@@ -1,0 +1,16 @@
+⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[2026-03-12T02:02:17.202Z] [PID: 74380] [32m[NODE-CRON][32m [33m[WARN][0m missed execution at Wed Mar 11 2026 23:02:00 GMT-0300 (Horário Padrão de Brasília)! Possible blocking IO or high CPU user at the same process used by node-cron.
+(node:74380) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2026-03-12T02:10:03.336Z] [PID: 74380] [32m[NODE-CRON][32m [33m[WARN][0m missed execution at Wed Mar 11 2026 23:10:00 GMT-0300 (Horário Padrão de Brasília)! Possible blocking IO or high CPU user at the same process used by node-cron.
+[2026-03-12T02:10:03.338Z] [PID: 74380] [32m[NODE-CRON][32m [33m[WARN][0m missed execution at Wed Mar 11 2026 23:10:00 GMT-0300 (Horário Padrão de Brasília)! Possible blocking IO or high CPU user at the same process used by node-cron.
+⨯ ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new I (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1451:9)
+    at Pa (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2078:11)
+    at e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2218:24)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2134:40)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2127:25) {
+  clientVersion: '7.4.0'
+}
+^C

@@ -1,0 +1,10 @@
+▲ Next.js 16.1.6
+- Local:         http://localhost:3000
+- Network:       http://192.168.15.5:3000
+
+✓ Starting...
+✓ Ready in 420ms
+[Scheduler] Initializing cron jobs...
+[Scheduler] Cron jobs initialized successfully
+[WhatsApp Handler] Registering message handlers...
+[WhatsApp Handler] Message handlers registered.

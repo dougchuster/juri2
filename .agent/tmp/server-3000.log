@@ -1,0 +1,721 @@
+
+> sistema-juridico@0.1.0 start
+> ts-node --transpile-only -r tsconfig-paths/register -O "{\"module\":\"commonjs\",\"moduleResolution\":\"node\"}" server.ts start
+
+[Scheduler] Initializing cron jobs...
+[Scheduler] Cron jobs initialized successfully
+[WhatsApp Handler] Registering message handlers...
+[WhatsApp Handler] Message handlers registered.
+[server] ready on http://0.0.0.0:3000 (start)
+(node:45160) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes] Falha ao sincronizar prazo no calendario: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new f (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70700:17)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70719:123)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71879:19)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71878:23)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74857:36)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74855:30)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes] Falha ao sincronizar prazo no calendario: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new f (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70700:17)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70719:123)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71879:19)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71878:23)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74857:36)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74855:30)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes] Falha ao sincronizar prazo no calendario: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new f (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70700:17)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70719:123)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71879:19)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71878:23)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74857:36)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74855:30)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[publicacoes-prazo-ai] fallback heuristica: Error: Kimi timeout apos 20000ms.
+    at g (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_39fde0d1._.js:36:27)
+    at async h (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:19:21)
+    at async i (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[root-of-the-server]__e0ad8965._.js:50:21)
+    at async K (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:169:37)
+    at async Q (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\src_e156e40d._.js:251:25)
+    at async m (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:71:29)
+    at async p (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:105:572)
+    at async Module.L (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_061c4c20._.js:160:28)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 4 atend SLA
+⨯ ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new f (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70700:17)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:70719:123)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71879:19)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:71878:23)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12)
+    at Context.esmImport [as i] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:275:20)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74857:36)
+    at Context.asyncModule [as a] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:506:5)
+    at module evaluation (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_37f43656._.js:74855:30)
+    at instantiateModule (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:799:9)
+    at getOrInstantiateModuleFromParent (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:823:12) {
+  digest: '1677415165'
+}
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+[Scheduler] DataJud monitor: VALID (ENV)
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ unhandledRejection:  Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}
+⨯ Error [ChunkLoadError]: Failed to load chunk server/chunks/ssr/_a423727d._.js from module 227517
+    at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:742:27) {
+  digest: '2385822188',
+  [cause]: Error: Cannot find module 'C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\_a423727d._.js'
+  Require stack:
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\app\(auth)\login\mfa\page.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\require.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\load-components.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\utils.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\options.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\swc\index.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\build\next-config-ts\transpile-config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\config.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\node_modules\next\dist\server\next.js
+  - C:\Users\dougc\Documents\Sistema Juridico ADV\server.ts
+      at Context.loadChunkAsync [as l] (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\server\chunks\ssr\[turbopack]_runtime.js:736:34) {
+    code: 'MODULE_NOT_FOUND',
+    requireStack: [
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\chunks\\ssr\\[turbopack]_runtime.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\.next\\server\\app\\(auth)\\login\\mfa\\page.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\require.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\load-components.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\utils.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\options.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\swc\\index.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\build\\next-config-ts\\transpile-config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\config.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\node_modules\\next\\dist\\server\\next.js',
+      'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\server.ts'
+    ]
+  }
+}

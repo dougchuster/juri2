@@ -1,0 +1,4611 @@
+
+> sistema-juridico@0.1.0 dev:next
+> next dev --webpack --port 3001
+
+▲ Next.js 16.1.6 (webpack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.15.8:3001
+- Environments: .env
+- Experiments (use with caution):
+  · serverActions
+
+✓ Starting...
+[Scheduler] Initializing cron jobs...
+[Scheduler] Cron jobs initialized successfully
+[WhatsApp Handler] Registering message handlers...
+[WhatsApp Handler] Message handlers registered.
+✓ Ready in 4s
+ GET /login 200 in 2.0s (compile: 1826ms, proxy.ts: 78ms, render: 123ms)
+ GET / 307 in 1959ms (compile: 1090ms, proxy.ts: 10ms, render: 859ms)
+ GET /login 200 in 338ms (compile: 245ms, proxy.ts: 7ms, render: 87ms)
+ GET / 307 in 130ms (compile: 55ms, proxy.ts: 3ms, render: 72ms)
+ GET /login 200 in 32ms (compile: 4ms, proxy.ts: 5ms, render: 24ms)
+○ Compiling /dashboard ...
+ GET /dashboard 200 in 9.2s (compile: 8.8s, proxy.ts: 5ms, render: 354ms)
+ POST /login 303 in 9.3s (compile: 3ms, proxy.ts: 4ms, render: 9.3s)
+ GET /api/chat/unread-count 200 in 2.1s (compile: 1915ms, proxy.ts: 110ms, render: 89ms)
+ GET /api/chat/users 200 in 2.1s (compile: 1916ms, proxy.ts: 110ms, render: 96ms)
+ GET /api/chat/conversations 200 in 2.1s (compile: 1915ms, proxy.ts: 110ms, render: 96ms)
+ GET /api/chat/users 200 in 47ms (compile: 12ms, proxy.ts: 8ms, render: 28ms)
+ GET /api/chat/unread-count 200 in 52ms (compile: 5ms, proxy.ts: 8ms, render: 40ms)
+ GET /api/chat/conversations 200 in 58ms (compile: 10ms, proxy.ts: 8ms, render: 40ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 1588ms (compile: 1547ms, proxy.ts: 18ms, render: 22ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 1301ms (compile: 1273ms, proxy.ts: 5ms, render: 23ms)
+ GET /admin/equipe-juridica?userId=ce999350-c4d2-40db-a89d-2eb577851ac3 200 in 1461ms (compile: 1334ms, proxy.ts: 4ms, render: 123ms)
+ GET /admin 200 in 1775ms (compile: 1661ms, proxy.ts: 3ms, render: 110ms)
+ GET /admin/equipe-juridica 200 in 161ms (compile: 97ms, proxy.ts: 6ms, render: 58ms)
+ POST /admin/equipe-juridica 200 in 338ms (compile: 3ms, proxy.ts: 4ms, render: 331ms)
+ GET /admin/equipe-juridica 200 in 93ms (compile: 14ms, proxy.ts: 20ms, render: 58ms)
+ GET /admin 200 in 62ms (compile: 1979µs, proxy.ts: 4ms, render: 57ms)
+ GET /admin/equipe-juridica?userId=cmmf9cy400006vwmhucrwgsb4 200 in 36ms (compile: 2ms, proxy.ts: 3ms, render: 30ms)
+ GET /admin 200 in 63ms (compile: 2ms, proxy.ts: 4ms, render: 57ms)
+ GET /admin 200 in 354ms (compile: 190ms, proxy.ts: 4ms, render: 159ms)
+ GET /admin 200 in 584ms (compile: 131ms, proxy.ts: 4ms, render: 449ms)
+ GET /admin 200 in 345ms (compile: 28ms, proxy.ts: 21ms, render: 296ms)
+ GET /api/chat/unread-count 200 in 2.2s (compile: 2.2s, proxy.ts: 4ms, render: 55ms)
+ GET /api/chat/users 200 in 2.2s (compile: 2.2s, proxy.ts: 4ms, render: 59ms)
+ GET /api/chat/conversations 200 in 2.2s (compile: 2.2s, proxy.ts: 4ms, render: 60ms)
+ GET /admin 200 in 487ms (compile: 145ms, proxy.ts: 13ms, render: 329ms)
+ GET /api/chat/users 200 in 211ms (compile: 39ms, proxy.ts: 8ms, render: 164ms)
+ GET /api/chat/unread-count 200 in 219ms (compile: 159ms, proxy.ts: 8ms, render: 52ms)
+ GET /api/chat/conversations 200 in 224ms (compile: 114ms, proxy.ts: 8ms, render: 101ms)
+ GET /admin 200 in 550ms (compile: 168ms, proxy.ts: 17ms, render: 364ms)
+ GET /api/chat/conversations 200 in 206ms (compile: 44ms, proxy.ts: 36ms, render: 126ms)
+ GET /api/chat/users 200 in 208ms (compile: 132ms, proxy.ts: 36ms, render: 40ms)
+ GET /api/chat/unread-count 200 in 212ms (compile: 88ms, proxy.ts: 36ms, render: 88ms)
+ GET /admin 200 in 561ms (compile: 183ms, proxy.ts: 12ms, render: 366ms)
+ GET /api/chat/unread-count 200 in 2.3s (compile: 2.2s, proxy.ts: 4ms, render: 71ms)
+ GET /api/chat/users 200 in 2.3s (compile: 2.2s, proxy.ts: 4ms, render: 75ms)
+ GET /api/chat/conversations 200 in 2.3s (compile: 2.2s, proxy.ts: 4ms, render: 77ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 1661ms (compile: 1620ms, proxy.ts: 3ms, render: 38ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 1211ms (compile: 1161ms, proxy.ts: 4ms, render: 47ms)
+ GET /admin 200 in 289ms (compile: 128ms, proxy.ts: 4ms, render: 157ms)
+ GET /admin 200 in 111ms (compile: 4ms, proxy.ts: 5ms, render: 102ms)
+ GET /admin 200 in 126ms (compile: 5ms, proxy.ts: 7ms, render: 113ms)
+ GET /admin 200 in 49ms (compile: 3ms, proxy.ts: 4ms, render: 42ms)
+ GET /admin 200 in 69ms (compile: 3ms, proxy.ts: 4ms, render: 62ms)
+ GET /admin/equipe-juridica?userId=cmmfi2pac001hssmhspsednqv 200 in 168ms (compile: 99ms, proxy.ts: 9ms, render: 60ms)
+○ Compiling /admin/comunicacao ...
+ GET /admin/comunicacao 200 in 5.2s (compile: 4.9s, proxy.ts: 4ms, render: 281ms)
+ GET /admin/comunicacao 200 in 251ms (compile: 82ms, proxy.ts: 4ms, render: 165ms)
+ GET /admin/comunicacao 200 in 392ms (compile: 177ms, proxy.ts: 5ms, render: 210ms)
+ GET /admin/comunicacao 200 in 295ms (compile: 127ms, proxy.ts: 3ms, render: 165ms)
+ GET /admin/comunicacao 200 in 327ms (compile: 149ms, proxy.ts: 3ms, render: 174ms)
+ GET /admin/comunicacao 200 in 289ms (compile: 135ms, proxy.ts: 3ms, render: 151ms)
+ GET /admin/comunicacao 200 in 101ms (compile: 4ms, proxy.ts: 9ms, render: 88ms)
+ GET /admin/comunicacao 200 in 98ms (compile: 3ms, proxy.ts: 4ms, render: 92ms)
+ GET /admin/comunicacao 200 in 405ms (compile: 184ms, proxy.ts: 3ms, render: 218ms)
+ GET /admin/comunicacao 200 in 362ms (compile: 168ms, proxy.ts: 3ms, render: 191ms)
+ GET /admin/comunicacao 200 in 338ms (compile: 164ms, proxy.ts: 3ms, render: 171ms)
+ GET /admin/comunicacao 200 in 344ms (compile: 155ms, proxy.ts: 3ms, render: 186ms)
+○ Compiling /admin/publicacoes ...
+ GET /admin/publicacoes 200 in 6.3s (compile: 5.6s, proxy.ts: 4ms, render: 652ms)
+ GET / 307 in 6.2s (compile: 5.9s, proxy.ts: 5ms, render: 390ms)
+ GET /dashboard 200 in 832ms (compile: 125ms, proxy.ts: 5ms, render: 702ms)
+ GET /admin/comunicacao 200 in 971ms (compile: 452ms, proxy.ts: 267ms, render: 252ms)
+○ Compiling /api/chat/users ...
+ GET /api/chat/unread-count 200 in 7.4s (compile: 7.1s, proxy.ts: 193ms, render: 75ms)
+ GET /api/chat/users 200 in 7.4s (compile: 7.1s, proxy.ts: 193ms, render: 79ms)
+ GET /api/chat/conversations 200 in 7.4s (compile: 7.1s, proxy.ts: 193ms, render: 79ms)
+○ Compiling /api/chat/conversations/[conversationId]/messages ...
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 4.6s (compile: 4.1s, proxy.ts: 3ms, render: 444ms)
+ GET /api/chat/users 200 in 915ms (compile: 70ms, proxy.ts: 267ms, render: 578ms)
+ GET /api/chat/unread-count 200 in 966ms (compile: 194ms, proxy.ts: 267ms, render: 505ms)
+ GET /api/chat/conversations 200 in 980ms (compile: 106ms, proxy.ts: 267ms, render: 606ms)
+ GET /admin/comunicacao 200 in 843ms (compile: 561ms, proxy.ts: 8ms, render: 274ms)
+ GET /dashboard 200 in 1620ms (compile: 358ms, proxy.ts: 8ms, render: 1254ms)
+○ Compiling /api/chat/conversations/[conversationId]/read ...
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 4.0s (compile: 3.9s, proxy.ts: 53ms, render: 51ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 4.1s (compile: 4.0s, proxy.ts: 92ms, render: 57ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 31ms (compile: 3ms, proxy.ts: 5ms, render: 24ms)
+○ Compiling /publicacoes ...
+ GET /publicacoes 200 in 14.4s (compile: 14.2s, proxy.ts: 3ms, render: 233ms)
+ GET /admin/comunicacao 200 in 818ms (compile: 577ms, proxy.ts: 6ms, render: 236ms)
+ GET /publicacoes 200 in 824ms (compile: 235ms, proxy.ts: 6ms, render: 583ms)
+ GET /admin/comunicacao 200 in 762ms (compile: 526ms, proxy.ts: 11ms, render: 225ms)
+ GET /publicacoes 200 in 768ms (compile: 227ms, proxy.ts: 11ms, render: 530ms)
+ GET /admin/comunicacao 200 in 753ms (compile: 554ms, proxy.ts: 5ms, render: 194ms)
+ GET /publicacoes 200 in 757ms (compile: 230ms, proxy.ts: 5ms, render: 522ms)
+ GET /admin/comunicacao 200 in 1004ms (compile: 627ms, proxy.ts: 5ms, render: 373ms)
+ GET /publicacoes 200 in 1010ms (compile: 210ms, proxy.ts: 6ms, render: 795ms)
+○ Compiling /_error ...
+ GET /admin/comunicacao 500 in 15.0s (compile: 14.8s, proxy.ts: 22ms, render: 149ms)
+ GET /publicacoes 500 in 15.0s (compile: 14.8s, proxy.ts: 22ms, render: 145ms)
+ GET /publicacoes 500 in 30ms (compile: 6ms, proxy.ts: 8ms, render: 16ms)
+ GET /publicacoes 500 in 28ms (compile: 4ms, proxy.ts: 8ms, render: 16ms)
+ GET /admin/comunicacao 500 in 31ms (compile: 7ms, proxy.ts: 8ms, render: 16ms)
+ GET /admin/comunicacao 500 in 29ms (compile: 5ms, proxy.ts: 8ms, render: 16ms)
+ GET /publicacoes 500 in 23ms (compile: 6ms, proxy.ts: 6ms, render: 11ms)
+ GET /admin/comunicacao 500 in 640ms (proxy.ts: 356ms)
+ GET /publicacoes 500 in 311ms (proxy.ts: 18ms)
+ GET /publicacoes 200 in 892ms (compile: 217ms, proxy.ts: 502ms, render: 173ms)
+ GET /publicacoes 200 in 295ms (compile: 11ms, proxy.ts: 24ms, render: 260ms)
+ GET /admin/comunicacao 200 in 2.4s (compile: 296ms, proxy.ts: 1045ms, render: 1103ms)
+○ Compiling /api/chat/users ...
+ GET /api/chat/users 200 in 15.4s (compile: 15.0s, proxy.ts: 7ms, render: 324ms)
+ GET /api/chat/conversations 200 in 15.4s (compile: 15.0s, proxy.ts: 7ms, render: 396ms)
+ GET /api/chat/unread-count 200 in 15.5s (compile: 15.0s, proxy.ts: 7ms, render: 409ms)
+ GET /api/chat/users 200 in 147ms (compile: 19ms, proxy.ts: 30ms, render: 99ms)
+ GET /api/chat/conversations 200 in 114ms (compile: 13ms, proxy.ts: 12ms, render: 89ms)
+○ Compiling /api/chat/conversations/[conversationId]/messages ...
+ GET /api/chat/unread-count 200 in 7.7s (compile: 7.5s, proxy.ts: 59ms, render: 77ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 7.7s (compile: 7.6s, proxy.ts: 12ms, render: 82ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 92ms (compile: 4ms, proxy.ts: 9ms, render: 79ms)
+○ Compiling /api/chat/conversations/[conversationId]/read ...
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 4.5s (compile: 4.4s, proxy.ts: 9ms, render: 94ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 294ms (compile: 10ms, proxy.ts: 237ms, render: 48ms)
+○ Compiling /_error ...
+ GET /publicacoes 500 in 13.8s (compile: 13.8s, proxy.ts: 8ms, render: 30ms)
+ GET /admin/comunicacao 500 in 13.8s (compile: 13.8s, proxy.ts: 8ms, render: 30ms)
+ GET /publicacoes 500 in 30ms (compile: 10ms, proxy.ts: 6ms, render: 13ms)
+ GET /admin/comunicacao 500 in 31ms (compile: 11ms, proxy.ts: 6ms, render: 14ms)
+ GET /admin/comunicacao 500 in 692ms (proxy.ts: 356ms)
+ GET /publicacoes 500 in 361ms (proxy.ts: 20ms)
+ GET /admin/comunicacao 200 in 2.6s (compile: 634ms, proxy.ts: 1107ms, render: 876ms)
+ GET /publicacoes 200 in 2.3s (compile: 710ms, proxy.ts: 785ms, render: 786ms)
+○ Compiling /api/chat/unread-count ...
+ GET /api/chat/unread-count 200 in 10.6s (compile: 9.6s, proxy.ts: 279ms, render: 695ms)
+ GET /api/chat/users 200 in 10.6s (compile: 9.6s, proxy.ts: 279ms, render: 700ms)
+ GET /api/chat/conversations 200 in 10.6s (compile: 9.6s, proxy.ts: 279ms, render: 704ms)
+ GET /api/chat/unread-count 200 in 120ms (compile: 6ms, proxy.ts: 6ms, render: 107ms)
+ GET /api/chat/users 200 in 122ms (compile: 23ms, proxy.ts: 6ms, render: 92ms)
+ GET /api/chat/conversations 200 in 124ms (compile: 45ms, proxy.ts: 6ms, render: 73ms)
+ GET /admin/comunicacao 200 in 833ms (compile: 448ms, proxy.ts: 10ms, render: 375ms)
+ GET /publicacoes 200 in 952ms (compile: 190ms, proxy.ts: 10ms, render: 752ms)
+○ Compiling /api/chat/conversations/[conversationId]/messages ...
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 5.5s (compile: 5.3s, proxy.ts: 85ms, render: 75ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 98ms (compile: 11ms, proxy.ts: 7ms, render: 80ms)
+○ Compiling /api/chat/conversations/[conversationId]/read ...
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 4.5s (compile: 4.4s, proxy.ts: 8ms, render: 91ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 226ms (compile: 5ms, proxy.ts: 178ms, render: 43ms)
+ GET /admin/comunicacao 200 in 672ms (compile: 452ms, proxy.ts: 5ms, render: 215ms)
+ GET /publicacoes 200 in 675ms (compile: 191ms, proxy.ts: 5ms, render: 480ms)
+prisma:error 
+Invalid `prisma.session.delete()` invocation:
+
+
+An operation failed because it depends on one or more records that were required but not found. No record was found for a delete.
+ GET /admin/comunicacao 200 in 657ms (compile: 304ms, proxy.ts: 22ms, render: 332ms)
+ GET /publicacoes 200 in 738ms (compile: 235ms, proxy.ts: 22ms, render: 481ms)
+ GET /admin/comunicacao 200 in 1484ms (compile: 357ms, proxy.ts: 23ms, render: 1104ms)
+ GET /admin/comunicacao 200 in 188ms (compile: 7ms, proxy.ts: 5ms, render: 176ms)
+ GET /publicacoes 200 in 1503ms (compile: 295ms, proxy.ts: 23ms, render: 1185ms)
+ GET /publicacoes 200 in 189ms (compile: 83ms, proxy.ts: 6ms, render: 101ms)
+○ Compiling /login ...
+ GET /login 200 in 8.0s (compile: 8.0s, proxy.ts: 3ms, render: 59ms)
+ GET /login 200 in 65ms (compile: 4ms, proxy.ts: 9ms, render: 52ms)
+ GET /login 200 in 292ms (compile: 7ms, proxy.ts: 230ms, render: 54ms)
+ GET /login 200 in 35ms (compile: 7ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 54ms (compile: 5ms, proxy.ts: 7ms, render: 42ms)
+ GET /login 200 in 37ms (compile: 4ms, proxy.ts: 6ms, render: 27ms)
+ GET /login 200 in 196ms (compile: 148ms, proxy.ts: 7ms, render: 41ms)
+ GET /login 200 in 45ms (compile: 3ms, proxy.ts: 4ms, render: 38ms)
+ GET /login 200 in 88ms (compile: 49ms, proxy.ts: 3ms, render: 36ms)
+ GET /login 200 in 50ms (compile: 4ms, proxy.ts: 6ms, render: 40ms)
+ GET /login 200 in 103ms (compile: 55ms, proxy.ts: 4ms, render: 45ms)
+ GET /login 200 in 38ms (compile: 5ms, proxy.ts: 5ms, render: 28ms)
+ GET /login 200 in 87ms (compile: 49ms, proxy.ts: 3ms, render: 35ms)
+ GET /login 200 in 33ms (compile: 5ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 92ms (compile: 46ms, proxy.ts: 3ms, render: 43ms)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 4ms, render: 26ms)
+ GET /login 200 in 85ms (compile: 49ms, proxy.ts: 3ms, render: 33ms)
+ GET /login 200 in 41ms (compile: 3ms, proxy.ts: 4ms, render: 34ms)
+ GET /login 200 in 55ms (compile: 5ms, proxy.ts: 9ms, render: 41ms)
+ GET /login 200 in 37ms (compile: 5ms, proxy.ts: 5ms, render: 27ms)
+ GET /login 200 in 508ms (compile: 86ms, proxy.ts: 18ms, render: 404ms)
+ GET /login 200 in 241ms (compile: 33ms, proxy.ts: 150ms, render: 58ms)
+ GET /login 200 in 72ms (compile: 18ms, proxy.ts: 11ms, render: 43ms)
+ GET /login 200 in 40ms (compile: 4ms, proxy.ts: 5ms, render: 30ms)
+ GET /login 200 in 46ms (compile: 4ms, proxy.ts: 7ms, render: 35ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 4ms, render: 26ms)
+ GET /login 200 in 38ms (compile: 4ms, proxy.ts: 5ms, render: 30ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 4ms, render: 26ms)
+ GET /login 200 in 41ms (compile: 4ms, proxy.ts: 4ms, render: 33ms)
+ GET /login 200 in 32ms (compile: 3ms, proxy.ts: 6ms, render: 23ms)
+ GET /login 200 in 418ms (compile: 223ms, proxy.ts: 22ms, render: 173ms)
+ GET /login 200 in 193ms (compile: 23ms, proxy.ts: 132ms, render: 38ms)
+ GET /login 200 in 39ms (compile: 4ms, proxy.ts: 7ms, render: 28ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 5ms, render: 21ms)
+ GET /login 200 in 55ms (compile: 9ms, proxy.ts: 8ms, render: 38ms)
+ GET /login 200 in 41ms (compile: 4ms, proxy.ts: 5ms, render: 32ms)
+ GET /login 200 in 438ms (compile: 240ms, proxy.ts: 18ms, render: 180ms)
+ GET /login 200 in 189ms (compile: 23ms, proxy.ts: 120ms, render: 47ms)
+ GET /login 200 in 60ms (compile: 9ms, proxy.ts: 11ms, render: 41ms)
+ GET /login 200 in 40ms (compile: 3ms, proxy.ts: 15ms, render: 22ms)
+ GET /login 200 in 335ms (compile: 183ms, proxy.ts: 15ms, render: 137ms)
+ GET /login 200 in 150ms (compile: 16ms, proxy.ts: 104ms, render: 30ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 23ms (compile: 3ms, proxy.ts: 3ms, render: 17ms)
+ GET /login 200 in 373ms (compile: 192ms, proxy.ts: 19ms, render: 161ms)
+ GET /login 200 in 51ms (compile: 16ms, proxy.ts: 7ms, render: 28ms)
+ GET /login 200 in 39ms (compile: 3ms, proxy.ts: 5ms, render: 30ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 11ms, render: 19ms)
+ GET /login 200 in 338ms (compile: 194ms, proxy.ts: 15ms, render: 129ms)
+ GET /login 200 in 56ms (compile: 17ms, proxy.ts: 14ms, render: 25ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 31ms (compile: 3ms, proxy.ts: 3ms, render: 25ms)
+ GET /login 200 in 39ms (compile: 3ms, proxy.ts: 4ms, render: 32ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 4ms, render: 19ms)
+ GET /login 200 in 349ms (compile: 40ms, proxy.ts: 24ms, render: 284ms)
+ GET /login 200 in 165ms (compile: 23ms, proxy.ts: 102ms, render: 41ms)
+ GET /login 200 in 44ms (compile: 9ms, proxy.ts: 8ms, render: 27ms)
+ GET /login 200 in 37ms (compile: 3ms, proxy.ts: 4ms, render: 30ms)
+ GET /login 200 in 156ms (compile: 120ms, proxy.ts: 4ms, render: 33ms)
+ GET /login 200 in 31ms (compile: 3ms, proxy.ts: 3ms, render: 25ms)
+ GET /login 200 in 102ms (compile: 72ms, proxy.ts: 3ms, render: 27ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 3ms, render: 27ms)
+ GET /login 200 in 128ms (compile: 85ms, proxy.ts: 4ms, render: 39ms)
+ GET /login 200 in 28ms (compile: 4ms, proxy.ts: 4ms, render: 20ms)
+ GET /login 200 in 35ms (compile: 5ms, proxy.ts: 5ms, render: 25ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 19ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 4ms, render: 23ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 18ms)
+○ Compiling /_error ...
+ GET /login 500 in 4.3s (compile: 4.3s, proxy.ts: 24ms, render: 15ms)
+ GET /login 500 in 11ms (compile: 2ms, proxy.ts: 4ms, render: 5ms)
+ GET /login 500 in 12ms (compile: 3ms, proxy.ts: 3ms, render: 7ms)
+ GET /login 500 in 13ms (compile: 3ms, proxy.ts: 3ms, render: 7ms)
+ GET /login 500 in 14ms (compile: 4ms, proxy.ts: 3ms, render: 7ms)
+ GET /login 500 in 15ms (compile: 4ms, proxy.ts: 3ms, render: 7ms)
+ GET /login 500 in 1278ms (proxy.ts: 43ms)
+ GET /login 200 in 168ms (compile: 23ms, proxy.ts: 106ms, render: 40ms)
+ GET /login 200 in 49ms (compile: 4ms, proxy.ts: 4ms, render: 41ms)
+ GET /login 200 in 80ms (compile: 2ms, proxy.ts: 4ms, render: 74ms)
+ GET /login 200 in 51ms (compile: 3ms, proxy.ts: 4ms, render: 43ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 19ms)
+ GET /login 200 in 1036ms (compile: 858ms, proxy.ts: 26ms, render: 152ms)
+ GET /login 200 in 159ms (compile: 23ms, proxy.ts: 109ms, render: 27ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 4ms, render: 23ms)
+ GET /login 200 in 23ms (compile: 3ms, proxy.ts: 3ms, render: 17ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 3ms, render: 22ms)
+ GET /login 200 in 24ms (compile: 3ms, proxy.ts: 3ms, render: 18ms)
+ GET /login 200 in 28ms (compile: 4ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 23ms (compile: 3ms, proxy.ts: 3ms, render: 17ms)
+ GET /login 200 in 370ms (compile: 32ms, proxy.ts: 8ms, render: 330ms)
+ GET /login 200 in 152ms (compile: 8ms, proxy.ts: 107ms, render: 37ms)
+ GET /login 200 in 42ms (compile: 4ms, proxy.ts: 4ms, render: 33ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 20ms)
+ GET /login 200 in 197ms (compile: 156ms, proxy.ts: 3ms, render: 38ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 4ms, render: 18ms)
+ GET /login 200 in 134ms (compile: 98ms, proxy.ts: 5ms, render: 31ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 41ms (compile: 5ms, proxy.ts: 5ms, render: 32ms)
+ GET /login 200 in 29ms (compile: 4ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 186ms (compile: 144ms, proxy.ts: 3ms, render: 39ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 4ms, render: 29ms)
+ GET /login 200 in 117ms (compile: 85ms, proxy.ts: 3ms, render: 29ms)
+ GET /login 200 in 39ms (compile: 4ms, proxy.ts: 4ms, render: 31ms)
+ GET /login 200 in 376ms (compile: 25ms, proxy.ts: 10ms, render: 341ms)
+ GET /login 200 in 167ms (compile: 21ms, proxy.ts: 110ms, render: 36ms)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 5ms, render: 24ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 4ms, render: 19ms)
+ GET /login 200 in 251ms (compile: 178ms, proxy.ts: 8ms, render: 66ms)
+ GET /login 200 in 43ms (compile: 5ms, proxy.ts: 7ms, render: 31ms)
+ GET /login 200 in 477ms (compile: 274ms, proxy.ts: 26ms, render: 177ms)
+ GET /login 200 in 180ms (compile: 19ms, proxy.ts: 133ms, render: 28ms)
+ GET /login 200 in 51ms (compile: 4ms, proxy.ts: 5ms, render: 43ms)
+ GET /login 200 in 32ms (compile: 4ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 388ms (compile: 214ms, proxy.ts: 14ms, render: 159ms)
+ GET /login 200 in 169ms (compile: 19ms, proxy.ts: 116ms, render: 33ms)
+ GET /login 200 in 32ms (compile: 3ms, proxy.ts: 5ms, render: 24ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 159ms (compile: 117ms, proxy.ts: 6ms, render: 36ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 33ms (compile: 4ms, proxy.ts: 5ms, render: 25ms)
+ GET /login 200 in 28ms (compile: 3ms, proxy.ts: 3ms, render: 22ms)
+ GET /login 200 in 32ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 129ms (compile: 92ms, proxy.ts: 3ms, render: 33ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 5ms, render: 22ms)
+ GET /login 200 in 183ms (compile: 143ms, proxy.ts: 4ms, render: 36ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 20ms)
+ GET /login 200 in 111ms (compile: 80ms, proxy.ts: 3ms, render: 29ms)
+ GET /login 200 in 36ms (compile: 3ms, proxy.ts: 3ms, render: 30ms)
+ GET /login 200 in 188ms (compile: 146ms, proxy.ts: 6ms, render: 36ms)
+ GET /login 200 in 30ms (compile: 4ms, proxy.ts: 4ms, render: 23ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 5ms, render: 27ms)
+ GET /login 200 in 30ms (compile: 4ms, proxy.ts: 3ms, render: 23ms)
+ GET /login 200 in 33ms (compile: 4ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 3ms, render: 21ms)
+ GET /login 200 in 37ms (compile: 3ms, proxy.ts: 4ms, render: 30ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 20ms)
+ GET /login 200 in 40ms (compile: 4ms, proxy.ts: 5ms, render: 30ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 4ms, render: 23ms)
+ GET /login 200 in 386ms (compile: 25ms, proxy.ts: 10ms, render: 351ms)
+ GET /login 200 in 173ms (compile: 10ms, proxy.ts: 114ms, render: 49ms)
+ GET /login 200 in 38ms (compile: 4ms, proxy.ts: 4ms, render: 30ms)
+ GET /login 200 in 32ms (compile: 3ms, proxy.ts: 6ms, render: 22ms)
+ GET /login 200 in 1184ms (compile: 253ms, proxy.ts: 769ms, render: 163ms)
+ GET /login 200 in 159ms (compile: 18ms, proxy.ts: 111ms, render: 29ms)
+ GET /login 200 in 44ms (compile: 3ms, proxy.ts: 5ms, render: 35ms)
+ GET /login 200 in 36ms (compile: 3ms, proxy.ts: 13ms, render: 21ms)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 4ms, render: 27ms)
+ GET /login 200 in 36ms (compile: 3ms, proxy.ts: 3ms, render: 29ms)
+ GET /login 200 in 33ms (compile: 4ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 34ms (compile: 3ms, proxy.ts: 3ms, render: 28ms)
+ GET /login 200 in 36ms (compile: 3ms, proxy.ts: 4ms, render: 29ms)
+ GET /login 200 in 24ms (compile: 3ms, proxy.ts: 3ms, render: 18ms)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 4ms, render: 26ms)
+ GET /login 200 in 28ms (compile: 3ms, proxy.ts: 3ms, render: 21ms)
+ GET /login 200 in 209ms (compile: 172ms, proxy.ts: 3ms, render: 34ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 32ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 34ms (compile: 3ms, proxy.ts: 3ms, render: 27ms)
+ GET /login 200 in 48ms (compile: 4ms, proxy.ts: 4ms, render: 40ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 4ms, render: 27ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 32ms (compile: 3ms, proxy.ts: 3ms, render: 26ms)
+ GET /login 200 in 41ms (compile: 3ms, proxy.ts: 3ms, render: 34ms)
+ GET /login 200 in 28ms (compile: 3ms, proxy.ts: 3ms, render: 21ms)
+ GET /login 200 in 97ms (compile: 9ms, proxy.ts: 8ms, render: 80ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 37ms (compile: 4ms, proxy.ts: 4ms, render: 29ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 3ms, render: 22ms)
+ GET /login 200 in 46ms (compile: 3ms, proxy.ts: 4ms, render: 39ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 4ms, render: 20ms)
+ GET /login 200 in 32ms (compile: 3ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 48ms (compile: 3ms, proxy.ts: 4ms, render: 41ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 32ms (compile: 4ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 24ms (compile: 3ms, proxy.ts: 3ms, render: 18ms)
+ GET /login 200 in 67ms (compile: 5ms, proxy.ts: 6ms, render: 56ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 346ms (compile: 24ms, proxy.ts: 9ms, render: 313ms)
+ GET /login 200 in 351ms (compile: 8ms, proxy.ts: 100ms, render: 243ms)
+ GET /login 200 in 328ms (compile: 183ms, proxy.ts: 16ms, render: 129ms)
+ GET /login 200 in 147ms (compile: 17ms, proxy.ts: 95ms, render: 35ms)
+ GET /login 200 in 31ms (compile: 3ms, proxy.ts: 5ms, render: 24ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 19ms)
+ GET /login 200 in 32ms (compile: 4ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 46ms (compile: 3ms, proxy.ts: 4ms, render: 39ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 214ms (compile: 169ms, proxy.ts: 3ms, render: 41ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 232ms (compile: 193ms, proxy.ts: 3ms, render: 35ms)
+ GET /login 200 in 38ms (compile: 3ms, proxy.ts: 5ms, render: 30ms)
+ GET /login 200 in 346ms (compile: 26ms, proxy.ts: 7ms, render: 313ms)
+ GET /login 200 in 161ms (compile: 27ms, proxy.ts: 96ms, render: 38ms)
+ GET /login 200 in 33ms (compile: 4ms, proxy.ts: 6ms, render: 23ms)
+ GET /login 200 in 25ms (compile: 2ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 4ms, render: 28ms)
+ GET /login 200 in 24ms (compile: 3ms, proxy.ts: 3ms, render: 18ms)
+ GET /login 200 in 385ms (compile: 65ms, proxy.ts: 10ms, render: 311ms)
+ GET /login 200 in 167ms (compile: 23ms, proxy.ts: 109ms, render: 35ms)
+ GET /login 200 in 36ms (compile: 4ms, proxy.ts: 7ms, render: 25ms)
+ GET /login 200 in 37ms (compile: 12ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 217ms (compile: 179ms, proxy.ts: 3ms, render: 35ms)
+ GET /login 200 in 38ms (compile: 3ms, proxy.ts: 4ms, render: 32ms)
+ GET /login 200 in 144ms (compile: 108ms, proxy.ts: 7ms, render: 29ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 394ms (compile: 204ms, proxy.ts: 21ms, render: 169ms)
+ GET /login 200 in 64ms (compile: 19ms, proxy.ts: 9ms, render: 36ms)
+ GET /login 200 in 39ms (compile: 4ms, proxy.ts: 6ms, render: 29ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 4ms, render: 26ms)
+ GET /login 200 in 346ms (compile: 192ms, proxy.ts: 14ms, render: 139ms)
+ GET /login 200 in 52ms (compile: 4ms, proxy.ts: 21ms, render: 27ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 5ms, render: 26ms)
+ GET /login 200 in 37ms (compile: 3ms, proxy.ts: 3ms, render: 31ms)
+ GET /login 200 in 31ms (compile: 3ms, proxy.ts: 3ms, render: 24ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 3ms, render: 28ms)
+ GET /login 200 in 354ms (compile: 27ms, proxy.ts: 8ms, render: 319ms)
+ GET /login 200 in 152ms (compile: 9ms, proxy.ts: 102ms, render: 41ms)
+ GET /login 200 in 40ms (compile: 5ms, proxy.ts: 5ms, render: 31ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 3ms, render: 21ms)
+ GET /login 200 in 38ms (compile: 3ms, proxy.ts: 4ms, render: 30ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 19ms)
+ GET /login 200 in 32ms (compile: 4ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 36ms (compile: 4ms, proxy.ts: 3ms, render: 29ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 4ms, render: 28ms)
+ GET /login 200 in 28ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 42ms (compile: 5ms, proxy.ts: 6ms, render: 32ms)
+ GET /login 200 in 36ms (compile: 4ms, proxy.ts: 4ms, render: 29ms)
+ GET /login 200 in 33ms (compile: 4ms, proxy.ts: 5ms, render: 25ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 3ms, render: 24ms)
+ GET /login 200 in 338ms (compile: 190ms, proxy.ts: 14ms, render: 134ms)
+ GET /login 200 in 148ms (compile: 19ms, proxy.ts: 94ms, render: 35ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 5ms, render: 25ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 32ms (compile: 4ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 26ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 46ms (compile: 4ms, proxy.ts: 4ms, render: 38ms)
+ GET /login 200 in 29ms (compile: 4ms, proxy.ts: 5ms, render: 21ms)
+ GET /login 200 in 40ms (compile: 4ms, proxy.ts: 5ms, render: 31ms)
+ GET /login 200 in 40ms (compile: 3ms, proxy.ts: 4ms, render: 33ms)
+ GET /login 200 in 41ms (compile: 4ms, proxy.ts: 4ms, render: 33ms)
+ GET /login 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 33ms (compile: 4ms, proxy.ts: 5ms, render: 25ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 3ms, render: 29ms)
+ GET /login 200 in 39ms (compile: 4ms, proxy.ts: 4ms, render: 32ms)
+ GET /login 200 in 28ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 4ms, render: 27ms)
+ GET /login 200 in 34ms (compile: 3ms, proxy.ts: 4ms, render: 27ms)
+ GET /login 200 in 33ms (compile: 3ms, proxy.ts: 5ms, render: 25ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 4ms, render: 28ms)
+ GET /login 200 in 33ms (compile: 4ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 35ms (compile: 4ms, proxy.ts: 4ms, render: 27ms)
+ GET /login 200 in 354ms (compile: 65ms, proxy.ts: 8ms, render: 281ms)
+ GET /login 200 in 152ms (compile: 22ms, proxy.ts: 103ms, render: 27ms)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 4ms, render: 25ms)
+ GET /login 200 in 36ms (compile: 3ms, proxy.ts: 3ms, render: 30ms)
+ GET /login 200 in 46ms (compile: 4ms, proxy.ts: 4ms, render: 38ms)
+ GET /login 200 in 30ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /login 200 in 34ms (compile: 3ms, proxy.ts: 4ms, render: 26ms)
+ GET /login 200 in 28ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+ GET /login 200 in 34ms (compile: 3ms, proxy.ts: 4ms, render: 26ms)
+ GET /login 200 in 35ms (compile: 3ms, proxy.ts: 4ms, render: 28ms)
+ GET /login 200 in 43ms (compile: 4ms, proxy.ts: 5ms, render: 34ms)
+ GET /login 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 20ms)
+ GET /login 200 in 237ms (compile: 193ms, proxy.ts: 8ms, render: 36ms)
+ GET /login 200 in 37ms (compile: 3ms, proxy.ts: 4ms, render: 31ms)
+ GET /login 200 in 39ms (compile: 4ms, proxy.ts: 3ms, render: 33ms)
+ GET /login 200 in 31ms (compile: 3ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 37ms (compile: 4ms, proxy.ts: 4ms, render: 29ms)
+ GET /login 200 in 27ms (compile: 4ms, proxy.ts: 3ms, render: 20ms)
+ GET /login 200 in 36ms (compile: 4ms, proxy.ts: 4ms, render: 29ms)
+ GET /login 200 in 31ms (compile: 3ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 367ms (compile: 51ms, proxy.ts: 9ms, render: 307ms)
+ GET /login 200 in 175ms (compile: 22ms, proxy.ts: 105ms, render: 48ms)
+ GET /login 200 in 55ms (compile: 9ms, proxy.ts: 9ms, render: 36ms)
+ GET /login 200 in 37ms (compile: 4ms, proxy.ts: 7ms, render: 26ms)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 3ms, render: 27ms)
+ GET /login 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 19ms)
+○ Compiling /dashboard ...
+ GET /login 200 in 449ms (compile: 189ms, proxy.ts: 7ms, render: 254ms)
+ GET /dashboard 200 in 560ms (compile: 29ms, proxy.ts: 285ms, render: 246ms)
+ GET /dashboard 200 in 17.8s (compile: 17.2s, proxy.ts: 4ms, render: 680ms)
+ POST /login 303 in 18.0s (compile: 3ms, proxy.ts: 3ms, render: 18.0s)
+○ Compiling /api/chat/unread-count ...
+ GET /api/chat/users 200 in 21.1s (compile: 20.7s, proxy.ts: 6ms, render: 395ms)
+ GET /api/chat/users 200 in 1095ms (compile: 17ms, proxy.ts: 610ms, render: 468ms)
+ GET /api/chat/conversations 200 in 21.3s (compile: 20.7s, proxy.ts: 6ms, render: 591ms)
+ GET /api/chat/unread-count 200 in 21.3s (compile: 20.7s, proxy.ts: 6ms, render: 594ms)
+ GET /api/chat/unread-count 200 in 486ms (compile: 21ms, proxy.ts: 250ms, render: 214ms)
+ GET /api/chat/conversations 200 in 565ms (compile: 222ms, proxy.ts: 52ms, render: 291ms)
+ GET /login 200 in 521ms (compile: 325ms, proxy.ts: 16ms, render: 180ms)
+ GET /dashboard 200 in 665ms (compile: 159ms, proxy.ts: 16ms, render: 490ms)
+○ Compiling /api/chat/conversations/[conversationId]/messages ...
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 18.0s (compile: 17.9s, proxy.ts: 16ms, render: 81ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 2.2s (compile: 2.2s, proxy.ts: 3ms, render: 60ms)
+○ Compiling /prazos ...
+ GET /prazos 200 in 15.2s (compile: 15.1s, proxy.ts: 4ms, render: 190ms)
+ POST /prazos 200 in 1102ms (compile: 3ms, proxy.ts: 3ms, render: 1096ms)
+ GET /prazos 200 in 119ms (compile: 14ms, proxy.ts: 30ms, render: 74ms)
+ POST /prazos 200 in 158ms (compile: 1877µs, proxy.ts: 3ms, render: 153ms)
+ GET /prazos 200 in 86ms (compile: 3ms, proxy.ts: 4ms, render: 79ms)
+ POST /prazos 200 in 169ms (compile: 1736µs, proxy.ts: 3ms, render: 164ms)
+ GET /prazos 200 in 87ms (compile: 4ms, proxy.ts: 4ms, render: 79ms)
+ POST /prazos 200 in 165ms (compile: 1767µs, proxy.ts: 3ms, render: 160ms)
+ GET /prazos 200 in 94ms (compile: 3ms, proxy.ts: 19ms, render: 72ms)
+ POST /prazos 200 in 168ms (compile: 1926µs, proxy.ts: 3ms, render: 163ms)
+ GET /prazos 200 in 77ms (compile: 3ms, proxy.ts: 4ms, render: 70ms)
+ POST /prazos 200 in 184ms (compile: 2ms, proxy.ts: 3ms, render: 178ms)
+ GET /prazos 200 in 94ms (compile: 2ms, proxy.ts: 4ms, render: 87ms)
+ POST /prazos 200 in 176ms (compile: 1765µs, proxy.ts: 3ms, render: 171ms)
+ GET /prazos 200 in 95ms (compile: 3ms, proxy.ts: 8ms, render: 84ms)
+ POST /prazos 200 in 192ms (compile: 2ms, proxy.ts: 3ms, render: 187ms)
+ GET /prazos 200 in 103ms (compile: 4ms, proxy.ts: 6ms, render: 94ms)
+○ Compiling /crm/campanhas ...
+ GET /crm/campanhas 200 in 12.7s (compile: 12.5s, proxy.ts: 4ms, render: 185ms)
+○ Compiling /crm/campanhas/nova ...
+ GET /crm/campanhas/nova 200 in 7.0s (compile: 6.8s, proxy.ts: 4ms, render: 111ms)
+○ Compiling /api/crm/segmentos ...
+ GET /api/crm/segmentos 200 in 4.1s (compile: 4.0s, proxy.ts: 4ms, render: 70ms)
+ GET /api/crm/segmentos 200 in 34ms (compile: 1891µs, proxy.ts: 3ms, render: 29ms)
+ GET /login 200 in 857ms (compile: 648ms, proxy.ts: 19ms, render: 190ms)
+ GET /login 200 in 111ms (compile: 4ms, proxy.ts: 20ms, render: 86ms)
+ GET /crm/campanhas/nova 200 in 962ms (compile: 349ms, proxy.ts: 19ms, render: 594ms)
+ GET /crm/campanhas/nova 200 in 115ms (compile: 29ms, proxy.ts: 20ms, render: 66ms)
+ GET /login 200 in 476ms (compile: 217ms, proxy.ts: 19ms, render: 241ms)
+ GET /login 200 in 91ms (compile: 38ms, proxy.ts: 7ms, render: 46ms)
+ GET /crm/campanhas/nova 200 in 578ms (compile: 245ms, proxy.ts: 19ms, render: 314ms)
+ GET /crm/campanhas/nova 200 in 104ms (compile: 13ms, proxy.ts: 7ms, render: 83ms)
+ GET /login 200 in 464ms (compile: 257ms, proxy.ts: 16ms, render: 191ms)
+ GET /login 200 in 96ms (compile: 38ms, proxy.ts: 6ms, render: 51ms)
+ GET /crm/campanhas/nova 200 in 563ms (compile: 228ms, proxy.ts: 16ms, render: 318ms)
+ GET /crm/campanhas/nova 200 in 100ms (compile: 11ms, proxy.ts: 6ms, render: 83ms)
+ GET /login 200 in 488ms (compile: 253ms, proxy.ts: 19ms, render: 217ms)
+ GET /login 200 in 112ms (compile: 49ms, proxy.ts: 10ms, render: 53ms)
+ GET /crm/campanhas/nova 200 in 125ms (compile: 23ms, proxy.ts: 10ms, render: 91ms)
+ GET /crm/campanhas/nova 200 in 616ms (compile: 224ms, proxy.ts: 19ms, render: 373ms)
+ GET /login 200 in 450ms (compile: 96ms, proxy.ts: 10ms, render: 344ms)
+ GET /crm/campanhas/nova 200 in 941ms (compile: 35ms, proxy.ts: 10ms, render: 896ms)
+ GET /login 200 in 463ms (compile: 241ms, proxy.ts: 35ms, render: 187ms)
+ GET /crm/campanhas/nova 200 in 530ms (compile: 214ms, proxy.ts: 35ms, render: 282ms)
+ GET /login 200 in 83ms (compile: 35ms, proxy.ts: 6ms, render: 42ms)
+ GET /crm/campanhas/nova 200 in 87ms (compile: 5ms, proxy.ts: 6ms, render: 77ms)
+ GET /login 200 in 484ms (compile: 226ms, proxy.ts: 12ms, render: 246ms)
+ GET /login 200 in 92ms (compile: 41ms, proxy.ts: 7ms, render: 44ms)
+ GET /crm/campanhas/nova 200 in 589ms (compile: 259ms, proxy.ts: 12ms, render: 317ms)
+ GET /crm/campanhas/nova 200 in 103ms (compile: 11ms, proxy.ts: 7ms, render: 85ms)
+ GET /login 200 in 469ms (compile: 267ms, proxy.ts: 18ms, render: 183ms)
+ GET /login 200 in 100ms (compile: 13ms, proxy.ts: 7ms, render: 80ms)
+ GET /crm/campanhas/nova 200 in 571ms (compile: 237ms, proxy.ts: 18ms, render: 316ms)
+ GET /crm/campanhas/nova 200 in 103ms (compile: 39ms, proxy.ts: 7ms, render: 57ms)
+ GET /login 200 in 491ms (compile: 227ms, proxy.ts: 18ms, render: 247ms)
+ GET /login 200 in 112ms (compile: 43ms, proxy.ts: 7ms, render: 61ms)
+ GET /crm/campanhas/nova 200 in 606ms (compile: 253ms, proxy.ts: 18ms, render: 336ms)
+ GET /crm/campanhas/nova 200 in 117ms (compile: 14ms, proxy.ts: 7ms, render: 96ms)
+ GET /login 200 in 451ms (compile: 64ms, proxy.ts: 11ms, render: 376ms)
+ GET /login 200 in 99ms (compile: 41ms, proxy.ts: 8ms, render: 50ms)
+ GET /crm/campanhas/nova 200 in 103ms (compile: 14ms, proxy.ts: 8ms, render: 81ms)
+ GET /crm/campanhas/nova 200 in 585ms (compile: 100ms, proxy.ts: 11ms, render: 474ms)
+ GET /login 200 in 461ms (compile: 248ms, proxy.ts: 20ms, render: 194ms)
+ GET /login 200 in 128ms (compile: 43ms, proxy.ts: 17ms, render: 67ms)
+ GET /crm/campanhas/nova 200 in 585ms (compile: 220ms, proxy.ts: 20ms, render: 345ms)
+ GET /crm/campanhas/nova 200 in 132ms (compile: 9ms, proxy.ts: 17ms, render: 105ms)
+ GET /login 200 in 440ms (compile: 58ms, proxy.ts: 12ms, render: 370ms)
+ GET /login 200 in 98ms (compile: 38ms, proxy.ts: 6ms, render: 54ms)
+ GET /crm/campanhas/nova 200 in 572ms (compile: 122ms, proxy.ts: 12ms, render: 437ms)
+ GET /crm/campanhas/nova 200 in 102ms (compile: 11ms, proxy.ts: 6ms, render: 85ms)
+ GET /login 200 in 432ms (compile: 239ms, proxy.ts: 20ms, render: 174ms)
+ GET /crm/campanhas/nova 200 in 547ms (compile: 64ms, proxy.ts: 20ms, render: 464ms)
+ GET /login 200 in 92ms (compile: 29ms, proxy.ts: 24ms, render: 38ms)
+ GET /crm/campanhas/nova 200 in 113ms (compile: 5ms, proxy.ts: 24ms, render: 84ms)
+ GET /login 200 in 471ms (compile: 95ms, proxy.ts: 12ms, render: 364ms)
+ GET /login 200 in 96ms (compile: 38ms, proxy.ts: 6ms, render: 52ms)
+ GET /crm/campanhas/nova 200 in 601ms (compile: 62ms, proxy.ts: 12ms, render: 527ms)
+ GET /crm/campanhas/nova 200 in 101ms (compile: 12ms, proxy.ts: 6ms, render: 83ms)
+ GET /login 200 in 436ms (compile: 93ms, proxy.ts: 10ms, render: 334ms)
+ GET /login 200 in 97ms (compile: 40ms, proxy.ts: 8ms, render: 48ms)
+ GET /crm/campanhas/nova 200 in 100ms (compile: 14ms, proxy.ts: 8ms, render: 78ms)
+ GET /crm/campanhas/nova 200 in 571ms (compile: 64ms, proxy.ts: 10ms, render: 498ms)
+ GET /login 200 in 433ms (compile: 258ms, proxy.ts: 10ms, render: 165ms)
+ GET /login 200 in 77ms (compile: 12ms, proxy.ts: 5ms, render: 60ms)
+ GET /crm/campanhas/nova 200 in 554ms (compile: 69ms, proxy.ts: 10ms, render: 475ms)
+ GET /crm/campanhas/nova 200 in 96ms (compile: 38ms, proxy.ts: 5ms, render: 53ms)
+ GET /login 200 in 439ms (compile: 193ms, proxy.ts: 38ms, render: 208ms)
+ GET /login 200 in 92ms (compile: 31ms, proxy.ts: 7ms, render: 54ms)
+ GET /crm/campanhas/nova 200 in 538ms (compile: 239ms, proxy.ts: 38ms, render: 262ms)
+ GET /crm/campanhas/nova 200 in 95ms (compile: 4ms, proxy.ts: 7ms, render: 83ms)
+ GET /dashboard 200 in 351ms (compile: 163ms, proxy.ts: 3ms, render: 185ms)
+ GET /login 200 in 406ms (compile: 71ms, proxy.ts: 9ms, render: 325ms)
+ GET /login 200 in 178ms (compile: 38ms, proxy.ts: 36ms, render: 103ms)
+ GET /dashboard 200 in 648ms (compile: 47ms, proxy.ts: 9ms, render: 591ms)
+ GET /dashboard 200 in 216ms (compile: 14ms, proxy.ts: 36ms, render: 166ms)
+○ Compiling /agentes-juridicos ...
+ GET /agentes-juridicos 200 in 15.9s (compile: 15.8s, proxy.ts: 4ms, render: 131ms)
+ GET /login 200 in 367ms (compile: 265ms, proxy.ts: 11ms, render: 90ms)
+ GET /agentes-juridicos 200 in 388ms (compile: 4ms, proxy.ts: 287ms, render: 98ms)
+ POST /agentes-juridicos 200 in 169ms (compile: 3ms, proxy.ts: 4ms, render: 162ms)
+ POST /agentes-juridicos 200 in 399ms (compile: 5ms, proxy.ts: 51ms, render: 342ms)
+ GET /login 200 in 418ms (compile: 254ms, proxy.ts: 14ms, render: 150ms)
+ GET /login 200 in 79ms (compile: 40ms, proxy.ts: 8ms, render: 32ms)
+ GET /agentes-juridicos 200 in 514ms (compile: 200ms, proxy.ts: 14ms, render: 300ms)
+ GET /agentes-juridicos 200 in 96ms (compile: 16ms, proxy.ts: 8ms, render: 72ms)
+ GET /login 200 in 443ms (compile: 225ms, proxy.ts: 48ms, render: 170ms)
+ GET /login 200 in 97ms (compile: 39ms, proxy.ts: 7ms, render: 51ms)
+ GET /agentes-juridicos 200 in 102ms (compile: 15ms, proxy.ts: 7ms, render: 80ms)
+ GET /agentes-juridicos 200 in 547ms (compile: 199ms, proxy.ts: 48ms, render: 300ms)
+ GET /agentes-juridicos 200 in 443ms (compile: 47ms, proxy.ts: 8ms, render: 388ms)
+ GET /agentes-juridicos 200 in 61ms (compile: 10ms, proxy.ts: 5ms, render: 46ms)
+ GET /agentes-juridicos 200 in 705ms (compile: 334ms, proxy.ts: 20ms, render: 351ms)
+ GET /agentes-juridicos 200 in 84ms (compile: 12ms, proxy.ts: 7ms, render: 65ms)
+ GET /agentes-juridicos 200 in 667ms (compile: 310ms, proxy.ts: 19ms, render: 338ms)
+ GET /agentes-juridicos 200 in 82ms (compile: 4ms, proxy.ts: 15ms, render: 63ms)
+ GET /agentes-juridicos 200 in 828ms (compile: 369ms, proxy.ts: 22ms, render: 437ms)
+ GET /agentes-juridicos 200 in 127ms (compile: 15ms, proxy.ts: 13ms, render: 99ms)
+ GET /agentes-juridicos 200 in 134ms (compile: 10ms, proxy.ts: 18ms, render: 106ms)
+ GET /agentes-juridicos 200 in 893ms (compile: 425ms, proxy.ts: 23ms, render: 445ms)
+ GET /agentes-juridicos 200 in 771ms (compile: 363ms, proxy.ts: 26ms, render: 382ms)
+ GET /agentes-juridicos 200 in 93ms (compile: 14ms, proxy.ts: 10ms, render: 70ms)
+ GET /agentes-juridicos 200 in 96ms (compile: 16ms, proxy.ts: 7ms, render: 73ms)
+ GET /agentes-juridicos 200 in 136ms (compile: 5ms, proxy.ts: 6ms, render: 125ms)
+ GET /agentes-juridicos 200 in 773ms (compile: 342ms, proxy.ts: 28ms, render: 403ms)
+ GET /agentes-juridicos 200 in 97ms (compile: 15ms, proxy.ts: 12ms, render: 70ms)
+ GET /agentes-juridicos 200 in 729ms (compile: 356ms, proxy.ts: 22ms, render: 352ms)
+ GET /agentes-juridicos 200 in 91ms (compile: 11ms, proxy.ts: 7ms, render: 72ms)
+ GET /agentes-juridicos 200 in 110ms (compile: 5ms, proxy.ts: 17ms, render: 87ms)
+ GET /agentes-juridicos 200 in 772ms (compile: 330ms, proxy.ts: 25ms, render: 417ms)
+ GET /agentes-juridicos 200 in 642ms (compile: 294ms, proxy.ts: 21ms, render: 327ms)
+ GET /agentes-juridicos 200 in 84ms (compile: 5ms, proxy.ts: 7ms, render: 72ms)
+ GET /agentes-juridicos 200 in 605ms (compile: 73ms, proxy.ts: 12ms, render: 520ms)
+ GET /agentes-juridicos 200 in 86ms (compile: 3ms, proxy.ts: 15ms, render: 67ms)
+ GET /agentes-juridicos 200 in 632ms (compile: 61ms, proxy.ts: 12ms, render: 559ms)
+ GET /agentes-juridicos 200 in 92ms (compile: 4ms, proxy.ts: 22ms, render: 66ms)
+ GET /agentes-juridicos 200 in 860ms (compile: 356ms, proxy.ts: 25ms, render: 478ms)
+ GET /agentes-juridicos 200 in 169ms (compile: 8ms, proxy.ts: 13ms, render: 148ms)
+ GET /agentes-juridicos 200 in 118ms (compile: 6ms, proxy.ts: 7ms, render: 105ms)
+ GET /agentes-juridicos 200 in 670ms (compile: 319ms, proxy.ts: 21ms, render: 331ms)
+ GET /agentes-juridicos 200 in 86ms (compile: 11ms, proxy.ts: 9ms, render: 66ms)
+ GET /agentes-juridicos 200 in 116ms (compile: 4ms, proxy.ts: 18ms, render: 93ms)
+ GET /agentes-juridicos 200 in 803ms (compile: 386ms, proxy.ts: 28ms, render: 389ms)
+ GET /agentes-juridicos 200 in 771ms (compile: 510ms, proxy.ts: 27ms, render: 234ms)
+ GET /agentes-juridicos 200 in 124ms (compile: 6ms, proxy.ts: 18ms, render: 100ms)
+ GET /agentes-juridicos 200 in 839ms (compile: 427ms, proxy.ts: 24ms, render: 387ms)
+ GET /agentes-juridicos 200 in 93ms (compile: 4ms, proxy.ts: 21ms, render: 67ms)
+ GET /agentes-juridicos 200 in 773ms (compile: 369ms, proxy.ts: 34ms, render: 370ms)
+ GET /agentes-juridicos 200 in 101ms (compile: 6ms, proxy.ts: 10ms, render: 84ms)
+ GET /agentes-juridicos 200 in 982ms (compile: 468ms, proxy.ts: 31ms, render: 484ms)
+ GET /agentes-juridicos 200 in 119ms (compile: 18ms, proxy.ts: 15ms, render: 86ms)
+ GET /agentes-juridicos 200 in 919ms (compile: 421ms, proxy.ts: 35ms, render: 463ms)
+ GET /agentes-juridicos 200 in 117ms (compile: 18ms, proxy.ts: 15ms, render: 84ms)
+ GET /agentes-juridicos 200 in 741ms (compile: 332ms, proxy.ts: 29ms, render: 380ms)
+ GET /agentes-juridicos 200 in 98ms (compile: 4ms, proxy.ts: 10ms, render: 83ms)
+ GET /agentes-juridicos 200 in 843ms (compile: 355ms, proxy.ts: 30ms, render: 459ms)
+ GET /agentes-juridicos 200 in 126ms (compile: 20ms, proxy.ts: 23ms, render: 83ms)
+ GET /agentes-juridicos 200 in 172ms (compile: 7ms, proxy.ts: 26ms, render: 140ms)
+ GET /agentes-juridicos 200 in 938ms (compile: 392ms, proxy.ts: 32ms, render: 514ms)
+ GET /agentes-juridicos 200 in 799ms (compile: 344ms, proxy.ts: 23ms, render: 432ms)
+ GET /agentes-juridicos 200 in 78ms (compile: 3ms, proxy.ts: 12ms, render: 64ms)
+ GET /agentes-juridicos 200 in 702ms (compile: 336ms, proxy.ts: 22ms, render: 344ms)
+ GET /agentes-juridicos 200 in 89ms (compile: 4ms, proxy.ts: 18ms, render: 67ms)
+ GET /agentes-juridicos 200 in 866ms (compile: 370ms, proxy.ts: 27ms, render: 470ms)
+ GET /agentes-juridicos 200 in 118ms (compile: 15ms, proxy.ts: 12ms, render: 91ms)
+ GET /agentes-juridicos 200 in 896ms (compile: 466ms, proxy.ts: 22ms, render: 408ms)
+ GET /agentes-juridicos 200 in 98ms (compile: 6ms, proxy.ts: 12ms, render: 80ms)
+ GET /agentes-juridicos 200 in 504ms (compile: 244ms, proxy.ts: 32ms, render: 229ms)
+ GET /agentes-juridicos 200 in 1025ms (compile: 251ms, proxy.ts: 16ms, render: 759ms)
+ GET /agentes-juridicos 200 in 59ms (compile: 4ms, proxy.ts: 5ms, render: 51ms)
+ GET /agentes-juridicos 200 in 608ms (compile: 297ms, proxy.ts: 16ms, render: 295ms)
+ GET /agentes-juridicos 200 in 74ms (compile: 12ms, proxy.ts: 8ms, render: 53ms)
+ GET /agentes-juridicos 200 in 110ms (compile: 4ms, proxy.ts: 6ms, render: 99ms)
+ GET /agentes-juridicos 200 in 599ms (compile: 249ms, proxy.ts: 21ms, render: 330ms)
+ GET /agentes-juridicos 200 in 87ms (compile: 12ms, proxy.ts: 8ms, render: 67ms)
+ GET /agentes-juridicos 200 in 555ms (compile: 247ms, proxy.ts: 15ms, render: 292ms)
+ GET /agentes-juridicos 200 in 78ms (compile: 17ms, proxy.ts: 9ms, render: 53ms)
+ GET /agentes-juridicos 200 in 689ms (compile: 282ms, proxy.ts: 58ms, render: 349ms)
+ GET /agentes-juridicos 200 in 690ms (compile: 282ms, proxy.ts: 58ms, render: 350ms)
+ GET /agentes-juridicos 200 in 171ms (compile: 26ms, proxy.ts: 37ms, render: 108ms)
+ GET /agentes-juridicos 200 in 555ms (compile: 95ms, proxy.ts: 10ms, render: 450ms)
+ GET /agentes-juridicos 200 in 76ms (compile: 4ms, proxy.ts: 11ms, render: 61ms)
+ GET /agentes-juridicos 200 in 61ms (compile: 3ms, proxy.ts: 5ms, render: 53ms)
+ GET /agentes-juridicos 200 in 519ms (compile: 26ms, proxy.ts: 11ms, render: 483ms)
+ GET /agentes-juridicos 200 in 72ms (compile: 3ms, proxy.ts: 12ms, render: 57ms)
+ GET /agentes-juridicos 200 in 547ms (compile: 266ms, proxy.ts: 37ms, render: 244ms)
+ GET /agentes-juridicos 200 in 71ms (compile: 17ms, proxy.ts: 5ms, render: 49ms)
+ GET /agentes-juridicos 200 in 80ms (compile: 14ms, proxy.ts: 5ms, render: 61ms)
+ GET /agentes-juridicos 200 in 568ms (compile: 54ms, proxy.ts: 10ms, render: 503ms)
+ GET /agentes-juridicos 200 in 91ms (compile: 4ms, proxy.ts: 6ms, render: 82ms)
+ GET /agentes-juridicos 200 in 83ms (compile: 3ms, proxy.ts: 5ms, render: 76ms)
+ GET /agentes-juridicos 200 in 445ms (compile: 156ms, proxy.ts: 5ms, render: 284ms)
+ GET /agentes-juridicos 200 in 304ms (compile: 72ms, proxy.ts: 5ms, render: 227ms)
+ GET /agentes-juridicos 200 in 1592ms (compile: 75ms, proxy.ts: 4ms, render: 1513ms)
+ GET /agentes-juridicos 200 in 473ms (compile: 22ms, proxy.ts: 9ms, render: 443ms)
+ GET /agentes-juridicos 200 in 75ms (compile: 3ms, proxy.ts: 12ms, render: 59ms)
+ GET /agentes-juridicos 200 in 62ms (compile: 3ms, proxy.ts: 4ms, render: 55ms)
+ GET /agentes-juridicos 200 in 576ms (compile: 72ms, proxy.ts: 10ms, render: 494ms)
+ GET /agentes-juridicos 200 in 72ms (compile: 4ms, proxy.ts: 14ms, render: 54ms)
+ GET /agentes-juridicos 200 in 88ms (compile: 3ms, proxy.ts: 5ms, render: 79ms)
+ GET /agentes-juridicos 200 in 1728ms (compile: 181ms, proxy.ts: 3ms, render: 1544ms)
+ GET /agentes-juridicos 200 in 1711ms (compile: 127ms, proxy.ts: 3ms, render: 1580ms)
+ GET /agentes-juridicos 200 in 381ms (compile: 145ms, proxy.ts: 4ms, render: 232ms)
+ GET /agentes-juridicos 200 in 519ms (compile: 241ms, proxy.ts: 17ms, render: 261ms)
+ GET /agentes-juridicos 200 in 77ms (compile: 5ms, proxy.ts: 11ms, render: 61ms)
+ GET /agentes-juridicos 200 in 497ms (compile: 50ms, proxy.ts: 12ms, render: 435ms)
+ GET /agentes-juridicos 200 in 68ms (compile: 3ms, proxy.ts: 12ms, render: 52ms)
+ GET /agentes-juridicos 200 in 488ms (compile: 61ms, proxy.ts: 10ms, render: 416ms)
+ GET /agentes-juridicos 200 in 71ms (compile: 10ms, proxy.ts: 5ms, render: 56ms)
+ GET /agentes-juridicos 200 in 68ms (compile: 3ms, proxy.ts: 6ms, render: 59ms)
+ GET /agentes-juridicos 200 in 95ms (compile: 3ms, proxy.ts: 5ms, render: 87ms)
+ GET /agentes-juridicos 200 in 450ms (compile: 158ms, proxy.ts: 6ms, render: 286ms)
+ GET /agentes-juridicos 200 in 78ms (compile: 4ms, proxy.ts: 4ms, render: 70ms)
+ GET /agentes-juridicos 200 in 583ms (compile: 250ms, proxy.ts: 17ms, render: 316ms)
+ GET /agentes-juridicos 200 in 81ms (compile: 12ms, proxy.ts: 8ms, render: 62ms)
+ GET /agentes-juridicos 200 in 80ms (compile: 3ms, proxy.ts: 5ms, render: 72ms)
+ GET /agentes-juridicos 200 in 76ms (compile: 3ms, proxy.ts: 5ms, render: 69ms)
+ GET /agentes-juridicos 200 in 67ms (compile: 3ms, proxy.ts: 5ms, render: 59ms)
+ GET /agentes-juridicos 200 in 66ms (compile: 3ms, proxy.ts: 4ms, render: 59ms)
+ GET /agentes-juridicos 200 in 62ms (compile: 3ms, proxy.ts: 4ms, render: 54ms)
+ GET /agentes-juridicos 200 in 526ms (compile: 53ms, proxy.ts: 10ms, render: 463ms)
+ GET /agentes-juridicos 200 in 73ms (compile: 5ms, proxy.ts: 17ms, render: 52ms)
+ GET /agentes-juridicos 200 in 76ms (compile: 3ms, proxy.ts: 4ms, render: 69ms)
+ GET /agentes-juridicos 200 in 86ms (compile: 3ms, proxy.ts: 5ms, render: 77ms)
+ GET /agentes-juridicos 200 in 64ms (compile: 3ms, proxy.ts: 4ms, render: 57ms)
+ GET /agentes-juridicos 200 in 327ms (compile: 176ms, proxy.ts: 3ms, render: 147ms)
+ GET /agentes-juridicos 200 in 235ms (compile: 113ms, proxy.ts: 5ms, render: 118ms)
+ GET /agentes-juridicos 200 in 498ms (compile: 52ms, proxy.ts: 9ms, render: 437ms)
+ GET /agentes-juridicos 200 in 65ms (compile: 10ms, proxy.ts: 5ms, render: 49ms)
+ GET /agentes-juridicos 200 in 534ms (compile: 26ms, proxy.ts: 10ms, render: 498ms)
+ GET /agentes-juridicos 200 in 63ms (compile: 3ms, proxy.ts: 13ms, render: 47ms)
+ GET /agentes-juridicos 200 in 97ms (compile: 3ms, proxy.ts: 5ms, render: 89ms)
+ GET /agentes-juridicos 200 in 513ms (compile: 25ms, proxy.ts: 9ms, render: 479ms)
+ GET /agentes-juridicos 200 in 76ms (compile: 4ms, proxy.ts: 15ms, render: 57ms)
+ GET /agentes-juridicos 200 in 65ms (compile: 3ms, proxy.ts: 4ms, render: 58ms)
+ GET /agentes-juridicos 200 in 68ms (compile: 3ms, proxy.ts: 4ms, render: 61ms)
+ GET /agentes-juridicos 200 in 93ms (compile: 3ms, proxy.ts: 5ms, render: 85ms)
+ GET /agentes-juridicos 200 in 87ms (compile: 3ms, proxy.ts: 5ms, render: 79ms)
+ GET /agentes-juridicos 200 in 524ms (compile: 234ms, proxy.ts: 21ms, render: 270ms)
+ GET /agentes-juridicos 200 in 101ms (compile: 8ms, proxy.ts: 15ms, render: 78ms)
+ GET /agentes-juridicos 200 in 84ms (compile: 3ms, proxy.ts: 4ms, render: 77ms)
+ GET /agentes-juridicos 200 in 118ms (compile: 3ms, proxy.ts: 5ms, render: 109ms)
+ GET /agentes-juridicos 200 in 552ms (compile: 272ms, proxy.ts: 4ms, render: 275ms)
+ GET /agentes-juridicos 200 in 76ms (compile: 4ms, proxy.ts: 6ms, render: 66ms)
+ GET /agentes-juridicos 200 in 574ms (compile: 107ms, proxy.ts: 21ms, render: 445ms)
+ GET /agentes-juridicos 200 in 74ms (compile: 3ms, proxy.ts: 21ms, render: 50ms)
+ GET /agentes-juridicos 200 in 59ms (compile: 3ms, proxy.ts: 5ms, render: 51ms)
+ GET /agentes-juridicos 200 in 53ms (compile: 3ms, proxy.ts: 5ms, render: 46ms)
+ GET /agentes-juridicos 200 in 545ms (compile: 228ms, proxy.ts: 17ms, render: 300ms)
+ GET /agentes-juridicos 200 in 84ms (compile: 4ms, proxy.ts: 10ms, render: 69ms)
+ GET /agentes-juridicos 200 in 576ms (compile: 291ms, proxy.ts: 12ms, render: 272ms)
+ GET /agentes-juridicos 200 in 70ms (compile: 6ms, proxy.ts: 6ms, render: 58ms)
+ GET /agentes-juridicos 200 in 67ms (compile: 3ms, proxy.ts: 4ms, render: 59ms)
+ GET /agentes-juridicos 200 in 89ms (compile: 3ms, proxy.ts: 5ms, render: 81ms)
+ GET /agentes-juridicos 200 in 492ms (compile: 65ms, proxy.ts: 11ms, render: 416ms)
+ GET /agentes-juridicos 200 in 74ms (compile: 4ms, proxy.ts: 6ms, render: 63ms)
+ GET /agentes-juridicos 200 in 617ms (compile: 279ms, proxy.ts: 20ms, render: 318ms)
+ GET /agentes-juridicos 200 in 77ms (compile: 4ms, proxy.ts: 14ms, render: 59ms)
+ GET /agentes-juridicos 200 in 393ms (compile: 220ms, proxy.ts: 4ms, render: 168ms)
+ GET /agentes-juridicos 200 in 581ms (compile: 63ms, proxy.ts: 10ms, render: 508ms)
+ GET /agentes-juridicos 200 in 83ms (compile: 4ms, proxy.ts: 13ms, render: 65ms)
+ GET /agentes-juridicos 200 in 541ms (compile: 65ms, proxy.ts: 11ms, render: 466ms)
+ GET /agentes-juridicos 200 in 82ms (compile: 15ms, proxy.ts: 5ms, render: 61ms)
+ GET /agentes-juridicos 200 in 520ms (compile: 250ms, proxy.ts: 30ms, render: 240ms)
+ GET /agentes-juridicos 200 in 62ms (compile: 4ms, proxy.ts: 7ms, render: 51ms)
+ GET /agentes-juridicos 200 in 637ms (compile: 299ms, proxy.ts: 23ms, render: 315ms)
+ GET /agentes-juridicos 200 in 75ms (compile: 4ms, proxy.ts: 8ms, render: 64ms)
+ GET /agentes-juridicos 200 in 515ms (compile: 229ms, proxy.ts: 40ms, render: 246ms)
+ GET /agentes-juridicos 200 in 73ms (compile: 4ms, proxy.ts: 6ms, render: 62ms)
+ GET /agentes-juridicos 200 in 560ms (compile: 60ms, proxy.ts: 10ms, render: 490ms)
+ GET /agentes-juridicos 200 in 76ms (compile: 3ms, proxy.ts: 13ms, render: 60ms)
+ GET /agentes-juridicos 200 in 648ms (compile: 268ms, proxy.ts: 11ms, render: 369ms)
+ GET /agentes-juridicos 200 in 98ms (compile: 17ms, proxy.ts: 8ms, render: 73ms)
+ GET /agentes-juridicos 200 in 601ms (compile: 255ms, proxy.ts: 17ms, render: 330ms)
+ GET /agentes-juridicos 200 in 92ms (compile: 4ms, proxy.ts: 22ms, render: 66ms)
+ GET /agentes-juridicos 200 in 96ms (compile: 3ms, proxy.ts: 5ms, render: 88ms)
+ GET /agentes-juridicos 200 in 496ms (compile: 321ms, proxy.ts: 5ms, render: 171ms)
+ GET /agentes-juridicos 200 in 617ms (compile: 284ms, proxy.ts: 17ms, render: 316ms)
+ GET /agentes-juridicos 200 in 77ms (compile: 12ms, proxy.ts: 8ms, render: 57ms)
+ GET /agentes-juridicos 200 in 85ms (compile: 3ms, proxy.ts: 5ms, render: 77ms)
+ GET /agentes-juridicos 200 in 289ms (compile: 137ms, proxy.ts: 3ms, render: 149ms)
+ GET /agentes-juridicos 200 in 572ms (compile: 253ms, proxy.ts: 20ms, render: 298ms)
+ GET /agentes-juridicos 200 in 78ms (compile: 10ms, proxy.ts: 7ms, render: 61ms)
+ GET /agentes-juridicos 200 in 614ms (compile: 35ms, proxy.ts: 10ms, render: 570ms)
+ GET /agentes-juridicos 200 in 93ms (compile: 5ms, proxy.ts: 20ms, render: 68ms)
+ GET /agentes-juridicos 200 in 88ms (compile: 3ms, proxy.ts: 5ms, render: 80ms)
+ GET /agentes-juridicos 200 in 105ms (compile: 4ms, proxy.ts: 4ms, render: 97ms)
+ GET /agentes-juridicos 200 in 95ms (compile: 3ms, proxy.ts: 5ms, render: 87ms)
+ GET /agentes-juridicos 200 in 2.1s (compile: 27ms, proxy.ts: 18ms, render: 2.1s)
+ GET /agentes-juridicos 200 in 535ms (compile: 179ms, proxy.ts: 68ms, render: 288ms)
+ GET /agentes-juridicos 200 in 61ms (compile: 3ms, proxy.ts: 5ms, render: 53ms)
+ GET /agentes-juridicos 200 in 92ms (compile: 3ms, proxy.ts: 5ms, render: 84ms)
+ GET /agentes-juridicos 200 in 282ms (compile: 137ms, proxy.ts: 4ms, render: 140ms)
+ GET /agentes-juridicos 200 in 86ms (compile: 3ms, proxy.ts: 5ms, render: 79ms)
+ GET /agentes-juridicos 200 in 83ms (compile: 4ms, proxy.ts: 6ms, render: 73ms)
+ GET /agentes-juridicos 200 in 79ms (compile: 4ms, proxy.ts: 5ms, render: 70ms)
+ GET /agentes-juridicos 200 in 503ms (compile: 225ms, proxy.ts: 9ms, render: 268ms)
+ GET /agentes-juridicos 200 in 71ms (compile: 9ms, proxy.ts: 5ms, render: 57ms)
+ GET /agentes-juridicos 200 in 60ms (compile: 3ms, proxy.ts: 4ms, render: 53ms)
+ GET /agentes-juridicos 200 in 77ms (compile: 14ms, proxy.ts: 8ms, render: 55ms)
+ GET /agentes-juridicos 200 in 537ms (compile: 243ms, proxy.ts: 15ms, render: 279ms)
+ GET /agentes-juridicos 200 in 560ms (compile: 247ms, proxy.ts: 36ms, render: 277ms)
+ GET /agentes-juridicos 200 in 81ms (compile: 6ms, proxy.ts: 10ms, render: 66ms)
+ GET /agentes-juridicos 200 in 1048ms (compile: 310ms, proxy.ts: 22ms, render: 716ms)
+ GET /agentes-juridicos 200 in 538ms (compile: 272ms, proxy.ts: 24ms, render: 243ms)
+ GET /agentes-juridicos 200 in 59ms (compile: 3ms, proxy.ts: 6ms, render: 50ms)
+ GET /agentes-juridicos 200 in 383ms (compile: 232ms, proxy.ts: 5ms, render: 145ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 200 in 317ms (compile: 172ms, proxy.ts: 5ms, render: 140ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 908ms (compile: 292ms, proxy.ts: 35ms, render: 582ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 200 in 2.3s (compile: 56ms, proxy.ts: 303ms, render: 1964ms)
+ GET /agentes-juridicos 200 in 8.3s (compile: 75ms, proxy.ts: 1543ms, render: 6.7s)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 627ms (compile: 202ms, proxy.ts: 45ms, render: 379ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 546ms (compile: 63ms, proxy.ts: 11ms, render: 473ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 307ms (compile: 122ms, proxy.ts: 27ms, render: 158ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 411ms (compile: 173ms, proxy.ts: 22ms, render: 216ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 108ms (compile: 3ms, proxy.ts: 5ms, render: 99ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 138ms (compile: 4ms, proxy.ts: 6ms, render: 128ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 614ms (compile: 303ms, proxy.ts: 28ms, render: 283ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 87ms (compile: 3ms, proxy.ts: 5ms, render: 79ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 115ms (compile: 4ms, proxy.ts: 5ms, render: 106ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 328ms (compile: 141ms, proxy.ts: 13ms, render: 175ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 367ms (compile: 135ms, proxy.ts: 48ms, render: 184ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 105ms (compile: 4ms, proxy.ts: 5ms, render: 96ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 607ms (compile: 65ms, proxy.ts: 15ms, render: 527ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 96ms (compile: 6ms, proxy.ts: 4ms, render: 85ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 104ms (compile: 4ms, proxy.ts: 4ms, render: 96ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 519ms (compile: 27ms, proxy.ts: 9ms, render: 483ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 516ms (compile: 73ms, proxy.ts: 11ms, render: 432ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 86ms (compile: 4ms, proxy.ts: 5ms, render: 78ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 356ms (compile: 154ms, proxy.ts: 6ms, render: 196ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 145ms (compile: 5ms, proxy.ts: 18ms, render: 123ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 517ms (compile: 69ms, proxy.ts: 13ms, render: 435ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 89ms (compile: 4ms, proxy.ts: 5ms, render: 81ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 345ms (compile: 145ms, proxy.ts: 23ms, render: 178ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 505ms (compile: 55ms, proxy.ts: 10ms, render: 440ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 542ms (compile: 281ms, proxy.ts: 19ms, render: 243ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 99ms (compile: 4ms, proxy.ts: 4ms, render: 90ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 117ms (compile: 5ms, proxy.ts: 5ms, render: 107ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 85ms (compile: 4ms, proxy.ts: 4ms, render: 77ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 116ms (compile: 4ms, proxy.ts: 4ms, render: 107ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 121ms (compile: 4ms, proxy.ts: 5ms, render: 112ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 548ms (compile: 271ms, proxy.ts: 19ms, render: 259ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 103ms (compile: 4ms, proxy.ts: 5ms, render: 94ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 587ms (compile: 279ms, proxy.ts: 17ms, render: 291ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 101ms (compile: 4ms, proxy.ts: 5ms, render: 92ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 495ms (compile: 55ms, proxy.ts: 12ms, render: 428ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 866ms (compile: 466ms, proxy.ts: 20ms, render: 380ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 291ms (compile: 141ms, proxy.ts: 5ms, render: 144ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 87ms (compile: 4ms, proxy.ts: 5ms, render: 79ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 108ms (compile: 4ms, proxy.ts: 5ms, render: 99ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 105ms (compile: 3ms, proxy.ts: 5ms, render: 97ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 86ms (compile: 4ms, proxy.ts: 4ms, render: 78ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 135ms (compile: 5ms, proxy.ts: 5ms, render: 126ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 86ms (compile: 4ms, proxy.ts: 5ms, render: 77ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 103ms (compile: 4ms, proxy.ts: 5ms, render: 95ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 99ms (compile: 4ms, proxy.ts: 5ms, render: 90ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 103ms (compile: 3ms, proxy.ts: 5ms, render: 95ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 80ms (compile: 3ms, proxy.ts: 4ms, render: 72ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 328ms (compile: 155ms, proxy.ts: 5ms, render: 168ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 96ms (compile: 4ms, proxy.ts: 5ms, render: 87ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 355ms (compile: 164ms, proxy.ts: 17ms, render: 174ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 760ms (compile: 407ms, proxy.ts: 12ms, render: 341ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 98ms (compile: 4ms, proxy.ts: 5ms, render: 89ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 222ms (compile: 99ms, proxy.ts: 8ms, render: 115ms)
+prisma:error 
+Invalid `prisma.session.findUnique()` invocation:
+
+{
+  where: {
+    token: "a92611145898fd8a6930d12f12bc6b91908a32c4bb5faecdd98f33377ec41052"
+  },
+  include: {
+    user: {
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        avatarUrl: true,
+        isActive: true,
+        advogado: {
+          select: {
+            id: true,
+            oab: true
+          }
+        },
+        mfaConfig: {
+        ~~~~~~~~~
+          select: {
+            isEnabled: true,
+            enabledAt: true,
+            lastUsedAt: true,
+            enforcedByPolicy: true
+          }
+        },
+?       passwordHash?: true,
+?       lastLoginAt?: true,
+?       createdAt?: true,
+?       updatedAt?: true,
+?       sessions?: true,
+?       logs?: true,
+?       jobExecutionAttemptsTriggered?: true,
+?       notifications?: true,
+?       assignedConversations?: true,
+?       legalAgentConversations?: true,
+?       atribuicoesProcessoExecutadas?: true,
+?       crmOwnedCards?: true,
+?       crmActivities?: true,
+?       crmStageTransitions?: true,
+?       crmLgpdEvents?: true,
+?       crmCommercialDocuments?: true,
+?       crmConflictDecisions?: true,
+?       funcionarioFinanceiro?: true,
+?       financeiroLancamentosCriados?: true,
+?       casosFinanceirosCriados?: true,
+?       repassesAprovados?: true,
+?       repassesFuncionario?: true,
+?       internalChatCreatedConversations?: true,
+?       internalChatParticipants?: true,
+?       internalChatMessages?: true,
+?       internalChatReads?: true,
+?       internalChatPresence?: true,
+?       _count?: true
+      }
+    }
+  }
+}
+
+Unknown field `mfaConfig` for select statement on model `User`. Available options are marked with ?.
+ GET /agentes-juridicos 500 in 371ms (compile: 176ms, proxy.ts: 15ms, render: 181ms)
+○ Compiling /_error ...
+ GET /agentes-juridicos 500 in 5.2s (compile: 4.9s, proxy.ts: 263ms, render: 31ms)

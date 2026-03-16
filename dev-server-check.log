@@ -1,0 +1,4062 @@
+
+> sistema-juridico@0.1.0 dev
+> ts-node --transpile-only -r tsconfig-paths/register -O "{\"module\":\"commonjs\",\"moduleResolution\":\"node\"}" server.ts dev
+
+Creating turbopack project {
+  dir: 'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV',
+  testMode: true
+}
+[Scheduler] Initializing cron jobs...
+[Scheduler] Cron jobs initialized successfully
+[WhatsApp Handler] Registering message handlers...
+[WhatsApp Handler] Message handlers registered.
+[server] ready on http://0.0.0.0:3000 (dev)
+[Baileys] Connecting with version: 2.3000.1033846690
+[WhatsApp Handler] Connection state: connecting (connected: false)
+[Baileys] Connected successfully!
+[WhatsApp Handler] Connection state: open (connected: true)
+(node:52628) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ GET /api/comunicacao/stream 200 in 7.8s (compile: 244ms, proxy.ts: 262ms, render: 7.3s)
+ GET /login 200 in 523ms (compile: 362ms, proxy.ts: 28ms, render: 134ms)
+ POST /login 200 in 52ms (compile: 4ms, proxy.ts: 10ms, render: 37ms)
+ GET /comunicacao 200 in 6.2s (compile: 3.8s, proxy.ts: 6ms, render: 2.5s)
+ GET /api/chat/unread-count 200 in 2.0s (compile: 1965ms, proxy.ts: 8ms, render: 50ms)
+ GET /api/chat/users 200 in 2.0s (compile: 1307ms, proxy.ts: 9ms, render: 725ms)
+ GET /api/chat/conversations 200 in 2.0s (compile: 1623ms, proxy.ts: 8ms, render: 407ms)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 1480ms (compile: 447ms, proxy.ts: 9ms, render: 1024ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 1533ms (compile: 1448ms, proxy.ts: 9ms, render: 76ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 1827ms (compile: 758ms, proxy.ts: 9ms, render: 1059ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 2.2s (compile: 763ms, proxy.ts: 9ms, render: 1443ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 784ms (compile: 4ms, proxy.ts: 9ms, render: 771ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 2.5s (compile: 766ms, proxy.ts: 9ms, render: 1720ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 4.1s (compile: 4.1s, proxy.ts: 4ms, render: 28ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 2.8s (compile: 2.8s, proxy.ts: 3ms, render: 49ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 43ms (compile: 19ms, proxy.ts: 6ms, render: 18ms)
+ GET /api/chat/conversations 200 in 28ms (compile: 2ms, proxy.ts: 3ms, render: 23ms)
+ POST /api/jobs/process 200 in 788ms (compile: 772ms, proxy.ts: 3ms, render: 13ms)
+ GET /api/comunicacao/stream 200 in 3.0min (compile: 2ms, proxy.ts: 3ms, render: 3.0min)
+ GET /comunicacao 200 in 237ms (compile: 5ms, proxy.ts: 3ms, render: 229ms)
+ GET /api/chat/users 200 in 33ms (compile: 4ms, proxy.ts: 4ms, render: 25ms)
+ GET /api/chat/unread-count 200 in 39ms (compile: 5ms, proxy.ts: 8ms, render: 26ms)
+ GET /api/chat/conversations 200 in 41ms (compile: 3ms, proxy.ts: 7ms, render: 31ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 41ms (compile: 13ms, proxy.ts: 2ms, render: 26ms)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 21ms (compile: 4ms, proxy.ts: 7ms, render: 10ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 21ms (compile: 14ms, proxy.ts: 4ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 29ms (compile: 12ms, proxy.ts: 13ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 26ms (compile: 13ms, proxy.ts: 10ms, render: 2ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 104ms (compile: 8ms, proxy.ts: 7ms, render: 89ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 103ms (compile: 35ms, proxy.ts: 11ms, render: 56ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 774ms (compile: 16ms, proxy.ts: 10ms, render: 748ms)
+ POST /api/jobs/process 200 in 15ms (compile: 2ms, proxy.ts: 3ms, render: 11ms)
+ GET /api/comunicacao/stream 200 in 8.2s (compile: 18ms, proxy.ts: 11ms, render: 8.2s)
+ GET /api/comunicacao/stream 200 in 432ms (compile: 1791µs, proxy.ts: 3ms, render: 428ms)
+ GET /api/comunicacao/stream 200 in 254ms (compile: 1763µs, proxy.ts: 2ms, render: 250ms)
+ GET /api/comunicacao/stream 200 in 29ms (compile: 2ms, proxy.ts: 3ms, render: 24ms)
+ GET /api/comunicacao/stream 200 in 19.6s (compile: 1758µs, proxy.ts: 3ms, render: 19.6s)
+ POST /api/jobs/automacao-nacional 200 in 1438ms (compile: 1419ms, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 1453ms (compile: 490ms, proxy.ts: 4ms, render: 960ms)
+ POST /api/jobs/process 200 in 13ms (compile: 2ms, proxy.ts: 3ms, render: 8ms)
+[WhatsApp Handler] Incoming message from +556199135861: Boa noite, preciso de ajuda...
+[WhatsApp Handler] Found client by ClientPhone: Douglas Chuster (cmln2qtic00g08wmhf819jsxh)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 22ms (compile: 11ms, proxy.ts: 10ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 25ms (compile: 13ms, proxy.ts: 10ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 28ms (compile: 16ms, proxy.ts: 10ms, render: 2ms)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 37ms (compile: 6ms, proxy.ts: 9ms, render: 21ms)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 34ms (compile: 4ms, proxy.ts: 6ms, render: 24ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 99ms (compile: 9ms, proxy.ts: 9ms, render: 81ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 72ms (compile: 7ms, proxy.ts: 6ms, render: 60ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 779ms (compile: 19ms, proxy.ts: 9ms, render: 752ms)
+ GET /api/comunicacao/stream 200 in 21.8s (compile: 9ms, proxy.ts: 5ms, render: 21.8s)
+ GET /comunicacao 200 in 259ms (compile: 6ms, proxy.ts: 4ms, render: 248ms)
+ GET /api/chat/users 200 in 25ms (compile: 1567µs, proxy.ts: 3ms, render: 21ms)
+ GET /api/chat/unread-count 200 in 29ms (compile: 4ms, proxy.ts: 5ms, render: 20ms)
+ GET /api/chat/conversations 200 in 32ms (compile: 6ms, proxy.ts: 5ms, render: 21ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 38ms (compile: 13ms, proxy.ts: 3ms, render: 22ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 26ms (compile: 6ms, proxy.ts: 10ms, render: 10ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 23ms (compile: 13ms, proxy.ts: 6ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 40ms (compile: 23ms, proxy.ts: 11ms, render: 7ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 104ms (compile: 84ms, proxy.ts: 17ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 102ms (compile: 17ms, proxy.ts: 82ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 30ms (compile: 5ms, proxy.ts: 22ms, render: 3ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 196ms (compile: 9ms, proxy.ts: 10ms, render: 177ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 177ms (compile: 46ms, proxy.ts: 80ms, render: 51ms)
+Closing session: SessionEntry {
+  _chains: {
+    BYXXdE5xeV2qqFYTZmnsuxmdJNvEwOg7wfcyk7tRL7N3: { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 1477366669,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 85 d7 74 4e 71 79 5d aa a8 56 13 66 69 ec bb 19 9d 24 db c4 c0 e8 3b c1 f7 32 93 bb 51 2f b3 77>,
+      privKey: <Buffer 88 08 2c 6c aa 33 1e e1 1b f5 d3 26 1c 43 d1 65 b4 57 ee ed 07 73 76 10 29 64 c6 d9 59 83 7b 43>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 ca 78 2a 92 71 3d 02 f0 48 d2 8d b5 1b 96 05 fb 42 67 9e 07 15 a8 ce 26 6a 76 a4 5e 32 4b a2 38>,
+    previousCounter: 0,
+    rootKey: <Buffer 96 0e be 82 b8 77 6d a3 9d 39 5c 91 c3 54 97 bd ce bd 72 d0 91 49 01 d1 7a 99 06 6d 5f 22 e8 6d>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 d9 a0 95 1c c6 ee 60 07 c6 8a 72 7f de 78 44 ec 5b 7d 07 bf 12 60 71 3c d7 d2 1a 33 48 6b 9e 4f>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773261266766,
+    created: 1773261266766,
+    remoteIdentityKey: <Buffer 05 65 4d 49 8c 7c 2e 63 0f 64 91 4c 7c 86 8e f6 37 7c 55 a2 c9 fa 9b e5 07 c5 de dd d3 ab 01 94 50>
+  },
+  pendingPreKey: {
+    signedKeyId: 10049963,
+    baseKey: <Buffer 05 d9 a0 95 1c c6 ee 60 07 c6 8a 72 7f de 78 44 ec 5b 7d 07 bf 12 60 71 3c d7 d2 1a 33 48 6b 9e 4f>,
+    preKeyId: 16571200
+  }
+}
+Closing session: SessionEntry {
+  _chains: {
+    'BcZ2LBLnsbvd0+oabbF0SXk5x5N4vdasrx5h0rUy9757': { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 2031889020,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 c6 76 2c 12 e7 b1 bb dd d3 ea 1a 6d b1 74 49 79 39 c7 93 78 bd d6 ac af 1e 61 d2 b5 32 f7 be 7b>,
+      privKey: <Buffer c0 a9 7e a9 d7 26 c6 8e 1c 46 fb 96 9f 90 f9 80 be cb 85 ab 28 7c f6 a7 c2 9c 70 3e a5 6c 3a 79>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 da d0 d2 21 db 92 4f 4e 19 fa c4 e8 7d 0c 34 84 95 2b c6 fd 18 ab 80 8e 92 2a 75 a0 c5 52 97 67>,
+    previousCounter: 0,
+    rootKey: <Buffer 8f 6f 41 c2 bb 2a e0 0e 0c 8e 1c a1 99 54 62 c8 55 5b 54 46 b7 3a 11 9a 6a 9f e1 18 ba 4a dc f0>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 d1 71 3b be cf 9d 59 a0 88 1f a4 94 77 8f 85 cd 00 27 16 13 bf 73 5e cc 55 1a 87 1d 31 f3 be 64>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773261348728,
+    created: 1773261348728,
+    remoteIdentityKey: <Buffer 05 0b 8f ef 73 b1 67 09 c0 6e 91 b7 ca 81 0c 52 4f 9e dc 19 be cc 5b 2a 56 63 a8 04 20 6e 96 2f 60>
+  },
+  pendingPreKey: {
+    signedKeyId: 12849778,
+    baseKey: <Buffer 05 d1 71 3b be cf 9d 59 a0 88 1f a4 94 77 8f 85 cd 00 27 16 13 bf 73 5e cc 55 1a 87 1d 31 f3 be 64>,
+    preKeyId: 8450638
+  }
+}
+[WhatsApp Handler] Message stored for client cmln2qtic00g08wmhf819jsxh
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 483ms (compile: 4ms, proxy.ts: 5ms, render: 474ms)
+ GET /api/comunicacao/conversations? 200 in 538ms (compile: 469ms, proxy.ts: 5ms, render: 64ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 86ms (compile: 12ms, proxy.ts: 13ms, render: 61ms)
+ GET /api/comunicacao/conversations? 200 in 89ms (compile: 9ms, proxy.ts: 12ms, render: 68ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 586ms (compile: 7ms, proxy.ts: 5ms, render: 574ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 98ms (compile: 15ms, proxy.ts: 12ms, render: 72ms)
+ GET /api/comunicacao/stream 200 in 41s (compile: 21ms, proxy.ts: 80ms, render: 41s)
+ POST /api/jobs/process 200 in 14ms (compile: 3ms, proxy.ts: 3ms, render: 8ms)
+ POST /api/jobs/process 200 in 16ms (compile: 6ms, proxy.ts: 3ms, render: 7ms)
+ POST /api/jobs/demandas 200 in 27ms (compile: 3ms, proxy.ts: 3ms, render: 21ms)
+ POST /comunicacao 200 in 205ms (compile: 5ms, proxy.ts: 3ms, render: 197ms)
+ GET /comunicacao 200 in 112ms (compile: 5ms, proxy.ts: 3ms, render: 104ms)
+ POST /comunicacao 200 in 164ms (compile: 4ms, proxy.ts: 3ms, render: 157ms)
+ GET /comunicacao 200 in 115ms (compile: 4ms, proxy.ts: 3ms, render: 108ms)
+ POST /api/jobs/process 200 in 11ms (compile: 1548µs, proxy.ts: 3ms, render: 7ms)
+[WhatsApp Handler] Incoming message from +556199135861: Gostaria de ver uma questão com Urgência...
+[WhatsApp Handler] Found client by ClientPhone: Douglas Chuster (cmln2qtic00g08wmhf819jsxh)
+[WhatsApp Handler] Message stored for client cmln2qtic00g08wmhf819jsxh
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 31ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 64ms (compile: 8ms, proxy.ts: 4ms, render: 53ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 23ms (compile: 4ms, proxy.ts: 7ms, render: 12ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 47ms (compile: 6ms, proxy.ts: 7ms, render: 34ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 728ms (compile: 1730µs, proxy.ts: 2ms, render: 724ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 1029ms (compile: 3ms, proxy.ts: 5ms, render: 1022ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 778ms (compile: 10ms, proxy.ts: 7ms, render: 761ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 1003ms (compile: 8ms, proxy.ts: 7ms, render: 988ms)
+[Baileys] History sync requested. Reconnecting with full history sync...
+[WhatsApp Handler] Connection state: open (connected: true)
+[Baileys] Connection closed. Reason: undefined undefined
+[WhatsApp Handler] Connection state: close (connected: false)
+[Baileys] Reconnecting in 2000ms (attempt 1)...
+ POST /api/whatsapp/sync-history 200 in 389ms (compile: 378ms, proxy.ts: 3ms, render: 8ms)
+ GET /api/comunicacao/conversations? 200 in 33ms (compile: 2ms, proxy.ts: 3ms, render: 28ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 12ms (compile: 2ms, proxy.ts: 3ms, render: 6ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 49ms (compile: 2ms, proxy.ts: 3ms, render: 44ms)
+[Baileys] Connecting with version: 2.3000.1033846690
+[WhatsApp Handler] Connection state: connecting (connected: false)
+[Baileys] Connected successfully!
+[WhatsApp Handler] Connection state: open (connected: true)
+ POST /api/jobs/process 200 in 12ms (compile: 1587µs, proxy.ts: 2ms, render: 8ms)
+[WhatsApp Handler] Connection state: open (connected: true)
+ POST /api/jobs/demandas 200 in 21ms (compile: 2ms, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/process 200 in 13ms (compile: 2ms, proxy.ts: 3ms, render: 9ms)
+ GET /documentos 200 in 1576ms (compile: 840ms, proxy.ts: 3ms, render: 733ms)
+ GET /api/chat/users 200 in 33ms (compile: 2ms, proxy.ts: 2ms, render: 29ms)
+ GET /api/chat/unread-count 200 in 32ms (compile: 8ms, proxy.ts: 4ms, render: 20ms)
+ GET /api/chat/conversations 200 in 44ms (compile: 3ms, proxy.ts: 4ms, render: 37ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 45ms (compile: 17ms, proxy.ts: 6ms, render: 23ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 67ms (compile: 12ms, proxy.ts: 2ms, render: 53ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 48ms (compile: 20ms, proxy.ts: 6ms, render: 22ms)
+ GET /api/chat/conversations 200 in 31ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 42ms (compile: 4ms, proxy.ts: 2ms, render: 36ms)
+ POST /api/jobs/process 200 in 15ms (compile: 3ms, proxy.ts: 3ms, render: 9ms)
+✓ Compiled in 252ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 166ms (compile: 15ms, proxy.ts: 7ms, render: 144ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 4.4s (compile: 2.1s, proxy.ts: 7ms, render: 2.3s)
+ GET /comunicacao 200 in 4.5s (compile: 4.1s, proxy.ts: 10ms, render: 364ms)
+ GET /comunicacao 200 in 142ms (compile: 4ms, proxy.ts: 3ms, render: 135ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.1s (compile: 5ms, proxy.ts: 4ms, render: 2.1s)
+ GET /comunicacao 200 in 2.1s (compile: 2.0s, proxy.ts: 4ms, render: 145ms)
+ POST /api/jobs/process 200 in 22ms (compile: 4ms, proxy.ts: 7ms, render: 11ms)
+ POST /api/jobs/automacao-nacional 200 in 3.4s (compile: 1842ms, proxy.ts: 9ms, render: 1546ms)
+ POST /api/jobs/demandas 200 in 3.4s (compile: 3.4s, proxy.ts: 8ms, render: 31ms)
+✓ Compiled in 184ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.4s (compile: 7ms, proxy.ts: 6ms, render: 2.4s)
+ GET /comunicacao 200 in 2.4s (compile: 2.2s, proxy.ts: 6ms, render: 173ms)
+ POST /api/jobs/process 200 in 14ms (compile: 2ms, proxy.ts: 3ms, render: 10ms)
+ POST /api/jobs/process 200 in 14ms (compile: 1985µs, proxy.ts: 3ms, render: 8ms)
+ POST /api/jobs/demandas 200 in 18ms (compile: 2ms, proxy.ts: 3ms, render: 12ms)
+ POST /api/jobs/operacoes 200 in 615ms (compile: 566ms, proxy.ts: 3ms, render: 46ms)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 2 atend SLA
+[WhatsApp Handler] Incoming message from +556199135861: Gostaria de ver uma questão com Urgência 2...
+[WhatsApp Handler] Found client by ClientPhone: Douglas Chuster (cmln2qtic00g08wmhf819jsxh)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 15ms (compile: 3ms, proxy.ts: 4ms, render: 8ms)
+ GET /api/comunicacao/conversations? 200 in 31ms (compile: 5ms, proxy.ts: 4ms, render: 22ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 1009ms (compile: 966ms, proxy.ts: 4ms, render: 39ms)
+ POST /api/jobs/process 200 in 16ms (compile: 2ms, proxy.ts: 4ms, render: 9ms)
+Closing session: SessionEntry {
+  _chains: {
+    'Bck18Y+Y+McmysR5i9Xr9stKKg1Clk12fxRi3b4noHIv': { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 1477366669,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 c9 35 f1 8f 98 f8 c7 26 ca c4 79 8b d5 eb f6 cb 4a 2a 0d 42 96 4d 76 7f 14 62 dd be 27 a0 72 2f>,
+      privKey: <Buffer 98 b6 f1 aa 73 3c d2 e3 b4 45 43 0a 02 a0 36 6f c5 88 9a 82 44 f9 14 17 b3 d9 8d 21 ed de 33 5b>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 ca 78 2a 92 71 3d 02 f0 48 d2 8d b5 1b 96 05 fb 42 67 9e 07 15 a8 ce 26 6a 76 a4 5e 32 4b a2 38>,
+    previousCounter: 0,
+    rootKey: <Buffer ee c8 91 b7 5c ce 47 f0 b6 c2 13 f8 c1 a7 3a 5b a6 11 1a 63 04 5a e3 c8 b4 58 de f3 b1 83 ee 67>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 22 9a e9 8d b5 5d ca 93 d7 10 67 cc 6f 13 31 af 36 db 2d 1c 3c d7 fb 4f 0b 7c b0 fb ba a1 84 03>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773272824873,
+    created: 1773272824873,
+    remoteIdentityKey: <Buffer 05 65 4d 49 8c 7c 2e 63 0f 64 91 4c 7c 86 8e f6 37 7c 55 a2 c9 fa 9b e5 07 c5 de dd d3 ab 01 94 50>
+  },
+  pendingPreKey: {
+    signedKeyId: 10049963,
+    baseKey: <Buffer 05 22 9a e9 8d b5 5d ca 93 d7 10 67 cc 6f 13 31 af 36 db 2d 1c 3c d7 fb 4f 0b 7c b0 fb ba a1 84 03>,
+    preKeyId: 16571895
+  }
+}
+Closing session: SessionEntry {
+  _chains: {
+    'BftaxrxDv37CNThDzFno2wEwC5ltZAil8Q/H2Bqh4DsA': { chainKey: [Object], chainType: 2, messageKeys: {} },
+    'BUFIPw//zLXkQL+lG3bH2hBw6blEJIWJthJSdheYx3Qi': { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 2031889020,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 41 48 3f 0f ff cc b5 e4 40 bf a5 1b 76 c7 da 10 70 e9 b9 44 24 85 89 b6 12 52 76 17 98 c7 74 22>,
+      privKey: <Buffer 08 13 58 66 b2 00 e2 1e 6c 1e 54 1d c4 6c 77 1c b2 eb ab e0 47 4a 94 8a 7f 68 a6 41 6b 52 0e 57>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 fb 5a c6 bc 43 bf 7e c2 35 38 43 cc 59 e8 db 01 30 0b 99 6d 64 08 a5 f1 0f c7 d8 1a a1 e0 3b 00>,
+    previousCounter: 0,
+    rootKey: <Buffer dc bd c7 d9 3a 8d 65 19 1c 0d 50 a9 2e 9d be c5 4f 1b 5e 0f 72 43 4e 3e 2f 92 b5 4f f8 72 34 e0>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 8b f4 a8 df 56 9b 3e 38 8d 7f ea 62 99 2e 02 70 44 3c a8 ed 8c 4c 89 cb 88 76 e6 33 28 35 5e 77>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773273151675,
+    created: 1773272824876,
+    remoteIdentityKey: <Buffer 05 0b 8f ef 73 b1 67 09 c0 6e 91 b7 ca 81 0c 52 4f 9e dc 19 be cc 5b 2a 56 63 a8 04 20 6e 96 2f 60>
+  }
+}
+[WhatsApp Handler] Message stored for client cmln2qtic00g08wmhf819jsxh
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 29ms (compile: 8ms, proxy.ts: 5ms, render: 17ms)
+ GET /api/comunicacao/conversations? 200 in 31ms (compile: 5ms, proxy.ts: 5ms, render: 21ms)
+ GET /api/comunicacao/conversations? 200 in 14ms (compile: 4ms, proxy.ts: 4ms, render: 6ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 15ms (compile: 6ms, proxy.ts: 4ms, render: 5ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 64ms (compile: 10ms, proxy.ts: 5ms, render: 49ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 30ms (compile: 2ms, proxy.ts: 5ms, render: 23ms)
+ POST /api/jobs/process 200 in 11ms (compile: 1580µs, proxy.ts: 2ms, render: 7ms)
+[WhatsApp Handler] Incoming message from +556199135861: Meu pai foi preso...
+[WhatsApp Handler] Found client by ClientPhone: Douglas Chuster (cmln2qtic00g08wmhf819jsxh)
+[WhatsApp Handler] Message stored for client cmln2qtic00g08wmhf819jsxh
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 23ms (compile: 5ms, proxy.ts: 4ms, render: 14ms)
+ GET /api/comunicacao/conversations? 200 in 26ms (compile: 3ms, proxy.ts: 5ms, render: 18ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 47ms (compile: 8ms, proxy.ts: 4ms, render: 34ms)
+ GET /api/comunicacao/conversations? 200 in 17ms (compile: 3ms, proxy.ts: 5ms, render: 9ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 18ms (compile: 5ms, proxy.ts: 5ms, render: 8ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 35ms (compile: 7ms, proxy.ts: 5ms, render: 23ms)
+ POST /api/jobs/process 200 in 16ms (compile: 5ms, proxy.ts: 4ms, render: 7ms)
+ POST /api/jobs/demandas 200 in 28ms (compile: 2ms, proxy.ts: 4ms, render: 22ms)
+ GET /api/comunicacao/stream 200 in 17.7min (compile: 2ms, proxy.ts: 3ms, render: 17.7min)
+ POST /comunicacao 200 in 161ms (compile: 4ms, proxy.ts: 4ms, render: 154ms)
+ GET /comunicacao 200 in 91ms (compile: 3ms, proxy.ts: 2ms, render: 85ms)
+ GET /comunicacao 200 in 1482ms (compile: 4ms, proxy.ts: 3ms, render: 1475ms)
+ GET /api/chat/users 200 in 32ms (compile: 3ms, proxy.ts: 5ms, render: 25ms)
+ GET /api/chat/conversations 200 in 37ms (compile: 6ms, proxy.ts: 4ms, render: 27ms)
+ GET /api/chat/unread-count 200 in 39ms (compile: 9ms, proxy.ts: 4ms, render: 26ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 38ms (compile: 15ms, proxy.ts: 3ms, render: 20ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 67ms (compile: 10ms, proxy.ts: 3ms, render: 53ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 43ms (compile: 10ms, proxy.ts: 14ms, render: 19ms)
+ GET /api/chat/conversations 200 in 28ms (compile: 2ms, proxy.ts: 3ms, render: 23ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 48ms (compile: 8ms, proxy.ts: 11ms, render: 29ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 80ms (compile: 12ms, proxy.ts: 10ms, render: 57ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 770ms (compile: 19ms, proxy.ts: 10ms, render: 741ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 803ms (compile: 28ms, proxy.ts: 10ms, render: 764ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 811ms (compile: 24ms, proxy.ts: 11ms, render: 776ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 853ms (compile: 14ms, proxy.ts: 10ms, render: 829ms)
+ GET /api/comunicacao/stream 200 in 5.0s (compile: 4ms, proxy.ts: 9ms, render: 4.9s)
+ POST /api/jobs/process 200 in 21ms (compile: 2ms, proxy.ts: 4ms, render: 15ms)
+ POST /comunicacao 200 in 154ms (compile: 5ms, proxy.ts: 4ms, render: 146ms)
+ GET /comunicacao 200 in 116ms (compile: 7ms, proxy.ts: 5ms, render: 105ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 19ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 12ms (compile: 3ms, proxy.ts: 6ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 6ms (compile: 1656µs, proxy.ts: 2ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 6ms (compile: 1560µs, proxy.ts: 3ms, render: 2ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 74ms (compile: 7ms, proxy.ts: 3ms, render: 64ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 8ms (compile: 1632µs, proxy.ts: 1820µs, render: 5ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 47ms (compile: 1702µs, proxy.ts: 1759µs, render: 44ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 765ms (compile: 1476µs, proxy.ts: 2ms, render: 761ms)
+ POST /api/jobs/process 200 in 13ms (compile: 2ms, proxy.ts: 2ms, render: 8ms)
+ POST /api/jobs/automacao-nacional 200 in 32ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ POST /api/jobs/demandas 200 in 35ms (compile: 8ms, proxy.ts: 4ms, render: 23ms)
+ POST /api/jobs/process 200 in 22ms (compile: 1650µs, proxy.ts: 3ms, render: 18ms)
+ GET /api/comunicacao/stream 200 in 2.1min (compile: 1868µs, proxy.ts: 3ms, render: 2.1min)
+✓ Compiled in 171ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.2s (compile: 6ms, proxy.ts: 4ms, render: 2.2s)
+ GET /comunicacao 200 in 2.3s (compile: 2.0s, proxy.ts: 4ms, render: 209ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 131ms (compile: 10ms, proxy.ts: 3ms, render: 118ms)
+ GET /comunicacao 200 in 2.1s (compile: 1902ms, proxy.ts: 3ms, render: 206ms)
+ POST /api/jobs/process 200 in 20ms (compile: 2ms, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/publicacoes 200 in 459ms (compile: 441ms, proxy.ts: 4ms, render: 14ms)
+ POST /api/jobs/process 200 in 461ms (compile: 9ms, proxy.ts: 4ms, render: 448ms)
+ POST /api/jobs/demandas 200 in 466ms (compile: 5ms, proxy.ts: 6ms, render: 455ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 41ms (compile: 5ms, proxy.ts: 11ms, render: 25ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 12ms (compile: 3ms, proxy.ts: 4ms, render: 6ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 88ms (compile: 8ms, proxy.ts: 11ms, render: 69ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 43ms (compile: 3ms, proxy.ts: 3ms, render: 37ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 764ms (compile: 12ms, proxy.ts: 11ms, render: 741ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 786ms (compile: 14ms, proxy.ts: 11ms, render: 761ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 810ms (compile: 16ms, proxy.ts: 8ms, render: 786ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 835ms (compile: 9ms, proxy.ts: 11ms, render: 814ms)
+[WhatsApp Handler] Incoming message from +556199135861: meu pai foi pres...
+[WhatsApp Handler] Found client by ClientPhone: Douglas Chuster (cmln2qtic00g08wmhf819jsxh)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 16ms (compile: 6ms, proxy.ts: 4ms, render: 7ms)
+ GET /api/comunicacao/conversations? 200 in 18ms (compile: 3ms, proxy.ts: 4ms, render: 11ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 39ms (compile: 8ms, proxy.ts: 4ms, render: 27ms)
+[WhatsApp Handler] Incoming message from +556199135861: preso...
+[WhatsApp Handler] Found client by ClientPhone: Douglas Chuster (cmln2qtic00g08wmhf819jsxh)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 21ms (compile: 8ms, proxy.ts: 6ms, render: 7ms)
+ GET /api/comunicacao/conversations? 200 in 32ms (compile: 5ms, proxy.ts: 5ms, render: 22ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 46ms (compile: 10ms, proxy.ts: 5ms, render: 30ms)
+ POST /api/jobs/process 200 in 11ms (compile: 1793µs, proxy.ts: 2ms, render: 7ms)
+Closing session: SessionEntry {
+  _chains: {
+    'Bf7RqTSkuo4MzTCAl8R5BI7r8uMlfyDiOXn4pk0Tt/wi': { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 1477366669,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 fe d1 a9 34 a4 ba 8e 0c cd 30 80 97 c4 79 04 8e eb f2 e3 25 7f 20 e2 39 79 f8 a6 4d 13 b7 fc 22>,
+      privKey: <Buffer 00 ef 43 b1 6e 15 1b 7f 2e 52 38 f4 d1 df bd 22 0a dc 6a b8 62 db b8 0c 91 16 b9 7a 4e 27 28 58>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 ca 78 2a 92 71 3d 02 f0 48 d2 8d b5 1b 96 05 fb 42 67 9e 07 15 a8 ce 26 6a 76 a4 5e 32 4b a2 38>,
+    previousCounter: 0,
+    rootKey: <Buffer 3a 61 6e ec 74 59 72 f8 0d fb fa 36 38 36 a7 b4 c6 5c 77 de ff 37 d0 27 7a b0 bb cd dc d9 c3 3d>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 7f e6 51 28 6b ca 8b 7b e5 a6 97 43 87 3c b8 7b de 49 f0 36 f2 48 1a dc d3 26 19 03 b1 2d 99 61>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773273968807,
+    created: 1773273968807,
+    remoteIdentityKey: <Buffer 05 65 4d 49 8c 7c 2e 63 0f 64 91 4c 7c 86 8e f6 37 7c 55 a2 c9 fa 9b e5 07 c5 de dd d3 ab 01 94 50>
+  },
+  pendingPreKey: {
+    signedKeyId: 10049963,
+    baseKey: <Buffer 05 7f e6 51 28 6b ca 8b 7b e5 a6 97 43 87 3c b8 7b de 49 f0 36 f2 48 1a dc d3 26 19 03 b1 2d 99 61>,
+    preKeyId: 16571865
+  }
+}
+Closing session: SessionEntry {
+  _chains: {
+    BU8JS83ULw0sBUM1fIAomUrx4M26FZnujqnWXxmDHioQ: { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 2031889020,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 4f 09 4b cd d4 2f 0d 2c 05 43 35 7c 80 28 99 4a f1 e0 cd ba 15 99 ee 8e a9 d6 5f 19 83 1e 2a 10>,
+      privKey: <Buffer 38 68 34 e3 4e ba de 61 22 cf 15 3c 70 d6 6b a5 ca d8 e6 34 d7 ef a6 6f 10 2b 3d 07 4b ce 2d 73>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 da d0 d2 21 db 92 4f 4e 19 fa c4 e8 7d 0c 34 84 95 2b c6 fd 18 ab 80 8e 92 2a 75 a0 c5 52 97 67>,
+    previousCounter: 0,
+    rootKey: <Buffer 2d 69 b2 c0 2f 07 4b a8 80 35 e9 ae a5 f5 42 0e c9 25 ab 70 72 93 a5 f4 43 10 a5 91 6b b3 a7 d9>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 7a 72 f4 f4 c7 3b 08 86 da 7a 24 32 8e fd 96 a8 c0 d3 80 00 90 af f5 0b b8 ae d6 d5 2f ea 0a 71>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773273968809,
+    created: 1773273968809,
+    remoteIdentityKey: <Buffer 05 0b 8f ef 73 b1 67 09 c0 6e 91 b7 ca 81 0c 52 4f 9e dc 19 be cc 5b 2a 56 63 a8 04 20 6e 96 2f 60>
+  },
+  pendingPreKey: {
+    signedKeyId: 12849778,
+    baseKey: <Buffer 05 7a 72 f4 f4 c7 3b 08 86 da 7a 24 32 8e fd 96 a8 c0 d3 80 00 90 af f5 0b b8 ae d6 d5 2f ea 0a 71>,
+    preKeyId: 8451057
+  }
+}
+[WhatsApp Handler] Message stored for client cmln2qtic00g08wmhf819jsxh
+ GET /api/comunicacao/conversations? 200 in 30ms (compile: 3ms, proxy.ts: 5ms, render: 21ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 30ms (compile: 6ms, proxy.ts: 5ms, render: 19ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 51ms (compile: 8ms, proxy.ts: 4ms, render: 38ms)
+[WhatsApp Handler] Message stored for client cmln2qtic00g08wmhf819jsxh
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 28ms (compile: 7ms, proxy.ts: 4ms, render: 18ms)
+ GET /api/comunicacao/conversations? 200 in 30ms (compile: 3ms, proxy.ts: 4ms, render: 23ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 52ms (compile: 10ms, proxy.ts: 4ms, render: 38ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 17ms (compile: 6ms, proxy.ts: 6ms, render: 5ms)
+ GET /api/comunicacao/conversations? 200 in 18ms (compile: 4ms, proxy.ts: 6ms, render: 9ms)
+ GET /api/comunicacao/conversations? 200 in 14ms (compile: 3ms, proxy.ts: 3ms, render: 7ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 15ms (compile: 6ms, proxy.ts: 3ms, render: 6ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 50ms (compile: 7ms, proxy.ts: 6ms, render: 37ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 31ms (compile: 2ms, proxy.ts: 5ms, render: 24ms)
+ POST /api/jobs/process 200 in 20ms (compile: 2ms, proxy.ts: 3ms, render: 15ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 28ms (compile: 6ms, proxy.ts: 5ms, render: 17ms)
+ GET /api/comunicacao/conversations? 200 in 30ms (compile: 4ms, proxy.ts: 5ms, render: 21ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 55ms (compile: 9ms, proxy.ts: 5ms, render: 41ms)
+ POST /api/jobs/demandas 200 in 21ms (compile: 1840µs, proxy.ts: 2ms, render: 17ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1739µs, proxy.ts: 3ms, render: 14ms)
+✓ Compiled in 428ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.8s (compile: 12ms, proxy.ts: 8ms, render: 2.8s)
+ GET /comunicacao 200 in 2.8s (compile: 2.6s, proxy.ts: 8ms, render: 176ms)
+✓ Compiled in 173ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.0s (compile: 4ms, proxy.ts: 3ms, render: 2.0s)
+ GET /comunicacao 200 in 2.0s (compile: 1872ms, proxy.ts: 3ms, render: 149ms)
+ POST /api/jobs/process 200 in 23ms (compile: 1935µs, proxy.ts: 5ms, render: 17ms)
+ GET /api/comunicacao/stream 200 in 6.7min (compile: 1802µs, proxy.ts: 3ms, render: 6.7min)
+✓ Compiled in 195ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.3s (compile: 6ms, proxy.ts: 5ms, render: 2.3s)
+ GET /comunicacao 200 in 2.4s (compile: 2.1s, proxy.ts: 5ms, render: 233ms)
+✓ Compiled in 168ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 87ms (compile: 4ms, proxy.ts: 3ms, render: 81ms)
+ GET /comunicacao 200 in 2.3s (compile: 2.1s, proxy.ts: 4ms, render: 188ms)
+ POST /api/jobs/automacao-nacional 200 in 41ms (compile: 5ms, proxy.ts: 6ms, render: 30ms)
+ POST /api/jobs/process 200 in 41ms (compile: 13ms, proxy.ts: 6ms, render: 23ms)
+ POST /api/jobs/demandas 200 in 43ms (compile: 16ms, proxy.ts: 5ms, render: 22ms)
+ POST /api/jobs/process 200 in 20ms (compile: 2ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1730µs, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 22ms (compile: 2ms, proxy.ts: 2ms, render: 18ms)
+ POST /api/jobs/process 200 in 22ms (compile: 2ms, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1965µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/process 200 in 22ms (compile: 4ms, proxy.ts: 4ms, render: 13ms)
+ POST /api/jobs/demandas 200 in 24ms (compile: 3ms, proxy.ts: 4ms, render: 17ms)
+ POST /api/jobs/process 200 in 19ms (compile: 2ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1702µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/automacao-nacional 200 in 23ms (compile: 3ms, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 26ms (compile: 5ms, proxy.ts: 4ms, render: 17ms)
+✓ Compiled in 435ms
+ POST /api/jobs/process 200 in 21ms (compile: 1802µs, proxy.ts: 3ms, render: 17ms)
+ POST /api/jobs/process 200 in 21ms (compile: 3ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 25ms (compile: 5ms, proxy.ts: 5ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 28ms (compile: 3ms, proxy.ts: 5ms, render: 20ms)
+ POST /api/jobs/process 200 in 23ms (compile: 3ms, proxy.ts: 4ms, render: 17ms)
+✓ Compiled in 255ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.3s (compile: 10ms, proxy.ts: 4ms, render: 2.3s)
+ GET /comunicacao 200 in 2.3s (compile: 2.1s, proxy.ts: 4ms, render: 239ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 4.5s (compile: 4.2s, proxy.ts: 4ms, render: 237ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 74ms (compile: 4ms, proxy.ts: 3ms, render: 67ms)
+ GET /comunicacao 200 in 4.6s (compile: 2.1s, proxy.ts: 3ms, render: 2.4s)
+ GET /comunicacao 200 in 271ms (compile: 29ms, proxy.ts: 16ms, render: 226ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.4s (compile: 5ms, proxy.ts: 3ms, render: 2.4s)
+ GET /comunicacao 200 in 2.4s (compile: 2.2s, proxy.ts: 4ms, render: 186ms)
+✓ Compiled in 283ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 151ms (compile: 9ms, proxy.ts: 3ms, render: 139ms)
+ GET /comunicacao 200 in 2.5s (compile: 2.3s, proxy.ts: 5ms, render: 179ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.3s (compile: 5ms, proxy.ts: 4ms, render: 2.3s)
+ GET /comunicacao 200 in 2.3s (compile: 2.1s, proxy.ts: 4ms, render: 221ms)
+✓ Compiled in 164ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.3s (compile: 7ms, proxy.ts: 4ms, render: 2.3s)
+ GET /comunicacao 200 in 2.3s (compile: 2.1s, proxy.ts: 4ms, render: 186ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.2s (compile: 5ms, proxy.ts: 4ms, render: 2.2s)
+ GET /comunicacao 200 in 2.2s (compile: 2.1s, proxy.ts: 4ms, render: 163ms)
+ POST /api/jobs/process 200 in 14ms (compile: 2ms, proxy.ts: 3ms, render: 9ms)
+○ Compiling /documentos ...
+✓ Compiled in 2.6s
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 7.3s (compile: 2.9s, proxy.ts: 7ms, render: 4.4s)
+ GET /comunicacao 200 in 7.3s (compile: 6.2s, proxy.ts: 6ms, render: 1081ms)
+ GET /comunicacao 200 in 1300ms (compile: 65ms, proxy.ts: 19ms, render: 1216ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 1302ms (compile: 22ms, proxy.ts: 19ms, render: 1261ms)
+ GET /comunicacao 200 in 355ms (compile: 178ms, proxy.ts: 117ms, render: 59ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 356ms (compile: 162ms, proxy.ts: 117ms, render: 76ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 1698ms (compile: 120ms, proxy.ts: 19ms, render: 1560ms)
+ GET /comunicacao 200 in 1746ms (compile: 135ms, proxy.ts: 19ms, render: 1592ms)
+ GET /api/chat/users 200 in 54ms (compile: 11ms, proxy.ts: 6ms, render: 37ms)
+ GET /api/chat/unread-count 200 in 56ms (compile: 5ms, proxy.ts: 5ms, render: 46ms)
+ GET /api/chat/conversations 200 in 59ms (compile: 15ms, proxy.ts: 5ms, render: 39ms)
+ GET /api/chat/users 200 in 49ms (compile: 5ms, proxy.ts: 6ms, render: 38ms)
+ GET /api/chat/unread-count 200 in 1837ms (compile: 8ms, proxy.ts: 6ms, render: 1823ms)
+ GET /api/chat/conversations 200 in 1840ms (compile: 10ms, proxy.ts: 6ms, render: 1824ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 1857ms (compile: 1813ms, proxy.ts: 9ms, render: 35ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 1545ms (compile: 17ms, proxy.ts: 5ms, render: 1523ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 1575ms (compile: 1501ms, proxy.ts: 5ms, render: 69ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 55ms (compile: 18ms, proxy.ts: 7ms, render: 29ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 87ms (compile: 21ms, proxy.ts: 7ms, render: 59ms)
+ GET /api/chat/conversations 200 in 45ms (compile: 5ms, proxy.ts: 5ms, render: 36ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 56ms (compile: 14ms, proxy.ts: 5ms, render: 36ms)
+ GET /api/chat/conversations 200 in 33ms (compile: 3ms, proxy.ts: 5ms, render: 25ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 39ms (compile: 9ms, proxy.ts: 6ms, render: 24ms)
+ GET /api/chat/conversations 200 in 32ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 38ms (compile: 11ms, proxy.ts: 3ms, render: 24ms)
+ GET /api/chat/conversations 200 in 25ms (compile: 1821µs, proxy.ts: 3ms, render: 21ms)
+ POST /api/jobs/demandas 200 in 1764ms (compile: 1712ms, proxy.ts: 3ms, render: 49ms)
+✓ Compiled in 203ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 4.6s (compile: 1936ms, proxy.ts: 270ms, render: 2.3s)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 168ms (compile: 12ms, proxy.ts: 5ms, render: 151ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 305ms (compile: 37ms, proxy.ts: 4ms, render: 264ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 268ms (compile: 17ms, proxy.ts: 11ms, render: 240ms)
+ GET /comunicacao 200 in 5.1s (compile: 4.1s, proxy.ts: 270ms, render: 787ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 270ms (compile: 16ms, proxy.ts: 13ms, render: 241ms)
+ GET /comunicacao 200 in 711ms (compile: 6ms, proxy.ts: 4ms, render: 701ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 187ms (compile: 4ms, proxy.ts: 4ms, render: 180ms)
+ GET /comunicacao 200 in 688ms (compile: 4ms, proxy.ts: 17ms, render: 667ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 212ms (compile: 5ms, proxy.ts: 4ms, render: 204ms)
+ GET /comunicacao 200 in 618ms (compile: 5ms, proxy.ts: 3ms, render: 611ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 230ms (compile: 9ms, proxy.ts: 14ms, render: 207ms)
+ GET /comunicacao 200 in 650ms (compile: 5ms, proxy.ts: 3ms, render: 643ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 315ms (compile: 33ms, proxy.ts: 4ms, render: 278ms)
+ GET /comunicacao 200 in 665ms (compile: 4ms, proxy.ts: 2ms, render: 659ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 284ms (compile: 9ms, proxy.ts: 13ms, render: 262ms)
+ GET /comunicacao 200 in 761ms (compile: 18ms, proxy.ts: 11ms, render: 732ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 277ms (compile: 8ms, proxy.ts: 18ms, render: 251ms)
+ GET /comunicacao 200 in 771ms (compile: 5ms, proxy.ts: 5ms, render: 762ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 254ms (compile: 7ms, proxy.ts: 4ms, render: 244ms)
+ GET /comunicacao 200 in 705ms (compile: 5ms, proxy.ts: 5ms, render: 696ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 272ms (compile: 5ms, proxy.ts: 4ms, render: 264ms)
+ GET /comunicacao 200 in 729ms (compile: 6ms, proxy.ts: 3ms, render: 719ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 340ms (compile: 8ms, proxy.ts: 38ms, render: 294ms)
+ GET /comunicacao 200 in 779ms (compile: 4ms, proxy.ts: 3ms, render: 772ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 338ms (compile: 42ms, proxy.ts: 4ms, render: 292ms)
+ GET /comunicacao 200 in 744ms (compile: 6ms, proxy.ts: 3ms, render: 735ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 283ms (compile: 18ms, proxy.ts: 10ms, render: 255ms)
+ GET /comunicacao 200 in 820ms (compile: 7ms, proxy.ts: 4ms, render: 810ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 293ms (compile: 13ms, proxy.ts: 6ms, render: 275ms)
+ GET /comunicacao 200 in 801ms (compile: 6ms, proxy.ts: 5ms, render: 789ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 231ms (compile: 5ms, proxy.ts: 3ms, render: 224ms)
+ GET /comunicacao 200 in 752ms (compile: 7ms, proxy.ts: 19ms, render: 726ms)
+ GET /comunicacao 200 in 692ms (compile: 4ms, proxy.ts: 3ms, render: 685ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 234ms (compile: 5ms, proxy.ts: 3ms, render: 226ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 253ms (compile: 15ms, proxy.ts: 12ms, render: 225ms)
+ GET /comunicacao 200 in 752ms (compile: 5ms, proxy.ts: 3ms, render: 743ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 353ms (compile: 38ms, proxy.ts: 4ms, render: 312ms)
+ GET /comunicacao 200 in 763ms (compile: 4ms, proxy.ts: 3ms, render: 756ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 291ms (compile: 17ms, proxy.ts: 18ms, render: 255ms)
+ GET /comunicacao 200 in 812ms (compile: 5ms, proxy.ts: 11ms, render: 796ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 288ms (compile: 12ms, proxy.ts: 21ms, render: 255ms)
+ GET /comunicacao 200 in 813ms (compile: 5ms, proxy.ts: 4ms, render: 804ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 240ms (compile: 4ms, proxy.ts: 3ms, render: 233ms)
+ GET /comunicacao 200 in 750ms (compile: 5ms, proxy.ts: 38ms, render: 707ms)
+ GET /comunicacao 200 in 715ms (compile: 11ms, proxy.ts: 4ms, render: 700ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 262ms (compile: 4ms, proxy.ts: 3ms, render: 255ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 321ms (compile: 13ms, proxy.ts: 45ms, render: 263ms)
+ GET /comunicacao 200 in 768ms (compile: 5ms, proxy.ts: 3ms, render: 760ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 333ms (compile: 8ms, proxy.ts: 41ms, render: 284ms)
+ GET /comunicacao 200 in 761ms (compile: 5ms, proxy.ts: 3ms, render: 753ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 289ms (compile: 9ms, proxy.ts: 19ms, render: 262ms)
+ GET /comunicacao 200 in 803ms (compile: 6ms, proxy.ts: 3ms, render: 793ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 281ms (compile: 21ms, proxy.ts: 18ms, render: 241ms)
+ GET /comunicacao 200 in 774ms (compile: 5ms, proxy.ts: 3ms, render: 766ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 233ms (compile: 4ms, proxy.ts: 4ms, render: 225ms)
+ GET /comunicacao 200 in 691ms (compile: 4ms, proxy.ts: 4ms, render: 683ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 242ms (compile: 4ms, proxy.ts: 3ms, render: 235ms)
+ GET /comunicacao 200 in 750ms (compile: 4ms, proxy.ts: 3ms, render: 743ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 315ms (compile: 42ms, proxy.ts: 5ms, render: 268ms)
+ GET /comunicacao 200 in 712ms (compile: 4ms, proxy.ts: 3ms, render: 704ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 260ms (compile: 20ms, proxy.ts: 9ms, render: 231ms)
+ GET /comunicacao 200 in 688ms (compile: 5ms, proxy.ts: 2ms, render: 681ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 309ms (compile: 17ms, proxy.ts: 20ms, render: 272ms)
+ GET /comunicacao 200 in 785ms (compile: 6ms, proxy.ts: 5ms, render: 774ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 286ms (compile: 13ms, proxy.ts: 6ms, render: 267ms)
+ GET /comunicacao 200 in 786ms (compile: 4ms, proxy.ts: 11ms, render: 771ms)
+ GET /comunicacao 200 in 700ms (compile: 5ms, proxy.ts: 3ms, render: 692ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 241ms (compile: 4ms, proxy.ts: 3ms, render: 234ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 238ms (compile: 5ms, proxy.ts: 3ms, render: 230ms)
+ GET /comunicacao 200 in 741ms (compile: 6ms, proxy.ts: 4ms, render: 732ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 322ms (compile: 38ms, proxy.ts: 13ms, render: 271ms)
+ GET /comunicacao 200 in 672ms (compile: 5ms, proxy.ts: 4ms, render: 664ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 276ms (compile: 6ms, proxy.ts: 19ms, render: 250ms)
+ GET /comunicacao 200 in 682ms (compile: 4ms, proxy.ts: 3ms, render: 675ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 291ms (compile: 28ms, proxy.ts: 12ms, render: 251ms)
+ GET /comunicacao 200 in 805ms (compile: 14ms, proxy.ts: 5ms, render: 786ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 336ms (compile: 8ms, proxy.ts: 40ms, render: 288ms)
+ GET /comunicacao 200 in 806ms (compile: 4ms, proxy.ts: 4ms, render: 798ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 230ms (compile: 6ms, proxy.ts: 4ms, render: 220ms)
+ GET /comunicacao 200 in 714ms (compile: 4ms, proxy.ts: 3ms, render: 707ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 237ms (compile: 4ms, proxy.ts: 3ms, render: 231ms)
+ GET /comunicacao 200 in 748ms (compile: 7ms, proxy.ts: 4ms, render: 737ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 331ms (compile: 47ms, proxy.ts: 4ms, render: 281ms)
+ GET /comunicacao 200 in 705ms (compile: 5ms, proxy.ts: 3ms, render: 697ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 278ms (compile: 17ms, proxy.ts: 21ms, render: 240ms)
+ GET /comunicacao 200 in 690ms (compile: 5ms, proxy.ts: 18ms, render: 667ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 257ms (compile: 24ms, proxy.ts: 5ms, render: 228ms)
+ GET /comunicacao 200 in 757ms (compile: 6ms, proxy.ts: 4ms, render: 746ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 254ms (compile: 8ms, proxy.ts: 34ms, render: 212ms)
+ GET /comunicacao 200 in 758ms (compile: 4ms, proxy.ts: 3ms, render: 751ms)
+ GET /comunicacao 200 in 663ms (compile: 4ms, proxy.ts: 4ms, render: 656ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 241ms (compile: 6ms, proxy.ts: 4ms, render: 231ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 225ms (compile: 5ms, proxy.ts: 4ms, render: 216ms)
+ GET /comunicacao 200 in 659ms (compile: 5ms, proxy.ts: 4ms, render: 650ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 314ms (compile: 34ms, proxy.ts: 4ms, render: 276ms)
+ GET /comunicacao 200 in 673ms (compile: 5ms, proxy.ts: 10ms, render: 658ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 284ms (compile: 11ms, proxy.ts: 6ms, render: 266ms)
+ GET /comunicacao 200 in 693ms (compile: 13ms, proxy.ts: 10ms, render: 669ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 291ms (compile: 10ms, proxy.ts: 38ms, render: 243ms)
+ GET /comunicacao 200 in 766ms (compile: 4ms, proxy.ts: 4ms, render: 757ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 285ms (compile: 35ms, proxy.ts: 4ms, render: 246ms)
+ GET /comunicacao 200 in 786ms (compile: 5ms, proxy.ts: 4ms, render: 777ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 244ms (compile: 6ms, proxy.ts: 3ms, render: 234ms)
+ GET /comunicacao 200 in 698ms (compile: 5ms, proxy.ts: 3ms, render: 690ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 263ms (compile: 4ms, proxy.ts: 2ms, render: 257ms)
+ GET /comunicacao 200 in 731ms (compile: 5ms, proxy.ts: 4ms, render: 721ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 350ms (compile: 41ms, proxy.ts: 4ms, render: 305ms)
+ GET /comunicacao 200 in 753ms (compile: 5ms, proxy.ts: 22ms, render: 726ms)
+ GET /comunicacao 200 in 726ms (compile: 14ms, proxy.ts: 11ms, render: 701ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 280ms (compile: 24ms, proxy.ts: 6ms, render: 249ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 302ms (compile: 38ms, proxy.ts: 5ms, render: 259ms)
+ GET /comunicacao 200 in 784ms (compile: 5ms, proxy.ts: 4ms, render: 775ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 300ms (compile: 7ms, proxy.ts: 46ms, render: 248ms)
+ GET /comunicacao 200 in 748ms (compile: 4ms, proxy.ts: 4ms, render: 740ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 238ms (compile: 5ms, proxy.ts: 3ms, render: 230ms)
+ GET /comunicacao 200 in 672ms (compile: 7ms, proxy.ts: 4ms, render: 661ms)
+ GET /comunicacao 200 in 680ms (compile: 5ms, proxy.ts: 3ms, render: 672ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 258ms (compile: 5ms, proxy.ts: 3ms, render: 250ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 308ms (compile: 43ms, proxy.ts: 3ms, render: 262ms)
+ GET /comunicacao 200 in 711ms (compile: 3ms, proxy.ts: 3ms, render: 705ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 314ms (compile: 9ms, proxy.ts: 41ms, render: 264ms)
+ GET /comunicacao 200 in 705ms (compile: 13ms, proxy.ts: 12ms, render: 679ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 309ms (compile: 17ms, proxy.ts: 22ms, render: 270ms)
+ GET /comunicacao 200 in 775ms (compile: 5ms, proxy.ts: 4ms, render: 765ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 323ms (compile: 9ms, proxy.ts: 43ms, render: 271ms)
+ GET /comunicacao 200 in 773ms (compile: 5ms, proxy.ts: 4ms, render: 763ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 237ms (compile: 4ms, proxy.ts: 3ms, render: 230ms)
+ GET /comunicacao 200 in 690ms (compile: 4ms, proxy.ts: 4ms, render: 682ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 238ms (compile: 3ms, proxy.ts: 4ms, render: 231ms)
+ GET /comunicacao 200 in 741ms (compile: 5ms, proxy.ts: 3ms, render: 732ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 315ms (compile: 41ms, proxy.ts: 5ms, render: 268ms)
+ GET /comunicacao 200 in 680ms (compile: 4ms, proxy.ts: 3ms, render: 673ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 278ms (compile: 11ms, proxy.ts: 19ms, render: 249ms)
+ GET /comunicacao 200 in 688ms (compile: 6ms, proxy.ts: 4ms, render: 678ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 260ms (compile: 24ms, proxy.ts: 5ms, render: 231ms)
+ GET /comunicacao 200 in 778ms (compile: 6ms, proxy.ts: 13ms, render: 759ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 267ms (compile: 36ms, proxy.ts: 4ms, render: 227ms)
+ GET /comunicacao 200 in 800ms (compile: 5ms, proxy.ts: 3ms, render: 791ms)
+ GET /comunicacao 200 in 724ms (compile: 5ms, proxy.ts: 3ms, render: 716ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 287ms (compile: 7ms, proxy.ts: 4ms, render: 277ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 262ms (compile: 4ms, proxy.ts: 4ms, render: 254ms)
+ GET /comunicacao 200 in 729ms (compile: 5ms, proxy.ts: 4ms, render: 720ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 287ms (compile: 11ms, proxy.ts: 8ms, render: 268ms)
+ GET /comunicacao 200 in 768ms (compile: 4ms, proxy.ts: 21ms, render: 743ms)
+ GET /comunicacao 200 in 762ms (compile: 15ms, proxy.ts: 12ms, render: 735ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 341ms (compile: 6ms, proxy.ts: 36ms, render: 299ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 310ms (compile: 40ms, proxy.ts: 3ms, render: 267ms)
+ GET /comunicacao 200 in 776ms (compile: 7ms, proxy.ts: 3ms, render: 766ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 252ms (compile: 36ms, proxy.ts: 4ms, render: 212ms)
+ GET /comunicacao 200 in 775ms (compile: 6ms, proxy.ts: 3ms, render: 766ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 238ms (compile: 7ms, proxy.ts: 3ms, render: 228ms)
+ GET /comunicacao 200 in 667ms (compile: 5ms, proxy.ts: 5ms, render: 658ms)
+ GET /comunicacao 200 in 676ms (compile: 4ms, proxy.ts: 4ms, render: 668ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 249ms (compile: 4ms, proxy.ts: 3ms, render: 242ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 348ms (compile: 23ms, proxy.ts: 6ms, render: 318ms)
+ GET /comunicacao 200 in 754ms (compile: 4ms, proxy.ts: 3ms, render: 747ms)
+ GET /comunicacao 200 in 771ms (compile: 12ms, proxy.ts: 11ms, render: 749ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 374ms (compile: 43ms, proxy.ts: 5ms, render: 327ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 296ms (compile: 46ms, proxy.ts: 4ms, render: 246ms)
+ GET /comunicacao 200 in 822ms (compile: 4ms, proxy.ts: 4ms, render: 814ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 255ms (compile: 38ms, proxy.ts: 4ms, render: 214ms)
+ GET /comunicacao 200 in 792ms (compile: 6ms, proxy.ts: 5ms, render: 781ms)
+ GET /comunicacao 200 in 649ms (compile: 5ms, proxy.ts: 4ms, render: 641ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 233ms (compile: 14ms, proxy.ts: 4ms, render: 215ms)
+ GET /comunicacao 200 in 641ms (compile: 4ms, proxy.ts: 4ms, render: 633ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 227ms (compile: 5ms, proxy.ts: 3ms, render: 220ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 304ms (compile: 37ms, proxy.ts: 4ms, render: 262ms)
+ GET /comunicacao 200 in 646ms (compile: 4ms, proxy.ts: 3ms, render: 639ms)
+ GET /comunicacao 200 in 708ms (compile: 35ms, proxy.ts: 12ms, render: 661ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 322ms (compile: 15ms, proxy.ts: 34ms, render: 273ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 336ms (compile: 37ms, proxy.ts: 5ms, render: 294ms)
+ GET /comunicacao 200 in 748ms (compile: 6ms, proxy.ts: 4ms, render: 737ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 271ms (compile: 42ms, proxy.ts: 4ms, render: 225ms)
+ GET /comunicacao 200 in 791ms (compile: 5ms, proxy.ts: 4ms, render: 782ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 264ms (compile: 4ms, proxy.ts: 3ms, render: 256ms)
+ GET /comunicacao 200 in 711ms (compile: 6ms, proxy.ts: 5ms, render: 700ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 236ms (compile: 4ms, proxy.ts: 3ms, render: 229ms)
+ GET /comunicacao 200 in 707ms (compile: 6ms, proxy.ts: 5ms, render: 696ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 292ms (compile: 11ms, proxy.ts: 4ms, render: 276ms)
+ GET /comunicacao 200 in 699ms (compile: 4ms, proxy.ts: 3ms, render: 692ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 316ms (compile: 39ms, proxy.ts: 4ms, render: 273ms)
+ GET /comunicacao 200 in 720ms (compile: 15ms, proxy.ts: 12ms, render: 693ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 306ms (compile: 7ms, proxy.ts: 34ms, render: 266ms)
+ GET /comunicacao 200 in 756ms (compile: 4ms, proxy.ts: 3ms, render: 749ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 267ms (compile: 39ms, proxy.ts: 4ms, render: 223ms)
+ GET /comunicacao 200 in 759ms (compile: 5ms, proxy.ts: 5ms, render: 749ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 232ms (compile: 6ms, proxy.ts: 3ms, render: 223ms)
+ GET /comunicacao 200 in 663ms (compile: 5ms, proxy.ts: 4ms, render: 653ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 223ms (compile: 4ms, proxy.ts: 3ms, render: 216ms)
+ GET /comunicacao 200 in 668ms (compile: 6ms, proxy.ts: 5ms, render: 657ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 325ms (compile: 39ms, proxy.ts: 3ms, render: 282ms)
+ GET /comunicacao 200 in 679ms (compile: 5ms, proxy.ts: 3ms, render: 671ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 315ms (compile: 7ms, proxy.ts: 38ms, render: 270ms)
+ GET /comunicacao 200 in 715ms (compile: 14ms, proxy.ts: 31ms, render: 671ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 305ms (compile: 37ms, proxy.ts: 4ms, render: 264ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 263ms (compile: 37ms, proxy.ts: 4ms, render: 222ms)
+ GET /comunicacao 200 in 754ms (compile: 5ms, proxy.ts: 4ms, render: 745ms)
+ GET /comunicacao 200 in 762ms (compile: 6ms, proxy.ts: 4ms, render: 752ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 246ms (compile: 6ms, proxy.ts: 5ms, render: 234ms)
+ GET /comunicacao 200 in 674ms (compile: 6ms, proxy.ts: 5ms, render: 663ms)
+ GET /comunicacao 200 in 685ms (compile: 5ms, proxy.ts: 5ms, render: 675ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 266ms (compile: 5ms, proxy.ts: 3ms, render: 259ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 370ms (compile: 40ms, proxy.ts: 4ms, render: 327ms)
+ GET /comunicacao 200 in 742ms (compile: 4ms, proxy.ts: 3ms, render: 735ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 674ms (compile: 15ms, proxy.ts: 7ms, render: 652ms)
+ GET /comunicacao 200 in 1154ms (compile: 42ms, proxy.ts: 5ms, render: 1108ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 676ms (compile: 8ms, proxy.ts: 412ms, render: 256ms)
+ GET /comunicacao 200 in 1160ms (compile: 5ms, proxy.ts: 5ms, render: 1150ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 250ms (compile: 37ms, proxy.ts: 3ms, render: 209ms)
+ GET /comunicacao 200 in 1147ms (compile: 6ms, proxy.ts: 16ms, render: 1124ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 213ms (compile: 4ms, proxy.ts: 5ms, render: 204ms)
+ GET /comunicacao 200 in 1002ms (compile: 378ms, proxy.ts: 4ms, render: 621ms)
+ GET /comunicacao 200 in 627ms (compile: 5ms, proxy.ts: 4ms, render: 618ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 217ms (compile: 4ms, proxy.ts: 3ms, render: 209ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 317ms (compile: 33ms, proxy.ts: 3ms, render: 280ms)
+ GET /comunicacao 200 in 643ms (compile: 4ms, proxy.ts: 3ms, render: 636ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 314ms (compile: 40ms, proxy.ts: 3ms, render: 270ms)
+ GET /comunicacao 200 in 742ms (compile: 31ms, proxy.ts: 4ms, render: 707ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 324ms (compile: 6ms, proxy.ts: 35ms, render: 283ms)
+ GET /comunicacao 200 in 758ms (compile: 5ms, proxy.ts: 5ms, render: 749ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 231ms (compile: 18ms, proxy.ts: 13ms, render: 199ms)
+ GET /comunicacao 200 in 747ms (compile: 5ms, proxy.ts: 4ms, render: 738ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 214ms (compile: 5ms, proxy.ts: 3ms, render: 207ms)
+ GET /comunicacao 200 in 657ms (compile: 5ms, proxy.ts: 3ms, render: 648ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 212ms (compile: 4ms, proxy.ts: 3ms, render: 205ms)
+ GET /comunicacao 200 in 648ms (compile: 4ms, proxy.ts: 4ms, render: 640ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 296ms (compile: 38ms, proxy.ts: 3ms, render: 256ms)
+ GET /comunicacao 200 in 666ms (compile: 3ms, proxy.ts: 5ms, render: 658ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 310ms (compile: 17ms, proxy.ts: 34ms, render: 259ms)
+ GET /comunicacao 200 in 646ms (compile: 11ms, proxy.ts: 9ms, render: 627ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 266ms (compile: 11ms, proxy.ts: 15ms, render: 240ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 249ms (compile: 42ms, proxy.ts: 4ms, render: 203ms)
+ GET /comunicacao 200 in 715ms (compile: 5ms, proxy.ts: 4ms, render: 707ms)
+ GET /comunicacao 200 in 731ms (compile: 5ms, proxy.ts: 4ms, render: 722ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 241ms (compile: 4ms, proxy.ts: 3ms, render: 233ms)
+ GET /comunicacao 200 in 662ms (compile: 4ms, proxy.ts: 3ms, render: 654ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 256ms (compile: 3ms, proxy.ts: 3ms, render: 250ms)
+ GET /comunicacao 200 in 676ms (compile: 5ms, proxy.ts: 5ms, render: 666ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 334ms (compile: 12ms, proxy.ts: 39ms, render: 283ms)
+ GET /comunicacao 200 in 731ms (compile: 4ms, proxy.ts: 3ms, render: 724ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 318ms (compile: 44ms, proxy.ts: 11ms, render: 263ms)
+ GET /comunicacao 200 in 743ms (compile: 32ms, proxy.ts: 3ms, render: 708ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 258ms (compile: 9ms, proxy.ts: 5ms, render: 244ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 264ms (compile: 38ms, proxy.ts: 3ms, render: 223ms)
+ GET /comunicacao 200 in 770ms (compile: 6ms, proxy.ts: 6ms, render: 758ms)
+ GET /comunicacao 200 in 756ms (compile: 8ms, proxy.ts: 10ms, render: 738ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 231ms (compile: 5ms, proxy.ts: 5ms, render: 222ms)
+ GET /comunicacao 200 in 661ms (compile: 3ms, proxy.ts: 2ms, render: 655ms)
+ GET /comunicacao 200 in 658ms (compile: 5ms, proxy.ts: 5ms, render: 649ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 224ms (compile: 5ms, proxy.ts: 4ms, render: 216ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 298ms (compile: 47ms, proxy.ts: 4ms, render: 248ms)
+ GET /comunicacao 200 in 713ms (compile: 5ms, proxy.ts: 3ms, render: 706ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 349ms (compile: 38ms, proxy.ts: 4ms, render: 307ms)
+ GET /comunicacao 200 in 742ms (compile: 50ms, proxy.ts: 3ms, render: 689ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 301ms (compile: 12ms, proxy.ts: 18ms, render: 271ms)
+ GET /comunicacao 200 in 789ms (compile: 5ms, proxy.ts: 4ms, render: 780ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 276ms (compile: 56ms, proxy.ts: 5ms, render: 215ms)
+ GET /comunicacao 200 in 790ms (compile: 5ms, proxy.ts: 4ms, render: 781ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 217ms (compile: 5ms, proxy.ts: 4ms, render: 208ms)
+ GET /comunicacao 200 in 692ms (compile: 5ms, proxy.ts: 3ms, render: 684ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 214ms (compile: 4ms, proxy.ts: 2ms, render: 208ms)
+ GET /comunicacao 200 in 659ms (compile: 7ms, proxy.ts: 6ms, render: 646ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 302ms (compile: 36ms, proxy.ts: 4ms, render: 262ms)
+ GET /comunicacao 200 in 666ms (compile: 4ms, proxy.ts: 3ms, render: 659ms)
+ GET /comunicacao 200 in 691ms (compile: 32ms, proxy.ts: 4ms, render: 655ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 314ms (compile: 13ms, proxy.ts: 39ms, render: 261ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 281ms (compile: 9ms, proxy.ts: 27ms, render: 245ms)
+ GET /comunicacao 200 in 734ms (compile: 5ms, proxy.ts: 5ms, render: 724ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 258ms (compile: 37ms, proxy.ts: 3ms, render: 217ms)
+ GET /comunicacao 200 in 743ms (compile: 5ms, proxy.ts: 4ms, render: 734ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 224ms (compile: 4ms, proxy.ts: 4ms, render: 216ms)
+ GET /comunicacao 200 in 659ms (compile: 4ms, proxy.ts: 3ms, render: 652ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 233ms (compile: 4ms, proxy.ts: 3ms, render: 226ms)
+ GET /comunicacao 200 in 666ms (compile: 4ms, proxy.ts: 4ms, render: 657ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 333ms (compile: 38ms, proxy.ts: 4ms, render: 291ms)
+ GET /comunicacao 200 in 711ms (compile: 4ms, proxy.ts: 3ms, render: 703ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 328ms (compile: 40ms, proxy.ts: 8ms, render: 280ms)
+ GET /comunicacao 200 in 733ms (compile: 29ms, proxy.ts: 4ms, render: 701ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 292ms (compile: 10ms, proxy.ts: 20ms, render: 263ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 270ms (compile: 38ms, proxy.ts: 4ms, render: 228ms)
+ GET /comunicacao 200 in 783ms (compile: 5ms, proxy.ts: 5ms, render: 773ms)
+ GET /comunicacao 200 in 769ms (compile: 12ms, proxy.ts: 4ms, render: 754ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 231ms (compile: 5ms, proxy.ts: 10ms, render: 216ms)
+ GET /comunicacao 200 in 679ms (compile: 4ms, proxy.ts: 3ms, render: 672ms)
+ GET /comunicacao 200 in 656ms (compile: 5ms, proxy.ts: 4ms, render: 647ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 223ms (compile: 4ms, proxy.ts: 2ms, render: 217ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 307ms (compile: 7ms, proxy.ts: 37ms, render: 262ms)
+ GET /comunicacao 200 in 684ms (compile: 4ms, proxy.ts: 3ms, render: 678ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 319ms (compile: 39ms, proxy.ts: 5ms, render: 275ms)
+ GET /comunicacao 200 in 703ms (compile: 36ms, proxy.ts: 4ms, render: 663ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 268ms (compile: 8ms, proxy.ts: 21ms, render: 239ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 254ms (compile: 42ms, proxy.ts: 3ms, render: 209ms)
+ GET /comunicacao 200 in 737ms (compile: 6ms, proxy.ts: 2ms, render: 729ms)
+ GET /comunicacao 200 in 744ms (compile: 5ms, proxy.ts: 6ms, render: 734ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 223ms (compile: 5ms, proxy.ts: 4ms, render: 214ms)
+ GET /comunicacao 200 in 650ms (compile: 4ms, proxy.ts: 3ms, render: 642ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 222ms (compile: 4ms, proxy.ts: 3ms, render: 216ms)
+ GET /comunicacao 200 in 686ms (compile: 5ms, proxy.ts: 5ms, render: 676ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 270ms (compile: 11ms, proxy.ts: 5ms, render: 254ms)
+ GET /comunicacao 200 in 643ms (compile: 4ms, proxy.ts: 3ms, render: 636ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 262ms (compile: 18ms, proxy.ts: 10ms, render: 235ms)
+ GET /comunicacao 200 in 692ms (compile: 35ms, proxy.ts: 4ms, render: 654ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 325ms (compile: 14ms, proxy.ts: 36ms, render: 275ms)
+ GET /comunicacao 200 in 740ms (compile: 4ms, proxy.ts: 3ms, render: 733ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 270ms (compile: 45ms, proxy.ts: 4ms, render: 222ms)
+ GET /comunicacao 200 in 754ms (compile: 4ms, proxy.ts: 3ms, render: 747ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 241ms (compile: 7ms, proxy.ts: 5ms, render: 229ms)
+ GET /comunicacao 200 in 681ms (compile: 5ms, proxy.ts: 3ms, render: 673ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 253ms (compile: 4ms, proxy.ts: 3ms, render: 247ms)
+ GET /comunicacao 200 in 709ms (compile: 6ms, proxy.ts: 4ms, render: 699ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 345ms (compile: 27ms, proxy.ts: 6ms, render: 312ms)
+ GET /comunicacao 200 in 739ms (compile: 5ms, proxy.ts: 3ms, render: 731ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 339ms (compile: 16ms, proxy.ts: 50ms, render: 273ms)
+ GET /comunicacao 200 in 797ms (compile: 39ms, proxy.ts: 4ms, render: 753ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 323ms (compile: 39ms, proxy.ts: 5ms, render: 279ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 266ms (compile: 7ms, proxy.ts: 35ms, render: 224ms)
+ GET /comunicacao 200 in 829ms (compile: 5ms, proxy.ts: 3ms, render: 821ms)
+ GET /comunicacao 200 in 806ms (compile: 27ms, proxy.ts: 3ms, render: 776ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 240ms (compile: 5ms, proxy.ts: 5ms, render: 230ms)
+ GET /comunicacao 200 in 732ms (compile: 6ms, proxy.ts: 5ms, render: 721ms)
+ GET /comunicacao 200 in 698ms (compile: 7ms, proxy.ts: 4ms, render: 688ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 255ms (compile: 4ms, proxy.ts: 4ms, render: 246ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 276ms (compile: 11ms, proxy.ts: 18ms, render: 247ms)
+ GET /comunicacao 200 in 693ms (compile: 4ms, proxy.ts: 3ms, render: 686ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 321ms (compile: 35ms, proxy.ts: 4ms, render: 282ms)
+ GET /comunicacao 200 in 752ms (compile: 47ms, proxy.ts: 4ms, render: 701ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 322ms (compile: 7ms, proxy.ts: 37ms, render: 278ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 284ms (compile: 14ms, proxy.ts: 39ms, render: 231ms)
+ GET /comunicacao 200 in 803ms (compile: 6ms, proxy.ts: 3ms, render: 794ms)
+ GET /comunicacao 200 in 773ms (compile: 5ms, proxy.ts: 4ms, render: 764ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 233ms (compile: 7ms, proxy.ts: 5ms, render: 220ms)
+ GET /comunicacao 200 in 700ms (compile: 6ms, proxy.ts: 5ms, render: 689ms)
+ GET /comunicacao 200 in 708ms (compile: 5ms, proxy.ts: 3ms, render: 699ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 262ms (compile: 7ms, proxy.ts: 12ms, render: 243ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 288ms (compile: 25ms, proxy.ts: 11ms, render: 252ms)
+ GET /comunicacao 200 in 697ms (compile: 4ms, proxy.ts: 4ms, render: 689ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 309ms (compile: 6ms, proxy.ts: 38ms, render: 265ms)
+ GET /comunicacao 200 in 734ms (compile: 36ms, proxy.ts: 4ms, render: 694ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 362ms (compile: 39ms, proxy.ts: 4ms, render: 320ms)
+ GET /comunicacao 200 in 795ms (compile: 6ms, proxy.ts: 3ms, render: 786ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 239ms (compile: 28ms, proxy.ts: 11ms, render: 201ms)
+ GET /comunicacao 200 in 777ms (compile: 6ms, proxy.ts: 3ms, render: 768ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 233ms (compile: 6ms, proxy.ts: 3ms, render: 224ms)
+ GET /comunicacao 200 in 697ms (compile: 5ms, proxy.ts: 4ms, render: 688ms)
+ GET /comunicacao 200 in 705ms (compile: 15ms, proxy.ts: 3ms, render: 687ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 242ms (compile: 4ms, proxy.ts: 3ms, render: 235ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 337ms (compile: 39ms, proxy.ts: 5ms, render: 292ms)
+ GET /comunicacao 200 in 713ms (compile: 4ms, proxy.ts: 3ms, render: 706ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 341ms (compile: 43ms, proxy.ts: 4ms, render: 295ms)
+ GET /comunicacao 200 in 749ms (compile: 9ms, proxy.ts: 37ms, render: 703ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 293ms (compile: 20ms, proxy.ts: 31ms, render: 242ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 250ms (compile: 36ms, proxy.ts: 4ms, render: 210ms)
+ GET /comunicacao 200 in 776ms (compile: 5ms, proxy.ts: 5ms, render: 765ms)
+ GET /comunicacao 200 in 757ms (compile: 5ms, proxy.ts: 4ms, render: 749ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 221ms (compile: 5ms, proxy.ts: 4ms, render: 213ms)
+ GET /comunicacao 200 in 660ms (compile: 4ms, proxy.ts: 3ms, render: 653ms)
+ GET /comunicacao 200 in 641ms (compile: 5ms, proxy.ts: 4ms, render: 632ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 232ms (compile: 6ms, proxy.ts: 3ms, render: 223ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 279ms (compile: 22ms, proxy.ts: 15ms, render: 242ms)
+ GET /comunicacao 200 in 684ms (compile: 3ms, proxy.ts: 3ms, render: 678ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 289ms (compile: 21ms, proxy.ts: 8ms, render: 260ms)
+ GET /comunicacao 200 in 714ms (compile: 31ms, proxy.ts: 17ms, render: 666ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 276ms (compile: 9ms, proxy.ts: 18ms, render: 250ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 265ms (compile: 10ms, proxy.ts: 39ms, render: 216ms)
+ GET /comunicacao 200 in 765ms (compile: 4ms, proxy.ts: 2ms, render: 759ms)
+ GET /comunicacao 200 in 756ms (compile: 4ms, proxy.ts: 2ms, render: 750ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 220ms (compile: 6ms, proxy.ts: 4ms, render: 210ms)
+ GET /comunicacao 200 in 667ms (compile: 4ms, proxy.ts: 3ms, render: 659ms)
+ GET /comunicacao 200 in 665ms (compile: 5ms, proxy.ts: 5ms, render: 656ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 236ms (compile: 4ms, proxy.ts: 3ms, render: 229ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 337ms (compile: 10ms, proxy.ts: 40ms, render: 287ms)
+ GET /comunicacao 200 in 749ms (compile: 4ms, proxy.ts: 3ms, render: 743ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 354ms (compile: 41ms, proxy.ts: 5ms, render: 309ms)
+ GET /comunicacao 200 in 752ms (compile: 37ms, proxy.ts: 3ms, render: 711ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 277ms (compile: 23ms, proxy.ts: 11ms, render: 243ms)
+ GET /comunicacao 200 in 797ms (compile: 5ms, proxy.ts: 4ms, render: 788ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 263ms (compile: 41ms, proxy.ts: 4ms, render: 218ms)
+ GET /comunicacao 200 in 786ms (compile: 6ms, proxy.ts: 5ms, render: 776ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 225ms (compile: 5ms, proxy.ts: 4ms, render: 216ms)
+ GET /comunicacao 200 in 717ms (compile: 3ms, proxy.ts: 3ms, render: 711ms)
+ GET /comunicacao 200 in 662ms (compile: 5ms, proxy.ts: 4ms, render: 653ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 233ms (compile: 4ms, proxy.ts: 3ms, render: 226ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 298ms (compile: 25ms, proxy.ts: 19ms, render: 253ms)
+ GET /comunicacao 200 in 728ms (compile: 4ms, proxy.ts: 2ms, render: 722ms)
+ GET /comunicacao 200 in 735ms (compile: 29ms, proxy.ts: 4ms, render: 702ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 344ms (compile: 57ms, proxy.ts: 3ms, render: 284ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 318ms (compile: 11ms, proxy.ts: 18ms, render: 289ms)
+ GET /comunicacao 200 in 836ms (compile: 3ms, proxy.ts: 3ms, render: 830ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 323ms (compile: 12ms, proxy.ts: 72ms, render: 239ms)
+ GET /comunicacao 200 in 827ms (compile: 5ms, proxy.ts: 4ms, render: 818ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 232ms (compile: 5ms, proxy.ts: 3ms, render: 224ms)
+ GET /comunicacao 200 in 755ms (compile: 5ms, proxy.ts: 2ms, render: 748ms)
+ GET /comunicacao 200 in 722ms (compile: 6ms, proxy.ts: 4ms, render: 711ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 240ms (compile: 4ms, proxy.ts: 3ms, render: 233ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 278ms (compile: 6ms, proxy.ts: 20ms, render: 252ms)
+ GET /comunicacao 200 in 733ms (compile: 4ms, proxy.ts: 4ms, render: 725ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 298ms (compile: 12ms, proxy.ts: 12ms, render: 274ms)
+ GET /comunicacao 200 in 697ms (compile: 17ms, proxy.ts: 10ms, render: 671ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 267ms (compile: 24ms, proxy.ts: 8ms, render: 235ms)
+ GET /comunicacao 200 in 767ms (compile: 4ms, proxy.ts: 3ms, render: 760ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 265ms (compile: 11ms, proxy.ts: 41ms, render: 213ms)
+ GET /comunicacao 200 in 774ms (compile: 4ms, proxy.ts: 3ms, render: 767ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 241ms (compile: 4ms, proxy.ts: 3ms, render: 234ms)
+ GET /comunicacao 200 in 690ms (compile: 4ms, proxy.ts: 3ms, render: 683ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 243ms (compile: 5ms, proxy.ts: 2ms, render: 235ms)
+ GET /comunicacao 200 in 688ms (compile: 4ms, proxy.ts: 3ms, render: 680ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 301ms (compile: 21ms, proxy.ts: 8ms, render: 272ms)
+ GET /comunicacao 200 in 753ms (compile: 4ms, proxy.ts: 2ms, render: 746ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 301ms (compile: 23ms, proxy.ts: 5ms, render: 274ms)
+ GET /comunicacao 200 in 730ms (compile: 23ms, proxy.ts: 6ms, render: 701ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 260ms (compile: 8ms, proxy.ts: 10ms, render: 243ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 226ms (compile: 22ms, proxy.ts: 8ms, render: 197ms)
+ GET /comunicacao 200 in 788ms (compile: 4ms, proxy.ts: 3ms, render: 781ms)
+ GET /comunicacao 200 in 780ms (compile: 6ms, proxy.ts: 3ms, render: 771ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 223ms (compile: 5ms, proxy.ts: 4ms, render: 215ms)
+ GET /comunicacao 200 in 673ms (compile: 4ms, proxy.ts: 4ms, render: 665ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 214ms (compile: 4ms, proxy.ts: 3ms, render: 208ms)
+ GET /comunicacao 200 in 651ms (compile: 5ms, proxy.ts: 3ms, render: 644ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 316ms (compile: 36ms, proxy.ts: 4ms, render: 277ms)
+ GET /comunicacao 200 in 707ms (compile: 4ms, proxy.ts: 4ms, render: 699ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 336ms (compile: 7ms, proxy.ts: 44ms, render: 286ms)
+ GET /comunicacao 200 in 772ms (compile: 31ms, proxy.ts: 4ms, render: 737ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 268ms (compile: 7ms, proxy.ts: 8ms, render: 253ms)
+ GET /comunicacao 200 in 770ms (compile: 5ms, proxy.ts: 5ms, render: 760ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 216ms (compile: 10ms, proxy.ts: 17ms, render: 189ms)
+ GET /comunicacao 200 in 781ms (compile: 6ms, proxy.ts: 3ms, render: 772ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 240ms (compile: 5ms, proxy.ts: 4ms, render: 231ms)
+ GET /comunicacao 200 in 694ms (compile: 4ms, proxy.ts: 3ms, render: 687ms)
+ GET /comunicacao 200 in 673ms (compile: 4ms, proxy.ts: 3ms, render: 666ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 234ms (compile: 4ms, proxy.ts: 3ms, render: 227ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 318ms (compile: 8ms, proxy.ts: 38ms, render: 273ms)
+ GET /comunicacao 200 in 742ms (compile: 5ms, proxy.ts: 3ms, render: 734ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 331ms (compile: 39ms, proxy.ts: 5ms, render: 287ms)
+ GET /comunicacao 200 in 776ms (compile: 42ms, proxy.ts: 4ms, render: 731ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 266ms (compile: 24ms, proxy.ts: 9ms, render: 234ms)
+ GET /comunicacao 200 in 767ms (compile: 5ms, proxy.ts: 3ms, render: 758ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 224ms (compile: 10ms, proxy.ts: 20ms, render: 194ms)
+ GET /comunicacao 200 in 768ms (compile: 4ms, proxy.ts: 5ms, render: 759ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 232ms (compile: 6ms, proxy.ts: 4ms, render: 223ms)
+ GET /comunicacao 200 in 680ms (compile: 3ms, proxy.ts: 2ms, render: 674ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 231ms (compile: 5ms, proxy.ts: 2ms, render: 224ms)
+ GET /comunicacao 200 in 671ms (compile: 5ms, proxy.ts: 2ms, render: 663ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 310ms (compile: 7ms, proxy.ts: 36ms, render: 267ms)
+ GET /comunicacao 200 in 724ms (compile: 4ms, proxy.ts: 3ms, render: 718ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 320ms (compile: 6ms, proxy.ts: 39ms, render: 275ms)
+ GET /comunicacao 200 in 721ms (compile: 16ms, proxy.ts: 31ms, render: 674ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 260ms (compile: 7ms, proxy.ts: 10ms, render: 243ms)
+ GET /comunicacao 200 in 733ms (compile: 4ms, proxy.ts: 3ms, render: 725ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 229ms (compile: 11ms, proxy.ts: 5ms, render: 212ms)
+ GET /comunicacao 200 in 757ms (compile: 5ms, proxy.ts: 4ms, render: 747ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 247ms (compile: 4ms, proxy.ts: 3ms, render: 240ms)
+ GET /comunicacao 200 in 687ms (compile: 3ms, proxy.ts: 3ms, render: 681ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 879ms (compile: 4ms, proxy.ts: 3ms, render: 872ms)
+ GET /comunicacao 200 in 1316ms (compile: 4ms, proxy.ts: 2ms, render: 1310ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 953ms (compile: 17ms, proxy.ts: 49ms, render: 887ms)
+ GET /comunicacao 200 in 1382ms (compile: 4ms, proxy.ts: 3ms, render: 1375ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 319ms (compile: 50ms, proxy.ts: 2ms, render: 267ms)
+ GET /comunicacao 200 in 1344ms (compile: 12ms, proxy.ts: 10ms, render: 1322ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 231ms (compile: 5ms, proxy.ts: 8ms, render: 218ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 247ms (compile: 6ms, proxy.ts: 39ms, render: 202ms)
+ GET /comunicacao 200 in 1381ms (compile: 7ms, proxy.ts: 4ms, render: 1370ms)
+ GET /comunicacao 200 in 747ms (compile: 7ms, proxy.ts: 4ms, render: 736ms)
+ GET /comunicacao 200 in 646ms (compile: 3ms, proxy.ts: 2ms, render: 640ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 227ms (compile: 4ms, proxy.ts: 4ms, render: 219ms)
+ GET /comunicacao 200 in 632ms (compile: 5ms, proxy.ts: 3ms, render: 623ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 214ms (compile: 4ms, proxy.ts: 3ms, render: 207ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 321ms (compile: 34ms, proxy.ts: 5ms, render: 282ms)
+ GET /comunicacao 200 in 725ms (compile: 5ms, proxy.ts: 2ms, render: 718ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 294ms (compile: 20ms, proxy.ts: 5ms, render: 269ms)
+ GET /comunicacao 200 in 716ms (compile: 29ms, proxy.ts: 3ms, render: 684ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 223ms (compile: 5ms, proxy.ts: 3ms, render: 215ms)
+ GET /comunicacao 200 in 759ms (compile: 4ms, proxy.ts: 5ms, render: 750ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 234ms (compile: 19ms, proxy.ts: 7ms, render: 208ms)
+ GET /comunicacao 200 in 628ms (compile: 4ms, proxy.ts: 3ms, render: 620ms)
+ GET /comunicacao 200 in 459ms (compile: 4ms, proxy.ts: 2ms, render: 452ms)
+ GET /comunicacao 200 in 302ms (compile: 5ms, proxy.ts: 2ms, render: 295ms)
+ GET /comunicacao 200 in 148ms (compile: 4ms, proxy.ts: 3ms, render: 141ms)
+✓ Compiled in 262ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 660ms (compile: 199ms, proxy.ts: 5ms, render: 456ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 417ms (compile: 64ms, proxy.ts: 24ms, render: 329ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 332ms (compile: 13ms, proxy.ts: 24ms, render: 295ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 263ms (compile: 29ms, proxy.ts: 16ms, render: 218ms)
+ GET /comunicacao 200 in 1059ms (compile: 165ms, proxy.ts: 4ms, render: 889ms)
+ GET /comunicacao 200 in 818ms (compile: 32ms, proxy.ts: 24ms, render: 762ms)
+ GET /comunicacao 200 in 718ms (compile: 9ms, proxy.ts: 18ms, render: 692ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 309ms (compile: 9ms, proxy.ts: 4ms, render: 296ms)
+ GET /comunicacao 200 in 739ms (compile: 6ms, proxy.ts: 3ms, render: 730ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 338ms (compile: 9ms, proxy.ts: 43ms, render: 286ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 283ms (compile: 11ms, proxy.ts: 20ms, render: 251ms)
+ GET /comunicacao 200 in 722ms (compile: 3ms, proxy.ts: 2ms, render: 716ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 306ms (compile: 11ms, proxy.ts: 6ms, render: 289ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 243ms (compile: 39ms, proxy.ts: 5ms, render: 199ms)
+ GET /comunicacao 200 in 854ms (compile: 7ms, proxy.ts: 4ms, render: 843ms)
+ GET /comunicacao 200 in 770ms (compile: 25ms, proxy.ts: 19ms, render: 727ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 262ms (compile: 22ms, proxy.ts: 8ms, render: 232ms)
+ GET /comunicacao 200 in 817ms (compile: 5ms, proxy.ts: 3ms, render: 809ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 281ms (compile: 17ms, proxy.ts: 9ms, render: 255ms)
+ GET /comunicacao 200 in 726ms (compile: 5ms, proxy.ts: 5ms, render: 717ms)
+ GET /comunicacao 200 in 718ms (compile: 4ms, proxy.ts: 2ms, render: 712ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 248ms (compile: 4ms, proxy.ts: 3ms, render: 241ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 247ms (compile: 18ms, proxy.ts: 16ms, render: 214ms)
+ GET /comunicacao 200 in 801ms (compile: 4ms, proxy.ts: 3ms, render: 794ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 314ms (compile: 37ms, proxy.ts: 4ms, render: 273ms)
+ GET /comunicacao 200 in 761ms (compile: 4ms, proxy.ts: 3ms, render: 755ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 246ms (compile: 4ms, proxy.ts: 3ms, render: 239ms)
+ GET /comunicacao 200 in 702ms (compile: 24ms, proxy.ts: 9ms, render: 669ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 265ms (compile: 24ms, proxy.ts: 7ms, render: 234ms)
+ GET /comunicacao 200 in 768ms (compile: 5ms, proxy.ts: 6ms, render: 757ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 271ms (compile: 7ms, proxy.ts: 40ms, render: 225ms)
+ GET /comunicacao 200 in 745ms (compile: 20ms, proxy.ts: 6ms, render: 719ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 229ms (compile: 5ms, proxy.ts: 3ms, render: 221ms)
+ GET /comunicacao 200 in 686ms (compile: 4ms, proxy.ts: 3ms, render: 679ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 243ms (compile: 10ms, proxy.ts: 18ms, render: 215ms)
+ GET /comunicacao 200 in 764ms (compile: 7ms, proxy.ts: 3ms, render: 755ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 318ms (compile: 7ms, proxy.ts: 34ms, render: 277ms)
+ GET /comunicacao 200 in 720ms (compile: 4ms, proxy.ts: 3ms, render: 713ms)
+ GET /comunicacao 200 in 699ms (compile: 13ms, proxy.ts: 10ms, render: 676ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 237ms (compile: 4ms, proxy.ts: 3ms, render: 230ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 263ms (compile: 6ms, proxy.ts: 9ms, render: 248ms)
+ GET /comunicacao 200 in 766ms (compile: 5ms, proxy.ts: 4ms, render: 757ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 319ms (compile: 36ms, proxy.ts: 5ms, render: 278ms)
+ GET /comunicacao 200 in 710ms (compile: 12ms, proxy.ts: 19ms, render: 679ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 243ms (compile: 5ms, proxy.ts: 3ms, render: 235ms)
+ GET /comunicacao 200 in 728ms (compile: 4ms, proxy.ts: 3ms, render: 721ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 207ms (compile: 23ms, proxy.ts: 15ms, render: 169ms)
+ GET /comunicacao 200 in 787ms (compile: 4ms, proxy.ts: 5ms, render: 778ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 299ms (compile: 10ms, proxy.ts: 16ms, render: 273ms)
+ GET /comunicacao 200 in 736ms (compile: 5ms, proxy.ts: 3ms, render: 728ms)
+ GET /comunicacao 200 in 688ms (compile: 6ms, proxy.ts: 4ms, render: 678ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 236ms (compile: 5ms, proxy.ts: 2ms, render: 229ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 282ms (compile: 8ms, proxy.ts: 23ms, render: 252ms)
+ GET /comunicacao 200 in 687ms (compile: 4ms, proxy.ts: 3ms, render: 680ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 173ms (compile: 11ms, proxy.ts: 49ms, render: 112ms)
+ GET /comunicacao 200 in 617ms (compile: 42ms, proxy.ts: 63ms, render: 512ms)
+ GET /comunicacao 200 in 351ms (compile: 4ms, proxy.ts: 3ms, render: 344ms)
+ GET /comunicacao 200 in 196ms (compile: 5ms, proxy.ts: 3ms, render: 188ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 2.3s (compile: 903ms, proxy.ts: 9ms, render: 1429ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 3.3s (compile: 1184ms, proxy.ts: 9ms, render: 2.1s)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 3.3s (compile: 1186ms, proxy.ts: 9ms, render: 2.1s)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 3.3s (compile: 1188ms, proxy.ts: 10ms, render: 2.1s)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 3.3s (compile: 1180ms, proxy.ts: 9ms, render: 2.1s)
+ POST /api/jobs/process 200 in 950ms (compile: 699ms, proxy.ts: 6ms, render: 244ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 3.3s (compile: 2.3s, proxy.ts: 9ms, render: 982ms)
+✓ Compiled in 176ms
+ GET /api/comunicacao/stream 200 in 3.2s (compile: 920ms, proxy.ts: 4ms, render: 2.3s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 16ms (compile: 2ms, proxy.ts: 4ms, render: 10ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 40ms (compile: 5ms, proxy.ts: 3ms, render: 32ms)
+✓ Compiled in 157ms
+ GET /api/comunicacao/stream 200 in 10.7s (compile: 2ms, proxy.ts: 3ms, render: 10.7s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 34ms (compile: 3ms, proxy.ts: 4ms, render: 28ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 66ms (compile: 9ms, proxy.ts: 4ms, render: 54ms)
+✓ Compiled in 190ms
+ GET /api/comunicacao/stream 200 in 9.2s (compile: 1555µs, proxy.ts: 6ms, render: 9.2s)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 27ms (compile: 12ms, proxy.ts: 13ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 30ms (compile: 14ms, proxy.ts: 13ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 32ms (compile: 18ms, proxy.ts: 13ms, render: 1753µs)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 39ms (compile: 9ms, proxy.ts: 12ms, render: 19ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 31ms (compile: 14ms, proxy.ts: 13ms, render: 3ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 68ms (compile: 11ms, proxy.ts: 12ms, render: 46ms)
+✓ Compiled in 156ms
+ GET /api/comunicacao/stream 200 in 20.1s (compile: 2ms, proxy.ts: 8ms, render: 20.1s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 41ms (compile: 3ms, proxy.ts: 4ms, render: 34ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 72ms (compile: 7ms, proxy.ts: 4ms, render: 62ms)
+✓ Compiled in 179ms
+ GET /api/comunicacao/stream 200 in 8.1s (compile: 2ms, proxy.ts: 6ms, render: 8.1s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 17ms (compile: 6ms, proxy.ts: 3ms, render: 8ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 43ms (compile: 4ms, proxy.ts: 3ms, render: 36ms)
+✓ Compiled in 191ms
+ GET /api/comunicacao/stream 200 in 13.3s (compile: 3ms, proxy.ts: 6ms, render: 13.3s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 31ms (compile: 1959µs, proxy.ts: 5ms, render: 24ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 61ms (compile: 6ms, proxy.ts: 5ms, render: 50ms)
+✓ Compiled in 152ms
+ POST /api/jobs/process 200 in 14ms (compile: 1974µs, proxy.ts: 3ms, render: 10ms)
+✓ Compiled in 190ms
+✓ Compiled in 173ms
+✓ Compiled in 188ms
+✓ Compiled in 181ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.7s (compile: 8ms, proxy.ts: 5ms, render: 2.6s)
+ GET /comunicacao 200 in 2.7s (compile: 2.5s, proxy.ts: 5ms, render: 211ms)
+ POST /api/jobs/automacao-nacional 200 in 2.5s (compile: 2.4s, proxy.ts: 4ms, render: 65ms)
+ POST /api/jobs/process 200 in 2.5s (compile: 856ms, proxy.ts: 4ms, render: 1604ms)
+ POST /api/jobs/demandas 200 in 2.5s (compile: 850ms, proxy.ts: 4ms, render: 1616ms)
+✓ Compiled in 168ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 4.4s (compile: 1975ms, proxy.ts: 5ms, render: 2.4s)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 160ms (compile: 17ms, proxy.ts: 9ms, render: 134ms)
+ GET /comunicacao 200 in 4.5s (compile: 4.2s, proxy.ts: 5ms, render: 333ms)
+ GET /comunicacao 200 in 114ms (compile: 3ms, proxy.ts: 3ms, render: 108ms)
+✓ Compiled in 162ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 89ms (compile: 5ms, proxy.ts: 2ms, render: 82ms)
+ GET /comunicacao 200 in 2.2s (compile: 2.0s, proxy.ts: 2ms, render: 151ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.9s (compile: 2.6s, proxy.ts: 18ms, render: 283ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 177ms (compile: 5ms, proxy.ts: 3ms, render: 170ms)
+ GET /comunicacao 200 in 5.9s (compile: 2.6s, proxy.ts: 6ms, render: 3.3s)
+ GET /comunicacao 200 in 459ms (compile: 26ms, proxy.ts: 23ms, render: 409ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 77ms (compile: 3ms, proxy.ts: 3ms, render: 71ms)
+ GET /comunicacao 200 in 201ms (compile: 6ms, proxy.ts: 3ms, render: 192ms)
+ POST /api/jobs/process 200 in 1250ms (compile: 1201ms, proxy.ts: 2ms, render: 47ms)
+✓ Compiled in 177ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 2.1s (compile: 4ms, proxy.ts: 3ms, render: 2.1s)
+ GET /comunicacao 200 in 2.1s (compile: 1901ms, proxy.ts: 3ms, render: 223ms)
+○ Compiling /comunicacao ...
+✓ Compiled in 1797ms
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 6.7s (compile: 2.3s, proxy.ts: 10ms, render: 4.4s)
+ GET /comunicacao 200 in 6.7s (compile: 5.6s, proxy.ts: 10ms, render: 1106ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 4.1s (compile: 16ms, proxy.ts: 22ms, render: 4.1s)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 1039ms (compile: 14ms, proxy.ts: 5ms, render: 1019ms)
+ GET /comunicacao 200 in 4.5s (compile: 2.1s, proxy.ts: 22ms, render: 2.4s)
+ GET /api/comunicacao/stream 200 in 6.0min (compile: 2ms, proxy.ts: 2ms, render: 6.0min)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 4.5s (compile: 47ms, proxy.ts: 13ms, render: 4.5s)
+ GET /comunicacao 200 in 4.6s (compile: 1994ms, proxy.ts: 13ms, render: 2.6s)
+ GET /api/chat/users 200 in 3.2s (compile: 2.1s, proxy.ts: 5ms, render: 1061ms)
+ GET /api/chat/unread-count 200 in 3.2s (compile: 3.1s, proxy.ts: 5ms, render: 55ms)
+ GET /api/chat/conversations 200 in 3.2s (compile: 1064ms, proxy.ts: 5ms, render: 2.1s)
+ GET /api/chat/users 200 in 64ms (compile: 7ms, proxy.ts: 12ms, render: 44ms)
+ GET /api/chat/unread-count 200 in 1913ms (compile: 9ms, proxy.ts: 12ms, render: 1891ms)
+ GET /api/chat/conversations 200 in 1908ms (compile: 10ms, proxy.ts: 8ms, render: 1890ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 1921ms (compile: 1852ms, proxy.ts: 6ms, render: 64ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 1492ms (compile: 13ms, proxy.ts: 7ms, render: 1473ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 1535ms (compile: 1456ms, proxy.ts: 7ms, render: 73ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 56ms (compile: 26ms, proxy.ts: 9ms, render: 21ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 107ms (compile: 20ms, proxy.ts: 9ms, render: 78ms)
+ GET /api/chat/conversations 200 in 50ms (compile: 7ms, proxy.ts: 6ms, render: 37ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 55ms (compile: 17ms, proxy.ts: 7ms, render: 32ms)
+ GET /api/chat/conversations 200 in 40ms (compile: 5ms, proxy.ts: 5ms, render: 30ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 128ms (compile: 17ms, proxy.ts: 6ms, render: 105ms)
+ GET /api/chat/conversations 200 in 44ms (compile: 3ms, proxy.ts: 4ms, render: 37ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 47ms (compile: 11ms, proxy.ts: 4ms, render: 33ms)
+ GET /api/chat/conversations 200 in 24ms (compile: 3ms, proxy.ts: 3ms, render: 18ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1793µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 3.1s (compile: 3.0s, proxy.ts: 3ms, render: 38ms)
+ POST /api/jobs/operacoes 200 in 3.1s (compile: 1538ms, proxy.ts: 3ms, render: 1552ms)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 2 atend SLA
+○ Compiling /documentos ...
+✓ Compiled in 1687ms
+ GET /comunicacao 200 in 6.3s (compile: 5.2s, proxy.ts: 6ms, render: 1025ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 6.3s (compile: 2.2s, proxy.ts: 7ms, render: 4.1s)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 624ms (compile: 388ms, proxy.ts: 155ms, render: 81ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 1448ms (compile: 15ms, proxy.ts: 14ms, render: 1420ms)
+ GET /comunicacao 200 in 624ms (compile: 356ms, proxy.ts: 155ms, render: 113ms)
+ GET /comunicacao 200 in 1448ms (compile: 32ms, proxy.ts: 14ms, render: 1402ms)
+ GET /documentos?pastaId=cmm796qyo00004kmhl6gp22o0 200 in 1538ms (compile: 103ms, proxy.ts: 13ms, render: 1421ms)
+ GET /comunicacao 200 in 1578ms (compile: 75ms, proxy.ts: 13ms, render: 1490ms)
+ GET /api/chat/users 200 in 50ms (compile: 16ms, proxy.ts: 4ms, render: 30ms)
+ GET /api/chat/unread-count 200 in 56ms (compile: 10ms, proxy.ts: 15ms, render: 31ms)
+ GET /api/chat/conversations 200 in 59ms (compile: 8ms, proxy.ts: 15ms, render: 35ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 56ms (compile: 16ms, proxy.ts: 2ms, render: 37ms)
+ GET /api/chat/users 200 in 54ms (compile: 4ms, proxy.ts: 20ms, render: 31ms)
+ GET /api/chat/unread-count 200 in 44ms (compile: 7ms, proxy.ts: 6ms, render: 32ms)
+ GET /api/chat/conversations 200 in 61ms (compile: 6ms, proxy.ts: 19ms, render: 37ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 29ms (compile: 6ms, proxy.ts: 4ms, render: 19ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 77ms (compile: 14ms, proxy.ts: 4ms, render: 59ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 56ms (compile: 9ms, proxy.ts: 4ms, render: 43ms)
+ POST /api/jobs/process 200 in 13ms (compile: 1949µs, proxy.ts: 3ms, render: 9ms)
+ POST /api/jobs/process 200 in 15ms (compile: 3ms, proxy.ts: 2ms, render: 10ms)
+ POST /api/jobs/process 200 in 30ms (compile: 8ms, proxy.ts: 5ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 35ms (compile: 4ms, proxy.ts: 6ms, render: 26ms)
+ POST /api/jobs/process 200 in 22ms (compile: 1710µs, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/process 200 in 21ms (compile: 3ms, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/automacao-nacional 200 in 1569ms (compile: 1521ms, proxy.ts: 5ms, render: 43ms)
+ POST /api/jobs/demandas 200 in 1575ms (compile: 2ms, proxy.ts: 5ms, render: 1568ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1726µs, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/process 200 in 21ms (compile: 1449µs, proxy.ts: 3ms, render: 17ms)
+ POST /api/jobs/publicacoes 200 in 922ms (compile: 897ms, proxy.ts: 4ms, render: 20ms)
+ POST /api/jobs/process 200 in 925ms (compile: 5ms, proxy.ts: 5ms, render: 915ms)
+ POST /api/jobs/demandas 200 in 931ms (compile: 3ms, proxy.ts: 5ms, render: 924ms)
+ POST /api/jobs/process 200 in 19ms (compile: 2ms, proxy.ts: 2ms, render: 15ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 2.1s (compile: 17ms, proxy.ts: 8ms, render: 2.1s)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 2.1s (compile: 12ms, proxy.ts: 8ms, render: 2.1s)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 2.1s (compile: 6ms, proxy.ts: 8ms, render: 2.1s)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 2.1s (compile: 21ms, proxy.ts: 8ms, render: 2.1s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 2.1s (compile: 965ms, proxy.ts: 9ms, render: 1170ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 2.1s (compile: 2.1s, proxy.ts: 9ms, render: 15ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ POST /api/jobs/process 200 in 20ms (compile: 1915µs, proxy.ts: 2ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 24ms (compile: 1668µs, proxy.ts: 2ms, render: 20ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1511µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1718µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/automacao-nacional 200 in 30ms (compile: 3ms, proxy.ts: 6ms, render: 21ms)
+ POST /api/jobs/process 200 in 31ms (compile: 8ms, proxy.ts: 6ms, render: 17ms)
+ POST /api/jobs/demandas 200 in 34ms (compile: 6ms, proxy.ts: 6ms, render: 22ms)
+ GET /comunicacao 200 in 144ms (compile: 8ms, proxy.ts: 2ms, render: 133ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 21ms (compile: 4ms, proxy.ts: 4ms, render: 14ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 20ms (compile: 7ms, proxy.ts: 10ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 24ms (compile: 11ms, proxy.ts: 10ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 26ms (compile: 14ms, proxy.ts: 10ms, render: 1880µs)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 102ms (compile: 8ms, proxy.ts: 4ms, render: 90ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 65ms (compile: 19ms, proxy.ts: 9ms, render: 37ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 68ms (compile: 4ms, proxy.ts: 29ms, render: 36ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 764ms (compile: 17ms, proxy.ts: 10ms, render: 737ms)
+ GET /api/comunicacao/stream 200 in 36.0s (compile: 7ms, proxy.ts: 28ms, render: 35.9s)
+ POST /api/jobs/process 200 in 19ms (compile: 1900µs, proxy.ts: 3ms, render: 15ms)
+ POST /comunicacao 200 in 1044ms (compile: 6ms, proxy.ts: 3ms, render: 1036ms)
+✓ Compiled in 223ms
+ POST /comunicacao 200 in 3.0s (compile: 2.5s, proxy.ts: 3ms, render: 494ms)
+ GET /admin 200 in 704ms (compile: 609ms, proxy.ts: 3ms, render: 92ms)
+ GET /admin?tab=escritorio 200 in 44ms (compile: 4ms, proxy.ts: 2ms, render: 37ms)
+ POST /admin?tab=escritorio 200 in 165ms (compile: 4ms, proxy.ts: 3ms, render: 159ms)
+ GET /admin?tab=escritorio 200 in 93ms (compile: 9ms, proxy.ts: 5ms, render: 78ms)
+ GET /admin?tab=feriados 200 in 77ms (compile: 11ms, proxy.ts: 5ms, render: 61ms)
+ GET /admin/lgpd 200 in 425ms (compile: 232ms, proxy.ts: 3ms, render: 190ms)
+ POST /api/jobs/process 200 in 16ms (compile: 2ms, proxy.ts: 2ms, render: 11ms)
+ GET /comunicacao 200 in 115ms (compile: 4ms, proxy.ts: 2ms, render: 109ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 36ms (compile: 5ms, proxy.ts: 8ms, render: 22ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 62ms (compile: 10ms, proxy.ts: 8ms, render: 44ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 12ms (compile: 1922µs, proxy.ts: 3ms, render: 7ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 29ms (compile: 1785µs, proxy.ts: 2ms, render: 25ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 748ms (compile: 20ms, proxy.ts: 7ms, render: 721ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 751ms (compile: 16ms, proxy.ts: 8ms, render: 727ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 764ms (compile: 2ms, proxy.ts: 3ms, render: 760ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 1064ms (compile: 13ms, proxy.ts: 8ms, render: 1043ms)
+ GET /api/comunicacao/stream 200 in 5.3s (compile: 1539µs, proxy.ts: 2ms, render: 5.3s)
+ GET /comunicacao 200 in 1636ms (compile: 5ms, proxy.ts: 2ms, render: 1629ms)
+ GET /api/chat/users 200 in 32ms (compile: 4ms, proxy.ts: 4ms, render: 24ms)
+ GET /api/chat/unread-count 200 in 35ms (compile: 7ms, proxy.ts: 4ms, render: 23ms)
+ GET /api/chat/conversations 200 in 39ms (compile: 10ms, proxy.ts: 4ms, render: 25ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 33ms (compile: 11ms, proxy.ts: 3ms, render: 19ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 50ms (compile: 11ms, proxy.ts: 3ms, render: 36ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 26ms (compile: 14ms, proxy.ts: 8ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 30ms (compile: 20ms, proxy.ts: 8ms, render: 1913µs)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 33ms (compile: 22ms, proxy.ts: 8ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 38ms (compile: 27ms, proxy.ts: 8ms, render: 3ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 46ms (compile: 7ms, proxy.ts: 9ms, render: 30ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 94ms (compile: 11ms, proxy.ts: 9ms, render: 75ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 29ms (compile: 18ms, proxy.ts: 9ms, render: 3ms)
+ POST /api/jobs/demandas 200 in 31ms (compile: 3ms, proxy.ts: 2ms, render: 27ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1742µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/process 200 in 21ms (compile: 1959µs, proxy.ts: 3ms, render: 16ms)
+✓ Compiled in 231ms
+ GET /comunicacao 200 in 2.4s (compile: 2.2s, proxy.ts: 3ms, render: 207ms)
+ POST /api/jobs/process 200 in 21ms (compile: 3ms, proxy.ts: 5ms, render: 13ms)
+ POST /api/jobs/demandas 200 in 26ms (compile: 9ms, proxy.ts: 5ms, render: 12ms)
+✓ Compiled in 228ms
+ GET /api/comunicacao/stream 200 in 7.3min (compile: 8ms, proxy.ts: 25ms, render: 7.2min)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 51ms (compile: 22ms, proxy.ts: 26ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 51ms (compile: 26ms, proxy.ts: 23ms, render: 1744µs)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 56ms (compile: 29ms, proxy.ts: 25ms, render: 2ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 87ms (compile: 14ms, proxy.ts: 32ms, render: 40ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 56ms (compile: 12ms, proxy.ts: 10ms, render: 34ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 180ms (compile: 19ms, proxy.ts: 29ms, render: 132ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 210ms (compile: 30ms, proxy.ts: 11ms, render: 169ms)
+ GET /comunicacao 200 in 2.6s (compile: 2.1s, proxy.ts: 3ms, render: 518ms)
+ POST /comunicacao 200 in 331ms (compile: 56ms, proxy.ts: 28ms, render: 247ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 763ms (compile: 9ms, proxy.ts: 10ms, render: 743ms)
+ POST /api/jobs/process 200 in 26ms (compile: 2ms, proxy.ts: 4ms, render: 21ms)
+✓ Compiled in 270ms
+ GET /api/comunicacao/stream 200 in 33.7s (compile: 88ms, proxy.ts: 60ms, render: 33.6s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 19ms (compile: 1812µs, proxy.ts: 2ms, render: 15ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 58ms (compile: 5ms, proxy.ts: 2ms, render: 50ms)
+✓ Compiled in 250ms
+ GET /api/comunicacao/stream 200 in 16.8s (compile: 3ms, proxy.ts: 8ms, render: 16.8s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 55ms (compile: 5ms, proxy.ts: 24ms, render: 26ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 125ms (compile: 9ms, proxy.ts: 25ms, render: 91ms)
+✓ Compiled in 250ms
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 13ms (compile: 2ms, proxy.ts: 3ms, render: 8ms)
+ GET /api/comunicacao/stream 200 in 7.7s (compile: 1908µs, proxy.ts: 4ms, render: 7.6s)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 57ms (compile: 1948µs, proxy.ts: 3ms, render: 52ms)
+✓ Compiled in 178ms
+ GET /api/comunicacao/stream 200 in 18.6s (compile: 3ms, proxy.ts: 3ms, render: 18.6s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 39ms (compile: 2ms, proxy.ts: 4ms, render: 32ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 78ms (compile: 15ms, proxy.ts: 4ms, render: 59ms)
+ POST /api/jobs/process 200 in 26ms (compile: 3ms, proxy.ts: 4ms, render: 19ms)
+ POST /api/jobs/automacao-nacional 200 in 33ms (compile: 4ms, proxy.ts: 6ms, render: 23ms)
+ POST /api/jobs/demandas 200 in 39ms (compile: 7ms, proxy.ts: 6ms, render: 26ms)
+ POST /api/jobs/process 200 in 22ms (compile: 1907µs, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/process 200 in 21ms (compile: 2ms, proxy.ts: 2ms, render: 16ms)
+ GET /api/comunicacao/stream 200 in 6.5min (compile: 3ms, proxy.ts: 4ms, render: 6.5min)
+ GET /comunicacao 200 in 3.7s (compile: 2.2s, proxy.ts: 2ms, render: 1499ms)
+ GET /api/chat/conversations 200 in 36ms (compile: 3ms, proxy.ts: 5ms, render: 28ms)
+ GET /api/chat/unread-count 200 in 38ms (compile: 6ms, proxy.ts: 5ms, render: 27ms)
+ GET /api/chat/users 200 in 41ms (compile: 10ms, proxy.ts: 5ms, render: 26ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 39ms (compile: 14ms, proxy.ts: 4ms, render: 22ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 62ms (compile: 13ms, proxy.ts: 3ms, render: 46ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 44ms (compile: 7ms, proxy.ts: 12ms, render: 25ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 77ms (compile: 11ms, proxy.ts: 12ms, render: 54ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 743ms (compile: 20ms, proxy.ts: 10ms, render: 713ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 746ms (compile: 17ms, proxy.ts: 11ms, render: 718ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 807ms (compile: 22ms, proxy.ts: 10ms, render: 775ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 1067ms (compile: 15ms, proxy.ts: 11ms, render: 1041ms)
+ GET /api/comunicacao/stream 200 in 4.6s (compile: 25ms, proxy.ts: 8ms, render: 4.6s)
+ GET /comunicacao 200 in 321ms (compile: 3ms, proxy.ts: 2ms, render: 315ms)
+ GET /api/chat/users 200 in 43ms (compile: 3ms, proxy.ts: 5ms, render: 35ms)
+ GET /api/chat/conversations 200 in 116ms (compile: 5ms, proxy.ts: 5ms, render: 106ms)
+ GET /api/chat/unread-count 200 in 118ms (compile: 8ms, proxy.ts: 5ms, render: 105ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 32ms (compile: 13ms, proxy.ts: 2ms, render: 17ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 60ms (compile: 14ms, proxy.ts: 3ms, render: 43ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 41ms (compile: 21ms, proxy.ts: 17ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 45ms (compile: 26ms, proxy.ts: 15ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 48ms (compile: 32ms, proxy.ts: 13ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 51ms (compile: 35ms, proxy.ts: 13ms, render: 3ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 63ms (compile: 13ms, proxy.ts: 16ms, render: 34ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 96ms (compile: 18ms, proxy.ts: 17ms, render: 61ms)
+ GET /api/comunicacao/stream 200 in 2.6s (compile: 6ms, proxy.ts: 4ms, render: 2.6s)
+ GET /comunicacao 200 in 263ms (compile: 4ms, proxy.ts: 3ms, render: 257ms)
+ GET /api/chat/conversations 200 in 50ms (compile: 6ms, proxy.ts: 8ms, render: 36ms)
+ GET /api/chat/unread-count 200 in 50ms (compile: 8ms, proxy.ts: 8ms, render: 34ms)
+ GET /api/chat/users 200 in 53ms (compile: 4ms, proxy.ts: 8ms, render: 41ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 31ms (compile: 10ms, proxy.ts: 3ms, render: 18ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 52ms (compile: 9ms, proxy.ts: 3ms, render: 39ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 30ms (compile: 16ms, proxy.ts: 12ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 33ms (compile: 18ms, proxy.ts: 13ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 35ms (compile: 20ms, proxy.ts: 13ms, render: 1892µs)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 38ms (compile: 22ms, proxy.ts: 13ms, render: 3ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 51ms (compile: 10ms, proxy.ts: 13ms, render: 29ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 77ms (compile: 13ms, proxy.ts: 13ms, render: 51ms)
+ GET /login 200 in 1318ms (compile: 1286ms, proxy.ts: 2ms, render: 29ms)
+ POST /comunicacao 303 in 1359ms (compile: 4ms, proxy.ts: 3ms, render: 1352ms)
+ GET /login 200 in 14ms (compile: 2ms, proxy.ts: 2ms, render: 10ms)
+ GET /api/comunicacao/stream 200 in 24.4s (compile: 4ms, proxy.ts: 5ms, render: 24.4s)
+[2026-03-12T01:50:16.235Z] [PID: 52628] [32m[NODE-CRON][32m [33m[WARN][0m missed execution at Wed Mar 11 2026 22:50:00 GMT-0300 (Horário Padrão de Brasília)! Possible blocking IO or high CPU user at the same process used by node-cron.
+[2026-03-12T01:50:16.238Z] [PID: 52628] [32m[NODE-CRON][32m [33m[WARN][0m missed execution at Wed Mar 11 2026 22:50:00 GMT-0300 (Horário Padrão de Brasília)! Possible blocking IO or high CPU user at the same process used by node-cron.
+ GET /dashboard 200 in 17.1s (compile: 16.9s, proxy.ts: 2ms, render: 247ms)
+ POST /login 303 in 17.2s (compile: 1958µs, proxy.ts: 3ms, render: 17.2s)
+ GET /api/chat/users 200 in 42ms (compile: 13ms, proxy.ts: 4ms, render: 25ms)
+ GET /api/chat/conversations 200 in 43ms (compile: 2ms, proxy.ts: 13ms, render: 28ms)
+ GET /api/chat/unread-count 200 in 56ms (compile: 8ms, proxy.ts: 3ms, render: 44ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 49ms (compile: 14ms, proxy.ts: 3ms, render: 32ms)
+ GET /api/chat/users 200 in 32ms (compile: 3ms, proxy.ts: 3ms, render: 25ms)
+ GET /api/chat/conversations 200 in 40ms (compile: 3ms, proxy.ts: 5ms, render: 32ms)
+ GET /api/chat/unread-count 200 in 67ms (compile: 12ms, proxy.ts: 13ms, render: 43ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 66ms (compile: 14ms, proxy.ts: 6ms, render: 46ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 79ms (compile: 23ms, proxy.ts: 5ms, render: 52ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 64ms (compile: 8ms, proxy.ts: 5ms, render: 51ms)
+ GET /comunicacao 200 in 134ms (compile: 4ms, proxy.ts: 2ms, render: 127ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 41ms (compile: 15ms, proxy.ts: 24ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 45ms (compile: 18ms, proxy.ts: 24ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 47ms (compile: 22ms, proxy.ts: 23ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 50ms (compile: 25ms, proxy.ts: 23ms, render: 2ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 58ms (compile: 6ms, proxy.ts: 25ms, render: 28ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 104ms (compile: 12ms, proxy.ts: 24ms, render: 67ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 47ms (compile: 4ms, proxy.ts: 7ms, render: 37ms)
+prisma:error 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+[fetchConversationWorkspace] Error: Error [PrismaClientValidationError]: 
+Invalid `prisma.conversation.findUnique()` invocation:
+
+{
+  where: {
+    id: "cmln2r8a900g28wmh9bsz9uxp"
+  },
+  select: {
+    id: true,
+    clienteId: true,
+    canal: true,
+    status: true,
+    subject: true,
+    processoId: true,
+    lastMessageAt: true,
+    unreadCount: true,
+    iaDesabilitada: true,
+    ~~~~~~~~~~~~~~
+    iaDesabilitadaEm: true,
+    iaDesabilitadaPor: true,
+    autoAtendimentoPausado: true,
+    pausadoAte: true,
+    motivoPausa: true,
+    assignedTo: {
+      select: {
+        id: true,
+        name: true,
+        role: true
+      }
+    },
+    cliente: {
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        celular: true,
+        whatsapp: true,
+        status: true,
+        inadimplente: true,
+        observacoes: true,
+        crmRelationship: true,
+        crmInterestLevel: true,
+        crmScore: true,
+        origem: {
+          select: {
+            id: true,
+            nome: true
+          }
+        }
+      }
+    },
+    processo: {
+      select: {
+        id: true,
+        numeroCnj: true,
+        objeto: true,
+        status: true
+      }
+    },
+?   atendimentoId?: true,
+?   assignedToId?: true,
+?   createdAt?: true,
+?   updatedAt?: true,
+?   atendimento?: true,
+?   messages?: true,
+?   automationSessions?: true,
+?   automationEvents?: true,
+?   _count?: true
+  }
+}
+
+Unknown field `iaDesabilitada` for select statement on model `Conversation`. Available options are marked with ?.
+    at ar (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1050:166)
+    at zr.handleRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3406:9)
+    at zr.handleAndLogRequestError (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3398:14)
+    at zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3394:14)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async fetchConversationWorkspace (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\comunicacao.ts:1111:62)
+    at async GET (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_af5b4620._.js:1879:40)
+  1109 |             db.advogado.findMany({
+  1110 |                 where: { ativo: true },
+> 1111 |                 include: { user: { select: { id: true, name: true } } },
+       |                                                              ^
+  1112 |                 orderBy: { user: { name: "asc" } },
+  1113 |             }),
+  1114 |             db.user.findMany({ {
+  clientVersion: '7.4.0'
+}
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 500 in 72ms (compile: 6ms, proxy.ts: 6ms, render: 60ms)
+ POST /api/jobs/process 200 in 28ms (compile: 4ms, proxy.ts: 5ms, render: 18ms)

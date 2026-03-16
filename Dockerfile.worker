@@ -1,0 +1,26 @@
+# =================================================================
+# Dockerfile.worker — BullMQ Worker
+# Runs src/worker/index.ts via ts-node (needs devDeps)
+# =================================================================
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache libc6-compat
+
+RUN addgroup -g 1001 -S nodejs \
+ && adduser  -S worker -u 1001 -G nodejs
+
+COPY package*.json ./
+# Install ALL deps (devDeps needed for ts-node)
+RUN npm ci --no-audit --no-fund
+
+COPY --chown=worker:nodejs . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+USER worker
+
+CMD ["npm", "run", "worker:start"]

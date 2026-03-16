@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Opção 2: Grid Assimétrico com Visual Hierarchy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: #f5f5f5;
+            color: #000;
+            padding: 24px;
+            line-height: 1.6;
+        }
+        
+        .wireframe-header {
+            background: white;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .wireframe-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .wireframe-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Component tag badge styles */
+        .component-wrapper {
+            position: relative;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .badge.new {
+            background: #FF9800;
+        }
+        
+        /* Main dashboard container */
+        .dashboard {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        /* Top bar with glance info */
+        .glance-bar {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+        
+        .glance-left h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .glance-left p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .glance-right {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .glance-metric {
+            text-align: right;
+        }
+        
+        .glance-metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .glance-metric-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        /* Asymmetric Bento Grid */
+        .bento-asymmetric {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(120px, auto);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        /* Hero KPI - Large card */
+        .kpi-hero {
+            grid-column: span 4;
+            grid-row: span 2;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 16px;
+            padding: 32px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .kpi-hero-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .kpi-hero-value {
+            font-size: 56px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        
+        .kpi-hero-trend {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .kpi-hero-icon {
+            position: absolute;
+            bottom: 32px;
+            right: 32px;
+            width: 64px;
+            height: 64px;
+            border: 3px solid #333;
+            border-radius: 16px;
+            background: #ccc;
+            opacity: 0.3;
+        }
+        
+        /* Compact KPI */
+        .kpi-compact {
+            grid-column: span 2;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .kpi-compact-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .kpi-compact-value {
+            font-size: 32px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .kpi-compact-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 28px;
+            height: 28px;
+            border: 2px solid #333;
+            border-radius: 6px;
+            background: #ccc;
+        }
+        
+        /* Alert Banner - Full width */
+        .alert-banner {
+            grid-column: span 12;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 12px;
+            padding: 20px 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 0 #333;
+        }
+        
+        .alert-banner-icon {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #333;
+            border-radius: 12px;
+            background: #ccc;
+            flex-shrink: 0;
+        }
+        
+        .alert-banner-content {
+            flex: 1;
+        }
+        
+        .alert-banner-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .alert-banner-text {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .alert-banner-cta {
+            padding: 10px 24px;
+            background: #333;
+            color: white;
+            border: 2px solid #333;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        /* Content Panel - Large */
+        .panel-large {
+            grid-column: span 8;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .panel-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .panel-icon {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: #ccc;
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .panel-link {
+            font-size: 13px;
+            color: #666;
+            text-decoration: underline;
+        }
+        
+        .panel-body {
+            padding: 24px;
+        }
+        
+        .panel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .panel-list-item {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            padding: 16px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            background: #fafafa;
+            align-items: center;
+        }
+        
+        .panel-item-content h4 {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        
+        .panel-item-content p {
+            font-size: 12px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .panel-item-badge {
+            padding: 6px 14px;
+            background: #333;
+            color: white;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        
+        /* Sidebar Panel */
+        .panel-sidebar {
+            grid-column: span 4;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        /* Mini Stats Row */
+        .mini-stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .mini-stat {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .mini-stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 8px;
+        }
+        
+        .mini-stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+        }
+        
+        .mini-stat-delta {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .kpi-hero {
+                grid-column: span 6;
+            }
+            
+            .kpi-compact {
+                grid-column: span 3;
+            }
+            
+            .panel-large {
+                grid-column: span 12;
+            }
+            
+            .panel-sidebar {
+                grid-column: span 12;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .kpi-hero {
+                grid-column: span 12;
+                grid-row: span 1;
+            }
+            
+            .kpi-compact {
+                grid-column: span 6;
+            }
+            
+            .glance-bar {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .glance-right {
+                justify-content: space-between;
+            }
+            
+            .mini-stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-compact {
+                grid-column: span 12;
+            }
+            
+            .glance-right {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .glance-metric {
+                text-align: left;
+            }
+            
+            .mini-stats-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Wireframe Info -->
+    <div class="wireframe-header">
+        <h1>🎨 Opção 2: Grid Assimétrico com Visual Hierarchy</h1>
+        <p><strong>Conceito:</strong> Dashboard inovador com grid assimétrico, priorizando métricas principais em destaque (hero cards), alertas tipo banner, e layout adaptativo com densidade visual balanceada.</p>
+        <p><strong>Características:</strong> 1 KPI Hero destacado | 5 KPIs compactos | Alert banner full-width | Layout assimétrico 8+4 colunas | Mini stats no rodapé</p>
+    </div>
+
+    <div class="dashboard">
+        <!-- Glance Bar -->
+        <!-- REUSABLE: Header components from src/components/layout/header.tsx -->
+        <div class="component-wrapper">
+            <span class="badge" title="src/components/layout/header.tsx">[REUSE] Header</span>
+            <div class="glance-bar">
+                <div class="glance-left">
+                    <h2>Dashboard ✨</h2>
+                    <p>Bem-vindo de volta! Aqui está o resumo do seu escritório</p>
+                </div>
+                <div class="glance-right">
+                    <div class="glance-metric">
+                        <div class="glance-metric-value">98%</div>
+                        <div class="glance-metric-label">Taxa Sucesso</div>
+                    </div>
+                    <div class="glance-metric">
+                        <div class="glance-metric-value">R$ 45k</div>
+                        <div class="glance-metric-label">Receita Mês</div>
+                    </div>
+                    <div class="glance-metric">
+                        <div class="glance-metric-value">🟢</div>
+                        <div class="glance-metric-label">Status Online</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asymmetric Bento Grid -->
+        <div class="bento-asymmetric">
+            <!-- Hero KPI -->
+            <!-- NEW COMPONENT: KPIHeroCard -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-hero-card.tsx">[NEW] KPIHeroCard</span>
+                <div class="kpi-hero">
+                    <div>
+                        <div class="kpi-hero-label">Processos Ativos</div>
+                        <div class="kpi-hero-value">127</div>
+                        <div class="kpi-hero-trend">↑ 12% vs mês anterior</div>
+                    </div>
+                    <div class="kpi-hero-icon">⚖️</div>
+                </div>
+            </div>
+
+            <!-- Compact KPIs -->
+            <!-- NEW COMPONENT: KPICompactCard -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-compact-card.tsx">[NEW] KPICompactCard</span>
+                <div class="kpi-compact">
+                    <div class="kpi-compact-icon">💰</div>
+                    <div class="kpi-compact-label">A Receber</div>
+                    <div class="kpi-compact-value">45k</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-compact-card.tsx">[NEW] KPICompactCard</span>
+                <div class="kpi-compact">
+                    <div class="kpi-compact-icon">📅</div>
+                    <div class="kpi-compact-label">Prazos 7d</div>
+                    <div class="kpi-compact-value">8</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-compact-card.tsx">[NEW] KPICompactCard</span>
+                <div class="kpi-compact">
+                    <div class="kpi-compact-icon">✓</div>
+                    <div class="kpi-compact-label">Taskscore</div>
+                    <div class="kpi-compact-value">842</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-compact-card.tsx">[NEW] KPICompactCard</span>
+                <div class="kpi-compact">
+                    <div class="kpi-compact-icon">👥</div>
+                    <div class="kpi-compact-label">Clientes</div>
+                    <div class="kpi-compact-value">43</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-compact-card.tsx">[NEW] KPICompactCard</span>
+                <div class="kpi-compact">
+                    <div class="kpi-compact-icon">🤝</div>
+                    <div class="kpi-compact-label">Leads</div>
+                    <div class="kpi-compact-value">12</div>
+                </div>
+            </div>
+
+            <!-- Alert Banner -->
+            <!-- NEW COMPONENT: AlertBanner -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/alert-banner.tsx">[NEW] AlertBanner</span>
+                <div class="alert-banner">
+                    <div class="alert-banner-icon">⚠️</div>
+                    <div class="alert-banner-content">
+                        <div class="alert-banner-title">Atenção: 3 prazos vencidos + 2 faturas atrasadas</div>
+                        <div class="alert-banner-text">Há ações urgentes que requerem sua atenção imediata no sistema</div>
+                    </div>
+                    <a href="#" class="alert-banner-cta">Ver Detalhes →</a>
+                </div>
+            </div>
+
+            <!-- Main Panel - Prazos -->
+            <!-- NEW COMPONENT: DashboardPanel -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/dashboard-panel.tsx">[NEW] DashboardPanel</span>
+                <div class="panel-large">
+                    <div class="panel-header">
+                        <div class="panel-title-wrapper">
+                            <div class="panel-icon">⏰</div>
+                            <div class="panel-title">Prazos Críticos</div>
+                        </div>
+                        <a href="#" class="panel-link">Ver todos →</a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-list">
+                            <!-- REUSABLE: Badge from src/components/ui/badge.tsx -->
+                            <div class="panel-list-item">
+                                <div class="panel-item-content">
+                                    <h4>Contestação inicial - Ação trabalhista</h4>
+                                    <p>0001234-56.2024.8.01.0001 — Cliente: Silva Comércio Ltda</p>
+                                </div>
+                                <span class="panel-item-badge">VENCIDO</span>
+                            </div>
+                            <div class="panel-list-item">
+                                <div class="panel-item-content">
+                                    <h4>Resposta ao recurso de apelação</h4>
+                                    <p>0007891-01.2024.8.01.0002 — Cliente: Santos & Associados</p>
+                                </div>
+                                <span class="panel-item-badge">HOJE</span>
+                            </div>
+                            <div class="panel-list-item">
+                                <div class="panel-item-content">
+                                    <h4>Manifestação sobre cálculos do perito</h4>
+                                    <p>0002345-67.2024.8.01.0003 — Cliente: Oliveira Construções</p>
+                                </div>
+                                <span class="panel-item-badge">3 DIAS</span>
+                            </div>
+                            <div class="panel-list-item">
+                                <div class="panel-item-content">
+                                    <h4>Impugnação à execução fiscal</h4>
+                                    <p>0003456-78.2024.8.01.0004 — Cliente: Tech Startup Inc</p>
+                                </div>
+                                <span class="panel-item-badge">5 DIAS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Panel - Tarefas -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/dashboard-panel.tsx">[NEW] DashboardPanel</span>
+                <div class="panel-sidebar">
+                    <div class="panel-header">
+                        <div class="panel-title-wrapper">
+                            <div class="panel-icon">✅</div>
+                            <div class="panel-title">Tarefas</div>
+                        </div>
+                        <a href="#" class="panel-link">Ver →</a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel-list">
+                            <div class="panel-list-item">
+                                <div class="panel-item-content">
+                                    <h4>Petição inicial</h4>
+                                    <p>Dr. João • 50 pts</p>
+                                </div>
+                                <span class="panel-item-badge">●</span>
+                            </div>
+                            <div class="panel-list-item">
+                                <div class="panel-item-content">
+                                    <h4>Revisar contrato</h4>
+                                    <p>Dra. Maria • 30 pts</p>
+                                </div>
+                                <span class="panel-item-badge">●</span>
+                            </div>
+                            <div class="panel-list-item">
+                                <div class="panel-item-content">
+                                    <h4>Reunião cliente</h4>
+                                    <p>Dr. Pedro • 20 pts</p>
+                                </div>
+                                <span class="panel-item-badge">●</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mini Stats Row -->
+        <div class="mini-stats-row">
+            <!-- NEW COMPONENT: MiniStatCard -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/mini-stat-card.tsx">[NEW] MiniStatCard</span>
+                <div class="mini-stat">
+                    <div class="mini-stat-value">23</div>
+                    <div class="mini-stat-label">Prazos Pendentes</div>
+                    <div class="mini-stat-delta">-3 vs semana passada</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/mini-stat-card.tsx">[NEW] MiniStatCard</span>
+                <div class="mini-stat">
+                    <div class="mini-stat-value">12</div>
+                    <div class="mini-stat-label">Tarefas A Fazer</div>
+                    <div class="mini-stat-delta">+2 novas hoje</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/mini-stat-card.tsx">[NEW] MiniStatCard</span>
+                <div class="mini-stat">
+                    <div class="mini-stat-value">7</div>
+                    <div class="mini-stat-label">Faturas Pendentes</div>
+                    <div class="mini-stat-delta">R$ 15.200,00 total</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/mini-stat-card.tsx">[NEW] MiniStatCard</span>
+                <div class="mini-stat">
+                    <div class="mini-stat-value">5</div>
+                    <div class="mini-stat-label">Atend. Qualificação</div>
+                    <div class="mini-stat-delta">+1 convertido</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

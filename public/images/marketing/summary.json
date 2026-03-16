@@ -1,0 +1,36 @@
+{
+  "baseURL": "http://127.0.0.1:3000",
+  "generatedAt": "2026-03-15T19:13:47.713Z",
+  "results": [
+    {
+      "key": "dashboard",
+      "path": "/dashboard",
+      "file": "C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\public\\images\\marketing\\dashboard.png"
+    },
+    {
+      "key": "crm-pipeline",
+      "path": "/crm/pipeline",
+      "file": "C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\public\\images\\marketing\\crm-pipeline.png"
+    },
+    {
+      "key": "clientes",
+      "path": "/clientes",
+      "file": "C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\public\\images\\marketing\\clientes.png"
+    },
+    {
+      "key": "processos",
+      "path": "/processos",
+      "file": "C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\public\\images\\marketing\\processos.png"
+    },
+    {
+      "key": "publicacoes",
+      "path": "/publicacoes",
+      "file": "C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\public\\images\\marketing\\publicacoes.png"
+    },
+    {
+      "key": "comunicacao",
+      "path": "/comunicacao",
+      "file": "C:\\Users\\dougc\\Documents\\Sistema Juridico ADV\\public\\images\\marketing\\comunicacao.png"
+    }
+  ]
+}

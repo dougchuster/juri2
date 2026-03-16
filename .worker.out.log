@@ -1,0 +1,5 @@
+
+> sistema-juridico@0.1.0 worker:start
+> ts-node -r tsconfig-paths/register -O "{\"module\":\"commonjs\",\"moduleResolution\":\"node\"}" src/worker/index.ts
+
+[Worker] national-orchestrator pronto (concurrency=2)

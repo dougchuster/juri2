@@ -1,0 +1,878 @@
+
+> sistema-juridico@0.1.0 dev
+> ts-node --transpile-only -r tsconfig-paths/register -O "{\"module\":\"commonjs\",\"moduleResolution\":\"node\"}" server.ts dev
+
+Creating turbopack project {
+  dir: 'C:\\Users\\dougc\\Documents\\Sistema Juridico ADV',
+  testMode: true
+}
+[Scheduler] Initializing cron jobs...
+[Scheduler] Cron jobs initialized successfully
+[WhatsApp Handler] Registering message handlers...
+[WhatsApp Handler] Message handlers registered.
+[server] ready on http://0.0.0.0:3000 (dev)
+ POST /api/jobs/process 200 in 1993ms (compile: 1447ms, proxy.ts: 298ms, render: 248ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 2.6s (compile: 2.6s, proxy.ts: 4ms, render: 77ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 2.5s (compile: 2.4s, proxy.ts: 7ms, render: 72ms)
+ POST /api/jobs/process 200 in 27ms (compile: 3ms, proxy.ts: 5ms, render: 19ms)
+ POST /api/jobs/automacao-nacional 200 in 2.2s (compile: 2.2s, proxy.ts: 5ms, render: 12ms)
+ POST /api/jobs/demandas 200 in 2.2s (compile: 1160ms, proxy.ts: 5ms, render: 1054ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 48ms (compile: 4ms, proxy.ts: 4ms, render: 41ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 30ms (compile: 3ms, proxy.ts: 3ms, render: 24ms)
+ GET /login 200 in 3.6s (compile: 3.3s, proxy.ts: 3ms, render: 317ms)
+○ Compiling /dashboard ...
+ GET /dashboard 200 in 22.2s (compile: 22.0s, proxy.ts: 4ms, render: 278ms)
+ POST /login 303 in 22.4s (compile: 3ms, proxy.ts: 5ms, render: 22.4s)
+ GET /api/chat/unread-count 200 in 2.7s (compile: 1184ms, proxy.ts: 7ms, render: 1484ms)
+ GET /api/chat/conversations 200 in 2.7s (compile: 864ms, proxy.ts: 7ms, render: 1806ms)
+ GET /api/chat/users 200 in 2.7s (compile: 1489ms, proxy.ts: 7ms, render: 1181ms)
+ GET /comunicacao 200 in 3.2s (compile: 1728ms, proxy.ts: 4ms, render: 1422ms)
+ GET /api/chat/users 200 in 36ms (compile: 3ms, proxy.ts: 6ms, render: 26ms)
+ GET /api/chat/conversations 200 in 42ms (compile: 7ms, proxy.ts: 6ms, render: 30ms)
+ GET /api/chat/unread-count 200 in 47ms (compile: 9ms, proxy.ts: 6ms, render: 31ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 62ms (compile: 6ms, proxy.ts: 12ms, render: 45ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 1726ms (compile: 1712ms, proxy.ts: 10ms, render: 5ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 1733ms (compile: 1721ms, proxy.ts: 9ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 1738ms (compile: 1726ms, proxy.ts: 10ms, render: 2ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 1756ms (compile: 1364ms, proxy.ts: 12ms, render: 380ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 781ms (compile: 4ms, proxy.ts: 774ms, render: 3ms)
+[Baileys] Connecting with version: 2.3000.1033846690
+[WhatsApp Handler] Connection state: connecting (connected: false)
+[Baileys] Connected successfully!
+[WhatsApp Handler] Connection state: open (connected: true)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 3.5s (compile: 3.5s, proxy.ts: 4ms, render: 22ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 2.5s (compile: 2.5s, proxy.ts: 3ms, render: 80ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 97ms (compile: 54ms, proxy.ts: 14ms, render: 30ms)
+ GET /api/chat/conversations 200 in 63ms (compile: 13ms, proxy.ts: 15ms, render: 35ms)
+ GET /api/comunicacao/stream 200 in 24.8s (compile: 270ms, proxy.ts: 6ms, render: 24.5s)
+ GET /login 200 in 44ms (compile: 2ms, proxy.ts: 3ms, render: 39ms)
+ GET /dashboard 200 in 246ms (compile: 7ms, proxy.ts: 3ms, render: 236ms)
+ POST /login 303 in 338ms (compile: 2ms, proxy.ts: 4ms, render: 332ms)
+ GET /api/chat/unread-count 200 in 133ms (compile: 31ms, proxy.ts: 12ms, render: 91ms)
+ GET /api/chat/users 200 in 135ms (compile: 16ms, proxy.ts: 12ms, render: 108ms)
+ GET /api/chat/conversations 200 in 135ms (compile: 21ms, proxy.ts: 12ms, render: 102ms)
+ GET /comunicacao 200 in 412ms (compile: 5ms, proxy.ts: 3ms, render: 404ms)
+ GET /api/chat/users 200 in 35ms (compile: 3ms, proxy.ts: 7ms, render: 25ms)
+ GET /api/chat/conversations 200 in 43ms (compile: 6ms, proxy.ts: 7ms, render: 31ms)
+ GET /api/chat/unread-count 200 in 46ms (compile: 8ms, proxy.ts: 4ms, render: 33ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 42ms (compile: 15ms, proxy.ts: 3ms, render: 24ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 68ms (compile: 14ms, proxy.ts: 4ms, render: 50ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 33ms (compile: 7ms, proxy.ts: 6ms, render: 19ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 31ms (compile: 16ms, proxy.ts: 12ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 37ms (compile: 21ms, proxy.ts: 12ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 42ms (compile: 24ms, proxy.ts: 13ms, render: 5ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 54ms (compile: 11ms, proxy.ts: 12ms, render: 31ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 24ms (compile: 10ms, proxy.ts: 10ms, render: 4ms)
+ GET /api/chat/conversations 200 in 104ms (compile: 12ms, proxy.ts: 11ms, render: 81ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 117ms (compile: 14ms, proxy.ts: 12ms, render: 90ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1537µs, proxy.ts: 3ms, render: 15ms)
+ GET /api/comunicacao/stream 200 in 36.1s (compile: 15ms, proxy.ts: 10ms, render: 36.1s)
+ GET /login 200 in 39ms (compile: 2ms, proxy.ts: 3ms, render: 34ms)
+ GET /dashboard 200 in 214ms (compile: 4ms, proxy.ts: 4ms, render: 207ms)
+ POST /login 303 in 303ms (compile: 2ms, proxy.ts: 3ms, render: 299ms)
+ GET /api/chat/users 200 in 115ms (compile: 33ms, proxy.ts: 9ms, render: 73ms)
+ GET /api/chat/unread-count 200 in 115ms (compile: 41ms, proxy.ts: 9ms, render: 65ms)
+ GET /api/chat/conversations 200 in 117ms (compile: 38ms, proxy.ts: 9ms, render: 70ms)
+ GET /comunicacao 200 in 397ms (compile: 4ms, proxy.ts: 3ms, render: 390ms)
+ GET /api/chat/users 200 in 46ms (compile: 4ms, proxy.ts: 8ms, render: 34ms)
+ GET /api/chat/conversations 200 in 47ms (compile: 6ms, proxy.ts: 7ms, render: 34ms)
+ GET /api/chat/unread-count 200 in 48ms (compile: 9ms, proxy.ts: 7ms, render: 32ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 43ms (compile: 20ms, proxy.ts: 3ms, render: 20ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 123ms (compile: 19ms, proxy.ts: 3ms, render: 101ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 76ms (compile: 12ms, proxy.ts: 13ms, render: 51ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 145ms (compile: 83ms, proxy.ts: 13ms, render: 49ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 152ms (compile: 17ms, proxy.ts: 13ms, render: 122ms)
+ GET /api/chat/conversations 200 in 28ms (compile: 1597µs, proxy.ts: 2ms, render: 24ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 336ms (compile: 19ms, proxy.ts: 13ms, render: 304ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 360ms (compile: 24ms, proxy.ts: 12ms, render: 323ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 338ms (compile: 10ms, proxy.ts: 22ms, render: 306ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 361ms (compile: 12ms, proxy.ts: 9ms, render: 340ms)
+ POST /api/jobs/demandas 200 in 32ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ POST /api/jobs/operacoes 200 in 956ms (compile: 851ms, proxy.ts: 3ms, render: 102ms)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 2 atend SLA
+ GET /api/comunicacao/stream 200 in 33.6s (compile: 5ms, proxy.ts: 7ms, render: 33.6s)
+ GET /login 200 in 41ms (compile: 2ms, proxy.ts: 3ms, render: 36ms)
+ GET /dashboard 200 in 220ms (compile: 4ms, proxy.ts: 3ms, render: 213ms)
+ POST /login 303 in 320ms (compile: 5ms, proxy.ts: 7ms, render: 307ms)
+ GET /api/chat/users 200 in 103ms (compile: 53ms, proxy.ts: 12ms, render: 38ms)
+ GET /api/chat/conversations 200 in 103ms (compile: 56ms, proxy.ts: 12ms, render: 34ms)
+ GET /api/chat/unread-count 200 in 103ms (compile: 61ms, proxy.ts: 12ms, render: 29ms)
+ GET /comunicacao 200 in 363ms (compile: 5ms, proxy.ts: 3ms, render: 355ms)
+ GET /api/chat/users 200 in 44ms (compile: 3ms, proxy.ts: 7ms, render: 34ms)
+ GET /api/chat/conversations 200 in 45ms (compile: 6ms, proxy.ts: 6ms, render: 33ms)
+ GET /api/chat/unread-count 200 in 46ms (compile: 8ms, proxy.ts: 6ms, render: 32ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 67ms (compile: 21ms, proxy.ts: 5ms, render: 40ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 86ms (compile: 15ms, proxy.ts: 5ms, render: 66ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 61ms (compile: 15ms, proxy.ts: 8ms, render: 38ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 34ms (compile: 18ms, proxy.ts: 12ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 37ms (compile: 24ms, proxy.ts: 10ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 40ms (compile: 28ms, proxy.ts: 10ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 43ms (compile: 31ms, proxy.ts: 10ms, render: 2ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 56ms (compile: 10ms, proxy.ts: 13ms, render: 34ms)
+ GET /api/chat/conversations 200 in 51ms (compile: 9ms, proxy.ts: 6ms, render: 36ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 110ms (compile: 15ms, proxy.ts: 13ms, render: 81ms)
+ GET /api/comunicacao/stream 200 in 3.6s (compile: 5ms, proxy.ts: 7ms, render: 3.6s)
+ POST /api/jobs/process 200 in 20ms (compile: 1626µs, proxy.ts: 2ms, render: 16ms)
+ GET /login 200 in 34ms (compile: 1923µs, proxy.ts: 3ms, render: 29ms)
+ GET /dashboard 200 in 221ms (compile: 4ms, proxy.ts: 2ms, render: 214ms)
+ POST /login 303 in 320ms (compile: 4ms, proxy.ts: 6ms, render: 310ms)
+ GET /api/chat/users 200 in 108ms (compile: 16ms, proxy.ts: 10ms, render: 82ms)
+ GET /api/chat/unread-count 200 in 107ms (compile: 25ms, proxy.ts: 11ms, render: 72ms)
+ GET /api/chat/conversations 200 in 108ms (compile: 23ms, proxy.ts: 10ms, render: 75ms)
+ GET /comunicacao 200 in 393ms (compile: 4ms, proxy.ts: 3ms, render: 385ms)
+ GET /api/chat/conversations 200 in 35ms (compile: 6ms, proxy.ts: 6ms, render: 23ms)
+ GET /api/chat/users 200 in 37ms (compile: 3ms, proxy.ts: 6ms, render: 28ms)
+ GET /api/chat/unread-count 200 in 45ms (compile: 8ms, proxy.ts: 6ms, render: 31ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 51ms (compile: 16ms, proxy.ts: 6ms, render: 28ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 68ms (compile: 22ms, proxy.ts: 4ms, render: 42ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 61ms (compile: 9ms, proxy.ts: 3ms, render: 48ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 33ms (compile: 13ms, proxy.ts: 17ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 37ms (compile: 17ms, proxy.ts: 17ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 41ms (compile: 21ms, proxy.ts: 17ms, render: 3ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 53ms (compile: 9ms, proxy.ts: 17ms, render: 27ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 46ms (compile: 32ms, proxy.ts: 12ms, render: 2ms)
+ GET /api/chat/conversations 200 in 42ms (compile: 9ms, proxy.ts: 9ms, render: 24ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 100ms (compile: 11ms, proxy.ts: 17ms, render: 72ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 8ms (compile: 1939µs, proxy.ts: 3ms, render: 3ms)
+ GET /api/comunicacao/stream 200 in 3.7s (compile: 6ms, proxy.ts: 11ms, render: 3.7s)
+ GET /login 200 in 34ms (compile: 2ms, proxy.ts: 2ms, render: 30ms)
+ GET /dashboard 200 in 238ms (compile: 4ms, proxy.ts: 3ms, render: 231ms)
+ POST /login 303 in 336ms (compile: 4ms, proxy.ts: 2ms, render: 330ms)
+ GET /api/chat/users 200 in 187ms (compile: 25ms, proxy.ts: 13ms, render: 149ms)
+ GET /api/chat/unread-count 200 in 185ms (compile: 43ms, proxy.ts: 13ms, render: 129ms)
+ GET /api/chat/conversations 200 in 187ms (compile: 28ms, proxy.ts: 12ms, render: 146ms)
+ GET /comunicacao 200 in 367ms (compile: 5ms, proxy.ts: 3ms, render: 359ms)
+ GET /api/chat/conversations 200 in 35ms (compile: 5ms, proxy.ts: 6ms, render: 24ms)
+ GET /api/chat/unread-count 200 in 49ms (compile: 6ms, proxy.ts: 6ms, render: 36ms)
+ GET /api/chat/users 200 in 51ms (compile: 3ms, proxy.ts: 6ms, render: 43ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 42ms (compile: 16ms, proxy.ts: 3ms, render: 23ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 76ms (compile: 12ms, proxy.ts: 3ms, render: 61ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 42ms (compile: 12ms, proxy.ts: 6ms, render: 24ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 61ms (compile: 27ms, proxy.ts: 17ms, render: 17ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 47ms (compile: 13ms, proxy.ts: 31ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 45ms (compile: 19ms, proxy.ts: 23ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 48ms (compile: 24ms, proxy.ts: 22ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 15ms (compile: 6ms, proxy.ts: 7ms, render: 3ms)
+ GET /api/chat/conversations 200 in 109ms (compile: 24ms, proxy.ts: 14ms, render: 71ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 112ms (compile: 13ms, proxy.ts: 25ms, render: 74ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 12ms (compile: 3ms, proxy.ts: 6ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 13ms (compile: 6ms, proxy.ts: 5ms, render: 1848µs)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 15ms (compile: 9ms, proxy.ts: 4ms, render: 2ms)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ GET /api/comunicacao/stream 200 in 3.7s (compile: 10ms, proxy.ts: 7ms, render: 3.7s)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 62ms (compile: 7ms, proxy.ts: 4ms, render: 50ms)
+ GET /api/comunicacao/stream 200 in 5.4s (compile: 5ms, proxy.ts: 5ms, render: 5.4s)
+ POST /api/jobs/process 200 in 22ms (compile: 2ms, proxy.ts: 4ms, render: 16ms)
+✓ Compiled in 219ms
+ GET /login 200 in 44ms (compile: 3ms, proxy.ts: 2ms, render: 39ms)
+ GET /dashboard 200 in 241ms (compile: 5ms, proxy.ts: 3ms, render: 233ms)
+ POST /login 303 in 324ms (compile: 2ms, proxy.ts: 4ms, render: 318ms)
+ GET /api/chat/users 200 in 3.5s (compile: 3.4s, proxy.ts: 10ms, render: 137ms)
+ GET /api/chat/unread-count 200 in 3.8s (compile: 3.4s, proxy.ts: 11ms, render: 437ms)
+ GET /api/chat/conversations 200 in 3.9s (compile: 3.4s, proxy.ts: 11ms, render: 442ms)
+ GET /comunicacao 200 in 4.0s (compile: 2.3s, proxy.ts: 3ms, render: 1676ms)
+ GET /api/chat/users 200 in 31ms (compile: 3ms, proxy.ts: 6ms, render: 22ms)
+ GET /api/chat/unread-count 200 in 35ms (compile: 8ms, proxy.ts: 6ms, render: 22ms)
+ GET /api/chat/conversations 200 in 42ms (compile: 6ms, proxy.ts: 6ms, render: 30ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 49ms (compile: 18ms, proxy.ts: 4ms, render: 27ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 61ms (compile: 14ms, proxy.ts: 3ms, render: 43ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 28ms (compile: 6ms, proxy.ts: 3ms, render: 20ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 36ms (compile: 20ms, proxy.ts: 13ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 42ms (compile: 24ms, proxy.ts: 15ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 46ms (compile: 29ms, proxy.ts: 15ms, render: 3ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 59ms (compile: 13ms, proxy.ts: 12ms, render: 34ms)
+ GET /api/chat/conversations 200 in 97ms (compile: 4ms, proxy.ts: 4ms, render: 89ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 124ms (compile: 17ms, proxy.ts: 12ms, render: 95ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 364ms (compile: 16ms, proxy.ts: 9ms, render: 340ms)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 16ms (compile: 3ms, proxy.ts: 4ms, render: 9ms)
+ GET /api/comunicacao/stream 200 in 3.8s (compile: 15ms, proxy.ts: 14ms, render: 3.8s)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 57ms (compile: 7ms, proxy.ts: 4ms, render: 47ms)
+ GET /api/comunicacao/stream 200 in 5.4s (compile: 7ms, proxy.ts: 18ms, render: 5.3s)
+ POST /api/jobs/process 200 in 33ms (compile: 6ms, proxy.ts: 4ms, render: 24ms)
+ GET /login 200 in 52ms (compile: 2ms, proxy.ts: 2ms, render: 47ms)
+ GET /dashboard 200 in 362ms (compile: 5ms, proxy.ts: 3ms, render: 354ms)
+ POST /login 303 in 445ms (compile: 3ms, proxy.ts: 4ms, render: 438ms)
+ GET /api/chat/unread-count 200 in 4.1s (compile: 30ms, proxy.ts: 3.7s, render: 401ms)
+ GET /api/chat/conversations 200 in 4.1s (compile: 3.7s, proxy.ts: 34ms, render: 407ms)
+ GET /api/chat/users 200 in 4.2s (compile: 3.7s, proxy.ts: 45ms, render: 414ms)
+ GET /comunicacao 200 in 4.3s (compile: 2.6s, proxy.ts: 3ms, render: 1711ms)
+ GET /api/chat/conversations 200 in 39ms (compile: 6ms, proxy.ts: 6ms, render: 27ms)
+ GET /api/chat/unread-count 200 in 40ms (compile: 8ms, proxy.ts: 5ms, render: 27ms)
+ GET /api/chat/users 200 in 43ms (compile: 3ms, proxy.ts: 6ms, render: 33ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 47ms (compile: 18ms, proxy.ts: 4ms, render: 24ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 67ms (compile: 14ms, proxy.ts: 4ms, render: 48ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 71ms (compile: 25ms, proxy.ts: 3ms, render: 44ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 39ms (compile: 15ms, proxy.ts: 17ms, render: 7ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 51ms (compile: 30ms, proxy.ts: 16ms, render: 4ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 73ms (compile: 14ms, proxy.ts: 15ms, render: 43ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 72ms (compile: 24ms, proxy.ts: 42ms, render: 6ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 199ms (compile: 25ms, proxy.ts: 18ms, render: 156ms)
+ GET /api/chat/conversations 200 in 127ms (compile: 43ms, proxy.ts: 27ms, render: 57ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 929ms (compile: 27ms, proxy.ts: 13ms, render: 889ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 2.9s (compile: 2.9s, proxy.ts: 15ms, render: 22ms)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 21ms (compile: 3ms, proxy.ts: 5ms, render: 12ms)
+ GET /api/comunicacao/stream 200 in 3.8s (compile: 18ms, proxy.ts: 32ms, render: 3.7s)
+ POST /api/comunicacao/conversations/cmmmm0tvo0067kwmhgrd3hw9g/read 200 in 63ms (compile: 27ms, proxy.ts: 5ms, render: 30ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 78ms (compile: 8ms, proxy.ts: 5ms, render: 65ms)
+ GET /api/comunicacao/stream 200 in 5.0s (compile: 4ms, proxy.ts: 5ms, render: 5.0s)
+✓ Compiled in 301ms
+ POST /api/jobs/process 200 in 21ms (compile: 2ms, proxy.ts: 4ms, render: 15ms)
+ GET /login 200 in 43ms (compile: 3ms, proxy.ts: 3ms, render: 37ms)
+[Baileys] Connection closed. Reason: 408 timedOut
+[WhatsApp Handler] Connection state: close (connected: false)
+[Baileys] Reconnecting in 2000ms (attempt 1)...
+ GET /dashboard 200 in 21.8s (compile: 21.5s, proxy.ts: 3ms, render: 288ms)
+ POST /login 303 in 21.9s (compile: 1914µs, proxy.ts: 3ms, render: 21.9s)
+ GET /api/chat/users 200 in 56ms (compile: 5ms, proxy.ts: 18ms, render: 33ms)
+ GET /api/chat/conversations 200 in 67ms (compile: 9ms, proxy.ts: 17ms, render: 41ms)
+ GET /api/chat/unread-count 200 in 77ms (compile: 13ms, proxy.ts: 16ms, render: 48ms)
+[Baileys] Connecting with version: 2.3000.1033846690
+[WhatsApp Handler] Connection state: connecting (connected: false)
+ GET /api/chat/unread-count 200 in 447ms (compile: 30ms, proxy.ts: 12ms, render: 405ms)
+ GET /api/chat/users 200 in 3.5s (compile: 20ms, proxy.ts: 3.1s, render: 426ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 445ms (compile: 119ms, proxy.ts: 10ms, render: 316ms)
+ GET /api/chat/conversations 200 in 3.5s (compile: 23ms, proxy.ts: 3.1s, render: 419ms)
+ GET /comunicacao 200 in 3.8s (compile: 2.1s, proxy.ts: 3ms, render: 1706ms)
+ GET /api/chat/users 200 in 67ms (compile: 4ms, proxy.ts: 9ms, render: 54ms)
+ GET /api/chat/conversations 200 in 76ms (compile: 7ms, proxy.ts: 9ms, render: 59ms)
+ GET /api/chat/unread-count 200 in 77ms (compile: 10ms, proxy.ts: 8ms, render: 59ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 54ms (compile: 21ms, proxy.ts: 5ms, render: 28ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 60ms (compile: 32ms, proxy.ts: 21ms, render: 7ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 70ms (compile: 42ms, proxy.ts: 21ms, render: 8ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 92ms (compile: 11ms, proxy.ts: 24ms, render: 57ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 198ms (compile: 19ms, proxy.ts: 6ms, render: 173ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 1635ms (compile: 1567ms, proxy.ts: 65ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 1631ms (compile: 16ms, proxy.ts: 1613ms, render: 2ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 1756ms (compile: 99ms, proxy.ts: 25ms, render: 1632ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 85ms (compile: 43ms, proxy.ts: 14ms, render: 28ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 1794ms (compile: 1667ms, proxy.ts: 22ms, render: 104ms)
+ GET /api/chat/conversations 200 in 28ms (compile: 1997µs, proxy.ts: 4ms, render: 22ms)
+[Baileys] Connected successfully!
+[WhatsApp Handler] Connection state: open (connected: true)
+ GET /api/comunicacao/messages?conversationId=cmmmm0tvo0067kwmhgrd3hw9g&page=1&pageSize=30 200 in 25ms (compile: 4ms, proxy.ts: 9ms, render: 13ms)
+ GET /api/comunicacao/stream 200 in 3.7s (compile: 32ms, proxy.ts: 1576ms, render: 2.1s)
+ POST /api/comunicacao/conversations/cmmmm0tvo0067kwmhgrd3hw9g/read 200 in 71ms (compile: 28ms, proxy.ts: 9ms, render: 34ms)
+ GET /api/comunicacao/workspace?conversationId=cmmmm0tvo0067kwmhgrd3hw9g 200 in 90ms (compile: 9ms, proxy.ts: 9ms, render: 72ms)
+ GET /api/comunicacao/stream 200 in 5.0s (compile: 3ms, proxy.ts: 6ms, render: 5.0s)
+ POST /api/jobs/automacao-nacional 200 in 28ms (compile: 3ms, proxy.ts: 5ms, render: 19ms)
+ POST /api/jobs/demandas 200 in 33ms (compile: 7ms, proxy.ts: 5ms, render: 20ms)
+ POST /api/jobs/process 200 in 21ms (compile: 3ms, proxy.ts: 4ms, render: 14ms)
+ POST /api/jobs/process 200 in 21ms (compile: 4ms, proxy.ts: 3ms, render: 14ms)
+ GET /comunicacao 200 in 244ms (compile: 6ms, proxy.ts: 3ms, render: 235ms)
+ GET /api/chat/users 200 in 35ms (compile: 8ms, proxy.ts: 5ms, render: 23ms)
+ GET /api/chat/unread-count 200 in 37ms (compile: 5ms, proxy.ts: 5ms, render: 27ms)
+ GET /api/chat/conversations 200 in 47ms (compile: 4ms, proxy.ts: 5ms, render: 38ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 34ms (compile: 15ms, proxy.ts: 2ms, render: 16ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 59ms (compile: 14ms, proxy.ts: 2ms, render: 42ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 46ms (compile: 7ms, proxy.ts: 14ms, render: 26ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 88ms (compile: 43ms, proxy.ts: 14ms, render: 31ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 109ms (compile: 12ms, proxy.ts: 13ms, render: 84ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 485ms (compile: 22ms, proxy.ts: 13ms, render: 450ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 555ms (compile: 18ms, proxy.ts: 13ms, render: 524ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 572ms (compile: 15ms, proxy.ts: 13ms, render: 544ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 571ms (compile: 3ms, proxy.ts: 5ms, render: 563ms)
+ POST /api/jobs/process 200 in 19ms (compile: 6ms, proxy.ts: 5ms, render: 8ms)
+ POST /api/jobs/demandas 200 in 32ms (compile: 3ms, proxy.ts: 5ms, render: 24ms)
+ POST /api/jobs/publicacoes 200 in 589ms (compile: 576ms, proxy.ts: 5ms, render: 8ms)
+ POST /api/jobs/process 200 in 13ms (compile: 2ms, proxy.ts: 2ms, render: 8ms)
+✓ Compiled in 260ms
+ GET /api/comunicacao/stream 200 in 4.2min (compile: 5ms, proxy.ts: 3ms, render: 4.2min)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 35ms (compile: 4ms, proxy.ts: 5ms, render: 26ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 71ms (compile: 9ms, proxy.ts: 2ms, render: 60ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 86ms (compile: 11ms, proxy.ts: 5ms, render: 70ms)
+✓ Compiled in 239ms
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 32ms (compile: 12ms, proxy.ts: 4ms, render: 16ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 15ms (compile: 3ms, proxy.ts: 3ms, render: 8ms)
+ GET /api/comunicacao/stream 200 in 8.7s (compile: 6ms, proxy.ts: 6ms, render: 8.7s)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 46ms (compile: 3ms, proxy.ts: 3ms, render: 41ms)
+ POST /api/jobs/process 200 in 13ms (compile: 2ms, proxy.ts: 2ms, render: 9ms)
+ POST /api/jobs/demandas 200 in 19ms (compile: 2ms, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 12ms (compile: 1987µs, proxy.ts: 2ms, render: 8ms)
+ POST /api/jobs/process 200 in 14ms (compile: 1874µs, proxy.ts: 3ms, render: 9ms)
+ GET /api/comunicacao/stream 200 in 5.7min (compile: 4ms, proxy.ts: 6ms, render: 5.7min)
+ GET /api/comunicacao/stream 200 in 640ms (compile: 1893µs, proxy.ts: 3ms, render: 635ms)
+✓ Compiled in 265ms
+ GET /api/comunicacao/stream 200 in 87s (compile: 1520µs, proxy.ts: 2ms, render: 87s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 94ms (compile: 10ms, proxy.ts: 3ms, render: 80ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 39ms (compile: 7ms, proxy.ts: 12ms, render: 21ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 94ms (compile: 14ms, proxy.ts: 7ms, render: 73ms)
+ POST /api/jobs/automacao-nacional 200 in 18ms (compile: 3ms, proxy.ts: 4ms, render: 11ms)
+ POST /api/jobs/process 200 in 23ms (compile: 8ms, proxy.ts: 4ms, render: 11ms)
+ POST /api/jobs/demandas 200 in 30ms (compile: 6ms, proxy.ts: 4ms, render: 20ms)
+✓ Compiled in 247ms
+ GET /api/comunicacao/stream 200 in 17.3s (compile: 19ms, proxy.ts: 6ms, render: 17.3s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 79ms (compile: 13ms, proxy.ts: 4ms, render: 61ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 14ms (compile: 2ms, proxy.ts: 3ms, render: 9ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 63ms (compile: 2ms, proxy.ts: 3ms, render: 58ms)
+✓ Compiled in 236ms
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 36ms (compile: 3ms, proxy.ts: 4ms, render: 29ms)
+ GET /api/comunicacao/stream 200 in 22.0s (compile: 2ms, proxy.ts: 3ms, render: 22.0s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 82ms (compile: 22ms, proxy.ts: 5ms, render: 56ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 121ms (compile: 8ms, proxy.ts: 4ms, render: 109ms)
+✓ Compiled in 268ms
+ GET /api/comunicacao/stream 200 in 75s (compile: 3ms, proxy.ts: 3ms, render: 75s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 52ms (compile: 6ms, proxy.ts: 9ms, render: 38ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 89ms (compile: 11ms, proxy.ts: 5ms, render: 72ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 90ms (compile: 11ms, proxy.ts: 10ms, render: 69ms)
+ POST /api/jobs/process 200 in 15ms (compile: 3ms, proxy.ts: 3ms, render: 10ms)
+✓ Compiled in 237ms
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 56ms (compile: 12ms, proxy.ts: 3ms, render: 41ms)
+ GET /api/comunicacao/stream 200 in 21.6s (compile: 14ms, proxy.ts: 10ms, render: 21.6s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 23ms (compile: 3ms, proxy.ts: 11ms, render: 9ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 68ms (compile: 4ms, proxy.ts: 7ms, render: 58ms)
+✓ Compiled in 233ms
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 40ms (compile: 5ms, proxy.ts: 4ms, render: 31ms)
+ GET /api/comunicacao/stream 200 in 17.2s (compile: 3ms, proxy.ts: 6ms, render: 17.1s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 84ms (compile: 25ms, proxy.ts: 5ms, render: 55ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 124ms (compile: 9ms, proxy.ts: 5ms, render: 111ms)
+ POST /api/jobs/process 200 in 17ms (compile: 3ms, proxy.ts: 3ms, render: 11ms)
+ GET /login 200 in 73ms (compile: 9ms, proxy.ts: 5ms, render: 58ms)
+ GET /dashboard 200 in 292ms (compile: 12ms, proxy.ts: 5ms, render: 276ms)
+ POST /login 303 in 408ms (compile: 3ms, proxy.ts: 5ms, render: 400ms)
+ GET /api/chat/conversations 200 in 451ms (compile: 23ms, proxy.ts: 10ms, render: 418ms)
+ GET /api/chat/unread-count 200 in 451ms (compile: 25ms, proxy.ts: 10ms, render: 416ms)
+ GET /api/chat/users 200 in 452ms (compile: 19ms, proxy.ts: 10ms, render: 423ms)
+ GET /comunicacao 200 in 4.5s (compile: 2.6s, proxy.ts: 3ms, render: 1883ms)
+ GET /api/chat/users 200 in 48ms (compile: 6ms, proxy.ts: 7ms, render: 34ms)
+ GET /api/chat/conversations 200 in 50ms (compile: 8ms, proxy.ts: 8ms, render: 35ms)
+ GET /api/chat/unread-count 200 in 57ms (compile: 10ms, proxy.ts: 8ms, render: 39ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 80ms (compile: 26ms, proxy.ts: 26ms, render: 28ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 63ms (compile: 9ms, proxy.ts: 14ms, render: 40ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 146ms (compile: 73ms, proxy.ts: 15ms, render: 57ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 199ms (compile: 21ms, proxy.ts: 4ms, render: 174ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 197ms (compile: 14ms, proxy.ts: 13ms, render: 171ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 41ms (compile: 10ms, proxy.ts: 6ms, render: 26ms)
+ GET /api/chat/conversations 200 in 38ms (compile: 4ms, proxy.ts: 6ms, render: 29ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 38ms (compile: 6ms, proxy.ts: 3ms, render: 29ms)
+ GET /api/chat/conversations 200 in 29ms (compile: 1834µs, proxy.ts: 3ms, render: 24ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 571ms (compile: 28ms, proxy.ts: 10ms, render: 533ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 572ms (compile: 36ms, proxy.ts: 10ms, render: 526ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 491ms (compile: 8ms, proxy.ts: 23ms, render: 461ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 543ms (compile: 23ms, proxy.ts: 6ms, render: 513ms)
+ GET /api/comunicacao/stream 200 in 4.6s (compile: 16ms, proxy.ts: 6ms, render: 4.6s)
+ POST /api/jobs/demandas 200 in 20ms (compile: 3ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 14ms (compile: 2ms, proxy.ts: 3ms, render: 8ms)
+Closing session: SessionEntry {
+  _chains: {
+    BZS03MqhwP7076c7g7P9lxqogvJ0Qpx19RlGIFsQ9YYg: { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 1626343062,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 94 b4 dc ca a1 c0 fe f4 ef a7 3b 83 b3 fd 97 1a a8 82 f2 74 42 9c 75 f5 19 46 20 5b 10 f5 86 20>,
+      privKey: <Buffer 48 75 c8 b9 ca 46 f4 5e 0f 22 74 17 54 ee 6f 5a c5 b9 17 46 e6 3f cc 82 6c de 5b 09 e8 c1 4a 76>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 b1 46 51 94 c0 0f 9c 07 54 8a 36 a9 9c 9d 3b 6f 3f fa ed c1 ee aa 9d 8b de 7c d2 70 4b c2 29 46>,
+    previousCounter: 0,
+    rootKey: <Buffer 96 40 7a af f7 ed 7c 9e b4 fb 21 ea f7 53 ca 5e 14 6d d6 b7 be 85 3d 1c a9 32 f7 b0 8d 23 7e 25>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 90 10 5c b8 c9 c7 cf 8e b8 fb 25 5a 3c ed 9a 1c 3d 24 95 83 47 42 c3 0c 92 1f 8a f1 39 6a 85 05>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773282918724,
+    created: 1773282918724,
+    remoteIdentityKey: <Buffer 05 b1 e0 fe b5 1c 5e 67 76 1e 49 55 81 b7 96 60 e9 ae 7a 34 d6 cd d1 2b 76 dd 76 18 67 00 c5 71 58>
+  },
+  pendingPreKey: {
+    signedKeyId: 13692197,
+    baseKey: <Buffer 05 90 10 5c b8 c9 c7 cf 8e b8 fb 25 5a 3c ed 9a 1c 3d 24 95 83 47 42 c3 0c 92 1f 8a f1 39 6a 85 05>,
+    preKeyId: 5131578
+  }
+}
+ POST /api/jobs/process 200 in 15ms (compile: 3ms, proxy.ts: 3ms, render: 10ms)
+ POST /api/jobs/process 200 in 17ms (compile: 2ms, proxy.ts: 3ms, render: 11ms)
+ POST /api/jobs/demandas 200 in 30ms (compile: 8ms, proxy.ts: 3ms, render: 19ms)
+ POST /api/jobs/process 200 in 12ms (compile: 1489µs, proxy.ts: 3ms, render: 8ms)
+✓ Compiled in 292ms
+ GET /api/comunicacao/stream 200 in 10.5min (compile: 7ms, proxy.ts: 28ms, render: 10.5min)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 38ms (compile: 4ms, proxy.ts: 8ms, render: 25ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 77ms (compile: 10ms, proxy.ts: 3ms, render: 64ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 86ms (compile: 8ms, proxy.ts: 8ms, render: 70ms)
+✓ Compiled in 189ms
+ GET /api/comunicacao/stream 200 in 10.0s (compile: 10ms, proxy.ts: 7ms, render: 10.0s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 55ms (compile: 12ms, proxy.ts: 3ms, render: 40ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 48ms (compile: 2ms, proxy.ts: 4ms, render: 43ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 72ms (compile: 3ms, proxy.ts: 3ms, render: 65ms)
+✓ Compiled in 249ms
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 35ms (compile: 3ms, proxy.ts: 6ms, render: 26ms)
+ GET /api/comunicacao/stream 200 in 8.0s (compile: 5ms, proxy.ts: 7ms, render: 8.0s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 89ms (compile: 23ms, proxy.ts: 7ms, render: 59ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 143ms (compile: 7ms, proxy.ts: 6ms, render: 130ms)
+✓ Compiled in 272ms
+ GET /api/comunicacao/stream 200 in 16.2s (compile: 8ms, proxy.ts: 29ms, render: 16.1s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 42ms (compile: 6ms, proxy.ts: 10ms, render: 25ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 86ms (compile: 15ms, proxy.ts: 3ms, render: 68ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 100ms (compile: 13ms, proxy.ts: 10ms, render: 77ms)
+✓ Compiled in 231ms
+ GET /api/comunicacao/stream 200 in 13.5s (compile: 15ms, proxy.ts: 10ms, render: 13.5s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 62ms (compile: 12ms, proxy.ts: 5ms, render: 45ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 26ms (compile: 4ms, proxy.ts: 7ms, render: 15ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 83ms (compile: 5ms, proxy.ts: 5ms, render: 73ms)
+ POST /api/jobs/process 200 in 12ms (compile: 1922µs, proxy.ts: 2ms, render: 8ms)
+ GET /login 200 in 64ms (compile: 3ms, proxy.ts: 3ms, render: 58ms)
+ GET /dashboard 200 in 328ms (compile: 7ms, proxy.ts: 3ms, render: 319ms)
+ POST /login 303 in 427ms (compile: 3ms, proxy.ts: 7ms, render: 417ms)
+ GET /api/chat/unread-count 200 in 473ms (compile: 25ms, proxy.ts: 11ms, render: 437ms)
+ GET /api/chat/users 200 in 475ms (compile: 20ms, proxy.ts: 11ms, render: 443ms)
+ GET /api/chat/conversations 200 in 474ms (compile: 22ms, proxy.ts: 11ms, render: 441ms)
+ GET /comunicacao 200 in 4.8s (compile: 3.0s, proxy.ts: 5ms, render: 1817ms)
+ GET /api/chat/users 200 in 37ms (compile: 3ms, proxy.ts: 6ms, render: 28ms)
+ GET /api/chat/conversations 200 in 38ms (compile: 7ms, proxy.ts: 6ms, render: 26ms)
+ GET /api/chat/unread-count 200 in 44ms (compile: 10ms, proxy.ts: 5ms, render: 29ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 64ms (compile: 32ms, proxy.ts: 5ms, render: 27ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 47ms (compile: 8ms, proxy.ts: 9ms, render: 30ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 101ms (compile: 53ms, proxy.ts: 9ms, render: 39ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 199ms (compile: 20ms, proxy.ts: 4ms, render: 175ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 160ms (compile: 14ms, proxy.ts: 10ms, render: 136ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 97ms (compile: 33ms, proxy.ts: 14ms, render: 50ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 46ms (compile: 8ms, proxy.ts: 10ms, render: 28ms)
+ GET /api/chat/conversations 200 in 35ms (compile: 3ms, proxy.ts: 4ms, render: 28ms)
+ GET /api/chat/conversations 200 in 29ms (compile: 3ms, proxy.ts: 3ms, render: 23ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 485ms (compile: 9ms, proxy.ts: 5ms, render: 471ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 567ms (compile: 20ms, proxy.ts: 10ms, render: 537ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 579ms (compile: 25ms, proxy.ts: 10ms, render: 544ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 10ms (compile: 3ms, proxy.ts: 5ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 564ms (compile: 12ms, proxy.ts: 10ms, render: 542ms)
+ GET /api/comunicacao/stream 200 in 3.6s (compile: 10ms, proxy.ts: 22ms, render: 3.6s)
+ POST /api/jobs/automacao-nacional 200 in 28ms (compile: 15ms, proxy.ts: 4ms, render: 8ms)
+ POST /api/jobs/demandas 200 in 44ms (compile: 19ms, proxy.ts: 4ms, render: 22ms)
+ POST /api/jobs/process 200 in 23ms (compile: 3ms, proxy.ts: 3ms, render: 17ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1704µs, proxy.ts: 3ms, render: 15ms)
+ GET /api/comunicacao/stream 200 in 5.1min (compile: 2ms, proxy.ts: 2ms, render: 5.1min)
+ GET /comunicacao 200 in 257ms (compile: 7ms, proxy.ts: 2ms, render: 247ms)
+ GET /api/chat/users 200 in 43ms (compile: 7ms, proxy.ts: 4ms, render: 32ms)
+ GET /api/chat/conversations 200 in 49ms (compile: 5ms, proxy.ts: 4ms, render: 40ms)
+ GET /api/chat/unread-count 200 in 50ms (compile: 10ms, proxy.ts: 4ms, render: 36ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 39ms (compile: 12ms, proxy.ts: 2ms, render: 24ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 26ms (compile: 13ms, proxy.ts: 11ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 32ms (compile: 18ms, proxy.ts: 10ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 40ms (compile: 28ms, proxy.ts: 9ms, render: 3ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 52ms (compile: 8ms, proxy.ts: 11ms, render: 33ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 120ms (compile: 50ms, proxy.ts: 12ms, render: 58ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 165ms (compile: 11ms, proxy.ts: 12ms, render: 142ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 133ms (compile: 33ms, proxy.ts: 8ms, render: 91ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 552ms (compile: 7ms, proxy.ts: 19ms, render: 526ms)
+ POST /api/jobs/process 200 in 24ms (compile: 6ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 30ms (compile: 2ms, proxy.ts: 4ms, render: 24ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1818µs, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1487µs, proxy.ts: 3ms, render: 16ms)
+✓ Compiled in 564ms
+ GET /comunicacao 200 in 4.0s (compile: 2.3s, proxy.ts: 3ms, render: 1686ms)
+ GET /comunicacao 200 in 510ms (compile: 12ms, proxy.ts: 8ms, render: 490ms)
+ GET /api/comunicacao/stream 200 in 5.8min (compile: 10ms, proxy.ts: 8ms, render: 5.8min)
+ GET /comunicacao 200 in 4.1s (compile: 2.2s, proxy.ts: 2ms, render: 1835ms)
+ GET /api/chat/users 200 in 30ms (compile: 4ms, proxy.ts: 4ms, render: 22ms)
+ GET /api/chat/unread-count 200 in 34ms (compile: 8ms, proxy.ts: 5ms, render: 21ms)
+ GET /api/chat/conversations 200 in 39ms (compile: 5ms, proxy.ts: 4ms, render: 30ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 35ms (compile: 14ms, proxy.ts: 3ms, render: 18ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 51ms (compile: 13ms, proxy.ts: 3ms, render: 36ms)
+ POST /api/jobs/demandas 200 in 19ms (compile: 2ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 12ms (compile: 1687µs, proxy.ts: 2ms, render: 8ms)
+ POST /api/jobs/process 200 in 14ms (compile: 1664µs, proxy.ts: 2ms, render: 10ms)
+ POST /api/jobs/automacao-nacional 200 in 29ms (compile: 6ms, proxy.ts: 6ms, render: 17ms)
+ POST /api/jobs/process 200 in 32ms (compile: 4ms, proxy.ts: 5ms, render: 23ms)
+ POST /api/jobs/demandas 200 in 34ms (compile: 9ms, proxy.ts: 6ms, render: 19ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1862µs, proxy.ts: 2ms, render: 16ms)
+ POST /api/jobs/process 200 in 19ms (compile: 2ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 43ms (compile: 6ms, proxy.ts: 3ms, render: 33ms)
+ POST /api/jobs/operacoes 200 in 50ms (compile: 3ms, proxy.ts: 3ms, render: 43ms)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 2 atend SLA
+ POST /api/jobs/process 200 in 21ms (compile: 1823µs, proxy.ts: 1842µs, render: 17ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 1371ms (compile: 7ms, proxy.ts: 11ms, render: 1353ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 1403ms (compile: 33ms, proxy.ts: 10ms, render: 1359ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 1433ms (compile: 1336ms, proxy.ts: 11ms, render: 87ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 1562ms (compile: 17ms, proxy.ts: 11ms, render: 1535ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 1637ms (compile: 11ms, proxy.ts: 11ms, render: 1615ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 1642ms (compile: 14ms, proxy.ts: 11ms, render: 1617ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 544ms (compile: 3ms, proxy.ts: 5ms, render: 536ms)
+ GET /api/comunicacao/stream 200 in 7.8s (compile: 3ms, proxy.ts: 3ms, render: 7.8s)
+ GET /comunicacao 200 in 222ms (compile: 4ms, proxy.ts: 3ms, render: 215ms)
+ GET /api/chat/users 200 in 47ms (compile: 3ms, proxy.ts: 5ms, render: 39ms)
+ GET /api/chat/conversations 200 in 53ms (compile: 7ms, proxy.ts: 5ms, render: 41ms)
+ GET /api/chat/unread-count 200 in 56ms (compile: 12ms, proxy.ts: 5ms, render: 40ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 30ms (compile: 11ms, proxy.ts: 2ms, render: 16ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 23ms (compile: 12ms, proxy.ts: 8ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 27ms (compile: 16ms, proxy.ts: 9ms, render: 2ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 29ms (compile: 18ms, proxy.ts: 9ms, render: 1892µs)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 39ms (compile: 5ms, proxy.ts: 9ms, render: 25ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 28ms (compile: 8ms, proxy.ts: 18ms, render: 2ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 102ms (compile: 42ms, proxy.ts: 9ms, render: 50ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 124ms (compile: 9ms, proxy.ts: 9ms, render: 106ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 107ms (compile: 24ms, proxy.ts: 19ms, render: 65ms)
+ POST /api/jobs/process 200 in 22ms (compile: 2ms, proxy.ts: 3ms, render: 17ms)
+✓ Compiled in 334ms
+ GET /api/comunicacao/stream 200 in 109s (compile: 11ms, proxy.ts: 18ms, render: 109s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 61ms (compile: 5ms, proxy.ts: 30ms, render: 26ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 110ms (compile: 16ms, proxy.ts: 6ms, render: 87ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 107ms (compile: 8ms, proxy.ts: 30ms, render: 68ms)
+ POST /api/jobs/process 200 in 24ms (compile: 3ms, proxy.ts: 4ms, render: 17ms)
+ POST /api/jobs/demandas 200 in 29ms (compile: 5ms, proxy.ts: 4ms, render: 20ms)
+ POST /api/jobs/process 200 in 21ms (compile: 2ms, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/process 200 in 20ms (compile: 3ms, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/automacao-nacional 200 in 22ms (compile: 2ms, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 28ms (compile: 5ms, proxy.ts: 3ms, render: 20ms)
+ POST /api/jobs/process 200 in 21ms (compile: 1675µs, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1812µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/publicacoes 200 in 25ms (compile: 8ms, proxy.ts: 4ms, render: 14ms)
+ POST /api/jobs/process 200 in 33ms (compile: 5ms, proxy.ts: 4ms, render: 25ms)
+ POST /api/jobs/demandas 200 in 38ms (compile: 3ms, proxy.ts: 4ms, render: 31ms)
+✓ Compiled in 259ms
+ GET /api/comunicacao/stream 200 in 11.3min (compile: 11ms, proxy.ts: 30ms, render: 11.3min)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 45ms (compile: 3ms, proxy.ts: 6ms, render: 36ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 90ms (compile: 10ms, proxy.ts: 2ms, render: 77ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 116ms (compile: 19ms, proxy.ts: 5ms, render: 92ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1552µs, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1716µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 23ms (compile: 1617µs, proxy.ts: 3ms, render: 19ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1989µs, proxy.ts: 2ms, render: 14ms)
+Closing session: SessionEntry {
+  _chains: {
+    'BeRP2zCf73FbIOabXupoX8cKPscb/ATShhViB+pk9s1g': { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 1999544853,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 e4 4f db 30 9f ef 71 5b 20 e6 9b 5e ea 68 5f c7 0a 3e c7 1b fc 04 d2 86 15 62 07 ea 64 f6 cd 60>,
+      privKey: <Buffer e0 4d ad b2 15 06 49 ab d7 97 e8 bc 0f e1 7d 49 26 34 1e 59 1e c0 1a 8d d7 d5 3f 81 e6 03 91 5f>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 dd fe 1f 63 21 db 8f f6 79 4b 4e 55 ee 4c 21 30 d3 ab 8e 41 d9 7c b6 4b 85 af 7b 07 4a 64 74 51>,
+    previousCounter: 0,
+    rootKey: <Buffer 88 d5 73 f0 ce 58 e6 13 75 59 5a dc 4e 04 38 7b 23 d2 c7 85 ee 6d b1 01 9f 6f be 41 58 cb 7d 7b>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 bb f5 a9 c8 8f a0 8f 37 df f3 65 43 5c a2 8f 5f 67 48 29 ed 29 f2 50 fe 9f 1f 16 22 f1 9e 6d 39>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773283072677,
+    created: 1773283072677,
+    remoteIdentityKey: <Buffer 05 97 de 93 47 bd 9b 61 d8 f0 ec a2 1e 2b 5a ab 1f c2 07 6c a8 4f 71 a2 fe 00 ad a2 3f 03 62 80 46>
+  },
+  pendingPreKey: {
+    signedKeyId: 379071,
+    baseKey: <Buffer 05 bb f5 a9 c8 8f a0 8f 37 df f3 65 43 5c a2 8f 5f 67 48 29 ed 29 f2 50 fe 9f 1f 16 22 f1 9e 6d 39>,
+    preKeyId: 3679902
+  }
+}
+ POST /api/jobs/process 200 in 18ms (compile: 1820µs, proxy.ts: 2ms, render: 14ms)
+ GET /api/comunicacao/stream 200 in 9.1min (compile: 23ms, proxy.ts: 4ms, render: 9.1min)
+ GET /comunicacao 200 in 3.7s (compile: 2.2s, proxy.ts: 9ms, render: 1502ms)
+ GET /api/chat/unread-count 200 in 38ms (compile: 3ms, proxy.ts: 5ms, render: 30ms)
+ GET /api/chat/users 200 in 39ms (compile: 7ms, proxy.ts: 4ms, render: 28ms)
+ GET /api/chat/conversations 200 in 47ms (compile: 10ms, proxy.ts: 4ms, render: 33ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 35ms (compile: 13ms, proxy.ts: 4ms, render: 19ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 63ms (compile: 11ms, proxy.ts: 4ms, render: 49ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 64ms (compile: 17ms, proxy.ts: 19ms, render: 28ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 124ms (compile: 58ms, proxy.ts: 19ms, render: 47ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 146ms (compile: 18ms, proxy.ts: 22ms, render: 107ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 505ms (compile: 27ms, proxy.ts: 21ms, render: 457ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 591ms (compile: 21ms, proxy.ts: 20ms, render: 549ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 601ms (compile: 24ms, proxy.ts: 20ms, render: 556ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 587ms (compile: 6ms, proxy.ts: 24ms, render: 557ms)
+ POST /api/jobs/automacao-nacional 200 in 35ms (compile: 4ms, proxy.ts: 5ms, render: 26ms)
+ POST /api/jobs/process 200 in 37ms (compile: 13ms, proxy.ts: 5ms, render: 19ms)
+ POST /api/jobs/demandas 200 in 39ms (compile: 10ms, proxy.ts: 5ms, render: 25ms)
+ POST /api/jobs/process 200 in 13ms (compile: 2ms, proxy.ts: 4ms, render: 7ms)
+✓ Compiled in 254ms
+ GET /api/comunicacao/stream 200 in 3.6min (compile: 7ms, proxy.ts: 9ms, render: 3.6min)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 64ms (compile: 11ms, proxy.ts: 3ms, render: 50ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 30ms (compile: 4ms, proxy.ts: 5ms, render: 20ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 72ms (compile: 9ms, proxy.ts: 5ms, render: 58ms)
+ POST /api/jobs/process 200 in 23ms (compile: 1860µs, proxy.ts: 6ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 24ms (compile: 1595µs, proxy.ts: 3ms, render: 19ms)
+ GET /api/comunicacao/stream 200 in 2.3min (compile: 11ms, proxy.ts: 5ms, render: 2.3min)
+ GET /comunicacao 200 in 3.8s (compile: 2.2s, proxy.ts: 3ms, render: 1537ms)
+ GET /api/chat/users 200 in 32ms (compile: 3ms, proxy.ts: 5ms, render: 24ms)
+ GET /api/chat/conversations 200 in 41ms (compile: 5ms, proxy.ts: 5ms, render: 31ms)
+ GET /api/chat/unread-count 200 in 42ms (compile: 6ms, proxy.ts: 5ms, render: 31ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 33ms (compile: 10ms, proxy.ts: 2ms, render: 20ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 51ms (compile: 10ms, proxy.ts: 3ms, render: 38ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 26ms (compile: 12ms, proxy.ts: 10ms, render: 4ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 31ms (compile: 18ms, proxy.ts: 10ms, render: 3ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 34ms (compile: 22ms, proxy.ts: 10ms, render: 2ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 42ms (compile: 5ms, proxy.ts: 11ms, render: 27ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 88ms (compile: 43ms, proxy.ts: 11ms, render: 34ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 109ms (compile: 9ms, proxy.ts: 10ms, render: 90ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 552ms (compile: 8ms, proxy.ts: 25ms, render: 519ms)
+ POST /api/jobs/process 200 in 33ms (compile: 2ms, proxy.ts: 3ms, render: 27ms)
+✓ Compiled in 216ms
+ GET /api/comunicacao/stream 200 in 113s (compile: 10ms, proxy.ts: 26ms, render: 113s)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 48ms (compile: 10ms, proxy.ts: 2ms, render: 36ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 26ms (compile: 5ms, proxy.ts: 6ms, render: 14ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 103ms (compile: 10ms, proxy.ts: 6ms, render: 86ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1911µs, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/process 200 in 24ms (compile: 5ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 28ms (compile: 2ms, proxy.ts: 5ms, render: 21ms)
+ POST /api/jobs/datajud-monitor 200 in 758ms (compile: 474ms, proxy.ts: 5ms, render: 279ms)
+[Scheduler] DataJud monitor: VALID (ENV)
+ POST /api/jobs/process 200 in 21ms (compile: 2ms, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/process 200 in 19ms (compile: 2ms, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/automacao-nacional 200 in 26ms (compile: 5ms, proxy.ts: 4ms, render: 17ms)
+ POST /api/jobs/demandas 200 in 32ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1725µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1545µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 24ms (compile: 3ms, proxy.ts: 4ms, render: 17ms)
+ POST /api/jobs/demandas 200 in 28ms (compile: 6ms, proxy.ts: 4ms, render: 19ms)
+ POST /api/jobs/process 200 in 21ms (compile: 1818µs, proxy.ts: 3ms, render: 17ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1634µs, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 26ms (compile: 1593µs, proxy.ts: 3ms, render: 21ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1499µs, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1458µs, proxy.ts: 1925µs, render: 14ms)
+ POST /api/jobs/automacao-nacional 200 in 28ms (compile: 9ms, proxy.ts: 4ms, render: 14ms)
+ POST /api/jobs/process 200 in 30ms (compile: 4ms, proxy.ts: 5ms, render: 20ms)
+ POST /api/jobs/demandas 200 in 34ms (compile: 2ms, proxy.ts: 5ms, render: 27ms)
+ POST /api/jobs/process 200 in 21ms (compile: 1938µs, proxy.ts: 2ms, render: 17ms)
+ POST /api/jobs/process 200 in 19ms (compile: 2ms, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 38ms (compile: 8ms, proxy.ts: 4ms, render: 27ms)
+ POST /api/jobs/operacoes 200 in 64ms (compile: 4ms, proxy.ts: 4ms, render: 56ms)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 2 atend SLA
+ POST /api/jobs/process 200 in 22ms (compile: 3ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/process 200 in 27ms (compile: 3ms, proxy.ts: 4ms, render: 20ms)
+ POST /api/jobs/process 200 in 24ms (compile: 5ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 27ms (compile: 2ms, proxy.ts: 4ms, render: 21ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1900µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 21ms (compile: 2ms, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/automacao-nacional 200 in 31ms (compile: 4ms, proxy.ts: 7ms, render: 21ms)
+ POST /api/jobs/demandas 200 in 34ms (compile: 7ms, proxy.ts: 7ms, render: 20ms)
+ POST /api/jobs/process 200 in 21ms (compile: 3ms, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/process 200 in 21ms (compile: 2ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/publicacoes 200 in 26ms (compile: 4ms, proxy.ts: 5ms, render: 17ms)
+ POST /api/jobs/process 200 in 28ms (compile: 10ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 34ms (compile: 7ms, proxy.ts: 5ms, render: 22ms)
+ POST /api/jobs/process 200 in 21ms (compile: 1705µs, proxy.ts: 5ms, render: 14ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1913µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 25ms (compile: 3ms, proxy.ts: 1956µs, render: 20ms)
+ POST /api/jobs/process 200 in 20ms (compile: 2ms, proxy.ts: 3ms, render: 15ms)
+ GET /comunicacao 307 in 3.6s (compile: 2.2s, proxy.ts: 3ms, render: 1393ms)
+ GET /api/comunicacao/stream 200 in 49.4min (compile: 12ms, proxy.ts: 6ms, render: 49.4min)
+ GET /login 200 in 34ms (compile: 4ms, proxy.ts: 2ms, render: 28ms)
+[Baileys] Connection closed. Reason: 408 timedOut
+[WhatsApp Handler] Connection state: close (connected: false)
+[Baileys] Reconnecting in 2000ms (attempt 1)...
+ GET /dashboard 200 in 14.6s (compile: 14.4s, proxy.ts: 2ms, render: 218ms)
+ POST /login 303 in 14.7s (compile: 2ms, proxy.ts: 2ms, render: 14.7s)
+ GET /api/chat/users 200 in 34ms (compile: 3ms, proxy.ts: 6ms, render: 25ms)
+ GET /api/chat/unread-count 200 in 40ms (compile: 8ms, proxy.ts: 5ms, render: 27ms)
+ GET /api/chat/conversations 200 in 44ms (compile: 6ms, proxy.ts: 6ms, render: 32ms)
+ GET /api/chat/unread-count 200 in 47ms (compile: 8ms, proxy.ts: 6ms, render: 33ms)
+ GET /api/chat/users 200 in 55ms (compile: 7ms, proxy.ts: 7ms, render: 41ms)
+ GET /api/chat/conversations 200 in 61ms (compile: 10ms, proxy.ts: 6ms, render: 45ms)
+ GET /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/messages 200 in 60ms (compile: 17ms, proxy.ts: 10ms, render: 33ms)
+ POST /api/chat/conversations/cmmg6aq16001p58mhxifvzpqu/read 200 in 47ms (compile: 10ms, proxy.ts: 2ms, render: 35ms)
+[Baileys] Connecting with version: 2.3000.1033846690
+[WhatsApp Handler] Connection state: connecting (connected: false)
+[Baileys] Connected successfully!
+[WhatsApp Handler] Connection state: open (connected: true)
+ POST /api/jobs/process 200 in 19ms (compile: 3ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/automacao-nacional 200 in 25ms (compile: 5ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/process 200 in 28ms (compile: 3ms, proxy.ts: 5ms, render: 20ms)
+ POST /api/jobs/demandas 200 in 29ms (compile: 8ms, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1477µs, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1428µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/demandas 200 in 23ms (compile: 1689µs, proxy.ts: 3ms, render: 18ms)
+ POST /api/jobs/process 200 in 16ms (compile: 1568µs, proxy.ts: 2ms, render: 12ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1449µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 21ms (compile: 1927µs, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 26ms (compile: 5ms, proxy.ts: 3ms, render: 17ms)
+ GET /comunicacao 200 in 135ms (compile: 6ms, proxy.ts: 4ms, render: 125ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 67ms (compile: 8ms, proxy.ts: 8ms, render: 51ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 99ms (compile: 50ms, proxy.ts: 8ms, render: 42ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 139ms (compile: 18ms, proxy.ts: 8ms, render: 114ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 45ms (compile: 14ms, proxy.ts: 15ms, render: 16ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 13ms (compile: 3ms, proxy.ts: 4ms, render: 6ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 45ms (compile: 4ms, proxy.ts: 6ms, render: 35ms)
+ GET /api/whatsapp/avatar?phone=%2B5561999135861 200 in 441ms (compile: 23ms, proxy.ts: 4ms, render: 414ms)
+ GET /api/whatsapp/avatar?phone=%2B556196942545 200 in 393ms (compile: 12ms, proxy.ts: 10ms, render: 371ms)
+ GET /api/whatsapp/avatar?phone=%2B556184410419 200 in 420ms (compile: 10ms, proxy.ts: 9ms, render: 402ms)
+ GET /api/whatsapp/avatar?phone=%2B5522998481466 200 in 422ms (compile: 12ms, proxy.ts: 10ms, render: 400ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1473µs, proxy.ts: 2ms, render: 13ms)
+✓ Compiled in 283ms
+ GET /api/comunicacao/stream 200 in 2.0min (compile: 5ms, proxy.ts: 4ms, render: 2.0min)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 37ms (compile: 8ms, proxy.ts: 2ms, render: 27ms)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 9ms (compile: 1596µs, proxy.ts: 2ms, render: 5ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 46ms (compile: 3ms, proxy.ts: 3ms, render: 40ms)
+✓ Compiled in 153ms
+ GET /api/comunicacao/stream 200 in 44s (compile: 5ms, proxy.ts: 2ms, render: 44s)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 39ms (compile: 3ms, proxy.ts: 5ms, render: 31ms)
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 200 in 55ms (compile: 22ms, proxy.ts: 5ms, render: 28ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 78ms (compile: 9ms, proxy.ts: 5ms, render: 64ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1881µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/automacao-nacional 200 in 20ms (compile: 2ms, proxy.ts: 4ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 23ms (compile: 5ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1379µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1444µs, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 21ms (compile: 4ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 24ms (compile: 2ms, proxy.ts: 3ms, render: 19ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1788µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1607µs, proxy.ts: 3ms, render: 13ms)
+ POST /api/jobs/demandas 200 in 20ms (compile: 1562µs, proxy.ts: 1868µs, render: 17ms)
+ POST /api/jobs/process 200 in 17ms (compile: 2ms, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1764µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/automacao-nacional 200 in 24ms (compile: 8ms, proxy.ts: 5ms, render: 12ms)
+ POST /api/jobs/process 200 in 27ms (compile: 5ms, proxy.ts: 4ms, render: 18ms)
+ POST /api/jobs/demandas 200 in 29ms (compile: 3ms, proxy.ts: 4ms, render: 22ms)
+ POST /api/jobs/process 200 in 13ms (compile: 3ms, proxy.ts: 2ms, render: 8ms)
+✓ Compiled in 284ms
+ GET /api/comunicacao/stream 200 in 19.1min (compile: 4ms, proxy.ts: 3ms, render: 19.1min)
+ GET /api/comunicacao/messages?conversationId=cmln2r8a900g28wmh9bsz9uxp&page=1&pageSize=30 200 in 35ms (compile: 7ms, proxy.ts: 7ms, render: 21ms)
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+ POST /api/comunicacao/conversations/cmln2r8a900g28wmh9bsz9uxp/read 500 in 78ms (compile: 11ms, proxy.ts: 4ms, render: 63ms)
+ GET /api/comunicacao/workspace?conversationId=cmln2r8a900g28wmh9bsz9uxp 200 in 76ms (compile: 11ms, proxy.ts: 7ms, render: 58ms)
+ POST /api/jobs/process 200 in 16ms (compile: 1915µs, proxy.ts: 2ms, render: 12ms)
+ POST /api/jobs/demandas 200 in 32ms (compile: 1584µs, proxy.ts: 4ms, render: 27ms)
+ POST /api/jobs/operacoes 200 in 49ms (compile: 5ms, proxy.ts: 3ms, render: 40ms)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 2 atend SLA
+ POST /api/jobs/process 200 in 16ms (compile: 1547µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1483µs, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 22ms (compile: 5ms, proxy.ts: 3ms, render: 13ms)
+ POST /api/jobs/demandas 200 in 24ms (compile: 2ms, proxy.ts: 3ms, render: 19ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1492µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1584µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/automacao-nacional 200 in 23ms (compile: 3ms, proxy.ts: 5ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 25ms (compile: 5ms, proxy.ts: 3ms, render: 17ms)
+ POST /api/jobs/bi-refresh 200 in 532ms (compile: 469ms, proxy.ts: 5ms, render: 59ms)
+[Scheduler] BI snapshots: 25 snapshot(s) atualizados
+ POST /api/jobs/process 200 in 18ms (compile: 1846µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1446µs, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/publicacoes 200 in 23ms (compile: 3ms, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/process 200 in 25ms (compile: 6ms, proxy.ts: 4ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 26ms (compile: 8ms, proxy.ts: 4ms, render: 14ms)
+Closing session: SessionEntry {
+  _chains: {
+    'BaKlQ0ZlgY5mN+tmC0MYtdS73BakGJEOwQ3QdDHtRG5j': { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 1581663647,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 a2 a5 43 46 65 81 8e 66 37 eb 66 0b 43 18 b5 d4 bb dc 16 a4 18 91 0e c1 0d d0 74 31 ed 44 6e 63>,
+      privKey: <Buffer d8 d6 60 f3 c5 01 f3 c2 5d a5 b5 62 1f c3 32 9b c6 e2 2d 58 4c ad f8 bf 1e 39 10 7f 13 bb 9e 61>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 96 3f 0f 67 a5 cd 79 94 64 c6 eb 5f 8a 45 bb 63 21 f2 59 15 4c 92 3c 4c b9 bf 62 7e 2d f8 de 5c>,
+    previousCounter: 0,
+    rootKey: <Buffer dd 1e 98 02 31 2d f8 ef 97 4f de 01 ce ca 13 8d d6 8b 35 49 73 22 28 d1 09 fd d2 ae 48 d6 c8 71>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 cf 00 b7 28 7b e4 8c a7 46 b6 c4 18 c8 90 ea e5 69 27 4a 4d fe dd 2f be f3 f1 a1 89 c8 12 19 11>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773292494267,
+    created: 1773292494267,
+    remoteIdentityKey: <Buffer 05 f1 3e 34 4c 7c a1 22 8f 78 72 8a 36 3d df 2c bc 7c 62 e2 32 6e 9a 99 b8 a7 7b ef 01 a5 75 23 02>
+  },
+  pendingPreKey: {
+    signedKeyId: 6668178,
+    baseKey: <Buffer 05 cf 00 b7 28 7b e4 8c a7 46 b6 c4 18 c8 90 ea e5 69 27 4a 4d fe dd 2f be f3 f1 a1 89 c8 12 19 11>,
+    preKeyId: 4061977
+  }
+}
+ POST /api/jobs/process 200 in 16ms (compile: 1481µs, proxy.ts: 1862µs, render: 13ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1705µs, proxy.ts: 2ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 19ms (compile: 1398µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/process 200 in 16ms (compile: 1504µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1388µs, proxy.ts: 3ms, render: 13ms)
+ POST /api/jobs/automacao-nacional 200 in 29ms (compile: 5ms, proxy.ts: 7ms, render: 17ms)
+ POST /api/jobs/process 200 in 31ms (compile: 3ms, proxy.ts: 7ms, render: 21ms)
+ POST /api/jobs/demandas 200 in 32ms (compile: 8ms, proxy.ts: 7ms, render: 17ms)
+ POST /api/jobs/process 200 in 16ms (compile: 1526µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1402µs, proxy.ts: 3ms, render: 13ms)
+ POST /api/jobs/demandas 200 in 22ms (compile: 1441µs, proxy.ts: 2ms, render: 18ms)
+ POST /api/jobs/process 200 in 16ms (compile: 1502µs, proxy.ts: 1866µs, render: 13ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1582µs, proxy.ts: 4ms, render: 12ms)
+ POST /api/jobs/process 200 in 28ms (compile: 9ms, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 31ms (compile: 3ms, proxy.ts: 4ms, render: 25ms)
+ POST /api/jobs/lgpd-retention 200 in 423ms (compile: 379ms, proxy.ts: 4ms, render: 40ms)
+[Scheduler] LGPD retention: 2 politica(s) executada(s)
+ POST /api/jobs/process 200 in 18ms (compile: 1385µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 16ms (compile: 1606µs, proxy.ts: 2ms, render: 12ms)
+ POST /api/jobs/automacao-nacional 200 in 19ms (compile: 1993µs, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 23ms (compile: 5ms, proxy.ts: 3ms, render: 15ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1458µs, proxy.ts: 2ms, render: 13ms)
+Closing session: SessionEntry {
+  _chains: {
+    'BVIy6tmjhO5v/99pp7LaRKx++JCQYVwfjSSYSigFwYEF': { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 1798402681,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 52 32 ea d9 a3 84 ee 6f ff df 69 a7 b2 da 44 ac 7e f8 90 90 61 5c 1f 8d 24 98 4a 28 05 c1 81 05>,
+      privKey: <Buffer 40 59 ba d1 f2 88 4f b2 8d b1 f4 d5 c2 40 2e be 8a ef c0 f2 ad 97 d7 d6 c4 56 01 09 76 2e 3e 59>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 2d 0a 7b ac 12 d1 2b f5 d9 9f 42 16 d0 96 6f 37 6d fd b5 31 42 95 da f2 41 50 31 7d 98 3d c0 54>,
+    previousCounter: 0,
+    rootKey: <Buffer e4 30 aa 0e 99 19 36 e6 4c 98 2a 97 0a eb 09 40 0b d8 2a 97 70 f4 30 67 84 1e 6c 89 c2 a5 e5 5b>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 50 d7 4e 19 6a 61 77 47 5a 18 6d ea 3d bc 26 6b c7 82 f5 c9 f3 10 80 61 3d c2 c7 99 c7 56 32 22>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773292803809,
+    created: 1773292803809,
+    remoteIdentityKey: <Buffer 05 4c ca 6e aa 61 89 e3 40 bd cc 83 20 4a 3b 87 c8 e0 0c aa 12 e6 0c 26 a4 ad 8d 51 44 61 71 2f 77>
+  },
+  pendingPreKey: {
+    signedKeyId: 954343,
+    baseKey: <Buffer 05 50 d7 4e 19 6a 61 77 47 5a 18 6d ea 3d bc 26 6b c7 82 f5 c9 f3 10 80 61 3d c2 c7 99 c7 56 32 22>,
+    preKeyId: 16114733
+  }
+}
+ POST /api/jobs/process 200 in 16ms (compile: 1682µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 22ms (compile: 5ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 19ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1813µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1968µs, proxy.ts: 1748µs, render: 14ms)
+ POST /api/jobs/demandas 200 in 20ms (compile: 1817µs, proxy.ts: 2ms, render: 16ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1452µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 19ms (compile: 1579µs, proxy.ts: 2ms, render: 15ms)
+ POST /api/jobs/automacao-nacional 200 in 24ms (compile: 3ms, proxy.ts: 4ms, render: 17ms)
+ POST /api/jobs/process 200 in 26ms (compile: 5ms, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 27ms (compile: 7ms, proxy.ts: 4ms, render: 16ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1673µs, proxy.ts: 2ms, render: 13ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1794µs, proxy.ts: 1957µs, render: 14ms)
+ POST /api/jobs/demandas 200 in 38ms (compile: 5ms, proxy.ts: 3ms, render: 30ms)
+ POST /api/jobs/operacoes 200 in 61ms (compile: 3ms, proxy.ts: 4ms, render: 55ms)
+[Scheduler] Operações: 0 movidos, 2 conv SLA, 2 atend SLA
+ POST /api/jobs/process 200 in 19ms (compile: 1544µs, proxy.ts: 2ms, render: 16ms)
+Closing session: SessionEntry {
+  _chains: {
+    BegmVtvJVLJCkGnTZd6n7Kv3dZ9XKxXJbHwZW9Nmt0l5: { chainKey: [Object], chainType: 1, messageKeys: {} }
+  },
+  registrationId: 123932320,
+  currentRatchet: {
+    ephemeralKeyPair: {
+      pubKey: <Buffer 05 e8 26 56 db c9 54 b2 42 90 69 d3 65 de a7 ec ab f7 75 9f 57 2b 15 c9 6c 7c 19 5b d3 66 b7 49 79>,
+      privKey: <Buffer e0 65 b5 66 93 cf 2f 15 c6 0e db 58 e4 2a 87 60 2f d2 fc e2 19 62 35 3c 5e 52 c4 9b e2 0d 5e 6e>
+    },
+    lastRemoteEphemeralKey: <Buffer 05 27 b2 2b 64 2b 18 f6 78 71 45 79 0a b5 ec 9e f8 0b f8 ec 2b 70 c0 a0 cc 7e 18 aa 27 cc 3c 3d 24>,
+    previousCounter: 0,
+    rootKey: <Buffer 95 61 c3 3b 15 41 57 a5 d8 1f 1b f9 6b 11 6e fd 9c 86 99 9e da 2e ac 0c bd 17 65 32 22 f3 11 21>
+  },
+  indexInfo: {
+    baseKey: <Buffer 05 7d c8 88 82 36 4b 19 61 f1 26 f2 f0 2a ef e8 7a cb 29 1f b4 bf e7 b4 c8 ab e5 b1 6e a5 13 16 77>,
+    baseKeyType: 1,
+    closed: -1,
+    used: 1773294390575,
+    created: 1773294390575,
+    remoteIdentityKey: <Buffer 05 95 05 99 1d f9 2c 3d 22 18 8b cf 53 18 43 10 47 51 97 65 23 60 7d 6d 71 5d db 25 39 7b ac 0a 49>
+  },
+  pendingPreKey: {
+    signedKeyId: 118722,
+    baseKey: <Buffer 05 7d c8 88 82 36 4b 19 61 f1 26 f2 f0 2a ef e8 7a cb 29 1f b4 bf e7 b4 c8 ab e5 b1 6e a5 13 16 77>,
+    preKeyId: 14797257
+  }
+}
+ POST /api/jobs/process 200 in 18ms (compile: 1577µs, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/process 200 in 25ms (compile: 5ms, proxy.ts: 5ms, render: 15ms)
+ POST /api/jobs/demandas 200 in 28ms (compile: 3ms, proxy.ts: 5ms, render: 20ms)
+ POST /api/jobs/datajud-aliases 200 in 588ms (compile: 440ms, proxy.ts: 5ms, render: 143ms)
+[Scheduler] DataJud aliases: 0 atualizado(s) (extraidos=91)
+ POST /api/jobs/process 200 in 18ms (compile: 1402µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1688µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/automacao-nacional 200 in 23ms (compile: 6ms, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 25ms (compile: 2ms, proxy.ts: 3ms, render: 20ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1603µs, proxy.ts: 2ms, render: 14ms)
+ POST /api/jobs/process 200 in 20ms (compile: 1672µs, proxy.ts: 3ms, render: 16ms)
+ POST /api/jobs/publicacoes 200 in 25ms (compile: 3ms, proxy.ts: 5ms, render: 17ms)
+ POST /api/jobs/process 200 in 28ms (compile: 8ms, proxy.ts: 5ms, render: 16ms)
+ POST /api/jobs/demandas 200 in 30ms (compile: 6ms, proxy.ts: 5ms, render: 20ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1467µs, proxy.ts: 2ms, render: 14ms)
+ GET /api/comunicacao/stream 200 in 79.5min (compile: 13ms, proxy.ts: 7ms, render: 79.5min)

@@ -1,0 +1,131 @@
+⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+⨯ ./src/components/marketing/legal-landing-page.tsx:525:24
+Parsing ecmascript source code failed
+[0m [90m 523 |[39m               [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 524 |[39m         [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 525 |[39m       [33m<[39m[33m/[39m[33mmotion[39m[33m.[39msection[33m>[39m
+ [90m     |[39m                        [31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 526 |[39m
+ [90m     |[39m [31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 527 |[39m       {[90m/* ── Container 2: pricing + faq + cta + footer ── */[39m}
+ [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 528 |[39m       [33m<[39m[33mdiv[39m className[33m=[39m[32m"relative z-10 mx-auto max-w-[1400px] px-5 pb-0 sm:px-8 lg:px-10"[39m[33m>[39m
+ [90m 529 |[39m
+ [90m 530 |[39m         {[90m/* ─── PRICING ─── */[39m}[0m
+
+Expected '</', got 'jsx text'
+
+Import trace:
+  Server Component:
+    ./src/components/marketing/legal-landing-page.tsx
+    ./src/app/page.tsx
+
+
+⨯ ./src/components/marketing/legal-landing-page.tsx:525:24
+Parsing ecmascript source code failed
+[0m [90m 523 |[39m               [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 524 |[39m         [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 525 |[39m       [33m<[39m[33m/[39m[33mmotion[39m[33m.[39msection[33m>[39m
+ [90m     |[39m                        [31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 526 |[39m
+ [90m     |[39m [31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 527 |[39m       {[90m/* ── Container 2: pricing + faq + cta + footer ── */[39m}
+ [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 528 |[39m       [33m<[39m[33mdiv[39m className[33m=[39m[32m"relative z-10 mx-auto max-w-[1400px] px-5 pb-0 sm:px-8 lg:px-10"[39m[33m>[39m
+ [90m 529 |[39m
+ [90m 530 |[39m         {[90m/* ─── PRICING ─── */[39m}[0m
+
+Expected '</', got 'jsx text'
+
+Import trace:
+  Server Component:
+    ./src/components/marketing/legal-landing-page.tsx
+    ./src/app/page.tsx
+
+
+(node:18208) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2026-03-15T21:08:06.350Z] [PID: 18208] [32m[NODE-CRON][32m [33m[WARN][0m missed execution at Sun Mar 15 2026 18:08:00 GMT-0300 (Horário Padrão de Brasília)! Possible blocking IO or high CPU user at the same process used by node-cron.
+⨯ ./src/components/marketing/legal-landing-page.tsx:307:18
+Parsing ecmascript source code failed
+[0m [90m 305 |[39m                       [33m<[39m[33mspan[39m[33m>[39m{item}[33m<[39m[33m/[39m[33mspan[39m[33m>[39m
+ [90m 306 |[39m                     [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 307 |[39m                 [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m     |[39m                  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 308 |[39m               [33m<[39m[33m/[39m[33mmotion[39m[33m.[39mdiv[33m>[39m
+ [90m 309 |[39m             [33m<[39m[33m/[39m[33mmotion[39m[33m.[39mdiv[33m>[39m
+ [90m 310 |[39m           [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m[0m
+
+Unterminated regexp literal
+
+Import trace:
+  Server Component:
+    ./src/components/marketing/legal-landing-page.tsx
+    ./src/app/page.tsx
+
+
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⨯ ReferenceError: showSparkles is not defined
+    at AuroraBackground (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\components\ui\aurora-background.tsx:86:13)
+  84 |             maxSize={1.2}
+  85 |             speed={1}
+> 86 |             particleDensity={80}
+     |             ^
+  87 |             particleColor="#FFFFFF"
+  88 |             className="h-full w-full"
+  89 |           /> {
+  digest: '1640436407'
+}
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⨯ Error: Invalid src prop (https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face) on `next/image`, hostname "images.unsplash.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at ignore-listed frames {
+  digest: '1849316921@E231'
+}
+⨯ Error: Invalid src prop (https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face) on `next/image`, hostname "images.unsplash.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at ignore-listed frames {
+  digest: '1849316921@E231'
+}
+⨯ Error: Invalid src prop (https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=face) on `next/image`, hostname "images.unsplash.com" is not configured under images in your `next.config.js`
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+    at ignore-listed frames {
+  digest: '1849316921@E231'
+}
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⨯ ReferenceError: Image is not defined
+    at <unknown> (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\components\ui\testimonials-columns.tsx:46:36)
+    at Array.map (<anonymous>)
+    at <unknown> (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\components\ui\testimonials-columns.tsx:35:43)
+    at Array.map (<anonymous>)
+    at TestimonialsColumn (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\components\ui\testimonials-columns.tsx:34:10)
+  44 |                   </div>
+  45 |                   <div className="mt-6 flex items-center gap-3">
+> 46 |                     <div className="relative h-10 w-10 overflow-hidden rounded-full ring-2 ring-[color:var(--accent)]/20">
+     |                                    ^
+  47 |                       <Image
+  48 |                         src={image}
+  49 |                         alt={name} {
+  digest: '128052533'
+}
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+
+thread 'tokio-runtime-worker' (61424) panicked at C:\actions-runner\_work\next.js\next.js\turbopack\crates\turbo-tasks-backend\src\backend\operation\mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for get_source_map_rope (TaskId 991574))
+
+Caused by:
+    0: Looking up data for TaskId 991574 from database failed
+    1: Unable to open static sorted file referenced from 00002651.meta
+    2: Unable to open static sorted file 00002647.sst
+    3: O sistema não pode encontrar o caminho especificado. (os error 3)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'tokio-runtime-worker' (61424) panicked at C:\actions-runner\_work\next.js\next.js\turbopack\crates\turbo-tasks-backend\src\backend\operation\mod.rs:156:17:
+Failed to restore task data (corrupted database or bug): Meta for get_source_map_rope (TaskId 991574))
+
+Caused by:
+    0: Looking up data for TaskId 991574 from database failed
+    1: Unable to open static sorted file referenced from 00002651.meta
+    2: Unable to open static sorted file 00002647.sst
+    3: O sistema não pode encontrar o caminho especificado. (os error 3)

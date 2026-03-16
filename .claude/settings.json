@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)/relatorios/\")",
+      "Bash(ls -la \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)/financeiro/relatorios/\")",
+      "Bash(ls -la \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(auth\\)/\")",
+      "Bash(find \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)/financeiro/relatorios\" -type f -name \"*.tsx\" -o -name \"*.ts\")",
+      "Bash(ls -la \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)/grafo/\")",
+      "Bash(find \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(auth\\)\" -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" -o -name \"*.json\" \\\\\\))",
+      "Bash(ls \"c:\\\\Users\\\\dougc\\\\Documents\\\\Sistema Juridico ADV\\\\src\\\\app\\\\\\(dashboard\\)\")",
+      "Bash(find 'c:\\\\Users\\\\dougc\\\\Documents\\\\Sistema Juridico ADV\\\\src\\\\app' -type d -name *processo* -o -type d -name *andamento*)",
+      "Bash(ls -la \"c:\\\\Users\\\\dougc\\\\Documents\\\\Sistema Juridico ADV\\\\src\\\\app\\\\\\(dashboard\\)\" \")",
+      "Bash(grep -r \"busca\\\\|universal\\\\|search\\\\|CommandPalette\\\\|command.*palette\" 'c:\\\\Users\\\\dougc\\\\Documents\\\\Sistema Juridico ADV\\\\src\\\\components\\\\layout' --include=*.tsx -l)",
+      "Bash(grep -r \"Asaas\\\\|asaas\\\\|boleto\\\\|PIX\\\\|pix\\\\|conciliacoes\\\\|conciliacao\" 'c:\\\\Users\\\\dougc\\\\Documents\\\\Sistema Juridico ADV\\\\src' --include=*.ts --include=*.tsx -l)",
+      "Bash(find \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)\" -type d -maxdepth 1)",
+      "Bash(find \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)/andamentos\" -type f)",
+      "Bash(find \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)/crm\" -type f)",
+      "Bash(find \"c:/Users/dougc/Documents/Sistema Juridico ADV/src/app/\\(dashboard\\)\" -name \"page.tsx\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(npx next:*)",
+      "Bash(curl -sv http://localhost:3000/login)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(taskkill /f /im node.exe)",
+      "Bash(cmd /c \"taskkill /f /im node.exe\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(curl -s http://localhost:3001/login)",
+      "Bash(cmd /c \"netstat -ano | findstr :3000\")",
+      "Bash(cmd /c \"netstat -ano\")",
+      "Bash(powershell -Command \"Stop-Process -Id 38540 -Force; Stop-Process -Id 85832 -Force\")",
+      "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue\")",
+      "Bash(curl -si http://localhost:3000/login)",
+      "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object State,OwningProcess\")",
+      "Bash(curl -si http://localhost:3000/publicacoes)",
+      "Bash(xargs grep:*)"
+    ]
+  }
+}

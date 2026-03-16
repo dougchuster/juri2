@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluid Background</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .fluid-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .base-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        135deg,
+        #0a0a2e 0%,
+        #1a0a3e 25%,
+        #2d1b4e 50%,
+        #1a1a4e 75%,
+        #0d0d3d 100%
+      );
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 60% 40% 50% 70% / 50% 60% 40% 50%;
+      filter: blur(60px);
+      opacity: 0.85;
+      will-change: transform;
+    }
+
+    .blob-1 {
+      width: 80vw;
+      height: 70vh;
+      top: -20%;
+      left: -20%;
+      background: radial-gradient(ellipse at 30% 20%, #FFD700 0%, #FF8C00 25%, #FF4500 50%, #DC143C 75%, transparent 100%);
+      border-radius: 70% 30% 60% 40% / 40% 60% 30% 70%;
+      animation: float1 20s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 90vw;
+      height: 80vh;
+      top: 10%;
+      left: 5%;
+      background: radial-gradient(ellipse at 50% 50%, #FF6347 0%, #FF4500 30%, #DC143C 60%, #8B0000 85%, transparent 100%);
+      border-radius: 40% 60% 70% 30% / 60% 40% 70% 30%;
+      opacity: 0.75;
+      animation: float2 25s ease-in-out infinite;
+    }
+
+    .blob-3 {
+      width: 75vw;
+      height: 75vh;
+      bottom: -15%;
+      left: -10%;
+      background: radial-gradient(ellipse at 40% 60%, #FF1493 0%, #DC143C 25%, #8B008B 55%, #4B0082 80%, transparent 100%);
+      border-radius: 60% 40% 30% 70% / 50% 70% 40% 60%;
+      animation: float3 22s ease-in-out infinite;
+    }
+
+    .blob-4 {
+      width: 85vw;
+      height: 85vh;
+      top: -10%;
+      right: -25%;
+      background: radial-gradient(ellipse at 60% 40%, #FFA500 0%, #FF6347 30%, #FF4500 60%, #B22222 85%, transparent 100%);
+      border-radius: 50% 50% 40% 60% / 40% 50% 60% 40%;
+      opacity: 0.8;
+      animation: float1 28s ease-in-out infinite;
+    }
+
+    .blob-5 {
+      width: 70vw;
+      height: 70vh;
+      bottom: -10%;
+      right: -15%;
+      background: radial-gradient(ellipse at 50% 70%, #DA70D6 0%, #FF1493 25%, #8B008B 55%, #2F1B69 80%, transparent 100%);
+      border-radius: 45% 55% 65% 35% / 55% 45% 65% 35%;
+      animation: float2 24s ease-in-out infinite;
+    }
+
+    .blob-6 {
+      width: 50vw;
+      height: 50vh;
+      top: -5%;
+      right: 5%;
+      background: radial-gradient(ellipse at 70% 30%, #1a1a4e 0%, #0d0d3d 40%, #050528 70%, transparent 100%);
+      border-radius: 55% 45% 50% 50% / 50% 55% 45% 50%;
+      opacity: 0.6;
+      filter: blur(80px);
+      animation: float3 26s ease-in-out infinite;
+    }
+
+    .blob-7 {
+      width: 60vw;
+      height: 60vh;
+      bottom: 5%;
+      left: 15%;
+      background: radial-gradient(ellipse at 30% 80%, #4B0082 0%, #2F1B69 35%, #1a0f4a 65%, transparent 100%);
+      border-radius: 65% 35% 45% 55% / 45% 65% 35% 55%;
+      opacity: 0.5;
+      filter: blur(90px);
+      animation: float1 30s ease-in-out infinite;
+    }
+
+    .noise-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .vignette {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at 50% 50%,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.2) 80%,
+        rgba(0, 0, 0, 0.4) 100%
+      );
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      25% { transform: translate(5%, -3%) rotate(2deg) scale(1.02); }
+      50% { transform: translate(-3%, 5%) rotate(-1deg) scale(0.98); }
+      75% { transform: translate(-5%, -2%) rotate(1deg) scale(1.01); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      33% { transform: translate(-4%, 4%) rotate(-2deg) scale(1.03); }
+      66% { transform: translate(3%, -5%) rotate(1deg) scale(0.97); }
+    }
+
+    @keyframes float3 {
+      0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      50% { transform: translate(6%, -4%) rotate(3deg) scale(1.04); }
+    }
+
+    /* Demo content */
+    .content {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="fluid-background">
+    <div class="base-gradient"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="blob blob-5"></div>
+    <div class="blob blob-6"></div>
+    <div class="blob blob-7"></div>
+    <div class="noise-overlay"></div>
+    <div class="vignette"></div>
+  </div>
+
+  <!-- Seu conteúdo aqui -->
+  <div class="content">
+    <h1>Seu Conteúdo</h1>
+    <p>O background fica atrás de tudo</p>
+  </div>
+</body>
+</html>

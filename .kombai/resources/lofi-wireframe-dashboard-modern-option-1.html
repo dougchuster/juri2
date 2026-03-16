@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Opção 1: Layout Fluido com Floating Cards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive;
+            background: #f5f5f5;
+            color: #000;
+            padding: 24px;
+            line-height: 1.6;
+        }
+        
+        .wireframe-header {
+            background: white;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .wireframe-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .wireframe-header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Component tag badge styles */
+        .component-wrapper {
+            position: relative;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .badge.new {
+            background: #FF9800;
+        }
+        
+        /* Main dashboard container */
+        .dashboard {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        /* Status bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .status-left h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .status-left p {
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Bento Grid - Variable sized cards */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        /* KPI Cards - Mini size */
+        .kpi-mini {
+            grid-column: span 2;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            position: relative;
+        }
+        
+        .kpi-mini::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #333;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .kpi-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        
+        .kpi-value {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .kpi-icon {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ccc;
+        }
+        
+        /* Alert Cards - Floating style */
+        .alert-floating {
+            grid-column: span 6;
+            background: #fff;
+            border: 3px solid #333;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 4px 4px 0 #333;
+        }
+        
+        .alert-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .alert-icon {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #333;
+            border-radius: 12px;
+            background: #ccc;
+        }
+        
+        .alert-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .alert-count {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .alert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .alert-item {
+            border: 2px solid #999;
+            border-left: 4px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            background: #fafafa;
+        }
+        
+        .alert-item-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        
+        .alert-item-meta {
+            font-size: 11px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .alert-item-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #333;
+            color: white;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+        
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        /* Large cards */
+        .card-large {
+            grid-column: span 6;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+        }
+        
+        .card-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #ccc;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .card-link {
+            font-size: 12px;
+            color: #666;
+            text-decoration: underline;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .list-item-content {
+            flex: 1;
+        }
+        
+        .list-item-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .list-item-meta {
+            font-size: 11px;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .list-item-badge {
+            padding: 4px 10px;
+            background: #333;
+            color: white;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        
+        .stat-card {
+            background: white;
+            border: 2px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #333;
+        }
+        
+        .stat-card-body {
+            padding: 16px;
+        }
+        
+        .stat-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .stat-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .stat-label {
+            color: #666;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .kpi-mini {
+                grid-column: span 3;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .kpi-mini {
+                grid-column: span 4;
+            }
+            
+            .alert-floating,
+            .card-large {
+                grid-column: span 12;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-mini {
+                grid-column: span 6;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Wireframe Info -->
+    <div class="wireframe-header">
+        <h1>🎨 Opção 1: Layout Fluido com Floating Cards</h1>
+        <p><strong>Conceito:</strong> Dashboard moderno com Bento Grid adaptativo, floating cards com sombras, e micro-interações sutis. Foco em densidade de informação organizada de forma elegante.</p>
+        <p><strong>Características:</strong> 6 KPIs compactos no topo | Alertas em destaque tipo "island" | Layout 2 colunas para listas | Stats cards no rodapé</p>
+    </div>
+
+    <div class="dashboard">
+        <!-- Status Bar -->
+        <!-- REUSABLE: Header components from src/components/layout/header.tsx -->
+        <div class="component-wrapper">
+            <span class="badge" title="src/components/layout/header.tsx">[REUSE] Header</span>
+            <div class="status-bar">
+                <div class="status-left">
+                    <h2>Dashboard ✨</h2>
+                    <p>Visão geral do escritório</p>
+                </div>
+                <div class="status-right">
+                    <div class="pulse-dot"></div>
+                    <span>Sistema operacional</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bento Grid - KPI Cards -->
+        <div class="bento-grid">
+            <!-- NEW COMPONENT: KPIMiniCard (6x compact cards) -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-mini-card.tsx">[NEW] KPIMiniCard</span>
+                <div class="kpi-mini">
+                    <div class="kpi-icon">⚖️</div>
+                    <div class="kpi-label">Processos Ativos</div>
+                    <div class="kpi-value">127</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-mini-card.tsx">[NEW] KPIMiniCard</span>
+                <div class="kpi-mini">
+                    <div class="kpi-icon">💰</div>
+                    <div class="kpi-label">A Receber</div>
+                    <div class="kpi-value">R$ 45k</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-mini-card.tsx">[NEW] KPIMiniCard</span>
+                <div class="kpi-mini">
+                    <div class="kpi-icon">📅</div>
+                    <div class="kpi-label">Prazos em 7d</div>
+                    <div class="kpi-value">8</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-mini-card.tsx">[NEW] KPIMiniCard</span>
+                <div class="kpi-mini">
+                    <div class="kpi-icon">✓</div>
+                    <div class="kpi-label">Taskscore</div>
+                    <div class="kpi-value">842</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-mini-card.tsx">[NEW] KPIMiniCard</span>
+                <div class="kpi-mini">
+                    <div class="kpi-icon">👥</div>
+                    <div class="kpi-label">Clientes Ativos</div>
+                    <div class="kpi-value">43</div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/kpi-mini-card.tsx">[NEW] KPIMiniCard</span>
+                <div class="kpi-mini">
+                    <div class="kpi-icon">🤝</div>
+                    <div class="kpi-label">Leads</div>
+                    <div class="kpi-value">12</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Floating Cards -->
+        <div class="bento-grid">
+            <!-- NEW COMPONENT: AlertFloatingCard -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/alert-floating-card.tsx">[NEW] AlertFloatingCard</span>
+                <div class="alert-floating">
+                    <div class="alert-header">
+                        <div class="alert-icon">⚠️</div>
+                        <div>
+                            <div class="alert-title">Prazos Vencidos</div>
+                            <div class="alert-count">3 ações necessárias</div>
+                        </div>
+                    </div>
+                    <div class="alert-list">
+                        <!-- REUSABLE: Badge from src/components/ui/badge.tsx -->
+                        <div class="alert-item">
+                            <div class="alert-item-title">Contestação - Processo 1234567</div>
+                            <div class="alert-item-meta">0001234-56.2024.8.01.0001 — Cliente Silva</div>
+                            <span class="alert-item-tag">VENCIDO</span>
+                        </div>
+                        <div class="alert-item">
+                            <div class="alert-item-title">Resposta recursal - Processo 7891011</div>
+                            <div class="alert-item-meta">0007891-01.2024.8.01.0001 — Cliente Santos</div>
+                            <span class="alert-item-tag">HOJE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/alert-floating-card.tsx">[NEW] AlertFloatingCard</span>
+                <div class="alert-floating">
+                    <div class="alert-header">
+                        <div class="alert-icon">💸</div>
+                        <div>
+                            <div class="alert-title">Faturas Atrasadas</div>
+                            <div class="alert-count">2 cobranças pendentes</div>
+                        </div>
+                    </div>
+                    <div class="alert-list">
+                        <div class="alert-item">
+                            <div class="alert-item-title">Fatura #1234 - R$ 3.500,00</div>
+                            <div class="alert-item-meta">Cliente: Empresa XYZ Ltda — Venc: 15/01</div>
+                            <span class="alert-item-tag">15 DIAS</span>
+                        </div>
+                        <div class="alert-item">
+                            <div class="alert-item-title">Fatura #1235 - R$ 2.200,00</div>
+                            <div class="alert-item-meta">Cliente: João Oliveira — Venc: 10/01</div>
+                            <span class="alert-item-tag">20 DIAS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Prazos Críticos Card -->
+            <!-- NEW COMPONENT: DashboardCard -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/dashboard-card.tsx">[NEW] DashboardCard</span>
+                <div class="card-large">
+                    <div class="card-header">
+                        <div class="card-header-left">
+                            <div class="card-icon">⏰</div>
+                            <div class="card-title">Prazos Críticos</div>
+                        </div>
+                        <a href="#" class="card-link">Ver todos →</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-list">
+                            <!-- REUSABLE: Badge from src/components/ui/badge.tsx -->
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-title">Contestação inicial</div>
+                                    <div class="list-item-meta">0001234-56.2024.8.01.0001 — Silva Advocacia</div>
+                                </div>
+                                <span class="list-item-badge">3d</span>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-title">Resposta ao recurso de apelação</div>
+                                    <div class="list-item-meta">0007891-01.2024.8.01.0002 — Santos & Associados</div>
+                                </div>
+                                <span class="list-item-badge">5d</span>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-title">Manifestação sobre cálculos</div>
+                                    <div class="list-item-meta">0002345-67.2024.8.01.0003 — Oliveira Advogados</div>
+                                </div>
+                                <span class="list-item-badge">7d</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarefas Recentes Card -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/dashboard-card.tsx">[NEW] DashboardCard</span>
+                <div class="card-large">
+                    <div class="card-header">
+                        <div class="card-header-left">
+                            <div class="card-icon">✅</div>
+                            <div class="card-title">Tarefas Recentes</div>
+                        </div>
+                        <a href="#" class="card-link">Ver todas →</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-list">
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-title">Elaborar petição inicial trabalhista</div>
+                                    <div class="list-item-meta">Dr. João Silva • 50 pts</div>
+                                </div>
+                                <span class="list-item-badge">●</span>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-title">Revisar contrato de prestação de serviços</div>
+                                    <div class="list-item-meta">Dra. Maria Santos • 30 pts</div>
+                                </div>
+                                <span class="list-item-badge">●</span>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <div class="list-item-title">Agendar reunião com cliente corporativo</div>
+                                    <div class="list-item-meta">Dr. Pedro Oliveira • 20 pts</div>
+                                </div>
+                                <span class="list-item-badge">●</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <!-- NEW COMPONENT: StatCard -->
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/stat-card.tsx">[NEW] StatCard</span>
+                <div class="stat-card">
+                    <div class="stat-card-body">
+                        <div class="stat-title">Tarefas</div>
+                        <div class="stat-row">
+                            <span class="stat-label">A Fazer</span>
+                            <span class="stat-value">12</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Em Andamento</span>
+                            <span class="stat-value">8</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Revisão</span>
+                            <span class="stat-value">3</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Concluídas</span>
+                            <span class="stat-value">45</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/stat-card.tsx">[NEW] StatCard</span>
+                <div class="stat-card">
+                    <div class="stat-card-body">
+                        <div class="stat-title">Prazos</div>
+                        <div class="stat-row">
+                            <span class="stat-label">Pendentes</span>
+                            <span class="stat-value">23</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Vencidos</span>
+                            <span class="stat-value">3</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Concluídos</span>
+                            <span class="stat-value">156</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/stat-card.tsx">[NEW] StatCard</span>
+                <div class="stat-card">
+                    <div class="stat-card-body">
+                        <div class="stat-title">Financeiro</div>
+                        <div class="stat-row">
+                            <span class="stat-label">Honorários</span>
+                            <span class="stat-value">34</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Fat. Pendentes</span>
+                            <span class="stat-value">7</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Contas Pend.</span>
+                            <span class="stat-value">5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="component-wrapper">
+                <span class="badge new" title="To be created at src/components/dashboard/stat-card.tsx">[NEW] StatCard</span>
+                <div class="stat-card">
+                    <div class="stat-card-body">
+                        <div class="stat-title">Atendimentos</div>
+                        <div class="stat-row">
+                            <span class="stat-label">Leads</span>
+                            <span class="stat-value">12</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Qualificação</span>
+                            <span class="stat-value">5</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Convertidos</span>
+                            <span class="stat-value">3</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Perdidos</span>
+                            <span class="stat-value">2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

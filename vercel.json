@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    { "path": "/api/jobs/process", "schedule": "*/2 * * * *" },
+    { "path": "/api/jobs/scheduler", "schedule": "0 8 * * *" },
+    { "path": "/api/jobs/scheduler", "schedule": "0 13 * * *" },
+    { "path": "/api/jobs/operacoes", "schedule": "5 * * * *" },
+    { "path": "/api/jobs/publicacoes", "schedule": "20 * * * *" },
+    { "path": "/api/jobs/demandas", "schedule": "*/5 * * * *" },
+    { "path": "/api/jobs/automacao-nacional", "schedule": "*/15 * * * *" },
+    { "path": "/api/jobs/datajud-monitor", "schedule": "40 */6 * * *" },
+    { "path": "/api/jobs/datajud-aliases", "schedule": "10 3 * * *" }
+  ]
+}
