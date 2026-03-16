@@ -5,7 +5,8 @@ import { PrismaClient } from "../src/generated/prisma";
 import { normalizeMojibake, normalizeNullableMojibake } from "../src/lib/text-normalization";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const adapter = new PrismaPg(pool as any);
 const prisma = new PrismaClient({ adapter });
 
 type TipoAcaoRow = {

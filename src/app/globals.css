@@ -509,6 +509,12 @@
   background: radial-gradient(circle, color-mix(in srgb, var(--info) 18%, var(--highlight) 28%), transparent 74%);
 }
 
+/* Footer: reduz o brilho das orbs no final da página */
+.footer-benefits.benefits-aurora-card::before,
+.footer-benefits.benefits-aurora-card::after {
+  opacity: 0.25;
+}
+
 .benefits-aurora-grid {
   position: relative;
   z-index: 1;
@@ -1730,4 +1736,55 @@
   .comparison-table-modern td:first-child {
     min-width: 160px;
   }
+}
+
+/* Stack Integrado Card - Classes específicas */
+.stack-integrado-card {
+  background-color: rgba(243, 239, 233, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.stack-integrado-title {
+  color: #4f361f;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.stack-integrado-icon-bg {
+  background-color: #ffffff6e;
+  border-radius: 9999px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stack-integrado-icon {
+  width: 12px;
+  height: 12px;
+  color: #2d7c63;
+}
+
+.stack-integrado-item {
+  color: #211b17;
+  font-size: 12px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.stack-integrado-item:hover {
+  color: #a4703f;
+}
+
+.stack-integrado-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #ffffff6e;
 }

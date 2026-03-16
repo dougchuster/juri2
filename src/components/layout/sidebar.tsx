@@ -14,11 +14,13 @@ import {
     CurrencyDollar,
     Gear,
     Handshake,
+    Moon,
     Newspaper,
     Robot,
     Scales,
     SignOut,
     SquaresFour,
+    Sun,
     Target,
     TrendUp,
     UsersThree,
@@ -35,6 +37,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { logout } from "@/actions/auth";
+import { useTheme } from "@/components/theme-provider";
 import {
     ADMIN_ITEMS,
     SIDEBAR_COLLAPSED_WIDTH,
@@ -482,6 +485,7 @@ export function Sidebar({
     onNavigate,
 }: SidebarProps) {
     const pathname = usePathname();
+    const { theme, toggleTheme } = useTheme();
     const activeGroup = useMemo(() => {
         return SIDEBAR_ITEMS.find((item) => item.subItems?.some((subItem) => pathname === subItem.href))?.label ?? null;
     }, [pathname]);
@@ -794,7 +798,26 @@ export function Sidebar({
                 </section>
             </div>
 
-            <div className="mt-4 border-t border-white/10 pt-3">
+            <div className="mt-4 border-t border-white/10 pt-3 space-y-1">
+                <button
+                    type="button"
+                    onClick={toggleTheme}
+                    className={cn(
+                        "adv-sidebar-item flex min-h-11 w-full items-center gap-3 px-3.5 py-3 text-[14px] font-medium text-[color:var(--sidebar-text-muted)] transition-all duration-300 hover:text-[color:var(--sidebar-text)]",
+                        isCollapsed && "justify-center px-0",
+                    )}
+                    title={isCollapsed ? (theme === "dark" ? "Tema claro" : "Tema escuro") : undefined}
+                    aria-label={theme === "dark" ? "Alternar para tema claro" : "Alternar para tema escuro"}
+                >
+                    {theme === "dark"
+                        ? <Sun size={20} weight="regular" className="shrink-0" />
+                        : <Moon size={20} weight="regular" className="shrink-0" />
+                    }
+                    {!isCollapsed ? (
+                        <span>{theme === "dark" ? "Tema claro" : "Tema escuro"}</span>
+                    ) : null}
+                </button>
+
                 <form action={logout}>
                     <button
                         type="submit"

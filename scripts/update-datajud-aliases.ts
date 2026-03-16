@@ -80,7 +80,8 @@ async function main() {
   console.log(`[DataJud] Aliases extraidos: ${aliases.size}`);
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const adapter = new PrismaPg(pool);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const adapter = new PrismaPg(pool as any);
   const prisma = new PrismaClient({ adapter });
 
   try {

@@ -96,6 +96,7 @@ model User {
   protocolosCriados Protocolo[]         @relation("ProtocoloCriadoPor")
   pecasIACriadas    PecaIA[]            @relation("PecaIACriadaPor")
   extratosCriados   ExtratoBancario[]   @relation("ExtratoCriadoPor")
+  passwordResetTokens PasswordResetToken[]
 
   @@index([email])
   @@index([role])
@@ -4401,6 +4402,20 @@ model CampoPersonalizado {
   @@index([entidade])
   @@index([ativo])
   @@map("campos_personalizados")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
 }
 
 model CampoValor {

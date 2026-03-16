@@ -37,7 +37,7 @@ export function AuroraBackground({
   children,
   showRadialGradient = true,
   showGridPattern = true,
-  showShader = true,
+  showShader = false,
   ...props
 }: AuroraBackgroundProps) {
   return (

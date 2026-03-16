@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="dark" suppressHydrationWarning>
+    <html lang="pt-BR" className="light" suppressHydrationWarning>
       <head>
         {/* Ensure the browser always decodes HTML as UTF-8 (fixes mojibake like "Publicações"). */}
         <meta charSet="utf-8" />
@@ -46,7 +46,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 var t = localStorage.getItem('theme');
-                if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                if (!t) t = 'light';
                 document.documentElement.className = t;
               })();
             `,

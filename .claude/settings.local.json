@@ -31,7 +31,14 @@
       "Bash(powershell -Command \"Stop-Process -Id 18208 -Force; Stop-Process -Id 14232 -Force; Stop-Process -Id 2564 -Force; Stop-Process -Id 18208 -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; Get-Process -Name node -ErrorAction SilentlyContinue | Stop-Process -Force; echo ''Todos processos Node encerrados''\")",
       "Bash(docker rm:*)",
       "Bash(docker stop:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(ssh:*)",
+      "Bash(command:*)",
+      "Bash(python3:*)",
+      "Bash(pip install:*)",
+      "Bash(grep:*)",
+      "Bash(ls \"c:\\\\Users\\\\dougc\\\\Documents\\\\Sistema Juridico ADV\\\\src\\\\app\\\\\\(auth\\)\"\")",
+      "Bash(docker exec:*)"
     ]
   }
 }

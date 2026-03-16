@@ -16,7 +16,16 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "30mb",
     },
   },
-  serverExternalPackages: ["node-cron", "@whiskeysockets/baileys", "qrcode", "pino"],
+  serverExternalPackages: [
+    "node-cron",
+    "@whiskeysockets/baileys",
+    "qrcode",
+    "pino",
+    "@prisma/client",
+    "@prisma/adapter-pg",
+    "pg",
+  ],
+  turbopack: {},
 };
 
 export default nextConfig;

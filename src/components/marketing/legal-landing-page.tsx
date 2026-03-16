@@ -13,18 +13,25 @@ import {
   FileSignature,
   Gauge,
   Gavel,
+  Instagram,
   Landmark,
   Layers3,
   LockKeyhole,
+  LogIn,
+  MessageCircle,
   MessageSquareText,
+  Moon,
   Scale,
   ShieldCheck,
   Sparkles,
+  Sun,
   Wallet,
   Workflow,
 } from "lucide-react";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/components/theme-provider";
 import {
   benefitMetrics,
   comparisonRows,
@@ -154,6 +161,7 @@ function BrowserShot({
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function LegalLandingPage() {
+  const { theme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [billingMode, setBillingMode] = useState<"monthly" | "yearly">("monthly");
   const [openFaq, setOpenFaq] = useState(faqItems[0]?.question ?? "");
@@ -176,7 +184,7 @@ export function LegalLandingPage() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
-      <AuroraBackground className="overflow-x-hidden pb-14">
+      <AuroraBackground className="overflow-x-hidden pb-14" showShader>
         {/* Ambient background orbs */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
           <div className="absolute left-[-8%] top-[-10%] h-[400px] w-[400px] rounded-full bg-[color:var(--accent)]/10 blur-3xl" />
@@ -210,10 +218,20 @@ export function LegalLandingPage() {
             </nav>
 
             <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="flex size-9 items-center justify-center rounded-full border border-[color:var(--border-color)] bg-[color:var(--surface-soft)] text-[color:var(--text-secondary)] transition hover:text-[color:var(--text-primary)]"
+                title={theme === "dark" ? "Tema claro" : "Tema escuro"}
+                aria-label={theme === "dark" ? "Alternar para tema claro" : "Alternar para tema escuro"}
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
               <Link
                 href="/login"
-                className="hidden text-sm font-semibold text-[color:var(--text-secondary)] transition hover:text-[color:var(--text-primary)] md:inline-flex"
+                className="group hidden items-center gap-2 rounded-full border border-[color:var(--border-hover)] bg-white/[0.04] px-4 py-2 text-sm font-semibold text-[color:var(--text-secondary)] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--accent)]/40 hover:bg-white/[0.08] hover:text-[color:var(--text-primary)] md:inline-flex"
               >
+                <LogIn className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 Entrar
               </Link>
               <Link href="#cta-final" className={cn(primaryCta, "btn-gradient h-10 px-5 text-sm")}>
@@ -325,20 +343,28 @@ export function LegalLandingPage() {
                 priority
               />
               <motion.div
-                className="absolute -bottom-5 left-6 hidden max-w-[210px] rounded-2xl border border-[color:var(--border-hover)] bg-[rgba(255,255,255,0.90)] p-4 shadow-lg backdrop-blur md:block"
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="stack-integrado-card absolute -bottom-5 left-6 hidden max-w-[240px] overflow-hidden rounded-[20px] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:block"
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               >
-                <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[color:var(--text-muted)]">
-                  Stack integrado
-                </div>
-                <div className="mt-2.5 space-y-2">
-                  {["CRM → Processos → Financeiro", "Comunicação → Portal do cliente", "IA → Automação → Governança"].map((item) => (
-                    <div key={item} className="flex items-center gap-2 text-xs text-[color:var(--text-primary)]">
-                      <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-[color:var(--success)]" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
+                {/* Glow effect */}
+                <div className="pointer-events-none absolute -right-10 -top-10 h-20 w-20 rounded-full bg-[color:var(--accent)]/10 blur-2xl" />
+                
+                <div className="relative">
+                  <div className="flex items-center gap-2 stack-integrado-title">
+                    <span className="stack-integrado-dot" />
+                    Stack integrado
+                  </div>
+                  <div className="mt-3 space-y-2.5">
+                    {["CRM → Processos → Financeiro", "Comunicação → Portal do cliente", "IA → Automação → Governança"].map((item) => (
+                      <div key={item} className="group flex items-center gap-2.5 stack-integrado-item">
+                        <div className="stack-integrado-icon-bg shrink-0">
+                          <BadgeCheck className="stack-integrado-icon" />
+                        </div>
+                        <span className="font-medium">{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -949,30 +975,40 @@ export function LegalLandingPage() {
         </Reveal>
       </div>
 
-      {/* ─── FOOTER ─── */}
-      <footer className="benefits-aurora-card relative mt-20 overflow-hidden py-12 md:py-16">
-        <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-10">
-          <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      {/* ─── FOOTER (mesmo background da seção "Resultados que escritórios reais já medem") ─── */}
+      <footer className="benefits-aurora-card footer-benefits relative mt-20 overflow-hidden pt-12 pb-6 md:pt-16 md:pb-8">
+        {/* Grade animada sobre o background */}
+        <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden>
+          <AnimatedGridPattern
+            numSquares={30}
+            maxOpacity={0.03}
+            duration={3}
+            repeatDelay={1}
+            className="[mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,white_25%,transparent_75%)] inset-0 stroke-white/[0.05] fill-white/[0.05]"
+          />
+        </div>
+        <div className="relative z-10 mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-10">
+            <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
             {/* Brand */}
             <div>
               <Link href="/" className="inline-flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--accent),var(--highlight))] text-white">
                   <Scale className="h-4 w-4" />
                 </div>
-                <span className="text-[15px] font-semibold text-[color:var(--text-primary)]">Juridico ADV</span>
+                <span className="text-[15px] font-semibold text-white">Juridico ADV</span>
               </Link>
-              <p className="mt-4 max-w-[260px] text-sm leading-6 text-[color:var(--text-muted)]">
+              <p className="mt-4 max-w-[260px] text-sm leading-6 text-white/70">
                 Sistema de gestão jurídica premium para escritórios de advocacia e departamentos jurídicos corporativos.
               </p>
             </div>
 
             {/* Produto */}
             <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">Produto</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Produto</div>
               <ul className="mt-4 space-y-3">
                 {[["Funcionalidades", "#funcionalidades"], ["Módulos", "#showcase"], ["Planos", "#planos"], ["Demonstração", "#cta-final"]].map(([label, href]) => (
                   <li key={label}>
-                    <Link href={href} className="text-sm text-[color:var(--text-secondary)] transition hover:text-[color:var(--text-primary)]">
+                    <Link href={href} className="text-sm text-white/80 transition hover:text-white">
                       {label}
                     </Link>
                   </li>
@@ -982,11 +1018,11 @@ export function LegalLandingPage() {
 
             {/* Segurança */}
             <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">Segurança</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Segurança</div>
               <ul className="mt-4 space-y-3">
                 {["LGPD", "MFA", "Auditoria", "Criptografia 256-bit"].map((item) => (
                   <li key={item}>
-                    <span className="text-sm text-[color:var(--text-secondary)]">{item}</span>
+                    <span className="text-sm text-white/80">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -994,11 +1030,11 @@ export function LegalLandingPage() {
 
             {/* Empresa */}
             <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">Empresa</div>
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Empresa</div>
               <ul className="mt-4 space-y-3">
                 {[["Sobre", "#"], ["Contato", "#cta-final"], ["Suporte", "#faq"], ["Entrar", "/login"]].map(([label, href]) => (
                   <li key={label}>
-                    <Link href={href} className="text-sm text-[color:var(--text-secondary)] transition hover:text-[color:var(--text-primary)]">
+                    <Link href={href} className="text-sm text-white/80 transition hover:text-white">
                       {label}
                     </Link>
                   </li>
@@ -1007,15 +1043,35 @@ export function LegalLandingPage() {
             </div>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/8 pt-6">
-            <p className="text-xs text-[color:var(--text-muted)]">
-              © 2026 Juridico ADV. Todos os direitos reservados.
-            </p>
-            <p className="text-xs text-[color:var(--text-muted)]">
-              Feito com precisão para o mercado jurídico brasileiro.
-            </p>
+            <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
+              <p className="text-xs text-white/50">
+                © 2026 Juridico ADV. Todos os direitos reservados.
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 backdrop-blur-md">
+                  <span className="text-[11px]"><span className="text-white/60">Desenvolvido por </span><span className="font-semibold text-[color:var(--accent)]">Chuster Company</span></span>
+                  <a
+                    href="https://instagram.com/chustercompany"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-6 w-6 items-center justify-center rounded-full text-white/70 transition hover:text-white hover:bg-white/10"
+                    aria-label="Instagram"
+                  >
+                    <Instagram className="h-3.5 w-3.5" />
+                  </a>
+                  <a
+                    href="https://wa.me/5511999999999"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-6 w-6 items-center justify-center rounded-full text-white/70 transition hover:text-white hover:bg-white/10"
+                    aria-label="WhatsApp"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
       </footer>
     </main>
   );

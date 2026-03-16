@@ -13,7 +13,7 @@ RUN apk add --no-cache libc6-compat
 
 COPY package*.json ./
 # Install ALL deps (devDeps needed at runtime for ts-node custom server)
-RUN npm ci --no-audit --no-fund
+RUN npm install --no-audit --no-fund
 
 # ── Stage 2: Build Next.js application ───────────────────────────
 FROM node:20-alpine AS builder
@@ -26,8 +26,8 @@ COPY . .
 # Generate Prisma client (uses schema.prisma → src/generated/prisma)
 RUN npx prisma generate
 
-# Build Next.js
-RUN npm run build
+# Build Next.js — aumentar heap para TypeScript check não OOM
+RUN NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
 # ── Stage 3: Production runtime ──────────────────────────────────
 FROM node:20-alpine AS runner
@@ -60,12 +60,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json    ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/next.config.ts   ./next.config.ts
 # Prisma schema + generated client
 COPY --from=builder --chown=nextjs:nodejs /app/prisma           ./prisma
+# Prisma 7 config (defines datasource.url for migrate deploy)
+COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
 # Source (needed by ts-node for socket-server and other runtime requires)
 COPY --from=builder --chown=nextjs:nodejs /app/src              ./src
 
-# Ensure uploads directory exists and is writable (volume mount overrides)
-RUN mkdir -p /app/public/uploads \
- && chown -R nextjs:nodejs /app/public/uploads
+# Ensure writable directories exist (uploads via volume, whatsapp-auth local)
+RUN mkdir -p /app/public/uploads /app/.whatsapp-auth \
+ && chown -R nextjs:nodejs /app/public/uploads /app/.whatsapp-auth
 
 USER nextjs
 

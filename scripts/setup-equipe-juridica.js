@@ -47,7 +47,7 @@ const ADVOGADOS = [
 
 async function main() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
+  const prisma = new PrismaClient({ adapter: new PrismaPg(pool as any) });
 
   try {
     console.log("Criando equipe juridica...");

@@ -60,6 +60,7 @@ const REQUIRED_DELEGATES = [
   "internalChatAttachment",
   "internalChatRead",
   "internalChatPresence",
+  "passwordResetToken",
 ] as const;
 
 function hasRequiredDelegates(client: PrismaClient | undefined) {
@@ -72,7 +73,8 @@ function createPrismaClient() {
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
   });
-  const adapter = new PrismaPg(pool);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const adapter = new PrismaPg(pool as any);
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],

@@ -14,12 +14,15 @@ RUN addgroup -g 1001 -S nodejs \
 
 COPY package*.json ./
 # Install ALL deps (devDeps needed for ts-node)
-RUN npm ci --no-audit --no-fund
+RUN npm install --no-audit --no-fund
 
 COPY --chown=worker:nodejs . .
 
 # Generate Prisma client
 RUN npx prisma generate
+
+# server-only é uma guarda para bundles do browser — no worker Node.js é desnecessário
+RUN echo "// no-op in worker context" > /app/node_modules/server-only/index.js
 
 USER worker
 

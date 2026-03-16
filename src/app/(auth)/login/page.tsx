@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, ArrowRight, Mail, Lock } from "lucide-react";
+import Link from "next/link";
 import { login } from "@/actions/auth";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const authFieldShellClass =
     "relative rounded-[20px] border border-[var(--input-border)] bg-[var(--glass-input-bg)] shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_10px_22px_color-mix(in_srgb,var(--shadow-color)_12%,transparent)] backdrop-blur-xl transition-all duration-200";
@@ -35,7 +37,8 @@ export default function LoginPage() {
                 router.push("/login/mfa");
                 setIsLoading(false);
             }
-        } catch {
+        } catch (err) {
+            if (isRedirectError(err)) throw err;
             setIsLoading(false);
         }
     }
@@ -65,18 +68,18 @@ export default function LoginPage() {
                     <label htmlFor="email" className="flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-[0.18em] text-text-muted">E-mail</label>
                     <div className={`${authFieldShellClass} ${focusedField === "email" ? authFieldActiveClass : "hover:border-border-hover"}`}>
                         <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2"><Mail size={16} className={focusedField === "email" ? "text-accent" : "text-text-muted"} /></div>
-                        <input id="email" name="email" type="email" required defaultValue="dougcruvinel@gmail.com" placeholder="seu@email.com" onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)} className="w-full rounded-[20px] bg-transparent pl-10 pr-4 py-3.5 text-[14px] text-text-primary placeholder:text-text-muted outline-none" />
+                        <input id="email" name="email" type="email" required placeholder="seu@email.com" onFocus={() => setFocusedField("email")} onBlur={() => setFocusedField(null)} className="w-full rounded-[20px] bg-transparent pl-10 pr-4 py-3.5 text-[14px] text-text-primary placeholder:text-text-muted outline-none" />
                     </div>
                 </div>
 
                 <div className="space-y-2">
                     <div className="flex items-center justify-between">
                         <label htmlFor="password" className="text-[12px] font-semibold uppercase tracking-[0.18em] text-text-muted">Senha</label>
-                        <a href="#" className="text-xs font-medium text-accent transition-colors hover:text-accent-hover">Esqueceu a senha?</a>
+                        <Link href="/esqueci-senha" className="text-xs font-medium text-accent transition-colors hover:text-accent-hover">Esqueceu a senha?</Link>
                     </div>
                     <div className={`${authFieldShellClass} ${focusedField === "password" ? authFieldActiveClass : "hover:border-border-hover"}`}>
                         <div className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2"><Lock size={16} className={focusedField === "password" ? "text-accent" : "text-text-muted"} /></div>
-                        <input id="password" name="password" type={showPassword ? "text" : "password"} required defaultValue="123456" placeholder="********" onFocus={() => setFocusedField("password")} onBlur={() => setFocusedField(null)} className="w-full rounded-[20px] bg-transparent pl-10 pr-12 py-3.5 text-[14px] text-text-primary placeholder:text-text-muted outline-none" />
+                        <input id="password" name="password" type={showPassword ? "text" : "password"} required placeholder="********" onFocus={() => setFocusedField("password")} onBlur={() => setFocusedField(null)} className="w-full rounded-[20px] bg-transparent pl-10 pr-12 py-3.5 text-[14px] text-text-primary placeholder:text-text-muted outline-none" />
                         <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-text-muted transition-colors hover:text-text-secondary">
                             {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                         </button>

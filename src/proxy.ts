@@ -4,6 +4,8 @@ import type { NextRequest } from "next/server";
 // Rotas públicas que não precisam de autenticação
 const PUBLIC_ROUTES = [
     "/login",
+    "/esqueci-senha",
+    "/redefinir-senha",
     "/api/chatbot-triagem",
     "/api/portal-cliente",
     "/api/webhooks",
