@@ -8251,3 +8251,145 @@ prisma:error Must call super constructor in derived class before accessing 'this
   clientVersion: '7.4.0'
 }
  POST /api/jobs/process 500 in 25ms (compile: 3ms, proxy.ts: 3ms, render: 20ms)
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+[Jobs Process] Error: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new I (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1451:9)
+    at He (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1457:61)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:219)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:56)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2213:53)
+    at async e.run (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2121:46)
+    at async e.execute (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2589:275)
+    at async _4.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3089:21)
+    at async Object.singleLoader (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3388:176)
+    at async zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3390:16)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async processJobQueue (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\lib\services\communication-engine.ts:391:31)
+    at async POST (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\app\api\jobs\process\route.ts:29:30)
+  389 |                     await db.communicationJob.update({
+  390 |                         where: { id: job.id },
+> 391 |                         data: {
+      |                               ^
+  392 |                             status: "FAILED",
+  393 |                             errorMessage: result.error,
+  394 |                         }, {
+  clientVersion: '7.4.0'
+}
+ POST /api/jobs/process 500 in 24ms (compile: 1690µs, proxy.ts: 2ms, render: 20ms)
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+[Jobs Automação Nacional] Error: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new I (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1451:9)
+    at He (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1457:61)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:219)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:56)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2213:53)
+    at async e.run (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2121:46)
+    at async e.execute (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2589:275)
+    at async _4.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3089:21)
+    at async Object.singleLoader (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3388:176)
+    at async zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3390:16)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async processarFilaAutomacaoNacional (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_lib_1ec0e135._.js:6218:34)
+    at async POST (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\app\api\jobs\automacao-nacional\route.ts:18:12)
+  16 |     const limit = Number(body.limit ?? 1);
+  17 |     const result = await processarFilaAutomacaoNacional(limit);
+> 18 |     return NextResponse.json({ ok: true, result });
+     |            ^
+  19 |   } catch (error) {
+  20 |     console.error("[Jobs Automação Nacional] Error:", error);
+  21 |     return NextResponse.json( {
+  clientVersion: '7.4.0'
+}
+ POST /api/jobs/automacao-nacional 500 in 28ms (compile: 3ms, proxy.ts: 4ms, render: 21ms)
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+[DemandasConfig] Falha ao carregar agendamento de planejamento: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new I (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1451:9)
+    at He (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1457:61)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:219)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:56)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2176:53)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2213:53)
+    at async e.run (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2121:46)
+    at async e.execute (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2589:275)
+    at async _4.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3089:21)
+    at async Object.singleLoader (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3388:176) {
+  clientVersion: '7.4.0'
+}
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+[Jobs Demandas] Error: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new I (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1451:9)
+    at He (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1457:61)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:219)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:56)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2176:53)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2213:53)
+    at async e.run (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2121:46)
+    at async e.execute (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2589:275)
+    at async _4.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3089:21)
+    at async Object.singleLoader (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3388:176)
+    at async zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3390:16)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async resolveAuditUserId (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\demandas.ts:2756:20)
+    at async executarPlanejamentoAgendadoDemandas (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\demandas.ts:1953:26)
+    at async runDemandasJob (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_61c9aada._.js:2880:36)
+    at async POST (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\src_61c9aada._.js:2907:41)
+  2754 |     input: z.infer<typeof executarRotinasSchema> = { modo: "MANUAL" }
+  2755 | ) {
+> 2756 |     const parsed = executarRotinasSchema.safeParse(input);
+       |                    ^
+  2757 |     if (!parsed.success) return { success: false, error: "Modo de execucao invalido." };
+  2758 |
+  2759 |     const session = await getSession(); {
+  clientVersion: '7.4.0'
+}
+ POST /api/jobs/demandas 500 in 50ms (compile: 5ms, proxy.ts: 3ms, render: 42ms)
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+[Jobs Process] Error: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new I (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1451:9)
+    at He (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1457:61)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:219)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:56)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2213:53)
+    at async e.run (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2121:46)
+    at async e.execute (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2589:275)
+    at async _4.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3089:21)
+    at async Object.singleLoader (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3388:176)
+    at async zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3390:16)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async processJobQueue (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\lib\services\communication-engine.ts:391:31)
+    at async POST (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\app\api\jobs\process\route.ts:29:30)
+  389 |                     await db.communicationJob.update({
+  390 |                         where: { id: job.id },
+> 391 |                         data: {
+      |                               ^
+  392 |                             status: "FAILED",
+  393 |                             errorMessage: result.error,
+  394 |                         }, {
+  clientVersion: '7.4.0'
+}
+ POST /api/jobs/process 500 in 21ms (compile: 1479µs, proxy.ts: 2ms, render: 18ms)
+prisma:error Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+[Jobs Process] Error: ReferenceError: Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+    at new I (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1451:9)
+    at He (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:1457:61)
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:219)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2166:56)
+    at async e.interpretNode (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2213:53)
+    at async e.run (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2121:46)
+    at async e.execute (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:2589:275)
+    at async _4.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3089:21)
+    at async Object.singleLoader (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3388:176)
+    at async zr.request (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3390:16)
+    at async a (C:\Users\dougc\Documents\Sistema Juridico ADV\src\generated\prisma\runtime\client.js:3651:723)
+    at async processJobQueue (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\lib\services\communication-engine.ts:391:31)
+    at async POST (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\app\api\jobs\process\route.ts:29:30)
+  389 |                     await db.communicationJob.update({
+  390 |                         where: { id: job.id },
+> 391 |                         data: {
+      |                               ^
+  392 |                             status: "FAILED",
+  393 |                             errorMessage: result.error,
+  394 |                         }, {
+  clientVersion: '7.4.0'
+}
+ POST /api/jobs/process 500 in 24ms (compile: 2ms, proxy.ts: 2ms, render: 19ms)
