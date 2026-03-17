@@ -105,7 +105,8 @@ export async function PATCH(
     }
 
     let acao = "ATUALIZAR_USUARIO";
-    let detalhes: Record<string, unknown> = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let detalhes: any = {
       userId: id,
       userName: existing.name,
       userEmail: existing.email,
