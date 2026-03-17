@@ -55,7 +55,7 @@ async function getUsers(searchParams: Record<string, string | string[]>) {
           isActive: true,
           lastLoginAt: true,
           createdAt: true,
-          advogado: {
+          funcionarioFinanceiro: {
             select: {
               escritorioId: true,
               escritorio: {
@@ -84,8 +84,8 @@ async function getUsers(searchParams: Record<string, string | string[]>) {
       isActive: u.isActive,
       lastLoginAt: u.lastLoginAt,
       createdAt: u.createdAt,
-      organizationId: u.advogado?.escritorioId ?? null,
-      organization: u.advogado?.escritorio ?? null,
+      organizationId: u.funcionarioFinanceiro?.escritorioId ?? null,
+      organization: u.funcionarioFinanceiro?.escritorio ?? null,
     }));
 
     return {
