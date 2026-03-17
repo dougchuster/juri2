@@ -56,7 +56,7 @@ async function getOrganizations(searchParams: Record<string, string | string[]>)
     // Count users per org
     const orgsWithCounts = await Promise.all(
       orgs.map(async (org) => {
-        const userCount = await db.advogado.count({
+        const userCount = await db.funcionarioFinanceiro.count({
           where: { escritorioId: org.id },
         });
         return {
