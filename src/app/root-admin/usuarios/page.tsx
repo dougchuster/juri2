@@ -56,7 +56,12 @@ async function getUsers(searchParams: Record<string, string | string[]>) {
           lastLoginAt: true,
           createdAt: true,
           advogado: {
-            select: { id: true },
+            select: {
+              escritorioId: true,
+              escritorio: {
+                select: { id: true, nome: true, email: true, slug: true },
+              },
+            },
           },
         },
         orderBy: { createdAt: "desc" },
@@ -71,8 +76,20 @@ async function getUsers(searchParams: Record<string, string | string[]>) {
       }),
     ]);
 
+    const mapped = users.map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      isActive: u.isActive,
+      lastLoginAt: u.lastLoginAt,
+      createdAt: u.createdAt,
+      organizationId: u.advogado?.escritorioId ?? null,
+      organization: u.advogado?.escritorio ?? null,
+    }));
+
     return {
-      usuarios: JSON.parse(JSON.stringify(users)),
+      usuarios: JSON.parse(JSON.stringify(mapped)),
       total,
       page,
       pageSize: limit,

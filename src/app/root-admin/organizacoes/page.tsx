@@ -59,7 +59,7 @@ async function getOrganizations(searchParams: Record<string, string | string[]>)
     const orgsWithCounts = await Promise.all(
       orgs.map(async (org) => {
         const userCount = await db.advogado.count({
-          where: { user: { isActive: true } },
+          where: { escritorioId: org.id },
         });
         return {
           ...org,

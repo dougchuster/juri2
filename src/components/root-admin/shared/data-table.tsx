@@ -40,7 +40,7 @@ export default function DataTable<T extends { id?: string | number }>({
     );
   }
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <div className="bg-[#1a1a24] border border-[rgba(255,255,255,0.08)] rounded-lg p-8">
         <p className="text-center text-[#64748b]">{emptyMessage}</p>
