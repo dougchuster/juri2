@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
         const result = await resolveOAuthLogin(email);
         if ("error" in result) {
-            return NextResponse.redirect(buildLoginErrorUrl(result.error));
+            return NextResponse.redirect(buildLoginErrorUrl(result.error ?? "Erro desconhecido."));
         }
 
         return NextResponse.redirect(new URL(result.redirectTo, getAppBaseUrl()));
