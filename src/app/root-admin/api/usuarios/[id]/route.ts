@@ -68,7 +68,7 @@ export async function GET(
     ]);
 
     const [userWithOrganization] = attachOrganizationToUsers(
-      [{ id: user.id, email: user.email, ...user }],
+      [{ ...user }],
       organizations as RootAdminOrgLite[],
       mappings
     );
