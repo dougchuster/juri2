@@ -50,8 +50,6 @@ export async function GET(request: NextRequest) {
         include: {
           assinaturas: {
             include: { plano: true },
-            take: 1,
-            orderBy: { createdAt: "desc" },
           },
         },
         orderBy: { createdAt: "desc" },

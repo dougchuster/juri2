@@ -46,8 +46,6 @@ async function getOrganizations(searchParams: Record<string, string | string[]>)
         include: {
           assinaturas: {
             include: { plano: true },
-            take: 1,
-            orderBy: { createdAt: "desc" },
           },
         },
         orderBy: { createdAt: "desc" },
