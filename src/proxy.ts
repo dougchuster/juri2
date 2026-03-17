@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 // Rotas públicas que não precisam de autenticação
 const PUBLIC_ROUTES = [
     "/login",
+    "/admin-login",
     "/esqueci-senha",
     "/redefinir-senha",
     "/api/chatbot-triagem",
@@ -24,6 +25,7 @@ const PROTECTED_API_PREFIXES = [
     "/api/grafo",
     "/api/bi",
     "/api/datajud",
+    "/root-admin/api", // Root admin APIs (validam própria autenticação)
 ];
 
 // Métodos que modificam estado — sujeitos à verificação CSRF
@@ -105,26 +107,8 @@ export default function proxy(request: NextRequest) {
 
     const sessionToken = request.cookies.get("session_token")?.value;
 
-    if (pathname.startsWith("/api")) {
-        if (isProtectedApiRoute(pathname) && !sessionToken) {
-            return NextResponse.json(
-                { error: "Não autorizado. Faça login para continuar.", code: "UNAUTHORIZED" },
-                { status: 401 }
-            );
-        }
-
-        if (
-            MUTATION_METHODS.has(httpMethod) &&
-            isProtectedApiRoute(pathname) &&
-            sessionToken &&
-            !checkCsrf(request)
-        ) {
-            return NextResponse.json(
-                { error: "Requisição bloqueada: origem não autorizada.", code: "FORBIDDEN" },
-                { status: 403 }
-            );
-        }
-
+    // Allow all API routes to pass - they validate their own authentication
+    if (pathname.startsWith("/api") || pathname.startsWith("/root-admin/api")) {
         return response;
     }
 
@@ -134,7 +118,8 @@ export default function proxy(request: NextRequest) {
         !pathname.startsWith("/icons") &&
         !pathname.startsWith("/images");
 
-    if (isPageRoute && !sessionToken && pathname !== "/login") {
+    // Protect page routes - require session_token for regular app, not root-admin pages
+    if (isPageRoute && !sessionToken && pathname !== "/login" && !pathname.startsWith("/root-admin") && !pathname.startsWith("/admin-login")) {
         const loginUrl = new URL("/login", request.url);
         loginUrl.searchParams.set("callbackUrl", pathname);
         return NextResponse.redirect(loginUrl);

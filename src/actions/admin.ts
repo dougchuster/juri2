@@ -103,15 +103,53 @@ export async function updateEscritorio(id: string, formData: z.infer<typeof escr
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     try {
-        await db.escritorio.update({
-            where: { id },
-            data: {
-                nome: parsed.data.nome,
-                cnpj: parsed.data.cnpj || null,
-                telefone: parsed.data.telefone || null,
-                email: parsed.data.email || null,
-                endereco: parsed.data.endereco || null,
-            },
+        const nome = parsed.data.nome.trim();
+        const cnpj = parsed.data.cnpj?.trim() || null;
+        const telefone = parsed.data.telefone?.trim() || null;
+        const email = parsed.data.email?.trim() || null;
+        const endereco = parsed.data.endereco?.trim() || null;
+
+        await db.$transaction(async (tx) => {
+            await tx.escritorio.update({
+                where: { id },
+                data: {
+                    nome,
+                    cnpj,
+                    telefone,
+                    email,
+                    endereco,
+                },
+            });
+
+            await tx.appSetting.upsert({
+                where: { key: "escritorio_nome" },
+                update: { value: nome },
+                create: { key: "escritorio_nome", value: nome },
+            });
+
+            if (cnpj) {
+                await tx.appSetting.upsert({
+                    where: { key: "escritorio_cnpj" },
+                    update: { value: cnpj },
+                    create: { key: "escritorio_cnpj", value: cnpj },
+                });
+            }
+
+            if (telefone) {
+                await tx.appSetting.upsert({
+                    where: { key: "escritorio_telefone" },
+                    update: { value: telefone },
+                    create: { key: "escritorio_telefone", value: telefone },
+                });
+            }
+
+            if (email) {
+                await tx.appSetting.upsert({
+                    where: { key: "escritorio_email" },
+                    update: { value: email },
+                    create: { key: "escritorio_email", value: email },
+                });
+            }
         });
         revalidatePath("/admin");
         return { success: true };

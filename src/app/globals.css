@@ -1788,3 +1788,67 @@
   border-radius: 9999px;
   background-color: #ffffff6e;
 }
+
+/* ─── Hero dark content — wrapper do conteúdo da hero section ─────────────── */
+/* Garante contexto de stacking correto e text-rendering otimizado no fundo marrom */
+.hero-dark-content {
+  position: relative;
+  z-index: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fallback para navegadores sem suporte a backdrop-filter */
+@supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) {
+
+  .glass-panel,
+  .glass-card,
+  .surface-soft,
+  .benefits-metric-card,
+  .stack-integrado-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: color-mix(in srgb, var(--bg-elevated) 94%, white 6%) !important;
+  }
+}
+
+/* ─── Otimizações de performance para mobile ──────────────────────────────── */
+/* Reduz animações pesadas em telas pequenas/touch */
+@media (max-width: 767px) {
+  /* Desativa aurora animation em mobile — economiza GPU */
+  .animate-\[aurora_34s_linear_infinite\] {
+    animation: none;
+  }
+
+  /* Reduz blur pesado em mobile */
+  .blur-\[12px\] {
+    filter: blur(6px);
+  }
+
+  .blur-\[18px\] {
+    filter: blur(8px);
+  }
+}
+
+/* Respeita preferência por menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .animate-\[aurora_34s_linear_infinite\] {
+    animation: none;
+  }
+
+  .landing-marquee-track,
+  .testimonials-column-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Modo de atualização lenta: reduz custo de animações contínuas */
+@media (update: slow) {
+  .landing-marquee-track,
+  .testimonials-column-track,
+  .animate-\[aurora_34s_linear_infinite\] {
+    animation: none !important;
+    transform: none !important;
+  }
+}

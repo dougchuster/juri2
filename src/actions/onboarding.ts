@@ -29,26 +29,70 @@ export async function salvarDadosEscritorio(dados: DadosEscritorio) {
     if (!session) return { success: false, error: "Sessao expirada." };
 
     try {
-        // Update escritorio name stored in AppSetting if available
-        await db.appSetting.upsert({
-            where: { key: "escritorio_nome" },
-            update: { value: dados.nome },
-            create: { key: "escritorio_nome", value: dados.nome },
+        const nome = dados.nome.trim();
+        const cnpj = dados.cnpj?.trim() || null;
+        const telefone = dados.telefone?.trim() || null;
+        const emailResponsavelCadastro = session.email?.trim() || null;
+
+        await db.$transaction(async (tx) => {
+            await tx.appSetting.upsert({
+                where: { key: "escritorio_nome" },
+                update: { value: nome },
+                create: { key: "escritorio_nome", value: nome },
+            });
+
+            if (emailResponsavelCadastro) {
+                await tx.appSetting.upsert({
+                    where: { key: "escritorio_email" },
+                    update: { value: emailResponsavelCadastro },
+                    create: { key: "escritorio_email", value: emailResponsavelCadastro },
+                });
+            }
+
+            if (cnpj) {
+                await tx.appSetting.upsert({
+                    where: { key: "escritorio_cnpj" },
+                    update: { value: cnpj },
+                    create: { key: "escritorio_cnpj", value: cnpj },
+                });
+            }
+
+            if (telefone) {
+                await tx.appSetting.upsert({
+                    where: { key: "escritorio_telefone" },
+                    update: { value: telefone },
+                    create: { key: "escritorio_telefone", value: telefone },
+                });
+            }
+
+            const escritorio = await tx.escritorio.findFirst({
+                orderBy: { createdAt: "asc" },
+                select: { id: true },
+            });
+
+            if (escritorio) {
+                await tx.escritorio.update({
+                    where: { id: escritorio.id },
+                    data: {
+                        nome,
+                        cnpj,
+                        telefone,
+                        email: emailResponsavelCadastro,
+                    },
+                });
+            } else {
+                await tx.escritorio.create({
+                    data: {
+                        nome,
+                        cnpj,
+                        telefone,
+                        email: emailResponsavelCadastro,
+                        origemCadastro: "onboarding",
+                    },
+                });
+            }
         });
-        if (dados.cnpj) {
-            await db.appSetting.upsert({
-                where: { key: "escritorio_cnpj" },
-                update: { value: dados.cnpj },
-                create: { key: "escritorio_cnpj", value: dados.cnpj },
-            });
-        }
-        if (dados.telefone) {
-            await db.appSetting.upsert({
-                where: { key: "escritorio_telefone" },
-                update: { value: dados.telefone },
-                create: { key: "escritorio_telefone", value: dados.telefone },
-            });
-        }
+        revalidatePath("/admin");
         return { success: true };
     } catch (error) {
         console.error("Error saving escritorio data:", error);

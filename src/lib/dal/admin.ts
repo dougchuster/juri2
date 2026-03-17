@@ -42,7 +42,51 @@ export async function getLogsAuditoria(filters: { userId?: string; entidade?: st
 
 // ── Escritório ──
 export async function getEscritorio() {
-    return db.escritorio.findFirst({ orderBy: { createdAt: "asc" } });
+    const [escritorio, settings, usuarioRegistrante] = await Promise.all([
+        db.escritorio.findFirst({ orderBy: { createdAt: "asc" } }),
+        db.appSetting.findMany({
+            where: { key: { in: ["escritorio_nome", "escritorio_cnpj", "escritorio_telefone", "escritorio_email"] } },
+            select: { key: true, value: true },
+        }),
+        db.user.findFirst({
+            where: { onboardingCompleted: true },
+            orderBy: { createdAt: "asc" },
+            select: { email: true },
+        }),
+    ]);
+
+    if (!escritorio) return null;
+
+    const getSetting = (key: string) => {
+        const item = settings.find((entry) => entry.key === key);
+        return typeof item?.value === "string" ? item.value.trim() : "";
+    };
+
+    const nome = getSetting("escritorio_nome") || escritorio.nome;
+    const cnpjSetting = getSetting("escritorio_cnpj");
+    const telefoneSetting = getSetting("escritorio_telefone");
+    const emailSetting = getSetting("escritorio_email");
+    const cnpj = cnpjSetting || escritorio.cnpj;
+    const telefone = telefoneSetting || escritorio.telefone;
+    const email = emailSetting || usuarioRegistrante?.email || escritorio.email;
+
+    if (
+        nome !== escritorio.nome ||
+        cnpj !== escritorio.cnpj ||
+        telefone !== escritorio.telefone ||
+        email !== escritorio.email
+    ) {
+        try {
+            await db.escritorio.update({
+                where: { id: escritorio.id },
+                data: { nome, cnpj, telefone, email },
+            });
+        } catch (error) {
+            console.error("Error reconciling escritorio data from settings:", error);
+        }
+    }
+
+    return { ...escritorio, nome, cnpj, telefone, email };
 }
 
 // ── Feriados ──

@@ -61,6 +61,15 @@ const REQUIRED_DELEGATES = [
   "internalChatRead",
   "internalChatPresence",
   "passwordResetToken",
+  // Root Admin models
+  "superAdmin",
+  "superAdminSession",
+  "superAdminLog",
+  "plano",
+  "assinatura",
+  "faturaPlataforma",
+  "featureFlag",
+  "comunicadoPlataforma",
 ] as const;
 
 function hasRequiredDelegates(client: PrismaClient | undefined) {

@@ -370,9 +370,7 @@ export function AdminFuncionariosPerfis({ funcionarios, initialSelectedUserId }:
             nome: String(form.get("nome") || "").trim(),
             email: String(form.get("email") || "").trim(),
             role: String(form.get("role") || selected.role) as FuncionarioItem["role"],
-            avatarUrl:
-                avatarDraft ||
-                String(form.get("avatarUrlManual") || form.get("avatarUrl") || "").trim(),
+            avatarUrl: avatarDraft || String(form.get("avatarUrl") || "").trim(),
             perfilProfissional: area,
             cargo: cargoInformado || inferCargo(selected, area),
             departamento: departamentoInformado || inferDepartamento(selected, area),
@@ -402,6 +400,7 @@ export function AdminFuncionariosPerfis({ funcionarios, initialSelectedUserId }:
             title: "Perfil atualizado",
             message: "Os dados do funcionario foram salvos e ja podem ser usados pelo modulo administrativo.",
         });
+        closeProfileModal();
         router.refresh();
     }
 
@@ -908,17 +907,6 @@ export function AdminFuncionariosPerfis({ funcionarios, initialSelectedUserId }:
                                                 label="Perfil de acesso"
                                                 options={roleOptions}
                                                 defaultValue={selected.role}
-                                            />
-                                            <Input
-                                                id="func-avatar-url"
-                                                name="avatarUrlManual"
-                                                label="URL manual (opcional)"
-                                                placeholder="https://..."
-                                                defaultValue={selected.avatarUrl || ""}
-                                                onBlur={(e) => {
-                                                    const value = e.currentTarget.value.trim();
-                                                    if (value) setAvatarDraft(value);
-                                                }}
                                             />
                                         </div>
                                     </div>

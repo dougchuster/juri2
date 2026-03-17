@@ -1,15 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   BadgeCheck,
   Bot,
   BriefcaseBusiness,
-  ChevronDown,
   FileSignature,
   Gauge,
   Gavel,
@@ -20,29 +20,29 @@ import {
   LogIn,
   MessageCircle,
   MessageSquareText,
-  Moon,
   Scale,
   ShieldCheck,
   Sparkles,
-  Sun,
   Wallet,
   Workflow,
 } from "lucide-react";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/components/theme-provider";
 import {
   benefitMetrics,
   comparisonRows,
-  faqItems,
   marqueeItems,
   platformPillars,
   pricingPlans,
   productScreens,
   testimonials,
 } from "./legal-landing-data";
-import { TestimonialsColumn } from "@/components/ui/testimonials-columns";
+
+const TestimonialsColumn = dynamic(
+  () => import("@/components/ui/testimonials-columns").then((mod) => mod.TestimonialsColumn),
+  { ssr: false },
+);
 
 // ─── Icon map ─────────────────────────────────────────────────────────────────
 
@@ -83,6 +83,8 @@ const primaryCta =
 
 const secondaryCta =
   "inline-flex h-[52px] items-center justify-center gap-2 rounded-full border border-[color:var(--border-hover)] bg-[color:var(--surface-soft)] px-7 text-[15px] font-semibold tracking-[-0.01em] text-[color:var(--text-primary)] transition duration-200 hover:-translate-y-[1px] hover:bg-[color:var(--surface-soft-hover)] focus-visible:outline-none";
+
+const enableLandingFullBackgroundTest = true;
 
 // ─── Shared components ────────────────────────────────────────────────────────
 
@@ -146,12 +148,12 @@ function BrowserShot({
         </div>
         <div className="hidden truncate text-xs text-[color:var(--text-muted)] md:block">{title}</div>
       </div>
-      <Image
+      <img
         src={image}
         alt={title}
-        width={1440}
-        height={900}
-        priority={priority}
+        fetchPriority={priority ? "high" : "auto"}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
         className="h-auto w-full object-cover object-top"
       />
     </div>
@@ -161,11 +163,44 @@ function BrowserShot({
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function LegalLandingPage() {
-  const { theme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [billingMode, setBillingMode] = useState<"monthly" | "yearly">("monthly");
-  const [openFaq, setOpenFaq] = useState(faqItems[0]?.question ?? "");
   const [autoPlay, setAutoPlay] = useState(0);
+  const [useLiteMode, setUseLiteMode] = useState(false);
+  const [menuLogoBroken, setMenuLogoBroken] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  // Landing page sempre em light mode — tema único, sem toggle
+  useEffect(() => {
+    const html = document.documentElement;
+    const prev = html.className;
+    html.className = "light";
+    localStorage.setItem("theme", "light");
+    return () => {
+      html.className = prev;
+    };
+  }, []);
+
+  useEffect(() => {
+    const checkLiteMode = () => {
+      const saveData =
+        typeof navigator !== "undefined" &&
+        "connection" in navigator &&
+        Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+      const lowMemory =
+        typeof navigator !== "undefined" &&
+        "deviceMemory" in navigator &&
+        Number((navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8) <= 4;
+      const lowCpu = Number(navigator.hardwareConcurrency ?? 8) <= 4;
+      const smallViewport = window.innerWidth < 768;
+
+      setUseLiteMode(saveData || lowMemory || lowCpu || smallViewport);
+    };
+
+    checkLiteMode();
+    window.addEventListener("resize", checkLiteMode, { passive: true });
+    return () => window.removeEventListener("resize", checkLiteMode);
+  }, []);
 
   const handleTabClick = useCallback((index: number) => {
     setActiveTab(index);
@@ -173,18 +208,48 @@ export function LegalLandingPage() {
   }, []);
 
   useEffect(() => {
+    if (prefersReducedMotion || useLiteMode || productScreens.length <= 1) {
+      return;
+    }
+
     const timer = window.setInterval(() => {
       setActiveTab((current) => (current + 1) % productScreens.length);
     }, 5000);
     return () => window.clearInterval(timer);
-  }, [autoPlay]);
+  }, [autoPlay, prefersReducedMotion, useLiteMode]);
 
   const currentScreen = productScreens[activeTab];
   const marquee = [...marqueeItems, ...marqueeItems];
 
   return (
     <main className="relative min-h-screen overflow-x-hidden">
-      <AuroraBackground className="overflow-x-hidden pb-14" showShader>
+      <AuroraBackground className="overflow-x-hidden pb-0" showShader heroMode>
+        {enableLandingFullBackgroundTest ? (
+          <>
+            <div className="pointer-events-none absolute inset-0" aria-hidden>
+              <Image
+                src="/images/backgroundLAW.jpg"
+                alt="Ambiente juridico classico"
+                fill
+                priority
+                className="object-cover object-[center_bottom] opacity-[0.28] saturate-[0.78]"
+              />
+            </div>
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_10%,rgba(74,45,22,0.66),rgba(74,45,22,0.38)_32%,transparent_62%)]" aria-hidden />
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(92deg,rgba(176,126,79,0.70)_0%,rgba(187,137,95,0.58)_46%,rgba(196,149,106,0.44)_74%,rgba(205,160,120,0.34)_90%,rgba(205,160,120,0.20)_100%)] backdrop-blur-[6px]" aria-hidden />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_22%,rgba(70,42,20,0.46),transparent_56%)]" aria-hidden />
+            <div className="pointer-events-none absolute inset-0 z-[1]" aria-hidden>
+              <AnimatedGridPattern
+                numSquares={30}
+                maxOpacity={0.045}
+                duration={3}
+                repeatDelay={1}
+                className="inset-0 [mask-image:radial-gradient(ellipse_86%_72%_at_32%_50%,white_26%,transparent_74%)] stroke-white/[0.06] fill-white/[0.05]"
+              />
+            </div>
+          </>
+        ) : null}
+
         {/* Ambient background orbs */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
           <div className="absolute left-[-8%] top-[-10%] h-[400px] w-[400px] rounded-full bg-[color:var(--accent)]/10 blur-3xl" />
@@ -197,8 +262,23 @@ export function LegalLandingPage() {
         <header className="sticky top-0 z-30 pt-4">
           <div className="glass-panel flex items-center justify-between gap-4 px-5 py-3.5 md:px-7">
             <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--accent),var(--highlight))] text-white">
-                <Scale className="h-4 w-4" />
+              <div className="relative h-9 w-9 overflow-hidden rounded-xl bg-transparent p-[3px] shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
+                {!menuLogoBroken ? (
+                  <img
+                    src="/images/logoadv.png"
+                    alt="Logo Juridico ADV"
+                    width="36"
+                    height="36"
+                    className="h-full w-full rounded-[8px] object-contain"
+                    loading="eager"
+                    decoding="async"
+                    onError={() => setMenuLogoBroken(true)}
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(135deg,var(--accent),var(--highlight))] text-white">
+                    <Scale className="h-4 w-4" />
+                  </div>
+                )}
               </div>
               <span className="text-[15px] font-semibold tracking-[-0.02em] text-[color:var(--text-primary)]">
                 Juridico ADV
@@ -218,15 +298,6 @@ export function LegalLandingPage() {
             </nav>
 
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={toggleTheme}
-                className="flex size-9 items-center justify-center rounded-full border border-[color:var(--border-color)] bg-[color:var(--surface-soft)] text-[color:var(--text-secondary)] transition hover:text-[color:var(--text-primary)]"
-                title={theme === "dark" ? "Tema claro" : "Tema escuro"}
-                aria-label={theme === "dark" ? "Alternar para tema claro" : "Alternar para tema escuro"}
-              >
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </button>
               <Link
                 href="/login"
                 className="group hidden items-center gap-2 rounded-full border border-[color:var(--border-hover)] bg-white/[0.04] px-4 py-2 text-sm font-semibold text-[color:var(--text-secondary)] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--accent)]/40 hover:bg-white/[0.08] hover:text-[color:var(--text-primary)] md:inline-flex"
@@ -244,8 +315,8 @@ export function LegalLandingPage() {
         </header>
 
         {/* ─── HERO ─── */}
-        <Reveal id="visao-geral" className="pt-16 md:pt-20">
-          <div className="grid items-center gap-12 xl:grid-cols-[minmax(0,1.02fr)_minmax(500px,0.98fr)]">
+        <Reveal id="visao-geral" className="pt-12 pb-10 md:pt-16 md:pb-12">
+          <div className="grid items-center gap-12 lg:min-h-[calc(100svh-148px)] xl:grid-cols-[minmax(0,1.02fr)_minmax(500px,0.98fr)]">
 
             {/* Left — headline + CTAs + stats — otimizado para fundo escuro */}
             <div className="hero-dark-content">
@@ -256,7 +327,7 @@ export function LegalLandingPage() {
 
               <h1 className="mt-6 font-display text-5xl leading-[0.92] tracking-[-0.05em] text-white md:text-6xl lg:text-[72px] [text-shadow:0_1px_2px_rgba(0,0,0,0.3)]">
                 Operação jurídica com{" "}
-                <em className="not-italic text-amber-300">clareza</em>,{" "}
+                <em className="not-italic text-white">clareza</em>,{" "}
                 cadência e controle.
               </h1>
 
@@ -309,12 +380,12 @@ export function LegalLandingPage() {
                     />
 
                     {/* Valor em dourado/âmbar */}
-                    <div className="relative z-10 mt-6 text-3xl font-medium tracking-[-0.03em] text-[color:var(--accent)] md:text-[2rem]">
+                    <div className="relative z-10 mt-6 text-3xl font-medium tracking-[-0.03em] text-white md:text-[2rem]">
                       {stat.value}
                     </div>
 
                     {/* Label */}
-                    <div className="relative z-10 mt-2 text-sm font-semibold uppercase tracking-[0.12em] text-white/90">
+                    <div className="relative z-10 mt-2 text-sm font-semibold uppercase tracking-[0.12em] text-[#5a4a3d]">
                       {stat.label}
                     </div>
 
@@ -397,9 +468,13 @@ export function LegalLandingPage() {
           aria-hidden
         />
         <motion.div
-          className="flex w-max gap-4"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
+          className="landing-marquee-track flex w-max gap-4"
+          animate={prefersReducedMotion || useLiteMode ? undefined : { x: ["0%", "-50%"] }}
+          transition={
+            prefersReducedMotion || useLiteMode
+              ? undefined
+              : { duration: 70, repeat: Infinity, ease: "linear" }
+          }
         >
           {marquee.map((item, index) => (
             <div
@@ -929,17 +1004,20 @@ export function LegalLandingPage() {
             <div className="flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)] max-h-[600px] overflow-hidden">
               <TestimonialsColumn 
                 testimonials={testimonials.slice(0, 3)} 
-                duration={20} 
+                duration={20}
+                paused={prefersReducedMotion || useLiteMode}
               />
               <TestimonialsColumn 
                 testimonials={testimonials.slice(3, 6)} 
                 className="hidden md:block" 
-                duration={25} 
+                duration={25}
+                paused={prefersReducedMotion || useLiteMode}
               />
               <TestimonialsColumn 
                 testimonials={testimonials.slice(6, 9)} 
                 className="hidden lg:block" 
-                duration={22} 
+                duration={22}
+                paused={prefersReducedMotion || useLiteMode}
               />
             </div>
           </div>
@@ -947,29 +1025,39 @@ export function LegalLandingPage() {
 
         {/* ─── CTA FINAL ─── */}
         <Reveal id="cta-final" className="pt-24">
-          <div className="relative overflow-hidden rounded-[32px] border border-[color:var(--border-hover)] bg-[linear-gradient(135deg,rgba(164,112,63,0.20),rgba(70,111,147,0.10),rgba(255,255,255,0.04))] px-8 py-14 md:px-14 md:py-18">
+          <div className="relative overflow-hidden rounded-[32px] border border-[color:var(--border-hover)] bg-[linear-gradient(135deg,rgba(164,112,63,0.20),rgba(70,111,147,0.10),rgba(255,255,255,0.04))] px-8 py-10 md:px-12 md:py-12 lg:px-14 lg:py-14">
             <div className="pointer-events-none absolute right-[-80px] top-[-80px] h-[300px] w-[300px] rounded-full bg-[color:var(--accent)]/14 blur-3xl" aria-hidden />
-            <div className="relative max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
-                <Sparkles className="h-4 w-4 text-[color:var(--accent)]" />
-                Pronto para demonstração
-              </div>
-              <h2 className="mt-6 font-display text-4xl tracking-[-0.05em] text-[color:var(--text-primary)] md:text-5xl lg:text-[56px]">
-                Seu escritório merece operar com infraestrutura de produto premium.
-              </h2>
-              <p className="mt-5 max-w-xl text-lg leading-8 text-[color:var(--text-secondary)]">
-                Agende uma demonstração e veja o sistema com dados reais do seu escritório — sem compromisso.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/login" className={cn(primaryCta, "btn-gradient")}>
-                  <span className="relative z-10 inline-flex items-center gap-2">
-                    Entrar na plataforma <ArrowRight className="h-4 w-4" />
-                  </span>
-                </Link>
-                <Link href="#planos" className={secondaryCta}>
-                  Ver planos
-                </Link>
-              </div>
+            <div className="pointer-events-none absolute right-[-10%] top-[8%] bottom-[-26%] z-10 hidden w-full items-end justify-end md:flex" aria-hidden>
+              <Image
+                src="/images/mockup_login.png"
+                alt=""
+                width={900}
+                height={700}
+                className="h-full w-auto max-w-none object-contain"
+              />
+            </div>
+
+            <div className="relative z-20 max-w-2xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--text-muted)]">
+                  <Sparkles className="h-4 w-4 text-[color:var(--accent)]" />
+                  Pronto para demonstração
+                </div>
+                <h2 className="mt-6 font-display text-4xl tracking-[-0.05em] text-[color:var(--text-primary)] md:text-5xl lg:text-[56px]">
+                  Seu escritório merece operar com infraestrutura de produto premium.
+                </h2>
+                <p className="mt-5 max-w-xl text-lg leading-8 text-[color:var(--text-secondary)]">
+                  Agende uma demonstração e veja o sistema com dados reais do seu escritório — sem compromisso.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-4">
+                  <Link href="/login" className={cn(primaryCta, "btn-gradient")}>
+                    <span className="relative z-10 inline-flex items-center gap-2">
+                      Entrar na plataforma <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </Link>
+                  <Link href="#planos" className={secondaryCta}>
+                    Ver planos
+                  </Link>
+                </div>
             </div>
           </div>
         </Reveal>
