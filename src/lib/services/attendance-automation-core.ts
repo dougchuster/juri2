@@ -12,6 +12,7 @@ export interface AttendanceAutomationFlowLike {
     keywords: unknown;
     businessHoursStart: number;
     businessHoursEnd: number;
+    timezone?: string | null;
     initialReplyTemplate: string;
     followUpReplyTemplate: string | null;
     aiEnabled: boolean;
@@ -171,9 +172,19 @@ export function detectAttendanceUrgency(value: string) {
     return URGENCY_PATTERNS.some((pattern) => pattern.test(text));
 }
 
-export function isWithinBusinessHours(referenceDate: Date, startHour: number, endHour: number) {
-    const hour = referenceDate.getHours();
-    return hour >= startHour && hour < endHour;
+export function isWithinBusinessHours(referenceDate: Date, startHour: number, endHour: number, timezone = "America/Sao_Paulo") {
+    try {
+        const formatter = new Intl.DateTimeFormat("en-US", {
+            timeZone: timezone,
+            hour: "numeric",
+            hour12: false,
+        });
+        const hour = parseInt(formatter.format(referenceDate), 10);
+        return hour >= startHour && hour < endHour;
+    } catch {
+        const hour = referenceDate.getHours();
+        return hour >= startHour && hour < endHour;
+    }
 }
 
 export function evaluateAttendanceAutomationFlow(params: {
@@ -183,19 +194,30 @@ export function evaluateAttendanceAutomationFlow(params: {
 }) {
     const normalizedText = normalizeAutomationText(params.incomingText);
     const keywords = normalizeAutomationKeywords(params.flow.keywords);
+    const timezone = params.flow.timezone || "America/Sao_Paulo";
     const withinBusinessHours = isWithinBusinessHours(
         params.referenceDate,
         params.flow.businessHoursStart,
-        params.flow.businessHoursEnd
+        params.flow.businessHoursEnd,
+        timezone
     );
 
     if (params.flow.triggerType === "AFTER_HOURS") {
-        return {
-            matched: !withinBusinessHours,
-            reason: !withinBusinessHours
-                ? `Mensagem recebida fora do horario comercial (${params.flow.businessHoursStart}h-${params.flow.businessHoursEnd}h).`
-                : null,
-        } satisfies AttendanceAutomationMatchResult;
+        if (!withinBusinessHours) {
+            return {
+                matched: true,
+                reason: `Mensagem recebida fora do horario comercial (${params.flow.businessHoursStart}h-${params.flow.businessHoursEnd}h, ${timezone}).`,
+            } satisfies AttendanceAutomationMatchResult;
+        }
+        // Urgency signals also trigger the AFTER_HOURS flow even during business hours
+        const isUrgent = detectAttendanceUrgency(params.incomingText);
+        if (isUrgent) {
+            return {
+                matched: true,
+                reason: "Sinal de urgencia detectado - acionamento prioritario independente do horario comercial.",
+            } satisfies AttendanceAutomationMatchResult;
+        }
+        return { matched: false, reason: null } satisfies AttendanceAutomationMatchResult;
     }
 
     if (params.flow.triggerType === "ALWAYS") {

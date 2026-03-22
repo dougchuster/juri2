@@ -74,9 +74,9 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: "/images/og-cover.png",
-        width: 1200,
-        height: 630,
+        url: "/images/backgroundLAW.jpg",
+        width: 1600,
+        height: 1067,
         alt: "Juridico ADV — Plataforma de Gestão Jurídica",
       },
     ],
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/images/og-cover.png"],
+    images: ["/images/backgroundLAW.jpg"],
   },
   alternates: {
     canonical: siteUrl,

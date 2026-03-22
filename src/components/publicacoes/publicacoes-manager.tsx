@@ -1462,7 +1462,7 @@ export function PublicacoesManager({
                           }}
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="dashboard-content-frame relative h-[100dvh] w-[100vw] overflow-hidden rounded-none border-0 shadow-none sm:h-[calc(100vh-24px)] sm:w-[calc(100vw-24px)] sm:rounded-[30px] sm:border sm:shadow-[var(--dashboard-frame-shadow)]">
+                          <div className="dashboard-content-frame relative h-[100dvh] w-[100vw] overflow-hidden rounded-none border-0 shadow-none sm:h-[calc(100vh-24px)] sm:w-[calc(100vw-24px)] sm:rounded-[30px] sm:border">
                               <div className="adv-dashboard-bg" />
                               <div className="relative flex h-full items-center justify-center px-4 py-6 sm:px-6 lg:px-10">
                                   <div className="grid w-full max-w-6xl gap-5 lg:grid-cols-[1.2fr_0.88fr]">

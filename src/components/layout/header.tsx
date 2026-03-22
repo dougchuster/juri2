@@ -430,7 +430,7 @@ export function Header({
                                     initial="hidden"
                                     animate="visible"
                                     exit="exit"
-                                    className="glass-card no-lift fixed z-[4200] overflow-hidden rounded-[26px] border border-[var(--glass-card-border)] shadow-[var(--card-shadow-hover)]"
+                                    className="glass-card no-lift fixed z-[4200] overflow-hidden rounded-[26px] border border-[var(--glass-card-border)]"
                                     style={{
                                         position: "fixed",
                                         top: notificationMenuPosition.top,

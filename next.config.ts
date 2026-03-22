@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
     "@prisma/client",
     "@prisma/adapter-pg",
     "pg",
+    "@google/genai",
+    "@hapi/boom",
   ],
   turbopack: {},
 };

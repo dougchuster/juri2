@@ -1,17 +1,20 @@
-import { NextResponse } from "next/server";
-import { whatsappService } from "@/lib/integrations/baileys-service";
+import { getWhatsappStatusResponse } from "@/app/api/comunicacao/whatsapp/shared";
+import { withLegacyWhatsappHeaders } from "@/app/api/comunicacao/whatsapp/compat";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Legacy compatibility endpoint.
+ * Prefer /api/comunicacao/whatsapp/status for module consumers.
+ */
 export async function GET() {
-  try {
-    whatsappService.restoreSessionInBackground();
-    const status = whatsappService.getStatus();
-    return NextResponse.json(status);
-  } catch {
-    return NextResponse.json(
-      { error: "Erro ao obter status do WhatsApp" },
-      { status: 500 }
-    );
-  }
+  const response = await getWhatsappStatusResponse();
+  const legacyHeaders = withLegacyWhatsappHeaders(
+    undefined,
+    "/api/comunicacao/whatsapp/status"
+  ).headers;
+  legacyHeaders.forEach((value, key) => {
+    response.headers.set(key, value);
+  });
+  return response;
 }

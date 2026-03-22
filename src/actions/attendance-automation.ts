@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession } from "@/actions/auth";
 import { db } from "@/lib/db";
-import { previewAttendanceAutomationFlow } from "@/lib/services/attendance-automation";
+import { previewAttendanceAutomationFlow, runAttendanceAutomationForInboundMessage } from "@/lib/services/attendance-automation";
 import { normalizeAutomationKeywords } from "@/lib/services/attendance-automation-core";
 
 const flowSchema = z.object({
@@ -163,6 +163,76 @@ export async function previewAttendanceAutomationFlowAction(input: { flowId: str
         return {
             success: false as const,
             error: error instanceof Error ? error.message : "Falha ao gerar previa do fluxo.",
+        };
+    }
+}
+
+export async function triggerConversationAutomationAction(conversationId: string) {
+    try {
+        const session = await getSession();
+        if (!session?.id) {
+            return { success: false as const, error: "Nao autenticado." };
+        }
+
+        if (!conversationId?.trim()) {
+            return { success: false as const, error: "ID da conversa invalido." };
+        }
+
+        const conversation = await db.conversation.findUnique({
+            where: { id: conversationId },
+            select: {
+                id: true,
+                canal: true,
+                messages: {
+                    where: { direction: "INBOUND" },
+                    orderBy: { createdAt: "desc" },
+                    take: 6,
+                    select: { id: true, content: true },
+                },
+            },
+        });
+
+        if (!conversation) {
+            return { success: false as const, error: "Conversa nao encontrada." };
+        }
+
+        if (conversation.canal !== "WHATSAPP") {
+            return { success: false as const, error: "Automacao disponivel apenas para conversas WhatsApp." };
+        }
+
+        const latestInbound = conversation.messages[0];
+        if (!latestInbound?.content?.trim()) {
+            return { success: false as const, error: "Nenhuma mensagem recebida nesta conversa." };
+        }
+
+        const combinedText = conversation.messages
+            .slice()
+            .reverse()
+            .map((m) => m.content)
+            .filter(Boolean)
+            .join("\n");
+
+        const result = await runAttendanceAutomationForInboundMessage({
+            conversationId: conversation.id,
+            messageId: latestInbound.id,
+            incomingText: combinedText,
+            source: "manual",
+            forceRetry: true,
+            skipBurstDelay: true,
+        });
+
+        if (result.handled) {
+            return { success: true as const, reason: result.reason };
+        }
+
+        return {
+            success: false as const,
+            error: result.reason || "Nenhum fluxo correspondeu a conversa.",
+        };
+    } catch (error) {
+        return {
+            success: false as const,
+            error: error instanceof Error ? error.message : "Falha ao acionar automacao.",
         };
     }
 }

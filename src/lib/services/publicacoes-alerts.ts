@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
-import { sendTextMessage } from "@/lib/integrations/evolution-api";
+import { sendWhatsappDirectText } from "@/lib/whatsapp/application/message-service";
 import { sendEmail } from "@/lib/integrations/email-service";
 
 // ─── Tipos ───────────────────────────────────────────────────────────────────
@@ -280,7 +280,7 @@ export async function enviarAlertasPublicacoes(
         if (whatsappEnabled && info.whatsappAdvogado) {
             try {
                 const mensagem = montarMensagemWhatsApp(info);
-                const res = await sendTextMessage(info.whatsappAdvogado, mensagem);
+                const res = await sendWhatsappDirectText({ phone: info.whatsappAdvogado, content: mensagem });
                 resultado.whatsappEnviado = res.ok;
                 if (!res.ok) {
                     console.warn(

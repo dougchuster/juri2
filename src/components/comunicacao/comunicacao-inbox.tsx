@@ -140,6 +140,14 @@ interface DraftAttachment {
   asVoiceNote?: boolean;
 }
 
+function normalizeWhatsAppState(state: unknown): "open" | "connecting" | "close" {
+  if (state === "open" || state === "CONNECTED") return "open";
+  if (state === "connecting" || state === "CONNECTING" || state === "QR_REQUIRED" || state === "VALIDATING") {
+    return "connecting";
+  }
+  return "close";
+}
+
 const STATUS_OPTIONS: Array<{ value: StatusCliente; label: string }> = [
   { value: "PROSPECTO", label: "Prospecto" },
   { value: "ATIVO", label: "Ativo" },
@@ -284,7 +292,7 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
 
     avatarLoadingRef.current.add(key);
     try {
-      const res = await fetch(`/api/whatsapp/avatar?phone=${encodeURIComponent(rawPhone || "")}`, {
+      const res = await fetch(`/api/comunicacao/whatsapp/avatar?phone=${encodeURIComponent(rawPhone || "")}`, {
         cache: "no-store",
       });
       const data = await res.json();
@@ -618,12 +626,12 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
     let active = true;
     async function loadWhatsAppStatus() {
       try {
-        const res = await fetch("/api/whatsapp/status", { cache: "no-store" });
+        const res = await fetch("/api/comunicacao/whatsapp/status", { cache: "no-store" });
         if (!res.ok) return;
         const data = await res.json();
         if (!active) return;
         setWhatsappConnected(Boolean(data?.connected));
-        setWhatsappState((data?.state || "close") as "open" | "connecting" | "close");
+        setWhatsappState(normalizeWhatsAppState(data?.state));
         setWhatsappPhone(data?.phoneNumber || null);
         setWhatsappName(data?.name || null);
         setWhatsappSyncInProgress(Boolean(data?.syncInProgress));
@@ -649,7 +657,7 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
         const data = JSON.parse(event.data);
         if (data.type === "connection") {
           setWhatsappConnected(data.whatsappConnected);
-          setWhatsappState((data.whatsappState || "close") as "open" | "connecting" | "close");
+          setWhatsappState(normalizeWhatsAppState(data.whatsappState));
           setWhatsappPhone(data.phoneNumber);
           setWhatsappName(data.name);
           setWhatsappSyncInProgress(Boolean(data.syncInProgress));
@@ -855,7 +863,7 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
     if (whatsappSyncInProgress || whatsappState === "connecting") return;
     try {
       setWhatsappSyncInProgress(true);
-      const res = await fetch("/api/whatsapp/sync-history", { method: "POST" });
+      const res = await fetch("/api/comunicacao/whatsapp/sync-history", { method: "POST" });
       if (!res.ok) {
         setWhatsappSyncInProgress(false);
         return;

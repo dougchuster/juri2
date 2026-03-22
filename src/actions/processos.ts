@@ -897,6 +897,65 @@ export async function deleteMovimentacao(processoId: string, movimentacaoId: str
 }
 
 // =============================================================
+// EVENTO MANUAL NA TIMELINE
+// =============================================================
+
+export async function addEventoManual(
+    processoId: string,
+    dados: {
+        subTipo: "REUNIAO" | "CONTATO_TELEFONICO" | "EMAIL" | "ANOTACAO" | "JUDICIAL" | "MANUAL";
+        data: string;
+        hora?: string;
+        descricao: string;
+        responsavelId?: string;
+        privado?: boolean;
+    }
+) {
+    if (!dados.descricao || dados.descricao.trim().length < 3) {
+        return { success: false, error: "Descrição deve ter ao menos 3 caracteres." };
+    }
+    if (!dados.data) {
+        return { success: false, error: "Data é obrigatória." };
+    }
+
+    const TIPO_MAP: Record<string, string> = {
+        REUNIAO: "REUNIÃO",
+        CONTATO_TELEFONICO: "CONTATO",
+        EMAIL: "EMAIL",
+        ANOTACAO: "ANOTAÇÃO",
+        JUDICIAL: "OUTROS",
+        MANUAL: "OUTROS",
+    };
+
+    try {
+        await db.movimentacao.create({
+            data: {
+                processoId,
+                data: new Date(dados.data),
+                hora: dados.hora || null,
+                descricao: dados.descricao.trim(),
+                tipo: TIPO_MAP[dados.subTipo] ?? "OUTROS",
+                subTipo: dados.subTipo,
+                fonte: "MANUAL",
+                responsavelId: dados.responsavelId || null,
+                privado: dados.privado ?? false,
+            },
+        });
+
+        await db.processo.update({
+            where: { id: processoId },
+            data: { dataUltimaMovimentacao: new Date() },
+        });
+
+        safeRevalidate(`/processos/${processoId}`);
+        return { success: true };
+    } catch (error) {
+        console.error("Error adding evento manual:", error);
+        return { success: false, error: "Erro ao salvar evento." };
+    }
+}
+
+// =============================================================
 // PARTES DO PROCESSO CRUD
 // =============================================================
 
@@ -964,6 +1023,24 @@ export async function addAudiencia(processoId: string, formData: AudienciaFormDa
         await syncAudienciaLegadaToAgendamento(audiencia.id).catch((error) => {
             console.warn("[processos] Falha ao sincronizar audiencia legada na agenda central:", error);
         });
+
+        // Auto-registro na timeline
+        await db.movimentacao.create({
+            data: {
+                processoId,
+                data: audiencia.data,
+                descricao: [
+                    `Audiência de ${d.tipo} agendada`,
+                    d.local ? `Local: ${d.local}` : null,
+                    d.sala ? `Sala ${d.sala}` : null,
+                    d.observacoes ?? null,
+                ].filter(Boolean).join(" — "),
+                tipo: "AUDIÊNCIA",
+                subTipo: "JUDICIAL",
+                fonte: "SISTEMA",
+                responsavelId: emptyToNull(d.advogadoId) as string | null,
+            },
+        }).catch(() => {});
 
         safeRevalidate(`/processos/${processoId}`);
         safeRevalidate("/agenda");
@@ -1047,6 +1124,20 @@ export async function addPrazo(processoId: string, formData: PrazoFormData) {
         await syncPrazoLegadoToAgendamento(prazo.id).catch((error) => {
             console.warn("[processos] Falha ao sincronizar prazo legado na agenda central:", error);
         });
+
+        // Auto-registro na timeline
+        await db.movimentacao.create({
+            data: {
+                processoId,
+                data: prazo.dataFatal,
+                descricao: `Prazo cadastrado: ${d.descricao}${d.fatal ? " (fatal)" : ""}`,
+                tipo: "PRAZO",
+                subTipo: "JUDICIAL",
+                fonte: "SISTEMA",
+                responsavelId: emptyToNull(d.advogadoId) as string | null,
+            },
+        }).catch(() => {});
+
 
         safeRevalidate(`/processos/${processoId}`);
         safeRevalidate("/prazos");

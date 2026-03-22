@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getClienteById, getOrigensCliente } from "@/lib/dal/clientes";
+import { getTimelineCliente } from "@/lib/dal/timeline";
 import { Badge, STATUS_CLIENTE_BADGE } from "@/components/ui/badge";
 import { getInitials, formatDate } from "@/lib/utils";
 import {
@@ -28,8 +29,8 @@ export default async function ClienteDetailPage({ params }: Props) {
         getClienteById(id),
         getOrigensCliente(),
     ]);
-
     if (!cliente) notFound();
+    const timelineResult = await getTimelineCliente(id, { porPagina: 999 });
 
     const statusConfig = STATUS_CLIENTE_BADGE[cliente.status];
 
@@ -197,10 +198,11 @@ export default async function ClienteDetailPage({ params }: Props) {
                 </div>
             </div>
 
-            {/* Tabs: Processos, Atendimentos, Financeiro */}
+            {/* Tabs: Processos, Timeline, Atendimentos, Financeiro */}
             <ClienteDetailTabs
                 cliente={JSON.parse(JSON.stringify(cliente))}
                 origens={JSON.parse(JSON.stringify(origens))}
+                timelineEventos={JSON.parse(JSON.stringify(timelineResult.eventos))}
             />
         </div>
     );

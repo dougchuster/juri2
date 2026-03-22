@@ -224,6 +224,7 @@ model Escritorio {
   modelosDocumento                ModeloDocumento[]
   pastasDocumento                 PastaDocumento[]                 @relation("EscritorioPastas")
   tiposAcao                       TipoAcao[]
+  whatsappConnections             WhatsappConnection[]
 
   @@map("escritorios")
 }
@@ -288,6 +289,14 @@ model Cliente {
   nome                            String
   cpf                             String?                          @unique
   rg                              String?
+  estadoCivil                     String?
+  profissao                       String?
+  sexo                            String?
+  nacionalidade                   String?
+  nomeMae                         String?
+  pisPasep                        String?
+  ctps                            String?
+  cid                             String?
   dataNascimento                  DateTime?                        @db.Date
   razaoSocial                     String?
   cnpj                            String?                          @unique
@@ -334,6 +343,7 @@ model Cliente {
   contatos                        ContatoCliente[]
   conversations                   Conversation[]
   crmActivities                   CRMActivity[]
+  pastasDocumento                 PastaDocumento[] @relation("ClientePastas")
   crmCards                        CRMCard[]
   crmDocuments                    CRMCommercialDocument[]
   crmConflicts                    CRMConflictCheck[]
@@ -391,6 +401,7 @@ model Advogado {
   repassesHonorariosAdvogado   RepasseHonorario[]      @relation("RepasseAdvogado")
   tarefas                      Tarefa[]
   timeMembros                  TimeMembro[]
+  movimentacoesResponsavel     Movimentacao[]          @relation("MovimentacaoResponsavel")
 
   @@index([oab])
   @@map("advogados")
@@ -570,14 +581,20 @@ model ParteProcesso {
 }
 
 model Movimentacao {
-  id         String   @id @default(cuid())
-  processoId String
-  data       DateTime @db.Date
-  descricao  String
-  tipo       String?
-  fonte      String?
-  createdAt  DateTime @default(now())
-  processo   Processo @relation(fields: [processoId], references: [id], onDelete: Cascade)
+  id            String    @id @default(cuid())
+  processoId    String
+  data          DateTime  @db.Date
+  hora          String?   // HH:MM para exibir na timeline
+  descricao     String
+  tipo          String?
+  subTipo       String?   // REUNIAO | CONTATO_TELEFONICO | EMAIL | ANOTACAO | JUDICIAL
+  fonte         String?
+  responsavelId String?
+  privado       Boolean   @default(false)
+  metadata      Json?
+  createdAt     DateTime  @default(now())
+  processo      Processo  @relation(fields: [processoId], references: [id], onDelete: Cascade)
+  responsavel   Advogado? @relation("MovimentacaoResponsavel", fields: [responsavelId], references: [id])
 
   @@index([processoId])
   @@index([data])
@@ -1333,20 +1350,24 @@ model CategoriaDocumento {
 }
 
 model PastaDocumento {
-  id           String           @id @default(cuid())
-  nome         String
-  descricao    String?
-  escritorioId String?
-  parentId     String?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  documentos   Documento[]
-  escritorio   Escritorio?      @relation("EscritorioPastas", fields: [escritorioId], references: [id], onDelete: Cascade)
-  parent       PastaDocumento?  @relation("SubPastas", fields: [parentId], references: [id], onDelete: Cascade)
-  subPastas    PastaDocumento[] @relation("SubPastas")
+  id             String           @id @default(cuid())
+  nome           String
+  descricao      String?
+  escritorioId   String?
+  parentId       String?
+  clienteId      String?
+  isRootClientes Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  documentos     Documento[]
+  cliente        Cliente?         @relation("ClientePastas", fields: [clienteId], references: [id], onDelete: SetNull)
+  escritorio     Escritorio?      @relation("EscritorioPastas", fields: [escritorioId], references: [id], onDelete: Cascade)
+  parent         PastaDocumento?  @relation("SubPastas", fields: [parentId], references: [id], onDelete: Cascade)
+  subPastas      PastaDocumento[] @relation("SubPastas")
 
   @@index([escritorioId])
   @@index([parentId])
+  @@index([clienteId])
   @@map("pastas_documento")
 }
 
@@ -1716,6 +1737,47 @@ model ClientPhone {
   @@map("client_phones")
 }
 
+model WhatsappConnection {
+  id                   String                   @id @default(cuid())
+  escritorioId         String
+  providerType         WhatsappProviderType
+  status               WhatsappConnectionStatus @default(DRAFT)
+  displayName          String
+  isPrimary            Boolean                  @default(false)
+  isActive             Boolean                  @default(true)
+  connectedPhone       String?
+  connectedName        String?
+  externalInstanceName String?
+  externalInstanceId   String?
+  baseUrl              String?
+  healthStatus         String?
+  lastHealthAt         DateTime?
+  lastConnectedAt      DateTime?
+  lastSyncAt           DateTime?
+  lastError            String?
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+  conversations        Conversation[]
+  escritorio           Escritorio               @relation(fields: [escritorioId], references: [id], onDelete: Cascade)
+  secret               WhatsappConnectionSecret?
+
+  @@index([escritorioId, providerType])
+  @@index([escritorioId, isPrimary])
+  @@index([status])
+  @@map("whatsapp_connections")
+}
+
+model WhatsappConnectionSecret {
+  id           String             @id @default(cuid())
+  connectionId String             @unique
+  payload      Json
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  connection   WhatsappConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@map("whatsapp_connection_secrets")
+}
+
 model Conversation {
   id                     String                        @id @default(cuid())
   clienteId              String
@@ -1733,6 +1795,7 @@ model Conversation {
   iaDesabilitada         Boolean                       @default(false)
   iaDesabilitadaEm       DateTime?
   iaDesabilitadaPor      String?
+  whatsappConnectionId   String?
   motivoPausa            String?
   pausadoAte             DateTime?
   automationEvents       AttendanceAutomationEvent[]
@@ -1742,12 +1805,14 @@ model Conversation {
   cliente                Cliente                       @relation(fields: [clienteId], references: [id])
   processo               Processo?                     @relation(fields: [processoId], references: [id])
   messages               Message[]
+  whatsappConnection     WhatsappConnection?           @relation(fields: [whatsappConnectionId], references: [id])
 
   @@index([clienteId])
   @@index([status])
   @@index([canal])
   @@index([atendimentoId])
   @@index([lastMessageAt])
+  @@index([whatsappConnectionId])
   @@map("conversations")
 }
 
@@ -3841,6 +3906,24 @@ enum WhatsAppOptIn {
   OPTED_IN
   OPTED_OUT
   UNKNOWN
+}
+
+enum WhatsappProviderType {
+  META_CLOUD_API
+  EVOLUTION_WHATSMEOW
+  EMBEDDED_BAILEYS_LEGACY
+}
+
+enum WhatsappConnectionStatus {
+  DRAFT
+  VALIDATING
+  QR_REQUIRED
+  CONNECTING
+  CONNECTED
+  DEGRADED
+  DISCONNECTED
+  ERROR
+  ARCHIVED
 }
 
 enum CanalComunicacao {

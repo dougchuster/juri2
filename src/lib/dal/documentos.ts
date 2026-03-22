@@ -138,6 +138,38 @@ export async function getPastasDocumento(parentId?: string | null) {
     }
     return db.pastaDocumento.findMany({
         where,
-        orderBy: { nome: "asc" }
+        orderBy: { nome: "asc" },
+        include: {
+            cliente: { select: { id: true, nome: true } },
+            subPastas: {
+                orderBy: { nome: "asc" },
+                include: {
+                    cliente: { select: { id: true, nome: true } },
+                    subPastas: {
+                        orderBy: { nome: "asc" },
+                        include: {
+                            _count: { select: { documentos: true } },
+                        },
+                    },
+                    _count: { select: { documentos: true } },
+                },
+            },
+            _count: { select: { documentos: true } },
+        },
+    });
+}
+
+/** Retorna todas as pastas em lista plana (para selects/dropdowns) */
+export async function getPastasDocumentoFlat() {
+    if (!db.pastaDocumento || !db.pastaDocumento.findMany) return [];
+    return db.pastaDocumento.findMany({
+        orderBy: { nome: "asc" },
+        select: {
+            id: true,
+            nome: true,
+            parentId: true,
+            clienteId: true,
+            isRootClientes: true,
+        },
     });
 }

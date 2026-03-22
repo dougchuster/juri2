@@ -23,9 +23,13 @@ export async function GET(request: Request) {
     if (canal && canal !== "all") where.canal = canal;
     if (search) {
       where.OR = [
-        { cliente: { nome: { contains: search, mode: "insensitive" } } },
-        { cliente: { celular: { contains: search } } },
-        { cliente: { whatsapp: { contains: search } } },
+        { cliente: { is: { nome: { contains: search, mode: "insensitive" } } } },
+        { cliente: { is: { email: { contains: search, mode: "insensitive" } } } },
+        { cliente: { is: { celular: { contains: search } } } },
+        { cliente: { is: { whatsapp: { contains: search } } } },
+        { subject: { contains: search, mode: "insensitive" } },
+        { processo: { is: { numeroCnj: { contains: search, mode: "insensitive" } } } },
+        { assignedTo: { is: { name: { contains: search, mode: "insensitive" } } } },
       ];
     }
 
@@ -36,6 +40,15 @@ export async function GET(request: Request) {
           cliente: { select: { id: true, nome: true, email: true, celular: true, whatsapp: true } },
           processo: { select: { id: true, numeroCnj: true } },
           assignedTo: { select: { id: true, name: true } },
+          atendimento: {
+            select: {
+              advogado: {
+                select: {
+                  user: { select: { id: true, name: true } },
+                },
+              },
+            },
+          },
           messages: {
             orderBy: { createdAt: "desc" },
             take: 1,
@@ -50,7 +63,10 @@ export async function GET(request: Request) {
     ]);
 
     return NextResponse.json({
-      items: conversations,
+      items: conversations.map((conversation) => ({
+        ...conversation,
+        assignedTo: conversation.assignedTo ?? conversation.atendimento?.advogado.user ?? null,
+      })),
       total,
       page,
       pageSize,

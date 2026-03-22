@@ -39,7 +39,8 @@ export function ContactHistoryTimeline({ clienteId }: { clienteId: string }) {
                 // Calls our existing conversation API for this client
                 const res = await fetch(`/api/comunicacao/conversations`);
                 if (!res.ok) return;
-                const allConvs = (await res.json()) as ConversationItem[];
+                const raw = await res.json();
+                const allConvs = (Array.isArray(raw) ? raw : raw.conversations ?? []) as ConversationItem[];
 
                 // Filter conversations for this client
                 const clientConvs = allConvs.filter((c) => c.clienteId === clienteId);

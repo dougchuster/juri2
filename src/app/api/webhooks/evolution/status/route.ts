@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { validateWebhookSignature } from "@/lib/integrations/evolution-api";
+import { validateEvolutionWebhookSignatureCapability } from "@/lib/whatsapp/application/provider-capabilities";
 import { checkRateLimit, getClientIp } from "@/lib/middleware/rate-limit";
 import { emitCommunicationMessageStatusUpdated } from "@/lib/comunicacao/realtime";
 
 /**
- * POST /api/webhooks/evolution/status
- * Receives message status updates from Evolution API
- * Updates message delivery status (sent, delivered, read, failed)
+ * Legacy compatibility webhook.
+ * The preferred multiprovider webhook path is /api/webhooks/evolution/messages.
  */
 export async function POST(req: NextRequest) {
     try {
@@ -22,7 +21,7 @@ export async function POST(req: NextRequest) {
         const signature = req.headers.get("x-api-key") || req.headers.get("apikey");
 
         // Validate webhook
-        if (!validateWebhookSignature(body, signature)) {
+        if (!(await validateEvolutionWebhookSignatureCapability(body, signature))) {
             return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
         }
 

@@ -1,11 +1,10 @@
 "use client";
 
 import {
+  ChevronLeft,
   Inbox,
   MessageSquarePlus,
-  RefreshCw,
   Search,
-  Sparkles,
   UsersRound,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -27,6 +26,7 @@ type Props = {
   compact?: boolean;
   externalSelectedConversationId?: string | null;
   onSelectedConversationChange?: (conversationId: string | null) => void;
+  "data-page-chat"?: boolean;
 };
 
 type ConversationFilter = "all" | "direct" | "group" | "unread";
@@ -99,6 +99,7 @@ export function InternalChatPage({
   compact = false,
   externalSelectedConversationId,
   onSelectedConversationChange,
+  ...rest
 }: Props) {
   const controller = useInternalChatController({
     currentUser,
@@ -192,84 +193,25 @@ export function InternalChatPage({
   ];
 
   return (
-    <div className={cn("space-y-4", compact && "space-y-3")}>
-      {!compact ? (
-        <section className="glass-card overflow-hidden px-5 py-4">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-            <div className="max-w-[58ch]">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-muted">
-                Caixa de entrada
-              </p>
-              <h2 className="mt-2 text-[1.45rem] font-semibold tracking-[-0.03em] text-text-primary">
-                Chat interno
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-text-secondary">
-                Atendimento rapido, grupos por equipe e historico centralizado em uma interface clara.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 xl:items-end">
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => void controller.refreshConversations()}
-                >
-                  <RefreshCw size={14} />
-                </Button>
-                <Button type="button" size="sm" onClick={() => setIsPickerOpen(true)}>
-                  <MessageSquarePlus size={14} />
-                  Novo
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="rounded-[22px] border border-white/70 bg-white/70 px-4 py-3 dark:border-white/10 dark:bg-white/5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-                  Nao lidas
-                </p>
-                <p className="mt-1 text-xl font-semibold text-text-primary">
-                  {controller.globalUnreadCount}
-                </p>
-              </div>
-              <div className="rounded-[22px] border border-white/70 bg-white/70 px-4 py-3 dark:border-white/10 dark:bg-white/5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-                  Conversas
-                </p>
-                <p className="mt-1 text-xl font-semibold text-text-primary">
-                  {controller.conversations.length}
-                </p>
-              </div>
-              <div className="rounded-[22px] border border-white/70 bg-white/70 px-4 py-3 dark:border-white/10 dark:bg-white/5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-                  Grupos
-                </p>
-                <p className="mt-1 text-xl font-semibold text-text-primary">{groupCount}</p>
-              </div>
-              <div className="rounded-[22px] border border-white/70 bg-white/70 px-4 py-3 dark:border-white/10 dark:bg-white/5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-                  Acesso rapido
-                </p>
-                <p className="mt-1 flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] dark:text-[var(--accent)]">
-                  <Sparkles size={14} />
-                  Diretas e equipes
-                </p>
-              </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ) : null}
-
+    <div
+      {...rest}
+      className={cn(
+        // mobile: 560px  —  md (768px+): 620px  —  lg (1024px+): 700px  —  xl/fullHD: 810px
+        "flex flex-col h-[560px] md:h-[620px] lg:h-[700px] xl:h-[810px]",
+        compact && "h-full"
+      )}
+    >
       <div
         className={cn(
           compact
             ? "grid h-full grid-cols-1 gap-3"
-            : "grid max-h-[700px] min-h-[700px] grid-cols-1 gap-4 xl:grid-cols-[370px_1fr]"
+            : "flex-1 min-h-0 grid grid-cols-1 gap-4 md:grid-cols-[290px_1fr] lg:grid-cols-[320px_1fr] xl:grid-cols-[360px_1fr]"
         )}
       >
-      <aside className="glass-card flex min-h-0 flex-col overflow-hidden p-4">
+      <aside className={cn(
+        "glass-card min-h-0 flex-col overflow-hidden p-4",
+        !compact && controller.selectedConversationId ? "hidden md:flex" : "flex"
+      )}>
         <div className="mb-3 rounded-[24px] border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.88),rgba(246,239,232,0.9))] px-4 py-3 dark:border-white/10 dark:bg-[linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))]">
           <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
             Inbox interna
@@ -386,9 +328,20 @@ export function InternalChatPage({
         </div>
       </aside>
 
-      <section className="glass-card flex min-h-0 flex-col overflow-hidden p-4">
+      <section className={cn(
+        "glass-card min-h-0 flex-col overflow-hidden p-4",
+        !compact && !controller.selectedConversationId ? "hidden md:flex" : "flex"
+      )}>
         {controller.selectedConversation ? (
           <>
+            <button
+              type="button"
+              onClick={() => controller.setSelectedConversationId(null)}
+              className="mb-3 flex shrink-0 items-center gap-1.5 self-start rounded-full border border-[var(--card-border)] bg-[var(--surface-soft)] px-3 py-1.5 text-sm font-medium text-text-secondary transition-colors hover:border-border-hover hover:text-text-primary md:hidden"
+            >
+              <ChevronLeft size={15} />
+              Conversas
+            </button>
             <header className="rounded-[32px] border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.94),rgba(245,237,230,0.94))] p-5 shadow-[0_24px_48px_color-mix(in_srgb,var(--shadow-color)_14%,transparent)] dark:border-white/10 dark:bg-[linear-gradient(145deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))]">
               <div className="mb-4 h-1 w-16 rounded-full bg-[linear-gradient(90deg,var(--accent),var(--highlight))]" />
               <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -509,7 +462,7 @@ export function InternalChatPage({
             </div>
           </>
         ) : (
-          <div className="flex h-full min-h-[560px] flex-col items-center justify-center rounded-[32px] border border-dashed border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(246,239,232,0.88))] px-6 text-center dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))]">
+          <div className="flex h-full flex-col items-center justify-center rounded-[32px] border border-dashed border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.82),rgba(246,239,232,0.88))] px-6 text-center dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02))]">
             <div className="flex size-20 items-center justify-center rounded-[28px] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent)_16%,white),rgba(255,255,255,0.9))] text-[var(--accent)] shadow-[0_18px_36px_color-mix(in_srgb,var(--accent)_14%,transparent)]">
               <Inbox size={30} />
             </div>

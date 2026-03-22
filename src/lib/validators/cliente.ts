@@ -13,6 +13,14 @@ export const clienteSchema = z.object({
         .or(z.literal("")),
     rg: z.string().max(20).optional().or(z.literal("")),
     dataNascimento: z.string().optional().or(z.literal("")),
+    estadoCivil: z.string().max(30).optional().or(z.literal("")),
+    profissao: z.string().max(100).optional().or(z.literal("")),
+    sexo: z.string().max(20).optional().or(z.literal("")),
+    nacionalidade: z.string().max(60).optional().or(z.literal("")),
+    nomeMae: z.string().max(200).optional().or(z.literal("")),
+    pisPasep: z.string().max(20).optional().or(z.literal("")),
+    ctps: z.string().max(30).optional().or(z.literal("")),
+    cid: z.string().max(20).optional().or(z.literal("")),
 
     // Pessoa Jurídica
     razaoSocial: z.string().max(300).optional().or(z.literal("")),

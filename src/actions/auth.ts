@@ -26,6 +26,18 @@ const MFA_SETUP_REQUIRED_COOKIE_NAME = "mfa_setup_required";
 const MFA_TRUSTED_DEVICE_COOKIE_NAME = "mfa_trusted_device";
 const MFA_TRUSTED_DEVICE_MAX_AGE_SEC = 30 * 24 * 60 * 60;
 
+function isSessionInfrastructureError(error: unknown) {
+    if (error && typeof error === "object" && "code" in error && error.code === "ECONNREFUSED") {
+        return true;
+    }
+
+    if (error instanceof Error) {
+        return error.message.includes("ECONNREFUSED") || error.message.includes("Can't reach database server");
+    }
+
+    return false;
+}
+
 async function setSessionCookie(token: string) {
     const cookieStore = await cookies();
     cookieStore.set("session_token", token, {
@@ -304,51 +316,60 @@ export const getSession = cache(async () => {
 
     if (!token) return null;
 
-    const session = await db.session.findUnique({
-        where: { token },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    email: true,
-                    name: true,
-                    role: true,
-                    avatarUrl: true,
-                    isActive: true,
-                    onboardingCompleted: true,
-                    advogado: {
-                        select: { id: true, oab: true, seccional: true },
-                    },
-                    mfaConfig: {
-                        select: {
-                            isEnabled: true,
-                            enabledAt: true,
-                            lastUsedAt: true,
-                            enforcedByPolicy: true,
+    try {
+        const session = await db.session.findUnique({
+            where: { token },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                        name: true,
+                        role: true,
+                        avatarUrl: true,
+                        isActive: true,
+                        onboardingCompleted: true,
+                        advogado: {
+                            select: { id: true, oab: true, seccional: true },
+                        },
+                        mfaConfig: {
+                            select: {
+                                isEnabled: true,
+                                enabledAt: true,
+                                lastUsedAt: true,
+                                enforcedByPolicy: true,
+                            },
                         },
                     },
                 },
             },
-        },
-    });
-
-    const now = new Date();
-    if (!session || session.expiresAt < now || !session.user.isActive) {
-        if (session) {
-            await db.session.delete({ where: { id: session.id } });
-        }
-        return null;
-    }
-
-    const remainingMs = session.expiresAt.getTime() - now.getTime();
-    if (remainingMs <= SESSION_REFRESH_THRESHOLD_MS) {
-        await db.session.update({
-            where: { id: session.id },
-            data: { expiresAt: new Date(now.getTime() + SESSION_INACTIVITY_MS) },
         });
-    }
 
-    return session.user;
+        const now = new Date();
+        if (!session || session.expiresAt < now || !session.user.isActive) {
+            if (session) {
+                await db.session.delete({ where: { id: session.id } });
+            }
+            return null;
+        }
+
+        const remainingMs = session.expiresAt.getTime() - now.getTime();
+        if (remainingMs <= SESSION_REFRESH_THRESHOLD_MS) {
+            await db.session.update({
+                where: { id: session.id },
+                data: { expiresAt: new Date(now.getTime() + SESSION_INACTIVITY_MS) },
+            });
+        }
+
+        return session.user;
+    } catch (error) {
+        if (isSessionInfrastructureError(error)) {
+            console.warn("[auth] Session lookup unavailable; continuing as anonymous.");
+            return null;
+        }
+
+        throw error;
+    }
 });
 
 export async function getPendingMfaLoginState() {

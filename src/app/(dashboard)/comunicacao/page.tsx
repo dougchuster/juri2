@@ -3,14 +3,16 @@ import { ComunicacaoPageShell } from "@/components/comunicacao/comunicacao-page-
 import { getCommunicationStats } from "@/lib/dal/comunicacao";
 import { getClientesForSelect } from "@/lib/dal/processos";
 import { db } from "@/lib/db";
+import { listEmailSenderProfiles } from "@/lib/integrations/email-service";
 import { getAttendanceAutomationDashboard } from "@/lib/services/attendance-automation";
 
 export default async function ComunicacaoPage() {
-    const [stats, clientes, templates, session] = await Promise.all([
+    const [stats, clientes, templates, session, emailSenderProfiles] = await Promise.all([
         getCommunicationStats(),
         getClientesForSelect(),
         db.messageTemplate.findMany({ where: { isActive: true }, orderBy: { category: "asc" } }),
         getSession(),
+        Promise.resolve(listEmailSenderProfiles()),
     ]);
 
     const conversations = await db.conversation.findMany({
@@ -19,6 +21,15 @@ export default async function ComunicacaoPage() {
             cliente: { select: { id: true, nome: true, email: true, celular: true, whatsapp: true } },
             processo: { select: { id: true, numeroCnj: true } },
             assignedTo: { select: { id: true, name: true } },
+            atendimento: {
+                select: {
+                    advogado: {
+                        select: {
+                            user: { select: { id: true, name: true } },
+                        },
+                    },
+                },
+            },
             messages: {
                 orderBy: { createdAt: "desc" },
                 take: 1,
@@ -48,9 +59,13 @@ export default async function ComunicacaoPage() {
 
             <ComunicacaoPageShell
                 kpis={kpis}
-                conversations={JSON.parse(JSON.stringify(conversations))}
+                conversations={JSON.parse(JSON.stringify(conversations.map((conversation) => ({
+                    ...conversation,
+                    assignedTo: conversation.assignedTo ?? conversation.atendimento?.advogado.user ?? null,
+                }))))}
                 clientes={JSON.parse(JSON.stringify(clientes))}
                 templates={JSON.parse(JSON.stringify(templates))}
+                emailSenderProfiles={JSON.parse(JSON.stringify(emailSenderProfiles))}
                 canManageAutomation={canManageAutomation}
                 automationDashboard={automationDashboard ? JSON.parse(JSON.stringify(automationDashboard)) : null}
             />

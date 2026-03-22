@@ -28,6 +28,13 @@ const memoryActivity = new Map<string, number>();
 const memorySeen = new Map<string, number>();
 
 let redisSingleton: Redis | null | undefined;
+let hasLoggedRedisConnectionError = false;
+
+function logRedisFallbackOnce(error: unknown) {
+  if (hasLoggedRedisConnectionError) return;
+  hasLoggedRedisConnectionError = true;
+  console.warn("[chat-presence] Redis unavailable; using in-memory fallback.", error);
+}
 
 function getPresenceKey(userId: string) {
   return `chat:presence:${userId}`;
@@ -55,7 +62,7 @@ export function getChatRedis() {
   });
 
   redisSingleton.on("error", (error) => {
-    console.error("[chat-presence] Redis error:", error);
+    logRedisFallbackOnce(error);
   });
 
   return redisSingleton;
@@ -76,7 +83,7 @@ async function readRedisPresenceState(userId: string): Promise<PresenceRedisStat
       escritorioId: payload.escritorioId || null,
     };
   } catch (error) {
-    console.error("[chat-presence] Failed to read Redis presence:", error);
+    logRedisFallbackOnce(error);
     return null;
   }
 }
@@ -108,7 +115,7 @@ async function writeRedisPresenceState(
     }
     await redis.expire(key, expireSeconds);
   } catch (error) {
-    console.error("[chat-presence] Failed to write Redis presence:", error);
+    logRedisFallbackOnce(error);
   }
 }
 

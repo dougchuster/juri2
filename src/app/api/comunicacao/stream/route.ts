@@ -1,71 +1,103 @@
-import { whatsappService } from "@/lib/integrations/baileys-service";
 import { subscribeCommunicationRealtimeEvents } from "@/lib/comunicacao/realtime";
+import { getPrimaryWhatsappConnection } from "@/lib/whatsapp/application/connection-service";
+import { getWhatsappProviderAdapter } from "@/lib/whatsapp/providers/provider-registry";
 
 export const dynamic = "force-dynamic";
 
+function normalizeLegacyWhatsappState(status?: string | null) {
+  switch (status) {
+    case "open":
+    case "CONNECTED":
+      return "open";
+    case "connecting":
+    case "CONNECTING":
+    case "QR_REQUIRED":
+    case "VALIDATING":
+      return "connecting";
+    default:
+      return "close";
+  }
+}
+
+function buildConnectionPayload(input: {
+  connectionId: string | null;
+  status?: string | null;
+  connected?: boolean;
+  phoneNumber?: string | null;
+  name?: string | null;
+  lastDisconnectError?: string | null;
+}) {
+  return {
+    type: "connection",
+    connectionId: input.connectionId,
+    whatsappConnected: Boolean(input.connected ?? (input.status === "CONNECTED" || input.status === "open")),
+    whatsappState: normalizeLegacyWhatsappState(input.status),
+    whatsappProviderStatus: input.status || "DISCONNECTED",
+    phoneNumber: input.phoneNumber || null,
+    name: input.name || null,
+    syncInProgress: false,
+    reconnectAttempts: 0,
+    maxReconnectAttempts: 0,
+    lastDisconnectReason: null,
+    lastDisconnectError: input.lastDisconnectError || null,
+  };
+}
+
 /**
  * SSE stream for real-time communication updates.
- * Sends events when:
- * - New WhatsApp message arrives
- * - Message status changes
- * - WhatsApp connection state changes
  */
 export async function GET() {
-  whatsappService.restoreSessionInBackground();
   const encoder = new TextEncoder();
-  let removeConnectionListener: (() => void) | null = null;
   let removeCommunicationRealtimeListener: (() => void) | null = null;
   let intervalId: ReturnType<typeof setInterval> | null = null;
 
   const stream = new ReadableStream({
-    start(controller) {
-      // Send initial connection status
-      const waStatus = whatsappService.getStatus();
-      const initData = JSON.stringify({
-        type: "connection",
-        whatsappConnected: waStatus.connected,
-        whatsappState: waStatus.state,
-        phoneNumber: waStatus.phoneNumber,
-        name: waStatus.name,
-        syncInProgress: waStatus.syncInProgress,
-        reconnectAttempts: waStatus.reconnectAttempts,
-        maxReconnectAttempts: waStatus.maxReconnectAttempts,
-        lastDisconnectReason: waStatus.lastDisconnectReason,
-        lastDisconnectError: waStatus.lastDisconnectError,
-      });
-      controller.enqueue(encoder.encode(`data: ${initData}\n\n`));
-
-      // Listen for connection changes
-      removeConnectionListener = whatsappService.onConnectionChange((status) => {
+    async start(controller) {
+      const emitConnectionSnapshot = async () => {
         try {
-          const data = JSON.stringify({
-            type: "connection",
-            whatsappConnected: status.connected,
-            whatsappState: status.state,
-            phoneNumber: status.phoneNumber,
-            name: status.name,
-            syncInProgress: status.syncInProgress,
-            reconnectAttempts: status.reconnectAttempts,
-            maxReconnectAttempts: status.maxReconnectAttempts,
-            lastDisconnectReason: status.lastDisconnectReason,
-            lastDisconnectError: status.lastDisconnectError,
-          });
-          controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+          const connection = await getPrimaryWhatsappConnection();
+          const waStatus = connection
+            ? await getWhatsappProviderAdapter(connection.providerType).getStatus(connection)
+            : null;
+          const initData = JSON.stringify(
+            buildConnectionPayload({
+              connectionId: connection?.id || null,
+              status: waStatus?.status || "DISCONNECTED",
+              connected: waStatus?.connected || false,
+              phoneNumber: waStatus?.connectedPhone || null,
+              name: waStatus?.connectedName || null,
+              lastDisconnectError: waStatus?.ok === false ? waStatus.lastError || null : null,
+            })
+          );
+          controller.enqueue(encoder.encode(`data: ${initData}\n\n`));
         } catch {
           // Stream closed
         }
-      });
+      };
+
+      await emitConnectionSnapshot();
 
       removeCommunicationRealtimeListener = subscribeCommunicationRealtimeEvents((payload) => {
         try {
+          if (payload.type === "whatsapp_connection_status_updated") {
+            const connectionPayload = buildConnectionPayload({
+              connectionId: payload.connectionId,
+              status: payload.status,
+              phoneNumber: payload.connectedPhone,
+              name: payload.connectedName,
+            });
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(connectionPayload)}\n\n`));
+            return;
+          }
+
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
         } catch {
           // Stream closed
         }
       });
 
-      // Keep alive ping every 15 seconds
       intervalId = setInterval(() => {
+        void emitConnectionSnapshot();
         try {
           controller.enqueue(encoder.encode(`: ping\n\n`));
         } catch {
@@ -79,7 +111,6 @@ export async function GET() {
   });
 
   function cleanup() {
-    if (removeConnectionListener) removeConnectionListener();
     if (removeCommunicationRealtimeListener) removeCommunicationRealtimeListener();
     if (intervalId) clearInterval(intervalId);
   }

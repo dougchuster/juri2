@@ -20,6 +20,14 @@ interface ClienteOption {
     nome: string;
 }
 
+interface EmailSenderProfile {
+    id: string;
+    label: string;
+    fromName: string;
+    fromEmail: string;
+    replyTo?: string | null;
+}
+
 interface ConversationItem {
     id: string;
     clienteId: string;
@@ -54,6 +62,7 @@ export function ComunicacaoPageShell({
     conversations,
     clientes,
     templates,
+    emailSenderProfiles,
     canManageAutomation,
     automationDashboard,
 }: {
@@ -61,6 +70,7 @@ export function ComunicacaoPageShell({
     conversations: ConversationItem[];
     clientes: ClienteOption[];
     templates: Template[];
+    emailSenderProfiles: EmailSenderProfile[];
     canManageAutomation: boolean;
     automationDashboard: DashboardPayload | null;
 }) {
@@ -86,8 +96,8 @@ export function ComunicacaoPageShell({
         if (canManageAutomation && automationDashboard) {
             base.push({
                 key: "automation",
-                label: "Automacao IA",
-                description: "Fluxos inteligentes de autoatendimento",
+                label: "Playbooks e IA",
+                description: "Fluxos, campanhas e jornadas juridicas",
                 icon: Bot,
                 badge: `${automationDashboard.stats.activeFlows}`,
             });
@@ -168,6 +178,7 @@ export function ComunicacaoPageShell({
                     conversations={conversations}
                     clientes={clientes}
                     templates={templates}
+                    emailSenderProfiles={emailSenderProfiles}
                 />
             )}
         </div>

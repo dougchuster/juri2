@@ -102,7 +102,7 @@ export function DashboardShell({
                             onOpenMobileSidebar={() => setIsMobileSidebarOpen(true)}
                         />
 
-                        <main className="relative z-10 flex-1 overflow-x-hidden overflow-y-auto pb-2 pt-2 md:pb-4 md:pt-3">
+                        <main className="relative z-10 flex-1 overflow-x-hidden overflow-y-auto pb-2 pt-2 md:pb-4 md:pt-3 [&:has([data-page-chat])]:overflow-hidden">
                             <div className="mx-auto flex min-h-full w-full max-w-full flex-col">
                                 {children}
                             </div>

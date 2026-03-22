@@ -1,93 +1,65 @@
-import { whatsappService } from "@/lib/integrations/baileys-service";
+import {
+  buildLegacyWhatsappStatusPayload,
+  getPrimaryWhatsappRuntime,
+  withLegacyWhatsappHeaders,
+} from "@/app/api/comunicacao/whatsapp/compat";
 
 export const dynamic = "force-dynamic";
 
 /**
- * SSE endpoint to stream QR code updates in real-time
- * The client connects and receives QR codes as they are generated
+ * Legacy compatibility SSE endpoint for QR/status snapshots.
+ * Prefer /api/comunicacao/stream for module consumers.
  */
 export async function GET() {
   const encoder = new TextEncoder();
-  let removeListener: (() => void) | null = null;
   let intervalId: ReturnType<typeof setInterval> | null = null;
 
   const stream = new ReadableStream({
-    start(controller) {
-      // Send current status immediately
-      const currentStatus = whatsappService.getStatus();
-      const initData = JSON.stringify({
-        type: "status",
-        connected: currentStatus.connected,
-        state: currentStatus.state,
-        qrCode: currentStatus.qrCode,
-        qrCodeRaw: currentStatus.qrCodeRaw,
-        phoneNumber: currentStatus.phoneNumber,
-        name: currentStatus.name,
-      });
-      controller.enqueue(encoder.encode(`data: ${initData}\n\n`));
-
-      // Listen for QR code updates
-      removeListener = whatsappService.addQRListener((qrBase64) => {
+    async start(controller) {
+      const emitSnapshot = async () => {
         try {
-          const data = JSON.stringify({
-            type: "qr",
-            qrCode: qrBase64,
-            qrCodeRaw: whatsappService.getStatus().qrCodeRaw,
-          });
-          controller.enqueue(encoder.encode(`data: ${data}\n\n`));
-        } catch {
-          // Stream might be closed
-        }
-      });
+          const runtime = await getPrimaryWhatsappRuntime();
 
-      // Listen for connection changes
-      const removeConnectionListener = whatsappService.onConnectionChange((status) => {
-        try {
           const data = JSON.stringify({
             type: "status",
-            connected: status.connected,
-            state: status.state,
-            qrCode: status.qrCode,
-            qrCodeRaw: status.qrCodeRaw,
-            phoneNumber: status.phoneNumber,
-            name: status.name,
+            ...buildLegacyWhatsappStatusPayload({
+              status: runtime.status?.status || "DISCONNECTED",
+              connected: runtime.status?.connected || false,
+              qrCode: runtime.qr?.qrCode || null,
+              qrCodeRaw: runtime.qr?.qrCodeRaw || null,
+              phoneNumber: runtime.status?.connectedPhone || null,
+              name: runtime.status?.connectedName || null,
+              providerType: runtime.connection?.providerType || null,
+            }),
           });
           controller.enqueue(encoder.encode(`data: ${data}\n\n`));
         } catch {
-          // Stream might be closed
+          // stream closed or polling failure
         }
-      });
-
-      // Keep alive with periodic pings
-      intervalId = setInterval(() => {
-        try {
-          controller.enqueue(encoder.encode(`: ping\n\n`));
-        } catch {
-          if (intervalId) clearInterval(intervalId);
-          if (removeListener) removeListener();
-          removeConnectionListener();
-        }
-      }, 15000);
-
-      // Store cleanup for cancel
-      const originalRemoveListener = removeListener;
-      removeListener = () => {
-        originalRemoveListener?.();
-        removeConnectionListener();
       };
+
+      await emitSnapshot();
+
+      intervalId = setInterval(() => {
+        void emitSnapshot();
+      }, 5000);
     },
     cancel() {
-      if (removeListener) removeListener();
       if (intervalId) clearInterval(intervalId);
     },
   });
 
   return new Response(stream, {
-    headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache, no-transform",
-      Connection: "keep-alive",
-      "X-Accel-Buffering": "no",
-    },
+    headers: withLegacyWhatsappHeaders(
+      {
+        headers: {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache, no-transform",
+          Connection: "keep-alive",
+          "X-Accel-Buffering": "no",
+        },
+      },
+      "/api/comunicacao/stream"
+    ).headers,
   });
 }

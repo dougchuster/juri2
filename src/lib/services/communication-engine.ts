@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
-import { sendTextMessage } from "@/lib/integrations/evolution-api";
+import { sendWhatsappDirectText } from "@/lib/whatsapp/application/message-service";
 import { sendEmail, renderTemplate, wrapInEmailLayout } from "@/lib/integrations/email-service";
 import { getOrCreateConversation, createMessage, getPendingJobs } from "@/lib/dal/comunicacao";
 import type { EventType, CanalComunicacao, NotificationRule, MessageTemplate, CommunicationJob } from "@/generated/prisma";
@@ -438,10 +438,10 @@ async function executeJob(job: CommunicationJob): Promise<{ ok: boolean; provide
     if (job.canal === "WHATSAPP") {
         if (!job.recipientPhone) return { ok: false, error: "No phone number" };
 
-        const result = await sendTextMessage(job.recipientPhone, job.content);
+        const result = await sendWhatsappDirectText({ phone: job.recipientPhone, content: job.content });
         return {
             ok: result.ok,
-            providerMsgId: result.data?.key?.id,
+            providerMsgId: result.providerMessageId || undefined,
             error: result.error,
         };
     }

@@ -5,48 +5,98 @@ import {
   closeQueueConnection,
   getQueueConnection,
 } from "../lib/queue";
+import { ATTENDANCE_AUTOMATION_QUEUE_NAME } from "../lib/queue/attendance-automation-queue";
+import { CRM_CAMPAIGN_QUEUE_NAME } from "../lib/queue/campaign-queue";
 import { executarAutomacaoNacionalJob } from "../lib/services/automacao-nacional";
+import { runAttendanceAutomationForInboundMessage } from "../lib/services/attendance-automation";
+import { processCampaignJob } from "../lib/services/campaign-engine";
 
 const connection = getQueueConnection();
 
 if (!connection) {
-  throw new Error("REDIS_URL nao configurada. Worker de automacao nacional nao pode iniciar.");
+  throw new Error("REDIS_URL nao configurada. Worker nao pode iniciar.");
 }
 
-const concurrency = Math.max(
+const nationalConcurrency = Math.max(
   1,
   Math.min(20, Number(process.env.AUTOMACAO_WORKER_CONCURRENCY || 2))
 );
-
-const worker = new Worker(
-  AUTOMACAO_NATIONAL_QUEUE_NAME,
-  async (job) => {
-    const jobId = String(job.data?.jobId || "");
-    if (!jobId) throw new Error("Payload invalido: jobId obrigatorio.");
-    return executarAutomacaoNacionalJob(jobId);
-  },
-  { connection, concurrency }
+const campaignConcurrency = Math.max(
+  1,
+  Math.min(10, Number(process.env.CRM_CAMPAIGN_WORKER_CONCURRENCY || 1))
+);
+const attendanceConcurrency = Math.max(
+  1,
+  Math.min(20, Number(process.env.ATTENDANCE_AUTOMATION_WORKER_CONCURRENCY || 4))
 );
 
-worker.on("ready", () => {
-  console.log(`[Worker] ${AUTOMACAO_NATIONAL_QUEUE_NAME} pronto (concurrency=${concurrency})`);
-});
+const workers = [
+  new Worker(
+    AUTOMACAO_NATIONAL_QUEUE_NAME,
+    async (job) => {
+      const jobId = String(job.data?.jobId || "");
+      if (!jobId) throw new Error("Payload invalido: jobId obrigatorio.");
+      return executarAutomacaoNacionalJob(jobId);
+    },
+    { connection, concurrency: nationalConcurrency }
+  ),
+  new Worker(
+    CRM_CAMPAIGN_QUEUE_NAME,
+    async (job) => {
+      const campaignId = String(job.data?.campaignId || "");
+      if (!campaignId) throw new Error("Payload invalido: campaignId obrigatorio.");
+      return processCampaignJob({ campaignId });
+    },
+    { connection, concurrency: campaignConcurrency }
+  ),
+  new Worker(
+    ATTENDANCE_AUTOMATION_QUEUE_NAME,
+    async (job) => {
+      const conversationId = String(job.data?.conversationId || "");
+      if (!conversationId) throw new Error("Payload invalido: conversationId obrigatorio.");
 
-worker.on("active", (job) => {
-  console.log(`[Worker] Processando ${job.id}`);
-});
+      return runAttendanceAutomationForInboundMessage({
+        conversationId,
+        messageId: job.data?.messageId || null,
+        incomingText: String(job.data?.incomingText || ""),
+        source: (job.data?.source || "evolution-webhook") as "baileys" | "evolution-webhook" | "manual",
+        forceRetry: Boolean(job.data?.forceRetry),
+        skipBurstDelay: true,
+      });
+    },
+    { connection, concurrency: attendanceConcurrency }
+  ),
+];
 
-worker.on("completed", (job) => {
-  console.log(`[Worker] Concluido ${job.id}`);
-});
+const workerLabels = [
+  `${AUTOMACAO_NATIONAL_QUEUE_NAME} (concurrency=${nationalConcurrency})`,
+  `${CRM_CAMPAIGN_QUEUE_NAME} (concurrency=${campaignConcurrency})`,
+  `${ATTENDANCE_AUTOMATION_QUEUE_NAME} (concurrency=${attendanceConcurrency})`,
+];
 
-worker.on("failed", (job, err) => {
-  console.error(`[Worker] Falha ${job?.id}:`, err?.message || err);
+workers.forEach((worker, index) => {
+  const label = workerLabels[index];
+
+  worker.on("ready", () => {
+    console.log(`[Worker] ${label} pronto`);
+  });
+
+  worker.on("active", (job) => {
+    console.log(`[Worker] ${label} processando ${job.id}`);
+  });
+
+  worker.on("completed", (job) => {
+    console.log(`[Worker] ${label} concluiu ${job.id}`);
+  });
+
+  worker.on("failed", (job, err) => {
+    console.error(`[Worker] ${label} falhou ${job?.id}:`, err?.message || err);
+  });
 });
 
 async function shutdown() {
   console.log("[Worker] Encerrando...");
-  await worker.close();
+  await Promise.all(workers.map((worker) => worker.close()));
   await closeQueueConnection();
   process.exit(0);
 }

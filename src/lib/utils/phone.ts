@@ -50,6 +50,39 @@ export function normalizePhoneE164(phone: string): string {
 }
 
 /**
+ * Normalize a WhatsApp number to digits-only international format.
+ * Example: (31) 99999-9999 -> 5531999999999
+ */
+export function normalizeWhatsApp(phone: string): string {
+    const digits = String(phone || "").replace(/\D/g, "");
+    if (!digits) return "";
+    if (digits.startsWith("55")) return digits;
+    return digits.length >= 10 ? `55${digits}` : digits;
+}
+
+/**
+ * Normalize provider payloads like 5511999999999@s.whatsapp.net or +55 11...
+ * to digits-only WhatsApp format.
+ */
+export function normalizeProviderPhone(phone: string): string {
+    const stripped = String(phone || "")
+        .replace(/@s\.whatsapp\.net$/i, "")
+        .replace(/@c\.us$/i, "")
+        .replace(/@g\.us$/i, "");
+    return normalizeWhatsApp(stripped);
+}
+
+export function formatWhatsAppDisplay(phone: string): string {
+    const digits = normalizeWhatsApp(phone);
+    if (!digits) return "";
+    return formatPhoneDisplay(digits);
+}
+
+export function buildWhatsAppLink(phone: string): string {
+    return `https://wa.me/${normalizeWhatsApp(phone)}`;
+}
+
+/**
  * Format a phone number for display: (XX) XXXXX-XXXX or (XX) XXXX-XXXX
  */
 export function formatPhoneDisplay(phone: string): string {

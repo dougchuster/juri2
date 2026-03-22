@@ -20,7 +20,38 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+  evolution-api:
+    image: atendai/evolution-api:v2.2.3
+    container_name: sistema-juridico-evolution
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
+    environment:
+      SERVER_URL: ${EVOLUTION_API_URL}
+      AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
+      AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES: "true"
+      CONFIG_SESSION_PHONE_VERSION: "2.3000.1035194821"
+      DATABASE_ENABLED: "true"
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: postgresql://juridico:juridico123@postgres:5432/evolution
+      DATABASE_SAVE_DATA_INSTANCE: "true"
+      DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
+      DATABASE_SAVE_DATA_CONTACTS: "true"
+      CACHE_REDIS_ENABLED: "true"
+      CACHE_REDIS_URI: redis://redis:6379
+      WEBHOOK_GLOBAL_URL: http://host.docker.internal:3000/api/webhooks/evolution/messages
+      WEBHOOK_GLOBAL_ENABLED: "true"
+      WEBHOOK_EVENTS_MESSAGES_UPSERT: "true"
+      WEBHOOK_EVENTS_MESSAGES_UPDATE: "true"
+      WEBHOOK_EVENTS_CONNECTION_UPDATE: "true"
+      WEBHOOK_EVENTS_QRCODE_UPDATED: "true"
+    volumes:
+      - evolution_instances:/evolution/instances
 
 volumes:
   postgres_data:
   redis_data:
+  evolution_instances:

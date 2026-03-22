@@ -1,9 +1,11 @@
 import "server-only";
 
+import { randomUUID } from "node:crypto";
 import { db } from "@/lib/db";
 import { getChatRedis } from "@/lib/chat/presence";
 import { askGemini, isGeminiConfigured } from "@/lib/services/ai-gemini";
-import { sendTextMessage } from "@/lib/integrations/evolution-api";
+import { sendWhatsappDirectText } from "@/lib/whatsapp/application/message-service";
+import { enqueueAttendanceAutomationJob } from "@/lib/queue/attendance-automation-queue";
 import {
     parseHumanizedStyle,
     serializeHumanizedStyle,
@@ -71,7 +73,24 @@ const DEFAULT_FLOW_DEFINITIONS = [
 
 const AUTOMATION_BURST_WINDOW_MS = 4_000;
 const AUTOMATION_RECENT_OPENINGS_KEY_PREFIX = "attendance:conversation:";
+const AUTOMATION_LOCK_KEY_PREFIX = "attendance:lock:";
+const AUTOMATION_LOCK_TTL_SECONDS = 180;
 const conversationAutomationLocks = new Map<string, Promise<void>>();
+
+export type AttendanceAutomationPreview = {
+    flowName: string | null;
+    reason: string | null;
+    reply: string;
+    mode: "ai" | "template" | "fallback" | null;
+};
+
+export type AttendanceAutomationRunResult = {
+    handled: boolean;
+    reason: string | null;
+    flowId?: string;
+    mode?: "ai" | "template" | "fallback" | null;
+    preview?: AttendanceAutomationPreview;
+};
 
 function hasAttendanceAutomationDelegates() {
     const dynamicDb = db as unknown as Record<string, unknown>;
@@ -90,7 +109,7 @@ function wait(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function withConversationAutomationLock<T>(conversationId: string, fn: () => Promise<T>) {
+async function withMemoryConversationAutomationLock<T>(conversationId: string, fn: () => Promise<T>) {
     const previous = conversationAutomationLocks.get(conversationId) || Promise.resolve();
     let release!: () => void;
     const current = new Promise<void>((resolve) => {
@@ -108,6 +127,68 @@ async function withConversationAutomationLock<T>(conversationId: string, fn: () 
         if (conversationAutomationLocks.get(conversationId) === queued) {
             conversationAutomationLocks.delete(conversationId);
         }
+    }
+}
+
+function buildConversationAutomationLockKey(conversationId: string) {
+    return `${AUTOMATION_LOCK_KEY_PREFIX}${conversationId}`;
+}
+
+async function acquireConversationAutomationRedisLock(conversationId: string) {
+    const redis = getChatRedis();
+    if (!redis) return null;
+
+    const token = randomUUID();
+    const key = buildConversationAutomationLockKey(conversationId);
+
+    if (redis.status === "wait") {
+        await redis.connect();
+    }
+
+    for (let attempt = 0; attempt < 40; attempt += 1) {
+        const result = await redis.set(key, token, "EX", AUTOMATION_LOCK_TTL_SECONDS, "NX");
+        if (result === "OK") {
+            return { redis, key, token };
+        }
+        await wait(400);
+    }
+
+    return null;
+}
+
+async function releaseConversationAutomationRedisLock(input: {
+    redis: NonNullable<ReturnType<typeof getChatRedis>>;
+    key: string;
+    token: string;
+}) {
+    await input.redis.eval(
+        `
+            if redis.call("get", KEYS[1]) == ARGV[1] then
+                return redis.call("del", KEYS[1])
+            end
+            return 0
+        `,
+        1,
+        input.key,
+        input.token
+    );
+}
+
+async function withConversationAutomationLock<T>(conversationId: string, fn: () => Promise<T>) {
+    try {
+        const redisLock = await acquireConversationAutomationRedisLock(conversationId);
+        if (!redisLock) {
+            return await withMemoryConversationAutomationLock(conversationId, fn);
+        }
+
+        try {
+            return await fn();
+        } finally {
+            await releaseConversationAutomationRedisLock(redisLock);
+        }
+    } catch (error) {
+        console.warn("[attendance-automation] Falling back to in-memory lock:", error);
+        return await withMemoryConversationAutomationLock(conversationId, fn);
     }
 }
 
@@ -514,19 +595,59 @@ export async function previewAttendanceAutomationFlow(input: {
     });
 }
 
+export async function scheduleAttendanceAutomationForInboundMessage(input: {
+    conversationId: string;
+    messageId?: string | null;
+    incomingText: string;
+    source: "baileys" | "evolution-webhook" | "manual";
+    forceRetry?: boolean;
+}) {
+    const queued = await enqueueAttendanceAutomationJob(
+        {
+            conversationId: input.conversationId,
+            messageId: input.messageId || null,
+            incomingText: input.incomingText,
+            source: input.source,
+            forceRetry: input.forceRetry || false,
+        },
+        input.forceRetry ? 0 : AUTOMATION_BURST_WINDOW_MS
+    );
+
+    if (queued.queued) {
+        return {
+            queued: true,
+            mode: "queue" as const,
+            duplicated: queued.duplicated === true,
+        };
+    }
+
+    const result = await runAttendanceAutomationForInboundMessage(input);
+    return {
+        queued: false,
+        mode: "direct" as const,
+        reason: queued.reason || null,
+        result,
+    };
+}
+
 export async function runAttendanceAutomationForInboundMessage(input: {
     conversationId: string;
     messageId?: string | null;
     incomingText: string;
-    source: "baileys" | "evolution-webhook";
-}) {
-    return withConversationAutomationLock(input.conversationId, async () => {
+    source: "baileys" | "evolution-webhook" | "manual";
+    forceRetry?: boolean;
+    skipBurstDelay?: boolean;
+    dryRun?: boolean;
+}): Promise<AttendanceAutomationRunResult> {
+    try {
+        return await withConversationAutomationLock(input.conversationId, async () => {
         const incomingText = trimText(input.incomingText, 4000);
+        const shouldReuseInboundEventKey = !(input.source === "manual" && input.forceRetry);
         if (!incomingText) {
             return { handled: false, reason: "Mensagem vazia para automacao." };
         }
 
-        if (input.messageId) {
+        if (!input.forceRetry && input.messageId) {
             const alreadyProcessed = await db.attendanceAutomationEvent.findFirst({
                 where: {
                     messageId: input.messageId,
@@ -540,7 +661,7 @@ export async function runAttendanceAutomationForInboundMessage(input: {
             }
         }
 
-        if (input.messageId) {
+        if (!input.forceRetry && input.messageId && !input.skipBurstDelay) {
             await wait(AUTOMATION_BURST_WINDOW_MS);
         }
 
@@ -598,6 +719,7 @@ export async function runAttendanceAutomationForInboundMessage(input: {
         });
 
         if (conversationGate.blocked) {
+            if (!input.dryRun) {
             await createAutomationEvent({
                 conversationId: conversation.id,
                 messageId: input.messageId || null,
@@ -608,6 +730,7 @@ export async function runAttendanceAutomationForInboundMessage(input: {
                     pausadoAte: conversationGate.pausadoAte?.toISOString() || null,
                 },
             });
+            }
             return {
                 handled: false,
                 reason: conversationGate.reason || "Automacao pausada nesta conversa.",
@@ -639,8 +762,9 @@ export async function runAttendanceAutomationForInboundMessage(input: {
 
         const combinedInboundText = inboundBurst.map((message) => message.content).join("\n");
         const latestInboundMessageId = inboundBurst[inboundBurst.length - 1]?.id || input.messageId || null;
+        const eventMessageId = shouldReuseInboundEventKey ? latestInboundMessageId : null;
 
-        const alreadyProcessedBurst = latestInboundMessageId
+        const alreadyProcessedBurst = !input.forceRetry && latestInboundMessageId
             ? await db.attendanceAutomationEvent.findFirst({
                 where: {
                     messageId: latestInboundMessageId,
@@ -654,16 +778,19 @@ export async function runAttendanceAutomationForInboundMessage(input: {
             return { handled: false, reason: "Rajada recente ja processada pela automacao." };
         }
 
-        await createAutomationEvent({
-            conversationId: conversation.id,
-            messageId: latestInboundMessageId,
-            eventType: "INBOUND_EVALUATED",
-            content: combinedInboundText,
-            metadata: {
-                source: input.source,
-                burstMessageIds: inboundBurst.map((message) => message.id),
-            },
-        });
+        if (!input.dryRun) {
+            await createAutomationEvent({
+                conversationId: conversation.id,
+                messageId: eventMessageId,
+                eventType: "INBOUND_EVALUATED",
+                content: combinedInboundText,
+                metadata: {
+                    source: input.source,
+                    replayedByHuman: !shouldReuseInboundEventKey,
+                    burstMessageIds: inboundBurst.map((message) => message.id),
+                },
+            });
+        }
 
         const flows = await db.attendanceAutomationFlow.findMany({
             where: {
@@ -680,11 +807,13 @@ export async function runAttendanceAutomationForInboundMessage(input: {
         const hasUrgencySignal = detectAttendanceUrgency(combinedInboundText);
 
         if (!phone) {
+            if (!input.dryRun) {
             await createAutomationEvent({
                 conversationId: conversation.id,
                 eventType: "ERROR",
                 content: "Cliente sem telefone de WhatsApp vinculado para resposta automatica.",
             });
+            }
             return { handled: false, reason: "Cliente sem WhatsApp." };
         }
 
@@ -697,40 +826,58 @@ export async function runAttendanceAutomationForInboundMessage(input: {
 
             if (!match.matched) continue;
 
-            const session = await db.attendanceAutomationSession.upsert({
-                where: {
-                    conversationId_flowId: {
+            const session = input.dryRun
+                ? await db.attendanceAutomationSession.findUnique({
+                    where: {
+                        conversationId_flowId: {
+                            conversationId: conversation.id,
+                            flowId: flow.id,
+                        },
+                    },
+                    select: {
+                        id: true,
+                        replyCount: true,
+                        lastReplyAt: true,
+                    },
+                })
+                : await db.attendanceAutomationSession.upsert({
+                    where: {
+                        conversationId_flowId: {
+                            conversationId: conversation.id,
+                            flowId: flow.id,
+                        },
+                    },
+                    update: {
+                        status: "ACTIVE",
+                        lastInboundAt: now,
+                        lastTriggerReason: match.reason,
+                        lastInboundSummary: combinedInboundText,
+                    },
+                    create: {
                         conversationId: conversation.id,
                         flowId: flow.id,
+                        status: "ACTIVE",
+                        lastInboundAt: now,
+                        lastTriggerReason: match.reason,
+                        lastInboundSummary: combinedInboundText,
                     },
-                },
-                update: {
-                    status: "ACTIVE",
-                    lastInboundAt: now,
-                    lastTriggerReason: match.reason,
-                    lastInboundSummary: combinedInboundText,
-                },
-                create: {
+                });
+
+            if (!input.dryRun && session) {
+                await createAutomationEvent({
                     conversationId: conversation.id,
                     flowId: flow.id,
-                    status: "ACTIVE",
-                    lastInboundAt: now,
-                    lastTriggerReason: match.reason,
-                    lastInboundSummary: combinedInboundText,
-                },
-            });
-
-            await createAutomationEvent({
-                conversationId: conversation.id,
-                flowId: flow.id,
-                sessionId: session.id,
-                messageId: latestInboundMessageId,
-                eventType: "FLOW_MATCHED",
-                content: match.reason,
-                metadata: {
-                    burstMessageIds: inboundBurst.map((message) => message.id),
-                },
-            });
+                    sessionId: session.id,
+                    messageId: eventMessageId,
+                    eventType: "FLOW_MATCHED",
+                    content: match.reason,
+                    metadata: {
+                        source: input.source,
+                        replayedByHuman: !shouldReuseInboundEventKey,
+                        burstMessageIds: inboundBurst.map((message) => message.id),
+                    },
+                });
+            }
 
             const permission = canSendAutomatedReply({
                 flow,
@@ -740,16 +887,18 @@ export async function runAttendanceAutomationForInboundMessage(input: {
             });
 
             if (!permission.allowed) {
-                await createAutomationEvent({
-                    conversationId: conversation.id,
-                    flowId: flow.id,
-                    sessionId: session.id,
-                    eventType: "SESSION_PAUSED",
-                    content: permission.reason,
-                    metadata: {
-                        urgentSignal: hasUrgencySignal,
-                    },
-                });
+                if (!input.dryRun && session) {
+                    await createAutomationEvent({
+                        conversationId: conversation.id,
+                        flowId: flow.id,
+                        sessionId: session.id,
+                        eventType: "SESSION_PAUSED",
+                        content: permission.reason,
+                        metadata: {
+                            urgentSignal: hasUrgencySignal,
+                        },
+                    });
+                }
                 return { handled: false, reason: permission.reason || "Fluxo pausado." };
             }
 
@@ -760,7 +909,7 @@ export async function runAttendanceAutomationForInboundMessage(input: {
                     flow,
                     incomingText: combinedInboundText,
                 })
-                : session.replyCount > 0 && flow.followUpReplyTemplate
+                : (session?.replyCount || 0) > 0 && flow.followUpReplyTemplate
                     ? flow.followUpReplyTemplate
                     : flow.initialReplyTemplate;
 
@@ -795,7 +944,29 @@ export async function runAttendanceAutomationForInboundMessage(input: {
                     recentMessages,
                 });
 
-            const sendResult = await sendTextMessage(phone, reply.content);
+            if (input.dryRun) {
+                return {
+                    handled: true,
+                    reason: match.reason,
+                    flowId: flow.id,
+                    mode: reply.mode,
+                    preview: {
+                        flowName: flow.name,
+                        reason: match.reason,
+                        reply: reply.content,
+                        mode: reply.mode,
+                    },
+                };
+            }
+
+            if (!session) {
+                return {
+                    handled: false,
+                    reason: "Sessao de automacao indisponivel para envio.",
+                };
+            }
+
+            const sendResult = await sendWhatsappDirectText({ phone, content: reply.content });
             if (!sendResult.ok) {
                 await createAutomationEvent({
                     conversationId: conversation.id,
@@ -819,7 +990,7 @@ export async function runAttendanceAutomationForInboundMessage(input: {
                     canal: "WHATSAPP",
                     content: reply.content,
                     status: "SENT",
-                    providerMsgId: sendResult.data?.key?.id || null,
+                    providerMsgId: sendResult.providerMessageId || null,
                     senderName: officeName,
                     sentAt,
                     createdAt: sentAt,
@@ -884,5 +1055,10 @@ export async function runAttendanceAutomationForInboundMessage(input: {
             handled: false,
             reason: "Nenhum fluxo ativo correspondeu a mensagem recebida.",
         };
-    });
+        });
+    } catch (fatalError) {
+        const message = fatalError instanceof Error ? fatalError.message : String(fatalError);
+        console.error("[attendance-automation] Fatal error:", message, fatalError);
+        return { handled: false, reason: `Erro interno: ${message}` };
+    }
 }

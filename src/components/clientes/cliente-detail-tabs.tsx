@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Scale, MessageSquare, DollarSign, Pencil, Clock } from "lucide-react";
+import { Scale, MessageSquare, DollarSign, Pencil, Clock, Activity } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { ClienteForm } from "@/components/clientes/cliente-form";
 import { ClienteTagsPanel } from "@/components/clientes/cliente-tags-panel";
 import { ContactHistoryTimeline } from "@/components/clientes/contact-history-timeline";
+import { ClienteTimelineFeed } from "@/components/clientes/cliente-timeline-feed";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import type { EventoTimelineCliente } from "@/lib/dal/timeline";
 
 interface Origem {
     id: string;
@@ -43,8 +45,8 @@ interface ClienteDetail {
     inadimplente: boolean;
     processos: Array<{
         id: string;
-        numero: string | null;
-        titulo: string;
+        numeroCnj: string | null;
+        objeto: string | null;
         status: string;
         createdAt: string;
         advogado: { user: { name: string | null } } | null;
@@ -67,9 +69,11 @@ interface ClienteDetail {
 interface ClienteDetailTabsProps {
     cliente: ClienteDetail;
     origens: Origem[];
+    timelineEventos: EventoTimelineCliente[];
 }
 
 const tabs = [
+    { id: "timeline", label: "Timeline", icon: Activity },
     { id: "processos", label: "Processos", icon: Scale },
     { id: "atendimentos", label: "Atendimentos", icon: MessageSquare },
     { id: "financeiro", label: "Financeiro", icon: DollarSign },
@@ -87,14 +91,14 @@ const STATUS_PROCESSO_COLORS: Record<string, string> = {
 
 const STATUS_FATURA_COLORS: Record<string, string> = {
     PENDENTE: "warning",
-    PAGO: "success",
-    ATRASADO: "danger",
-    CANCELADO: "muted",
+    PAGA: "success",
+    ATRASADA: "danger",
+    CANCELADA: "muted",
 };
 
-export function ClienteDetailTabs({ cliente, origens }: ClienteDetailTabsProps) {
+export function ClienteDetailTabs({ cliente, origens, timelineEventos }: ClienteDetailTabsProps) {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<TabId>("processos");
+    const [activeTab, setActiveTab] = useState<TabId>("timeline");
     const [showEdit, setShowEdit] = useState(false);
 
     return (
@@ -144,8 +148,8 @@ export function ClienteDetailTabs({ cliente, origens }: ClienteDetailTabsProps) 
                                 <tbody>
                                     {cliente.processos.map((proc) => (
                                         <tr key={proc.id} className="border-b border-border last:border-0 hover:bg-bg-tertiary transition-colors">
-                                            <td className="px-4 py-3 text-sm font-mono text-accent">{proc.numero || "—"}</td>
-                                            <td className="px-4 py-3 text-sm text-text-primary">{proc.titulo}</td>
+                                            <td className="px-4 py-3 text-sm font-mono text-accent">{proc.numeroCnj || "—"}</td>
+                                            <td className="px-4 py-3 text-sm text-text-primary">{proc.objeto || "—"}</td>
                                             <td className="px-4 py-3 text-sm text-text-secondary">{proc.advogado?.user?.name || "—"}</td>
                                             <td className="px-4 py-3">
                                                 <Badge variant={(STATUS_PROCESSO_COLORS[proc.status] || "muted") as "success" | "muted" | "warning"}>
@@ -159,6 +163,13 @@ export function ClienteDetailTabs({ cliente, origens }: ClienteDetailTabsProps) 
                             </table>
                         )}
                     </div>
+                )}
+
+                {activeTab === "timeline" && (
+                    <ClienteTimelineFeed
+                        eventos={timelineEventos}
+                        totalProcessos={cliente.processos.length}
+                    />
                 )}
 
                 {activeTab === "atendimentos" && (

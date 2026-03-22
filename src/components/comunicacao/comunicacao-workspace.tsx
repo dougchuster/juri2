@@ -81,7 +81,9 @@ interface MessageItem {
     canal: "WHATSAPP" | "EMAIL";
     content: string;
     contentHtml: string | null;
+    templateVars?: Record<string, unknown> | null;
     status: string;
+    errorMessage?: string | null;
     senderName: string | null;
     senderPhone: string | null;
     sentAt: string | null;
@@ -104,6 +106,14 @@ interface Template {
 interface ClienteOption {
     id: string;
     nome: string;
+}
+
+interface EmailSenderProfile {
+    id: string;
+    label: string;
+    fromName: string;
+    fromEmail: string;
+    replyTo?: string | null;
 }
 
 interface TagCategory {
@@ -225,10 +235,13 @@ interface Workspace {
     };
 }
 
+type ConversationFocusFilter = "all" | "unread" | "paused" | "assigned" | "unassigned";
+
 interface Props {
     conversations: ConversationItem[];
     clientes: ClienteOption[];
     templates: Template[];
+    emailSenderProfiles: EmailSenderProfile[];
 }
 
 interface DraftAttachment {
@@ -253,6 +266,13 @@ const WORKSPACE_LOAD_ERROR_MESSAGES = new Set([
     "Falha de rede ao carregar o cockpit operacional.",
     "Nao foi possivel carregar o cockpit operacional da conversa.",
 ]);
+
+function getDefaultProcessoId(workspace: Workspace) {
+    return workspace.atendimento?.processoId
+        || workspace.conversation.processo?.id
+        || (workspace.processos.length === 1 ? workspace.processos[0]?.id : "")
+        || "";
+}
 
 function formatDateTime(value: string | null | undefined) {
     if (!value) return "Sem registro";
@@ -310,6 +330,19 @@ function getMessagePreview(item: ConversationItem) {
 function getMessageDisplayContent(message: MessageItem) {
     if (!message.content) return "";
     return message.content.replace(/^\[(imagem|video|audio|documento|sticker)\]\s*/i, "").trim();
+}
+
+function getEmailMessageMeta(message: MessageItem) {
+    if (!message.templateVars || typeof message.templateVars !== "object") return null;
+    const emailMeta = (message.templateVars as { emailMeta?: unknown }).emailMeta;
+    if (!emailMeta || typeof emailMeta !== "object") return null;
+    return emailMeta as {
+        subject?: string | null;
+        to?: string | null;
+        from?: string | null;
+        fromLabel?: string | null;
+        hasSignature?: boolean;
+    };
 }
 
 function getPriorityVariant(priority: string | null | undefined) {
@@ -371,7 +404,7 @@ function colorMix(color: string, percentage: number) {
 const CHAT_ATTACHMENT_ACCEPT = "image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv";
 const QUICK_EMOJIS = ["🙂", "👍", "🙏", "✅", "📎", "🎧", "📄", "⚖️"];
 
-export function ComunicacaoWorkspace({ conversations: initialConversations, clientes, templates }: Props) {
+export function ComunicacaoWorkspace({ conversations: initialConversations, clientes, templates, emailSenderProfiles }: Props) {
     const [conversations, setConversations] = useState(initialConversations);
     const [selectedId, setSelectedId] = useState<string | null>(initialConversations[0]?.id || null);
     const [messages, setMessages] = useState<MessageItem[]>([]);
@@ -384,12 +417,15 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     const [workspaceSaving, setWorkspaceSaving] = useState(false);
     const [newMessage, setNewMessage] = useState("");
     const [draftAttachments, setDraftAttachments] = useState<DraftAttachment[]>([]);
+    const [emailDraftSubject, setEmailDraftSubject] = useState("");
+    const [emailSenderProfileId, setEmailSenderProfileId] = useState(emailSenderProfiles[0]?.id || "");
     const [uploadingAttachment, setUploadingAttachment] = useState(false);
     const [recordingAudio, setRecordingAudio] = useState(false);
     const [sending, setSending] = useState(false);
     const [showEmojiPanel, setShowEmojiPanel] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [filter, setFilter] = useState<"all" | "WHATSAPP" | "EMAIL">("all");
+    const [focusFilter, setFocusFilter] = useState<ConversationFocusFilter>("all");
     const [feedback, setFeedback] = useState<{ tone: "success" | "danger" | "warning"; text: string } | null>(null);
     const [showNewConversation, setShowNewConversation] = useState(false);
     const [activeModal, setActiveModal] = useState<null | "task" | "prazo" | "meeting">(null);
@@ -461,13 +497,36 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     const prependSnapshotRef = useRef<{ scrollTop: number; scrollHeight: number } | null>(null);
     const avatarLoadingRef = useRef<Set<string>>(new Set());
     const workspaceRequestRef = useRef(0);
+    const initializedEmailConversationRef = useRef<string | null>(null);
 
     const selectedConversation = conversations.find((item) => item.id === selectedId) || null;
     const filteredConversations = conversations.filter((item) => {
         if (filter !== "all" && item.canal !== filter) return false;
+
+        if (focusFilter === "unread" && item.unreadCount <= 0) return false;
+        if (focusFilter === "paused" && !item.iaDesabilitada && !item.autoAtendimentoPausado) return false;
+        if (focusFilter === "assigned" && !item.assignedTo) return false;
+        if (focusFilter === "unassigned" && item.assignedTo) return false;
+
         if (!searchTerm) return true;
-        return item.cliente.nome.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const normalizedSearch = searchTerm.toLowerCase().trim();
+        const haystack = [
+            item.cliente.nome,
+            item.cliente.email || "",
+            item.cliente.celular || "",
+            item.cliente.whatsapp || "",
+            item.subject || "",
+            item.processo?.numeroCnj || "",
+            item.assignedTo?.name || "",
+            item.messages[0]?.content || "",
+        ]
+            .join(" ")
+            .toLowerCase();
+
+        return haystack.includes(normalizedSearch);
     });
+    const unreadConversationCount = conversations.filter((item) => item.unreadCount > 0).length;
 
     const normalizePhoneKey = useCallback((phone: string | null | undefined) => {
         if (!phone) return "";
@@ -485,7 +544,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
 
         avatarLoadingRef.current.add(key);
         try {
-            const response = await fetch(`/api/whatsapp/avatar?phone=${encodeURIComponent(rawPhone || "")}`, {
+            const response = await fetch(`/api/comunicacao/whatsapp/avatar?phone=${encodeURIComponent(rawPhone || "")}`, {
                 cache: "no-store",
             });
             const payload = await response.json();
@@ -510,7 +569,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         if (!selectedId && items[0]?.id) setSelectedId(items[0].id);
     }, [filter, searchTerm, selectedId]);
 
-    const consumeConversationUnread = useCallback(async (conversationId: string) => {
+    const consumeConversationUnread = useCallback(async (conversationId: string | null | undefined) => {
+        if (!conversationId) return;
         setConversations((current) =>
             current.map((item) => {
                 if (item.id !== conversationId) return item;
@@ -641,20 +701,6 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         }
 
         const nextWorkspace = result.workspace as Workspace;
-        const latestSelectedMessagePreview = selectedConversation?.messages[0]?.content?.trim() || "";
-        const persistedSubject = nextWorkspace.atendimento?.assunto?.trim() || "";
-        const persistedSummary = nextWorkspace.atendimento?.resumo?.trim() || "";
-        const generatedSubject =
-            persistedSubject.length > 0
-            && (
-                persistedSubject === (nextWorkspace.conversation.subject || "").trim()
-                || persistedSubject === latestSelectedMessagePreview.slice(0, 120)
-                || persistedSubject.startsWith("Atendimento iniciado em ")
-            );
-        const generatedSummary =
-            persistedSummary.length > 0
-            && latestSelectedMessagePreview.length > 0
-            && persistedSummary === latestSelectedMessagePreview;
         setWorkspace(nextWorkspace);
         setFeedback((current) =>
             current && WORKSPACE_LOAD_ERROR_MESSAGES.has(current.text) ? null : current,
@@ -669,9 +715,9 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
             inadimplente: Boolean(nextWorkspace.clientProfile?.inadimplente || nextWorkspace.conversation.cliente.inadimplente),
         });
         setOpsForm({
-            assignedToId: nextWorkspace.conversation.assignedTo?.id || "",
+            assignedToId: nextWorkspace.conversation.assignedTo?.id || nextWorkspace.atendimento?.advogado.user.id || "",
             advogadoId: nextWorkspace.atendimento?.advogadoId || nextWorkspace.advogados[0]?.id || "",
-            processoId: nextWorkspace.atendimento?.processoId || nextWorkspace.conversation.processo?.id || "",
+            processoId: getDefaultProcessoId(nextWorkspace),
             tipoRegistro: nextWorkspace.atendimento?.tipoRegistro || "LEAD",
             cicloVida: nextWorkspace.atendimento?.cicloVida || "LEAD",
             statusOperacional: nextWorkspace.atendimento?.statusOperacional || "NOVO",
@@ -691,8 +737,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                 : "",
             statusReuniao: nextWorkspace.atendimento?.statusReuniao || "NAO_AGENDADA",
             observacoesReuniao: nextWorkspace.atendimento?.observacoesReuniao || "",
-            assunto: generatedSubject ? "" : nextWorkspace.atendimento?.assunto || "",
-            resumo: generatedSummary ? "" : nextWorkspace.atendimento?.resumo || "",
+            assunto: nextWorkspace.atendimento?.assunto || "",
+            resumo: nextWorkspace.atendimento?.resumo || "",
         });
         setTaskForm({
             titulo: `Follow-up de atendimento - ${nextWorkspace.conversation.cliente.nome}`,
@@ -713,14 +759,14 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
             local: "",
             descricao: nextWorkspace.atendimento?.observacoesReuniao || "",
         });
-    }, [selectedConversation]);
+    }, []);
 
     const syncWhatsAppHistory = useCallback(async () => {
         if (whatsAppState.syncInProgress || whatsAppState.state === "connecting") return;
         setFeedback(null);
         setWhatsAppState((current) => ({ ...current, syncInProgress: true }));
         try {
-            const response = await fetch("/api/whatsapp/sync-history", { method: "POST" });
+            const response = await fetch("/api/comunicacao/whatsapp/sync-history", { method: "POST" });
             if (!response.ok) throw new Error("Nao foi possivel sincronizar o historico do WhatsApp.");
             setFeedback({ tone: "success", text: "Historico do WhatsApp sincronizado. Atualizando a conversa..." });
             await refreshConversations();
@@ -745,6 +791,29 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         void loadMessages(selectedId);
         void loadWorkspace(selectedId);
     }, [consumeConversationUnread, loadMessages, loadWorkspace, selectedId]);
+
+    useEffect(() => {
+        if (selectedConversation?.canal !== "EMAIL") {
+            initializedEmailConversationRef.current = null;
+            return;
+        }
+
+        if (initializedEmailConversationRef.current === selectedConversation.id) return;
+
+        setEmailDraftSubject(
+            workspace?.atendimento?.assunto?.trim()
+            || selectedConversation.subject
+            || "Comunicação"
+        );
+        setEmailSenderProfileId((current) => current || emailSenderProfiles[0]?.id || "");
+        initializedEmailConversationRef.current = selectedConversation.id;
+    }, [
+        emailSenderProfiles,
+        selectedConversation?.canal,
+        selectedConversation?.id,
+        selectedConversation?.subject,
+        workspace?.atendimento?.assunto,
+    ]);
 
     useEffect(() => {
         const node = messagesContainerRef.current;
@@ -998,13 +1067,20 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                 );
                 if ("error" in result && result.error) throw new Error(result.error);
             } else {
-                const result = await sendEmailMessage(
-                    selectedConversation.clienteId,
-                    workspace?.atendimento?.assunto || selectedConversation.subject || "Comunicacao",
-                    newMessage.trim(),
-                    undefined,
-                    workspace?.atendimento?.processoId || undefined,
-                );
+                const result = await sendEmailMessage({
+                    clienteId: selectedConversation.clienteId,
+                    conversationId: selectedConversation.id,
+                    subject: emailDraftSubject.trim() || workspace?.atendimento?.assunto || selectedConversation.subject || "Comunicação",
+                    content: newMessage.trim(),
+                    processoId: workspace?.atendimento?.processoId || undefined,
+                    senderProfileId: emailSenderProfileId || emailSenderProfiles[0]?.id || undefined,
+                    attachments: draftAttachments.map((attachment) => ({
+                        fileUrl: attachment.fileUrl,
+                        fileName: attachment.fileName,
+                        mimeType: attachment.mimeType,
+                        fileSize: attachment.fileSize,
+                    })),
+                });
                 if ("error" in result && result.error) throw new Error(result.error);
             }
             setNewMessage("");
@@ -1275,58 +1351,90 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                 </div>
             )}
 
-            <div className="grid gap-3 lg:grid-cols-[minmax(272px,292px)_minmax(0,1fr)] xl:grid-cols-[minmax(284px,300px)_minmax(0,1fr)_minmax(260px,286px)] 2xl:grid-cols-[300px_minmax(0,1fr)_300px]">
-                <aside className="glass-card flex h-[480px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] p-3 sm:h-[560px] lg:sticky lg:top-5 lg:h-[calc(100vh-6rem)] lg:max-h-[900px] xl:h-[calc(100vh-5.5rem)] xl:max-h-[940px]">
-                    <div className="flex items-center justify-between gap-3">
-                        <div>
-                            <h3 className="text-lg font-semibold text-text-primary">Conversas ativas</h3>
-                            <p className="text-xs text-text-muted">
+            <div className="grid gap-3 lg:items-start lg:grid-cols-[minmax(272px,292px)_minmax(0,1fr)] xl:grid-cols-[minmax(284px,300px)_minmax(0,1fr)_minmax(260px,286px)] 2xl:grid-cols-[300px_minmax(0,1fr)_300px]">
+                <aside className="glass-card flex h-[640px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] sm:h-[720px] lg:sticky lg:top-5 lg:h-[calc(100vh-6rem)] lg:max-h-[900px] xl:h-[810px] xl:max-h-[810px]">
+                    <div className="p-3">
+                        <div className="flex flex-col gap-3">
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="min-w-0 flex-1 pr-2">
+                                    <h3 className="whitespace-nowrap text-[15px] font-semibold leading-none tracking-[-0.03em] text-text-primary sm:text-[17px]">
+                                        Conversas ativas
+                                    </h3>
+                                </div>
+                                <div className="flex shrink-0 items-center gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className="h-10 w-10 rounded-full border-[color:color-mix(in_srgb,var(--accent)_16%,var(--border)_84%)] bg-white p-0 text-[color:color-mix(in_srgb,var(--text-primary)_78%,var(--accent)_22%)] shadow-[0_8px_18px_rgba(0,0,0,0.06)] transition hover:border-[color:color-mix(in_srgb,var(--accent)_28%,var(--border)_72%)] hover:bg-[color:color-mix(in_srgb,var(--accent)_4%,white_96%)] hover:text-[color:color-mix(in_srgb,var(--text-primary)_70%,var(--accent)_30%)]"
+                                        onClick={() => void refreshConversations()}
+                                        aria-label="Atualizar conversas"
+                                    >
+                                        <RefreshCw size={18} strokeWidth={2.3} className="shrink-0" />
+                                    </Button>
+                                    <Button variant="gradient" size="sm" className="h-9 rounded-full px-3.5 text-[13px]" onClick={() => setShowNewConversation(true)}>
+                                        <Plus size={13} />
+                                        Nova
+                                    </Button>
+                                </div>
+                            </div>
+                            <p className="text-sm leading-5 text-text-muted">
                                 Caixa unificada de WhatsApp e e-mail com leitura operacional.
                             </p>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm" onClick={() => void refreshConversations()}>
-                                <RefreshCw size={14} />
-                            </Button>
-                            <Button variant="gradient" size="sm" onClick={() => setShowNewConversation(true)}>
-                                <Plus size={14} />
-                                Nova
-                            </Button>
-                        </div>
-                    </div>
 
-                    <div className="mt-4 space-y-3">
-                        <div className="relative">
-                            <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
-                            <input
-                                value={searchTerm}
-                                onChange={(event) => setSearchTerm(event.target.value)}
-                                placeholder="Buscar cliente ou assunto..."
-                                className="w-full rounded-[20px] border border-border bg-[var(--glass-input-bg)] px-11 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-accent"
-                            />
-                        </div>
-                        <div className="grid grid-cols-3 gap-2">
-                            {[
-                                { key: "all", label: "Todos" },
-                                { key: "WHATSAPP", label: "WhatsApp" },
-                                { key: "EMAIL", label: "E-mail" },
-                            ].map((tab) => (
+                        <div className="mt-4 space-y-3">
+                            <div className="relative">
+                                <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
+                                <input
+                                    value={searchTerm}
+                                    onChange={(event) => setSearchTerm(event.target.value)}
+                                    placeholder="Buscar cliente ou assunto..."
+                                    className="w-full rounded-[20px] border border-border bg-[var(--glass-input-bg)] px-11 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-accent"
+                                />
+                            </div>
+                            <div className="grid grid-cols-3 overflow-hidden rounded-[22px] border border-border bg-[var(--surface-soft)]">
+                                {[
+                                    { key: "all", label: "Todos" },
+                                    { key: "WHATSAPP", label: "WhatsApp" },
+                                    { key: "EMAIL", label: "E-mail" },
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.key}
+                                        type="button"
+                                        onClick={() => setFilter(tab.key as "all" | "WHATSAPP" | "EMAIL")}
+                                        className={`relative px-3 py-4 text-[13px] font-semibold transition ${
+                                            filter === tab.key
+                                                ? "bg-[color:color-mix(in_srgb,var(--accent)_8%,white_92%)] text-accent"
+                                                : "bg-transparent text-text-secondary hover:bg-white/55 hover:text-text-primary"
+                                        } ${tab.key !== "all" ? "border-l border-border" : ""}`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="flex items-center justify-between rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-2.5">
+                                <div className="min-w-0">
+                                    <p className="text-[11px] font-semibold text-text-primary">Mensagens não lidas</p>
+                                    <p className="text-[10px] text-text-muted">
+                                        {unreadConversationCount} conversa{unreadConversationCount === 1 ? "" : "s"} aguardando leitura
+                                    </p>
+                                </div>
                                 <button
-                                    key={tab.key}
                                     type="button"
-                                    onClick={() => setFilter(tab.key as "all" | "WHATSAPP" | "EMAIL")}
-                                    className={`rounded-full border px-3 py-2 text-xs font-semibold transition ${filter === tab.key
-                                        ? "border-accent/30 bg-accent-subtle text-accent"
-                                        : "border-border bg-[var(--surface-soft)] text-text-secondary"
-                                        }`}
+                                    onClick={() => setFocusFilter((current) => (current === "unread" ? "all" : "unread"))}
+                                    className={`inline-flex items-center rounded-full border px-3 py-1.5 text-[11px] font-semibold transition ${
+                                        focusFilter === "unread"
+                                            ? "border-accent/30 bg-accent-subtle text-accent"
+                                            : "border-border bg-white/75 text-text-secondary hover:border-border-hover hover:bg-white hover:text-text-primary"
+                                    }`}
                                 >
-                                    {tab.label}
+                                    {focusFilter === "unread" ? "Mostrando" : "Filtrar"}
                                 </button>
-                            ))}
+                            </div>
                         </div>
                     </div>
 
-                    <div className="mt-3 min-h-0 flex-1 space-y-1.5 overflow-y-auto pr-1">
+                    <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto px-3 pb-3 pt-3">
                         {filteredConversations.length === 0 ? (
                             <div className="rounded-[24px] border border-dashed border-border px-4 py-10 text-center text-sm text-text-muted">
                                 Nenhuma conversa encontrada com os filtros atuais.
@@ -1405,7 +1513,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                     ) : null}
                                                 </div>
                                                 <div className="mt-2 flex items-center justify-between gap-2 text-[9px] uppercase tracking-[0.14em] text-text-muted">
-                                                    <span className="truncate">{conversation.assignedTo?.name || "Sem dono"}</span>
+                                                    <span className="truncate">{conversation.assignedTo?.name || "Responsável principal"}</span>
                                                     {conversation.unreadCount > 0 && <span className="font-semibold text-[color:color-mix(in_srgb,var(--accent)_88%,#7a3a12_12%)]">Nova atividade</span>}
                                                 </div>
                                             </div>
@@ -1417,7 +1525,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                     </div>
                 </aside>
 
-                <section className="glass-card flex h-[640px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] sm:h-[720px] lg:h-[calc(100vh-6rem)] lg:max-h-[900px] xl:h-[calc(100vh-5.5rem)] xl:max-h-[940px]">
+                <section className="glass-card flex h-[640px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] sm:h-[720px] lg:h-[calc(100vh-6rem)] lg:max-h-[900px] xl:sticky xl:top-5 xl:h-[810px] xl:max-h-[810px]">
                     {!selectedConversation ? (
                         <div className="flex min-h-[620px] items-center justify-center p-8 text-center text-sm text-text-muted xl:h-[850px] xl:min-h-0">
                             Selecione uma conversa para abrir o atendimento operacional.
@@ -1425,9 +1533,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                     ) : (
                         <>
                             <div className="shrink-0 border-b border-border px-3.5 py-2 md:px-4.5">
-                                <div className="flex flex-col gap-1.5">
-                                    <div className="flex flex-col gap-2.5">
-                                        <div className="flex flex-col gap-2.5 xl:flex-row xl:items-start xl:justify-between">
+                                <div className="flex flex-col gap-2.5">
+                                        <div className="flex flex-col gap-2 xl:flex-row xl:items-center xl:justify-between">
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex w-full items-start gap-2">
                                                     {(() => {
@@ -1473,7 +1580,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex shrink-0 flex-wrap items-center gap-1 self-start rounded-[16px] border border-border bg-[var(--surface-soft)] p-1">
+                                            <div className="flex shrink-0 flex-wrap items-center gap-1 rounded-[16px] border border-border bg-[var(--surface-soft)] p-1">
                                                 <ConversationAutomationControl
                                                     conversationId={selectedConversation.id}
                                                     state={{
@@ -1510,33 +1617,34 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                 </Button>
                                             </div>
                                         </div>
-                                        <div className="grid w-full items-stretch gap-2 sm:grid-cols-2 xl:grid-cols-[minmax(0,1.9fr)_minmax(210px,1fr)_minmax(210px,1fr)]">
-                                            <div className="min-w-0 rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] sm:col-span-2 xl:col-span-1">
-                                                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
+                                        <div className="grid w-full items-stretch gap-2 sm:grid-cols-2 xl:grid-cols-[2fr_1fr_1fr]">
+                                            <div className="flex h-full min-w-0 flex-col rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] sm:col-span-2 xl:col-span-1">
+                                                <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">
                                                     Assunto do atendimento
                                                 </span>
-                                                <p className="mt-1.5 text-[12px] font-medium leading-5 text-text-secondary">
-                                                    {workspace?.atendimento?.assunto?.trim() || "Preencha manualmente o assunto para organizar este atendimento."}
+                                                <p className="mt-1 flex-1 text-[12px] font-medium leading-5 text-text-secondary">
+                                                    {workspace?.atendimento?.assunto?.trim() || "—"}
                                                 </p>
                                             </div>
-                                            <div className="min-w-0 rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-                                                <span className="block text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">
+                                            <div className="flex h-full min-w-0 flex-col rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+                                                <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">
                                                     Contato
                                                 </span>
-                                                <p className="mt-1.5 truncate text-[11px] font-medium text-text-secondary">
-                                                    {selectedConversation.cliente.whatsapp || selectedConversation.cliente.email || "Sem contato"}
+                                                <p className="mt-1 flex-1 break-all text-[12px] font-medium text-text-secondary">
+                                                    {selectedConversation.canal === "EMAIL"
+                                                        ? (selectedConversation.cliente.email || selectedConversation.cliente.whatsapp || "—")
+                                                        : (selectedConversation.cliente.whatsapp || selectedConversation.cliente.email || "—")}
                                                 </p>
                                             </div>
-                                            <div className="min-w-0 rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-                                                <span className="block text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">
+                                            <div className="flex h-full min-w-0 flex-col rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
+                                                <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">
                                                     Responsavel
                                                 </span>
-                                                <p className="mt-1.5 truncate text-[11px] font-medium text-text-secondary">
-                                                    {workspace?.atendimento?.advogado.user.name || "Nao definido"}
+                                                <p className="mt-1 flex-1 text-[12px] font-medium text-text-secondary">
+                                                    {workspace?.atendimento?.advogado.user.name || "—"}
                                                 </p>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -1591,6 +1699,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                         ) : (
                                             messages.map((message, index) => {
                                                 const outbound = message.direction === "OUTBOUND";
+                                                const emailMeta = message.canal === "EMAIL" ? getEmailMessageMeta(message) : null;
                                                 const currentDay = formatMessageDay(message.createdAt);
                                                 const previousDay = index > 0 ? formatMessageDay(messages[index - 1]?.createdAt) : null;
                                                 const showDayDivider = index === 0 || currentDay !== previousDay;
@@ -1619,6 +1728,48 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                                     <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-[var(--highlight)] dark:text-[#d7b496]">
                                                                         {message.senderName || selectedConversation.cliente.nome}
                                                                     </p>
+                                                                )}
+                                                                {emailMeta && (
+                                                                    <div className={`mb-2.5 rounded-[16px] border px-3 py-2 text-[11px] ${outbound
+                                                                        ? "border-accent/15 bg-[var(--surface-soft)] text-text-secondary"
+                                                                        : "border-border bg-[var(--surface-soft)] text-text-secondary"
+                                                                        }`}>
+                                                                        <div className="flex flex-wrap items-center gap-2">
+                                                                            <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">E-mail</span>
+                                                                            {emailMeta.hasSignature && (
+                                                                                <span className="rounded-full border border-border px-2 py-0.5 text-[9px] font-semibold text-text-muted">
+                                                                                    Assinatura automática
+                                                                                </span>
+                                                                            )}
+                                                                            {message.status === "FAILED" && (
+                                                                                <span className="rounded-full border border-danger/20 bg-danger/8 px-2 py-0.5 text-[9px] font-semibold text-danger">
+                                                                                    Falhou
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                        {emailMeta.subject && (
+                                                                            <p className="mt-1.5 text-[12px] font-semibold text-text-primary">
+                                                                                {emailMeta.subject}
+                                                                            </p>
+                                                                        )}
+                                                                        <div className="mt-1 space-y-0.5">
+                                                                            {emailMeta.from && (
+                                                                                <p>
+                                                                                    <span className="font-medium text-text-primary">De:</span>{" "}
+                                                                                    {emailMeta.fromLabel ? `${emailMeta.fromLabel} <${emailMeta.from}>` : emailMeta.from}
+                                                                                </p>
+                                                                            )}
+                                                                            {emailMeta.to && (
+                                                                                <p>
+                                                                                    <span className="font-medium text-text-primary">Para:</span>{" "}
+                                                                                    {emailMeta.to}
+                                                                                </p>
+                                                                            )}
+                                                                        </div>
+                                                                        {message.errorMessage && message.status === "FAILED" && (
+                                                                            <p className="mt-1.5 text-danger">{message.errorMessage}</p>
+                                                                        )}
+                                                                    </div>
                                                                 )}
                                                                 {getMessageDisplayContent(message) && (
                                                                     <p className="whitespace-pre-wrap break-words text-[13px] leading-5.5 tracking-[-0.01em]">
@@ -1678,7 +1829,12 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                                     <span>{formatShortTime(message.createdAt)}</span>
                                                                     {outbound && (
                                                                         <span className="inline-flex">
-                                                                            {message.readAt ? <CheckCheck size={12} /> : <Check size={12} />}
+                                                                            {message.readAt
+                                                                                ? <CheckCheck size={12} className="text-[#53d769]" />
+                                                                                : message.deliveredAt || message.status === "DELIVERED"
+                                                                                    ? <CheckCheck size={12} className="opacity-60" />
+                                                                                    : <Check size={12} className="opacity-60" />
+                                                                            }
                                                                         </span>
                                                                     )}
                                                                 </div>
@@ -1698,7 +1854,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                 WhatsApp desconectado. Conecte em Administracao &gt; Comunicacao para enviar mensagens.
                                             </div>
                                         )}
-                                        {showEmojiPanel && (
+                                        {selectedConversation.canal === "WHATSAPP" && showEmojiPanel && (
                                             <div className="mb-2.5 flex flex-wrap gap-2 rounded-[20px] border border-border bg-[var(--bg-primary)] p-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.04)] dark:bg-[rgba(49,36,31,0.94)]">
                                                 {QUICK_EMOJIS.map((emoji) => (
                                                     <button
@@ -1710,6 +1866,26 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                         {emoji}
                                                     </button>
                                                 ))}
+                                            </div>
+                                        )}
+                                        {selectedConversation.canal === "EMAIL" && (
+                                            <div className="mb-2.5 grid gap-2 md:grid-cols-[minmax(0,1fr)_280px]">
+                                                <Input
+                                                    label="Assunto"
+                                                    value={emailDraftSubject}
+                                                    onChange={(event) => setEmailDraftSubject(event.target.value)}
+                                                    placeholder="Assunto do e-mail"
+                                                />
+                                                <Select
+                                                    label="Remetente"
+                                                    value={emailSenderProfileId}
+                                                    onChange={(event) => setEmailSenderProfileId(event.target.value)}
+                                                    options={emailSenderProfiles.map((profile) => ({
+                                                        value: profile.id,
+                                                        label: `${profile.label} <${profile.fromEmail}>`,
+                                                    }))}
+                                                    placeholder="Selecionar remetente"
+                                                />
                                             </div>
                                         )}
                                         {draftAttachments.length > 0 && (
@@ -1736,8 +1912,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                         )}
                                         <div className="w-full rounded-[24px] border border-border bg-[color:color-mix(in_srgb,var(--surface-soft-strong)_92%,white_8%)] p-1.5 shadow-[0_8px_20px_rgba(0,0,0,0.04)]">
                                             <div className="flex w-full items-end gap-1.5">
-                                                {selectedConversation.canal === "WHATSAPP" && (
-                                                    <div className="flex shrink-0 items-center gap-1.5">
+                                                <div className="flex shrink-0 items-center gap-1.5">
+                                                    {selectedConversation.canal === "WHATSAPP" && (
                                                         <button
                                                             type="button"
                                                             onClick={() => setShowEmojiPanel((current) => !current)}
@@ -1746,23 +1922,25 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                         >
                                                             <Smile size={16} />
                                                         </button>
-                                                        <input
-                                                            ref={fileInputRef}
-                                                            type="file"
-                                                            multiple
-                                                            accept={CHAT_ATTACHMENT_ACCEPT}
-                                                            className="hidden"
-                                                            onChange={(event) => void handleAttachmentSelection(event.target.files)}
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => fileInputRef.current?.click()}
-                                                            disabled={uploadingAttachment || sending || recordingAudio}
-                                                            className="inline-flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full border border-border bg-[var(--bg-primary)] text-text-secondary transition hover:border-border-hover hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-50"
-                                                            title="Anexar arquivo"
-                                                        >
-                                                            {uploadingAttachment ? <Loader2 size={15} className="animate-spin" /> : <Paperclip size={15} />}
-                                                        </button>
+                                                    )}
+                                                    <input
+                                                        ref={fileInputRef}
+                                                        type="file"
+                                                        multiple
+                                                        accept={CHAT_ATTACHMENT_ACCEPT}
+                                                        className="hidden"
+                                                        onChange={(event) => void handleAttachmentSelection(event.target.files)}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => fileInputRef.current?.click()}
+                                                        disabled={uploadingAttachment || sending || recordingAudio}
+                                                        className="inline-flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full border border-border bg-[var(--bg-primary)] text-text-secondary transition hover:border-border-hover hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-50"
+                                                        title={selectedConversation.canal === "EMAIL" ? "Anexar ao e-mail" : "Anexar arquivo"}
+                                                    >
+                                                        {uploadingAttachment ? <Loader2 size={15} className="animate-spin" /> : <Paperclip size={15} />}
+                                                    </button>
+                                                    {selectedConversation.canal === "WHATSAPP" && (
                                                         <button
                                                             type="button"
                                                             onClick={recordingAudio ? stopAudioRecording : () => void startAudioRecording()}
@@ -1775,8 +1953,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                         >
                                                             {recordingAudio ? <Square size={14} /> : <Mic size={15} />}
                                                         </button>
-                                                    </div>
-                                                )}
+                                                    )}
+                                                </div>
                                                 <div className="flex flex-1 items-center">
                                                     <textarea
                                                         value={newMessage}
@@ -1788,7 +1966,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                             }
                                                         }}
                                                         rows={1}
-                                                        placeholder={selectedConversation.canal === "WHATSAPP" ? "Escreva uma mensagem..." : "Escreva um e-mail rapido..."}
+                                                        placeholder={selectedConversation.canal === "WHATSAPP" ? "Escreva uma mensagem..." : "Escreva o corpo do e-mail..."}
                                                         className="block h-[40px] max-h-[120px] w-full resize-none overflow-auto rounded-[20px] border border-transparent bg-[var(--bg-primary)] px-3.5 py-[10px] text-[13px] leading-5 text-text-primary outline-none transition placeholder:text-text-muted focus:border-accent/18"
                                                     />
                                                 </div>
@@ -1809,7 +1987,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                         </>
                     )}
                 </section>
-                <aside className="glass-card relative flex h-[500px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] p-3.5 sm:h-[560px] lg:col-span-2 lg:h-auto xl:col-span-1 xl:sticky xl:top-5 xl:h-[calc(100vh-5.5rem)] xl:max-h-[940px]">
+                <aside className="glass-card relative flex h-[640px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] p-3.5 sm:h-[720px] lg:col-span-2 lg:h-[calc(100vh-6rem)] lg:max-h-[900px] xl:col-span-1 xl:sticky xl:top-5 xl:h-[810px] xl:max-h-[810px]">
                     {!selectedConversation ? (
                         <div className="flex min-h-[220px] items-center justify-center text-center text-sm text-text-muted xl:min-h-0 xl:h-[850px]">
                             O painel lateral ativa quando uma conversa e selecionada.
@@ -1869,40 +2047,27 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                 <CockpitSection eyebrow="Atendimento" title="Contexto e proximo passo" tone="slate">
                                                     <div className="grid gap-2">
                                                         <Select label="Responsavel principal" value={opsForm.advogadoId} onChange={(event) => setOpsForm((current) => ({ ...current, advogadoId: event.target.value }))} options={workspace.advogados.map((item) => ({ value: item.id, label: item.name }))} />
-                                                        <Select label="Operador" value={opsForm.assignedToId} onChange={(event) => setOpsForm((current) => ({ ...current, assignedToId: event.target.value }))} options={workspace.users.map((item) => ({ value: item.id, label: `${item.name} (${item.role.toLowerCase()})` }))} placeholder="Sem operador" />
-                                                        <Select label="Area juridica" value={opsForm.areaJuridica} onChange={(event) => setOpsForm((current) => ({ ...current, areaJuridica: event.target.value }))} options={workspace.metadata.areasJuridicas.map((item) => ({ value: item, label: item }))} placeholder="Selecionar area" />
+                                                        <Select label="Operador" value={opsForm.assignedToId} onChange={(event) => setOpsForm((current) => ({ ...current, assignedToId: event.target.value }))} options={workspace.users.map((item) => ({ value: item.id, label: `${item.name} (${item.role.toLowerCase()})` }))} placeholder="Mesmo responsável principal" />
+                                                        <Select label="Área jurídica" value={opsForm.areaJuridica} onChange={(event) => setOpsForm((current) => ({ ...current, areaJuridica: event.target.value }))} options={workspace.metadata.areasJuridicas.map((item) => ({ value: item, label: item }))} placeholder="Selecionar área" />
                                                         <Input label="Origem" value={opsForm.origemAtendimento} onChange={(event) => setOpsForm((current) => ({ ...current, origemAtendimento: event.target.value }))} />
-                                                        <Select label="Processo vinculado" value={opsForm.processoId} onChange={(event) => setOpsForm((current) => ({ ...current, processoId: event.target.value }))} options={workspace.processos.map((item) => ({ value: item.id, label: item.numeroCnj || item.objeto || item.id }))} placeholder="Nao vinculado" />
-                                                        <Select label="Situacao documental" value={opsForm.situacaoDocumental} onChange={(event) => setOpsForm((current) => ({ ...current, situacaoDocumental: event.target.value }))} options={workspace.metadata.situacaoDocumental} />
+                                                        <Select label="Processo vinculado" value={opsForm.processoId} onChange={(event) => setOpsForm((current) => ({ ...current, processoId: event.target.value }))} options={workspace.processos.map((item) => ({ value: item.id, label: item.numeroCnj || item.objeto || item.id }))} placeholder="Não vinculado" />
+                                                        <Select label="Situação documental" value={opsForm.situacaoDocumental} onChange={(event) => setOpsForm((current) => ({ ...current, situacaoDocumental: event.target.value }))} options={workspace.metadata.situacaoDocumental} />
                                                         <div className="rounded-[26px] border border-border bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface-soft)_84%,white),color-mix(in_srgb,var(--surface-soft)_94%,transparent))] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]">
-                                                            <div className="mb-3 flex items-start justify-between gap-3">
-                                                                <div className="space-y-1">
-                                                                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
-                                                                        Registro manual
-                                                                    </p>
-                                                                    <h4 className="text-sm font-semibold tracking-[-0.02em] text-text-primary">
-                                                                        Assunto e resumo interno
-                                                                    </h4>
-                                                                    <p className="text-[11px] leading-5 text-text-secondary">
-                                                                        Estes campos ficam em branco por padrao para o atendente registrar o contexto do caso com mais precisao.
-                                                                    </p>
-                                                                </div>
-                                                                <span className="inline-flex shrink-0 items-center rounded-full border border-border bg-[rgba(255,255,255,0.52)] px-2.5 py-1 text-[10px] font-semibold text-text-secondary">
-                                                                    Preenchimento humano
-                                                                </span>
-                                                            </div>
+                                                            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
+                                                                Registro
+                                                            </p>
                                                             <div className="grid gap-2.5">
                                                                 <Input
                                                                     label="Assunto"
                                                                     value={opsForm.assunto}
-                                                                    placeholder="Ex: pedido de aposentadoria, revisao de beneficio, urgencia criminal"
+                                                                    placeholder="Ex: pedido de aposentadoria, revisão de benefício, urgência criminal"
                                                                     onChange={(event) => setOpsForm((current) => ({ ...current, assunto: event.target.value }))}
                                                                 />
                                                                 <Textarea
-                                                                    label="Resumo do atendimento"
+                                                                    label="Resumo interno"
                                                                     rows={4}
                                                                     className="min-h-[148px]"
-                                                                    placeholder="Descreva com suas palavras o que o cliente precisa, contexto, urgencia e proximos passos."
+                                                                    placeholder="Descreva com suas palavras o que o cliente precisa, contexto, urgência e próximos passos."
                                                                     value={opsForm.resumo}
                                                                     onChange={(event) => setOpsForm((current) => ({ ...current, resumo: event.target.value }))}
                                                                 />
@@ -2012,7 +2177,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                 </aside>
             </div>
 
-            <section className="glass-card rounded-[30px] border border-[var(--glass-card-border)] px-6 py-5">
+            <section className="glass-card mt-16 rounded-[30px] border border-[var(--glass-card-border)] px-6 py-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--highlight)]">

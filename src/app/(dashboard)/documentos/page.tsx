@@ -17,7 +17,7 @@ export default async function DocumentosPage({ searchParams }: Props) {
         getDocumentos({ search, pastaId: pastaId || undefined, categoriaId: categoriaId || undefined, page }),
         getModelosDocumento(),
         getDocumentoStats(),
-        getPastasDocumento(),
+        getPastasDocumento(null), // null = somente raízes, subPastas aninhadas via include
         getCategoriasDocumento()
     ]);
 

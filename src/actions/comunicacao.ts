@@ -185,15 +185,6 @@ function buildTagCategory(category: ChatTagCategoryKey) {
     return { id: meta.id, name: meta.name, color: meta.color };
 }
 
-async function getWhatsAppService() {
-    const baileysModule = await import("@/lib/integrations/baileys-service");
-    return baileysModule.whatsappService;
-}
-
-async function getEvolutionApi() {
-    return import("@/lib/integrations/evolution-api");
-}
-
 async function getEmailService() {
     return import("@/lib/integrations/email-service");
 }
@@ -206,25 +197,6 @@ async function getAgendaActions() {
     return import("@/actions/agenda");
 }
 
-async function ensureWhatsAppConnected(timeoutMs = 10_000) {
-    const whatsappService = await getWhatsAppService();
-    if (whatsappService.isConnected()) return true;
-
-    try {
-        await whatsappService.connect();
-    } catch (error) {
-        console.error("[sendWhatsAppMessage] Failed to initialize WhatsApp connection:", error);
-    }
-
-    const start = Date.now();
-    while (Date.now() - start < timeoutMs) {
-        if (whatsappService.isConnected()) return true;
-        await new Promise((resolve) => setTimeout(resolve, 250));
-    }
-
-    return whatsappService.isConnected();
-}
-
 interface OutboundMediaPayload {
     fileUrl: string;
     fileName: string;
@@ -234,13 +206,35 @@ interface OutboundMediaPayload {
     asVoiceNote?: boolean;
 }
 
-function mediaPlaceholder(mimeType: string, isVoiceNote?: boolean) {
-    const normalized = (mimeType || "").toLowerCase();
-    if (normalized.startsWith("image/")) return "[Imagem]";
-    if (normalized.startsWith("video/")) return "[Video]";
-    if (normalized.startsWith("audio/")) return isVoiceNote ? "[Audio] Mensagem de voz" : "[Audio]";
-    return "[Documento]";
+interface OutboundEmailAttachmentPayload {
+    fileUrl: string;
+    fileName: string;
+    mimeType: string;
+    fileSize?: number;
 }
+
+interface SendEmailMessageInput {
+    clienteId: string;
+    subject: string;
+    content: string;
+    contentHtml?: string;
+    processoId?: string;
+    conversationId?: string | null;
+    senderProfileId?: string | null;
+    attachments?: OutboundEmailAttachmentPayload[];
+}
+
+type EmailMessageMeta = {
+    subject?: string | null;
+    to?: string | null;
+    from?: string | null;
+    fromLabel?: string | null;
+    replyTo?: string | null;
+    senderProfileId?: string | null;
+    inReplyTo?: string | null;
+    references?: string[];
+    hasSignature?: boolean;
+};
 
 function resolveLocalUploadPath(fileUrl: string): string | null {
     if (!fileUrl || !fileUrl.startsWith("/uploads/")) return null;
@@ -248,6 +242,13 @@ function resolveLocalUploadPath(fileUrl: string): string | null {
     if (!normalized.startsWith("/uploads/")) return null;
     const relative = normalized.replace(/^\/+/, "");
     return path.join(process.cwd(), "public", relative);
+}
+
+function extractEmailMessageMeta(templateVars: unknown): EmailMessageMeta | null {
+    if (!templateVars || typeof templateVars !== "object") return null;
+    const emailMeta = (templateVars as { emailMeta?: unknown }).emailMeta;
+    if (!emailMeta || typeof emailMeta !== "object") return null;
+    return emailMeta as EmailMessageMeta;
 }
 
 function slugifyDocumentName(value: string) {
@@ -321,6 +322,35 @@ async function resolveResponsibleAdvogadoId(params: {
     return fallback?.id || null;
 }
 
+async function resolveAdvogadoUserId(advogadoId?: string | null) {
+    if (!advogadoId) return null;
+
+    const advogado = await db.advogado.findUnique({
+        where: { id: advogadoId },
+        select: { userId: true },
+    });
+
+    return advogado?.userId || null;
+}
+
+async function resolveAutoLinkedProcessId(params: {
+    clienteId: string;
+    currentProcessoId?: string | null;
+}) {
+    if (params.currentProcessoId) return params.currentProcessoId;
+
+    const processos = await db.processo.findMany({
+        where: { clienteId: params.clienteId },
+        select: { id: true },
+        orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+        take: 2,
+    });
+
+    if (processos.length !== 1) return null;
+
+    return processos[0]?.id || null;
+}
+
 async function appendAtendimentoHistorico(params: {
     atendimentoId: string;
     userId?: string | null;
@@ -380,7 +410,42 @@ async function ensureConversationAttendance(conversationId: string) {
     });
 
     if (!conversation) return null;
-    if (conversation.atendimento) return conversation.atendimento;
+
+    if (conversation.atendimento) {
+        const autoLinkedProcessId = await resolveAutoLinkedProcessId({
+            clienteId: conversation.clienteId,
+            currentProcessoId: conversation.atendimento.processoId || conversation.processoId,
+        });
+        const fallbackAssignedToId =
+            conversation.assignedToId || await resolveAdvogadoUserId(conversation.atendimento.advogadoId);
+        const updates = [
+            ...(autoLinkedProcessId && !conversation.atendimento.processoId
+                ? [
+                    db.atendimento.update({
+                        where: { id: conversation.atendimento.id },
+                        data: { processoId: autoLinkedProcessId },
+                    }),
+                ]
+                : []),
+            ...((!conversation.processoId && autoLinkedProcessId) || (!conversation.assignedToId && fallbackAssignedToId)
+                ? [
+                    db.conversation.update({
+                        where: { id: conversationId },
+                        data: {
+                            ...(autoLinkedProcessId && !conversation.processoId ? { processoId: autoLinkedProcessId } : {}),
+                            ...(!conversation.assignedToId && fallbackAssignedToId ? { assignedToId: fallbackAssignedToId } : {}),
+                        },
+                    }),
+                ]
+                : []),
+        ];
+
+        if (updates.length > 0) {
+            await db.$transaction(updates);
+        }
+
+        return conversation.atendimento;
+    }
 
     const existingWhere: Record<string, unknown> = {
         clienteId: conversation.clienteId,
@@ -404,10 +469,31 @@ async function ensureConversationAttendance(conversationId: string) {
     });
 
     if (existing) {
-        await db.conversation.update({
-            where: { id: conversationId },
-            data: { atendimentoId: existing.id },
+        const autoLinkedProcessId = await resolveAutoLinkedProcessId({
+            clienteId: conversation.clienteId,
+            currentProcessoId: existing.processoId || conversation.processoId,
         });
+        const fallbackAssignedToId =
+            conversation.assignedToId || await resolveAdvogadoUserId(existing.advogadoId);
+
+        await db.$transaction([
+            ...(autoLinkedProcessId && !existing.processoId
+                ? [
+                    db.atendimento.update({
+                        where: { id: existing.id },
+                        data: { processoId: autoLinkedProcessId },
+                    }),
+                ]
+                : []),
+            db.conversation.update({
+                where: { id: conversationId },
+                data: {
+                    atendimentoId: existing.id,
+                    ...(autoLinkedProcessId && !conversation.processoId ? { processoId: autoLinkedProcessId } : {}),
+                    ...(!conversation.assignedToId && fallbackAssignedToId ? { assignedToId: fallbackAssignedToId } : {}),
+                },
+            }),
+        ]);
         return existing;
     }
 
@@ -418,13 +504,20 @@ async function ensureConversationAttendance(conversationId: string) {
 
     if (!advogadoId) return null;
 
+    const autoLinkedProcessId = await resolveAutoLinkedProcessId({
+        clienteId: conversation.clienteId,
+        currentProcessoId: conversation.processoId,
+    });
+    const fallbackAssignedToId =
+        conversation.assignedToId || await resolveAdvogadoUserId(advogadoId);
+
     const tagNames = conversation.cliente.contactTags.map((item) => item.tag.name);
     const latestMessage = conversation.messages[0];
     const autoCreated = await db.atendimento.create({
         data: {
             clienteId: conversation.clienteId,
             advogadoId,
-            processoId: conversation.processoId || null,
+            processoId: autoLinkedProcessId || null,
             canal: mapConversationChannelToAttendance(conversation.canal),
             status: "LEAD",
             viabilidade: "EM_ANALISE",
@@ -470,7 +563,11 @@ async function ensureConversationAttendance(conversationId: string) {
 
     await db.conversation.update({
         where: { id: conversationId },
-        data: { atendimentoId: autoCreated.id },
+        data: {
+            atendimentoId: autoCreated.id,
+            ...(autoLinkedProcessId ? { processoId: autoLinkedProcessId } : {}),
+            ...(fallbackAssignedToId ? { assignedToId: fallbackAssignedToId } : {}),
+        },
     });
 
     await appendAtendimentoHistorico({
@@ -493,77 +590,19 @@ export async function sendWhatsAppMessage(
     processoId?: string
 ) {
     const user = await getSession();
-    if (!user) {
-        console.error("[sendWhatsAppMessage] Not authenticated");
-        return { error: "Não autenticado" };
-    }
+    if (!user) return { error: "Não autenticado" };
 
-    // Get client phone
-    const cliente = await db.cliente.findUnique({
-        where: { id: clienteId },
-        select: { id: true, whatsapp: true, celular: true, nome: true, phones: { where: { isWhatsApp: true }, take: 1, orderBy: { isPrimary: "desc" } } },
-    });
-
-    if (!cliente) {
-        console.error("[sendWhatsAppMessage] Client not found:", clienteId);
-        return { error: "Cliente não encontrado" };
-    }
-
-    const phone = cliente.phones[0]?.phone || cliente.whatsapp || cliente.celular;
-    if (!phone) {
-        console.error("[sendWhatsAppMessage] No phone for client:", clienteId);
-        return { error: "Cliente não possui WhatsApp cadastrado" };
-    }
-
-    const normalizedPhone = normalizePhoneE164(phone);
-    console.log(`[sendWhatsAppMessage] Sending to ${cliente.nome} at ${normalizedPhone}`);
-
-    const connected = await ensureWhatsAppConnected();
-    if (!connected) {
-        console.error("[sendWhatsAppMessage] WhatsApp disconnected");
-        return { error: "WhatsApp não está conectado. Conecte em Administração > Comunicação." };
-    }
-
-    // Get or create conversation
-    const conversation = await getOrCreateConversation(clienteId, "WHATSAPP", processoId);
-
-    // Send via Baileys (through Evolution API compatibility layer)
-    const { sendTextMessage } = await getEvolutionApi();
-    const result = await sendTextMessage(normalizedPhone, content);
-    console.log(`[sendWhatsAppMessage] Result:`, JSON.stringify(result));
-
-    const status = result.ok ? "SENT" as const : "FAILED" as const;
-    const providerMsgId = result.data?.key?.id || null;
-
-    // Create message record
-    const createdMessage = await createMessage({
-        conversationId: conversation.id,
-        direction: "OUTBOUND",
-        canal: "WHATSAPP",
+    const { sendWhatsappTextMessage } = await import("@/lib/whatsapp/application/message-service");
+    const result = await sendWhatsappTextMessage({
+        clienteId,
         content,
-        status,
-        providerMsgId,
-        errorMessage: result.ok ? undefined : (result.error || "Falha ao enviar"),
-        sentById: user.id,
         processoId: processoId || null,
-    });
-    emitCommunicationMessageCreated({
-        conversationId: conversation.id,
-        messageId: createdMessage.id,
-        direction: "OUTBOUND",
-        canal: "WHATSAPP",
-        status,
-    });
-
-    // Update conversation last message
-    await db.conversation.update({
-        where: { id: conversation.id },
-        data: { lastMessageAt: new Date() },
+        sentById: user.id,
     });
 
     revalidatePath("/comunicacao");
     return result.ok
-        ? { success: true, messageId: providerMsgId }
+        ? { success: true, messageId: result.providerMessageId }
         : { error: result.error || "Falha ao enviar mensagem" };
 }
 
@@ -573,132 +612,129 @@ export async function sendWhatsAppMediaMessage(
     processoId?: string
 ) {
     const user = await getSession();
-    if (!user) {
-        return { error: "Não autenticado" };
-    }
-
+    if (!user) return { error: "Não autenticado" };
     if (!media?.fileUrl || !media?.mimeType || !media?.fileName) {
         return { error: "Arquivo inválido para envio" };
     }
 
-    const localPath = resolveLocalUploadPath(media.fileUrl);
-    if (!localPath) {
-        return { error: "Arquivo fora da area permitida" };
-    }
-
-    const cliente = await db.cliente.findUnique({
-        where: { id: clienteId },
-        select: {
-            id: true,
-            whatsapp: true,
-            celular: true,
-            nome: true,
-            phones: { where: { isWhatsApp: true }, take: 1, orderBy: { isPrimary: "desc" } },
-        },
-    });
-
-    if (!cliente) return { error: "Cliente não encontrado" };
-
-    const phone = cliente.phones[0]?.phone || cliente.whatsapp || cliente.celular;
-    if (!phone) return { error: "Cliente não possui WhatsApp cadastrado" };
-
-    const normalizedPhone = normalizePhoneE164(phone);
-    const connected = await ensureWhatsAppConnected();
-    if (!connected) {
-        return { error: "WhatsApp não está conectado. Conecte em Administração > Comunicação." };
-    }
-
-    let fileBuffer: Buffer;
-    try {
-        fileBuffer = await fs.readFile(localPath);
-    } catch {
-        return { error: "Não foi possível ler o arquivo para envio" };
-    }
-
-    const conversation = await getOrCreateConversation(clienteId, "WHATSAPP", processoId);
-    const { sendMediaBufferMessage } = await getEvolutionApi();
-    const sendResult = await sendMediaBufferMessage(normalizedPhone, fileBuffer, {
-        caption: media.caption || undefined,
-        mimeType: media.mimeType,
+    const { sendWhatsappMediaMessage } = await import("@/lib/whatsapp/application/message-service");
+    const result = await sendWhatsappMediaMessage({
+        clienteId,
+        fileUrl: media.fileUrl,
         fileName: media.fileName,
-        asVoiceNote: Boolean(media.asVoiceNote),
-    });
-
-    const status = sendResult.ok ? "SENT" as const : "FAILED" as const;
-    const providerMsgId = sendResult.data?.key?.id || null;
-    const messageContent = media.caption?.trim() || mediaPlaceholder(media.mimeType, media.asVoiceNote);
-
-    const savedMessage = await db.message.create({
-        data: {
-            conversationId: conversation.id,
-            direction: "OUTBOUND",
-            canal: "WHATSAPP",
-            content: messageContent,
-            status,
-            providerMsgId,
-            errorMessage: sendResult.ok ? undefined : (sendResult.error || "Falha ao enviar"),
-            sentById: user.id,
-            processoId: processoId || null,
-            sentAt: new Date(),
-        },
-    });
-
-    await db.messageAttachment.create({
-        data: {
-            messageId: savedMessage.id,
-            fileName: media.fileName,
-            mimeType: media.mimeType,
-            fileSize: media.fileSize || fileBuffer.length,
-            fileUrl: media.fileUrl,
-        },
-    });
-
-    await db.conversation.update({
-        where: { id: conversation.id },
-        data: { lastMessageAt: new Date() },
-    });
-    emitCommunicationMessageCreated({
-        conversationId: conversation.id,
-        messageId: savedMessage.id,
-        direction: "OUTBOUND",
-        canal: "WHATSAPP",
-        status,
+        mimeType: media.mimeType,
+        fileSize: media.fileSize,
+        caption: media.caption,
+        asVoiceNote: media.asVoiceNote,
+        processoId: processoId || null,
+        sentById: user.id,
     });
 
     revalidatePath("/comunicacao");
-    return sendResult.ok
-        ? { success: true, messageId: providerMsgId }
-        : { error: sendResult.error || "Falha ao enviar midia" };
+    return result.ok
+        ? { success: true, messageId: result.providerMessageId }
+        : { error: result.error || "Falha ao enviar midia" };
 }
 
 export async function sendEmailMessage(
-    clienteId: string,
-    subject: string,
-    content: string,
-    contentHtml?: string,
-    processoId?: string
+    clienteIdOrInput: string | SendEmailMessageInput,
+    subjectArg?: string,
+    contentArg?: string,
+    contentHtmlArg?: string,
+    processoIdArg?: string
 ) {
     const user = await getSession();
     if (!user) return { error: "Não autenticado" };
 
+    const input: SendEmailMessageInput = typeof clienteIdOrInput === "string"
+        ? {
+            clienteId: clienteIdOrInput,
+            subject: subjectArg || "Comunicação",
+            content: contentArg || "",
+            contentHtml: contentHtmlArg,
+            processoId: processoIdArg,
+        }
+        : clienteIdOrInput;
+
     const cliente = await db.cliente.findUnique({
-        where: { id: clienteId },
+        where: { id: input.clienteId },
         select: { id: true, email: true, nome: true },
     });
 
     if (!cliente) return { error: "Cliente não encontrado" };
     if (!cliente.email) return { error: "Cliente não possui e-mail cadastrado" };
 
-    const conversation = await getOrCreateConversation(clienteId, "EMAIL", processoId);
+    const [existingConversation, emailService] = await Promise.all([
+        input.conversationId
+            ? db.conversation.findUnique({
+                where: { id: input.conversationId },
+                select: { id: true, canal: true, subject: true },
+            })
+            : Promise.resolve(null),
+        getEmailService(),
+    ]);
 
-    const { sendEmail, wrapInEmailLayout } = await getEmailService();
-    const html = contentHtml || wrapInEmailLayout(`<p>${content.replace(/\n/g, "<br/>")}</p>`);
+    const conversation =
+        existingConversation?.canal === "EMAIL"
+            ? existingConversation
+            : await getOrCreateConversation(input.clienteId, "EMAIL", input.processoId);
+
+    const lastOutboundEmail = await db.message.findFirst({
+        where: {
+            conversationId: conversation.id,
+            canal: "EMAIL",
+            direction: "OUTBOUND",
+            providerMsgId: { not: null },
+        },
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        select: {
+            providerMsgId: true,
+            templateVars: true,
+        },
+    });
+
+    const {
+        appendEmailSignature,
+        formatEmailFromAddress,
+        resolveEmailSenderProfile,
+        sendEmail,
+        wrapInEmailLayout,
+    } = emailService;
+    const senderProfile = resolveEmailSenderProfile(input.senderProfileId);
+    const rawHtml = input.contentHtml || `<p>${input.content.replace(/\n/g, "<br/>")}</p>`;
+    const signedBody = appendEmailSignature({
+        html: rawHtml,
+        text: input.content,
+    }, senderProfile);
+    const html = wrapInEmailLayout(signedBody.html, senderProfile.fromName);
+    const previousEmailMeta = extractEmailMessageMeta(lastOutboundEmail?.templateVars);
+    const references = Array.from(new Set([
+        ...(previousEmailMeta?.references || []),
+        ...(lastOutboundEmail?.providerMsgId ? [lastOutboundEmail.providerMsgId] : []),
+    ]));
+
+    const attachments = (input.attachments || []).map((attachment) => {
+        const localPath = resolveLocalUploadPath(attachment.fileUrl);
+        if (!localPath) {
+            throw new Error(`Arquivo inválido para envio por e-mail: ${attachment.fileName}`);
+        }
+        return {
+            filename: attachment.fileName,
+            path: localPath,
+            contentType: attachment.mimeType,
+        };
+    });
 
     const result = await sendEmail({
         to: cliente.email,
-        subject,
+        subject: input.subject,
         html,
-        text: content,
+        text: signedBody.text,
+        from: formatEmailFromAddress(senderProfile),
+        replyTo: senderProfile.replyTo || undefined,
+        attachments,
+        inReplyTo: lastOutboundEmail?.providerMsgId || undefined,
+        references: references.length > 0 ? references : undefined,
     });
 
     const status = result.ok ? "SENT" as const : "FAILED" as const;
@@ -707,13 +743,47 @@ export async function sendEmailMessage(
         conversationId: conversation.id,
         direction: "OUTBOUND",
         canal: "EMAIL",
-        content,
+        content: input.content,
         contentHtml: html,
         status,
         providerMsgId: result.messageId || null,
         sentById: user.id,
-        processoId: processoId || null,
+        processoId: input.processoId || null,
+        templateVars: {
+            emailMeta: {
+                subject: input.subject,
+                to: cliente.email,
+                from: senderProfile.fromEmail,
+                fromLabel: senderProfile.label,
+                replyTo: senderProfile.replyTo || null,
+                senderProfileId: senderProfile.id,
+                inReplyTo: lastOutboundEmail?.providerMsgId || null,
+                references,
+                hasSignature: Boolean(senderProfile.signatureHtml || senderProfile.signatureText),
+            },
+        },
     });
+
+    if (input.attachments?.length) {
+        await db.messageAttachment.createMany({
+            data: input.attachments.map((attachment) => ({
+                messageId: createdMessage.id,
+                fileName: attachment.fileName,
+                mimeType: attachment.mimeType,
+                fileSize: attachment.fileSize || null,
+                fileUrl: attachment.fileUrl,
+            })),
+        });
+    }
+
+    await db.conversation.update({
+        where: { id: conversation.id },
+        data: {
+            subject: input.subject,
+            lastMessageAt: new Date(),
+        },
+    });
+
     emitCommunicationMessageCreated({
         conversationId: conversation.id,
         messageId: createdMessage.id,
@@ -765,7 +835,13 @@ export async function sendTemplateMessage(
         const html = template.contentHtml
             ? wrapInEmailLayout(renderTemplate(template.contentHtml, variables))
             : undefined;
-        return sendEmailMessage(clienteId, subject, content, html, processoId);
+        return sendEmailMessage({
+            clienteId,
+            subject,
+            content,
+            contentHtml: html,
+            processoId,
+        });
     }
 }
 
@@ -1418,46 +1494,49 @@ export async function saveConversationWorkspace(input: {
 
     if (!before) return { error: "Atendimento nao encontrado" };
 
+    const resolvedAdvogadoId = input.advogadoId || before.advogadoId;
+    const resolvedAssignedToId = input.assignedToId || await resolveAdvogadoUserId(resolvedAdvogadoId);
     const resolvedStatusReuniao = input.statusReuniao || before.statusReuniao;
     const resolvedStatusOperacional =
         resolvedStatusReuniao === "CONFIRMADA"
             ? "REUNIAO_CONFIRMADA"
             : input.statusOperacional;
 
-    await db.conversation.update({
-        where: { id: input.conversationId },
-        data: {
-            assignedToId: input.assignedToId || null,
-            processoId: input.processoId || null,
-            atendimentoId: input.atendimentoId,
-        },
-    });
-
-    await db.atendimento.update({
-        where: { id: input.atendimentoId },
-        data: {
-            advogadoId: input.advogadoId || before.advogadoId,
-            processoId: input.processoId || null,
-            tipoRegistro: input.tipoRegistro,
-            cicloVida: input.cicloVida,
-            statusOperacional: resolvedStatusOperacional,
-            prioridade: input.prioridade,
-            areaJuridica: input.areaJuridica?.trim() || null,
-            subareaJuridica: input.subareaJuridica?.trim() || null,
-            origemAtendimento: input.origemAtendimento?.trim() || null,
-            proximaAcao: input.proximaAcao?.trim() || null,
-            proximaAcaoAt: input.proximaAcaoAt ? new Date(input.proximaAcaoAt) : null,
-            situacaoDocumental: input.situacaoDocumental || "SEM_DOCUMENTOS",
-            chanceFechamento: typeof input.chanceFechamento === "number" ? input.chanceFechamento : null,
-            motivoPerda: input.motivoPerda?.trim() || null,
-            dataReuniao: input.dataReuniao ? new Date(input.dataReuniao) : null,
-            statusReuniao: resolvedStatusReuniao,
-            observacoesReuniao: input.observacoesReuniao?.trim() || null,
-            assunto: input.assunto?.trim() || before.assunto,
-            resumo: input.resumo?.trim() || null,
-            ultimaInteracaoEm: new Date(),
-        },
-    });
+    await db.$transaction([
+        db.conversation.update({
+            where: { id: input.conversationId },
+            data: {
+                assignedToId: resolvedAssignedToId || null,
+                processoId: input.processoId || null,
+                atendimentoId: input.atendimentoId,
+            },
+        }),
+        db.atendimento.update({
+            where: { id: input.atendimentoId },
+            data: {
+                advogadoId: resolvedAdvogadoId,
+                processoId: input.processoId || null,
+                tipoRegistro: input.tipoRegistro,
+                cicloVida: input.cicloVida,
+                statusOperacional: resolvedStatusOperacional,
+                prioridade: input.prioridade,
+                areaJuridica: input.areaJuridica?.trim() || null,
+                subareaJuridica: input.subareaJuridica?.trim() || null,
+                origemAtendimento: input.origemAtendimento?.trim() || null,
+                proximaAcao: input.proximaAcao?.trim() || null,
+                proximaAcaoAt: input.proximaAcaoAt ? new Date(input.proximaAcaoAt) : null,
+                situacaoDocumental: input.situacaoDocumental || "SEM_DOCUMENTOS",
+                chanceFechamento: typeof input.chanceFechamento === "number" ? input.chanceFechamento : null,
+                motivoPerda: input.motivoPerda?.trim() || null,
+                dataReuniao: input.dataReuniao ? new Date(input.dataReuniao) : null,
+                statusReuniao: resolvedStatusReuniao,
+                observacoesReuniao: input.observacoesReuniao?.trim() || null,
+                assunto: input.assunto?.trim() || "",
+                resumo: input.resumo?.trim() || null,
+                ultimaInteracaoEm: new Date(),
+            },
+        }),
+    ]);
 
     const channel = await db.conversation.findUnique({
         where: { id: input.conversationId },
@@ -1489,7 +1568,7 @@ export async function saveConversationWorkspace(input: {
             descricao: input.processoId ? "Processo vinculado/atualizado pelo painel de comunicacao." : "Processo desvinculado pelo painel de comunicacao.",
         });
     }
-    if (before.advogadoId !== (input.advogadoId || before.advogadoId)) {
+    if (before.advogadoId !== resolvedAdvogadoId) {
         await appendAtendimentoHistorico({
             atendimentoId: input.atendimentoId,
             userId: session.id,
@@ -2013,73 +2092,107 @@ export async function updateWhatsAppAutoReplySettings(input: {
 }
 
 export async function getWhatsAppAdminStatus() {
-    const evolution = await getEvolutionApi();
+    const { getPrimaryWhatsappConnection } = await import("@/lib/whatsapp/application/connection-service");
+    const { getWhatsappProviderAdapter } = await import("@/lib/whatsapp/providers/provider-registry");
 
-    const [statusResult, qrResult] = await Promise.all([
-        evolution.getConnectionStatus(),
-        evolution.getQRCode(),
-    ]);
-
-    if (!statusResult.ok) {
+    const connection = await getPrimaryWhatsappConnection();
+    if (!connection) {
         return {
-            ok: false,
+            ok: true,
             connected: false,
-            state: "error",
+            state: "disconnected",
             qrCode: null,
             qrCodeRaw: null,
-            error: statusResult.error || "Nao foi possivel consultar o status do WhatsApp.",
+            error: null,
         };
     }
 
-    const state = statusResult.data?.state || "unknown";
+    const provider = getWhatsappProviderAdapter(connection.providerType);
+    const [statusResult, qrResult] = await Promise.all([
+        provider.getStatus(connection),
+        provider.getQrCode(connection),
+    ]);
 
     return {
-        ok: true,
-        connected: state === "open",
-        state,
-        qrCode: qrResult.data?.base64 || null,
-        qrCodeRaw: qrResult.data?.code || null,
-        error: qrResult.ok ? null : qrResult.error || null,
+        ok: statusResult.ok,
+        connected: statusResult.connected,
+        state: statusResult.status,
+        qrCode: qrResult?.qrCode || null,
+        qrCodeRaw: qrResult?.qrCodeRaw || null,
+        error: statusResult.ok ? null : statusResult.lastError || "Nao foi possivel consultar o status do WhatsApp.",
     };
 }
 
 export async function connectWhatsAppAdminInstance() {
-    const evolution = await getEvolutionApi();
-    const result = await evolution.createInstance();
+    const { getPrimaryWhatsappConnection, updateWhatsappConnection } = await import("@/lib/whatsapp/application/connection-service");
+    const { getWhatsappProviderAdapter } = await import("@/lib/whatsapp/providers/provider-registry");
 
-    if (!result.ok) {
+    const connection = await getPrimaryWhatsappConnection();
+    if (!connection) {
         return {
             ok: false,
             connected: false,
             state: "error",
             qrCode: null,
             qrCodeRaw: null,
-            error: result.error || "Nao foi possivel iniciar a conexao do WhatsApp.",
+            error: "Nenhuma conexao primaria configurada.",
         };
     }
 
-    return getWhatsAppAdminStatus();
+    try {
+        const provider = getWhatsappProviderAdapter(connection.providerType);
+        const result = await provider.connect(connection);
+        await updateWhatsappConnection(connection.id, {
+            status: result.status === "CONNECTED" ? "CONNECTED" : result.qrCodeRaw ? "QR_REQUIRED" : "CONNECTING",
+            connectedPhone: result.connectedPhone || null,
+            connectedName: result.connectedName || null,
+            lastError: null,
+        });
+        return getWhatsAppAdminStatus();
+    } catch (error) {
+        return {
+            ok: false,
+            connected: false,
+            state: "error",
+            qrCode: null,
+            qrCodeRaw: null,
+            error: error instanceof Error ? error.message : "Nao foi possivel iniciar a conexao do WhatsApp.",
+        };
+    }
 }
 
 export async function disconnectWhatsAppAdminInstance() {
-    const evolution = await getEvolutionApi();
-    const result = await evolution.disconnectInstance();
+    const { getPrimaryWhatsappConnection, updateWhatsappConnection } = await import("@/lib/whatsapp/application/connection-service");
+    const { getWhatsappProviderAdapter } = await import("@/lib/whatsapp/providers/provider-registry");
 
-    if (!result.ok) {
-        return {
-            ok: false,
-            error: result.error || "Nao foi possivel desconectar a instancia do WhatsApp.",
-        };
+    const connection = await getPrimaryWhatsappConnection();
+    if (!connection) {
+        return { ok: false, error: "Nenhuma conexao primaria configurada." };
     }
 
-    return {
-        ok: true,
-        connected: false,
-        state: "closed",
-        qrCode: null,
-        qrCodeRaw: null,
-        error: null,
-    };
+    try {
+        const provider = getWhatsappProviderAdapter(connection.providerType);
+        await provider.disconnect(connection);
+        await updateWhatsappConnection(connection.id, {
+            status: "DISCONNECTED",
+            connectedPhone: null,
+            connectedName: null,
+            lastError: null,
+        });
+        return {
+            ok: true,
+            connected: false,
+            state: "closed",
+            qrCode: null,
+            qrCodeRaw: null,
+            error: null,
+        };
+    } catch (error) {
+        return {
+            ok: false,
+            error: error instanceof Error ? error.message : "Nao foi possivel desconectar a instancia do WhatsApp.",
+        };
+    }
 }
 
 export async function getAdminSmtpStatus() {

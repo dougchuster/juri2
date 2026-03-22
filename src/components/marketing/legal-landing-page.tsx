@@ -101,7 +101,7 @@ function Reveal({
     <motion.section
       id={id}
       className={className}
-      initial={{ opacity: 0, y: 28 }}
+      initial={false}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -355,7 +355,7 @@ export function LegalLandingPage() {
                   <motion.div
                     key={stat.label}
                     className="group relative overflow-hidden rounded-[28px] border border-white/[0.10] bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-6 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_40px_rgba(0,0,0,0.20)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-white/[0.16] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_20px_48px_rgba(0,0,0,0.28)]"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={false}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -401,7 +401,7 @@ export function LegalLandingPage() {
             {/* Right — single dashboard screenshot */}
             <motion.div
               className="relative"
-              initial={{ opacity: 0, x: 28 }}
+              initial={false}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -510,7 +510,7 @@ export function LegalLandingPage() {
                 <motion.article
                   key={pillar.title}
                   className="glass-card p-6 md:p-7"
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={false}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.5, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
@@ -631,7 +631,7 @@ export function LegalLandingPage() {
       {/* ── BENEFITS DARK — full-width section ── */}
       <motion.section
         className="benefits-aurora-card relative mt-24 overflow-hidden py-24"
-        initial={{ opacity: 0 }}
+        initial={false}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -655,7 +655,7 @@ export function LegalLandingPage() {
                   <motion.div
                     key={metric.value}
                     className="benefits-metric-card group rounded-[28px] p-7 md:p-8"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={false}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: i * 0.08 }}
@@ -746,7 +746,7 @@ export function LegalLandingPage() {
                       ? "border-2 border-[color:var(--accent)] bg-gradient-to-b from-[rgba(164,112,63,0.12)] via-[rgba(164,112,63,0.05)] to-transparent shadow-[0_24px_60px_rgba(164,112,63,0.18),inset_0_1px_0_rgba(255,255,255,0.1)]"
                       : "border border-[color:var(--border-hover)] bg-gradient-to-b from-white/[0.06] to-transparent backdrop-blur-sm hover:border-[color:var(--accent)]/30 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]",
                   )}
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={false}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
@@ -868,7 +868,7 @@ export function LegalLandingPage() {
                     </th>
                     
                     {/* Plan headers */}
-                    {pricingPlans.map((plan, idx) => (
+                    {pricingPlans.map((plan) => (
                       <th
                         key={`header-${plan.name}`}
                         className={cn(
@@ -905,7 +905,7 @@ export function LegalLandingPage() {
                 </thead>
                 
                 <tbody>
-                  {comparisonRows.map((row, rowIdx) => (
+                  {comparisonRows.map((row) => (
                     <tr 
                       key={row.label}
                       className="group transition-colors hover:bg-white/[0.02]"
@@ -972,7 +972,7 @@ export function LegalLandingPage() {
         <section id="depoimentos" className="relative overflow-hidden pt-24">
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={false}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}

@@ -35,6 +35,9 @@ export interface SendEmailOptions {
     text?: string;
     attachments?: EmailAttachment[];
     replyTo?: string;
+    from?: string;
+    inReplyTo?: string;
+    references?: string[] | string;
 }
 
 export interface EmailAttachment {
@@ -50,6 +53,91 @@ export interface SendEmailResult {
     error?: string;
 }
 
+export interface EmailSenderProfile {
+    id: string;
+    label: string;
+    fromName: string;
+    fromEmail: string;
+    replyTo: string | null;
+    signatureHtml: string | null;
+    signatureText: string | null;
+}
+
+function getDefaultSenderProfile(): EmailSenderProfile {
+    return {
+        id: "default",
+        label: process.env.SMTP_FROM_NAME || "Escritório Jurídico",
+        fromName: process.env.SMTP_FROM_NAME || "Escritório Jurídico",
+        fromEmail: process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || "noreply@escritorio.com",
+        replyTo: process.env.SMTP_REPLY_TO || process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER || null,
+        signatureHtml: process.env.SMTP_SIGNATURE_HTML || null,
+        signatureText: process.env.SMTP_SIGNATURE_TEXT || null,
+    };
+}
+
+export function listEmailSenderProfiles(): EmailSenderProfile[] {
+    const fallback = getDefaultSenderProfile();
+    const raw = process.env.SMTP_SENDER_PROFILES;
+    if (!raw) return [fallback];
+
+    try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed) || parsed.length === 0) return [fallback];
+
+        const profiles = parsed
+            .map((item, index) => {
+                if (!item || typeof item !== "object") return null;
+                const value = item as Record<string, unknown>;
+                const fromEmail = String(value.fromEmail || "").trim();
+                if (!fromEmail) return null;
+                const fromName = String(value.fromName || value.label || process.env.SMTP_FROM_NAME || "Escritório Jurídico").trim();
+                return {
+                    id: String(value.id || `sender-${index + 1}`).trim(),
+                    label: String(value.label || fromName).trim(),
+                    fromName,
+                    fromEmail,
+                    replyTo: value.replyTo ? String(value.replyTo).trim() : null,
+                    signatureHtml: value.signatureHtml ? String(value.signatureHtml) : null,
+                    signatureText: value.signatureText ? String(value.signatureText) : null,
+                } satisfies EmailSenderProfile;
+            })
+            .filter((item): item is EmailSenderProfile => Boolean(item));
+
+        return profiles.length > 0 ? profiles : [fallback];
+    } catch (error) {
+        console.error("[Email] Invalid SMTP_SENDER_PROFILES:", error);
+        return [fallback];
+    }
+}
+
+export function resolveEmailSenderProfile(profileId?: string | null): EmailSenderProfile {
+    const profiles = listEmailSenderProfiles();
+    if (!profileId) return profiles[0] || getDefaultSenderProfile();
+    return profiles.find((item) => item.id === profileId) || profiles[0] || getDefaultSenderProfile();
+}
+
+export function formatEmailFromAddress(profile?: Pick<EmailSenderProfile, "fromName" | "fromEmail"> | null): string {
+    const fallback = getDefaultSenderProfile();
+    const fromName = profile?.fromName || fallback.fromName;
+    const fromEmail = profile?.fromEmail || fallback.fromEmail;
+    return `"${fromName}" <${fromEmail}>`;
+}
+
+export function appendEmailSignature(body: {
+    html: string;
+    text?: string;
+}, profile?: Pick<EmailSenderProfile, "signatureHtml" | "signatureText"> | null) {
+    const signatureHtml = profile?.signatureHtml?.trim();
+    const signatureText = profile?.signatureText?.trim();
+
+    return {
+        html: signatureHtml ? `${body.html}<div style="margin-top:24px;">${signatureHtml}</div>` : body.html,
+        text: signatureText
+            ? `${body.text || stripHtml(body.html)}\n\n${signatureText}`
+            : (body.text || stripHtml(body.html)),
+    };
+}
+
 export async function sendEmail(options: SendEmailOptions): Promise<SendEmailResult> {
     try {
         const transporter = getTransporter();
@@ -62,13 +150,15 @@ export async function sendEmail(options: SendEmailOptions): Promise<SendEmailRes
         }));
 
         const info = await transporter.sendMail({
-            from: getFromAddress(),
+            from: options.from || getFromAddress(),
             to: options.to,
             subject: options.subject,
             html: options.html,
             text: options.text || stripHtml(options.html),
             replyTo: options.replyTo,
             attachments,
+            inReplyTo: options.inReplyTo,
+            references: options.references,
         });
 
         console.log(`[Email] Sent to ${options.to}: ${info.messageId}`);

@@ -9,10 +9,8 @@
 export async function register() {
     // Only run on the server (not in the Edge runtime or client)
     if (process.env.NEXT_RUNTIME === "nodejs") {
-        const isVercelRuntime = process.env.VERCEL === "1";
-        const enableWhatsAppRuntime =
-            process.env.ENABLE_WHATSAPP_RUNTIME === "true" ||
-            (process.env.ENABLE_WHATSAPP_RUNTIME !== "false" && !isVercelRuntime);
+        const { shouldEnableEmbeddedWhatsAppRuntime } = await import("@/lib/integrations/whatsapp-backend");
+        const enableWhatsAppRuntime = shouldEnableEmbeddedWhatsAppRuntime();
 
         const { initializeScheduler } = await import("@/lib/cron/scheduler");
         initializeScheduler();

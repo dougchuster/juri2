@@ -49,3 +49,9 @@ next-env.d.ts
 
 # whatsapp auth state
 .whatsapp-auth/
+
+# claude worktrees e logs temporários
+.claude/worktrees/
+.runtime-logs/
+.tmp/
+backups/

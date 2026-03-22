@@ -9,8 +9,8 @@
  */
 
 import "server-only";
-import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "crypto";
 import { db } from "@/lib/db";
+import { decryptString, encryptString } from "@/lib/security/encrypted-json";
 
 // ─── Tipos das credenciais ─────────────────────────────────────────────────────
 
@@ -31,49 +31,6 @@ export interface IntegrationCredentials {
 
 // ─── Criptografia AES-256-GCM ─────────────────────────────────────────────────
 
-const ALGORITHM = "aes-256-gcm";
-const KEY_PREFIX = "cred:"; // Prefixo das chaves no AppSetting
-
-function getDerivedKey(): Buffer {
-    const secret =
-        process.env.APP_SECRET_KEY ||
-        process.env.NEXTAUTH_SECRET ||
-        process.env.DATABASE_URL ||
-        "sistema-juridico-adv-fallback-key";
-
-    return scryptSync(secret, "adv-credentials-salt-v1", 32);
-}
-
-function encrypt(plaintext: string): string {
-    const iv = randomBytes(12);
-    const key = getDerivedKey();
-    const cipher = createCipheriv(ALGORITHM, key, iv);
-
-    const encrypted = Buffer.concat([
-        cipher.update(plaintext, "utf8"),
-        cipher.final(),
-    ]);
-    const tag = cipher.getAuthTag();
-
-    // formato: iv(12) + tag(16) + ciphertext → base64
-    return Buffer.concat([iv, tag, encrypted]).toString("base64");
-}
-
-function decrypt(encoded: string): string {
-    const buf = Buffer.from(encoded, "base64");
-    const iv = buf.subarray(0, 12);
-    const tag = buf.subarray(12, 28);
-    const ciphertext = buf.subarray(28);
-
-    const key = getDerivedKey();
-    const decipher = createDecipheriv(ALGORITHM, key, iv);
-    decipher.setAuthTag(tag);
-
-    return Buffer.concat([
-        decipher.update(ciphertext),
-        decipher.final(),
-    ]).toString("utf8");
-}
 
 // ─── Persistência ─────────────────────────────────────────────────────────────
 
@@ -91,7 +48,7 @@ export async function getIntegrationCredentials(): Promise<IntegrationCredential
         for (const [k, v] of Object.entries(raw)) {
             if (typeof v !== "string") continue;
             try {
-                const decrypted = decrypt(v);
+                const decrypted = decryptString(v);
                 (result as Record<string, string>)[k] = decrypted;
             } catch {
                 // ignora valores corrompidos
@@ -118,7 +75,7 @@ export async function saveIntegrationCredentials(
         if (v === null || v === undefined || v === "") {
             delete next[k];
         } else {
-            next[k] = encrypt(String(v));
+            next[k] = encryptString(String(v));
         }
     }
 

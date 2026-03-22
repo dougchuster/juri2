@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/form-fields";
+import { getLegalCampaignPreset } from "@/lib/comunicacao/legal-campaign-presets";
 
 type MessageTemplate = {
     id: string;
@@ -44,6 +45,8 @@ const CANAL_ICON = {
     EMAIL: <Mail size={14} className="text-blue-400" />,
     SMS: <MessageCircle size={14} className="text-orange-400" />,
 };
+
+const auxilioMaternidadePreset = getLegalCampaignPreset("auxilio-maternidade");
 
 // Predefined legal templates
 const LEGAL_TEMPLATES: Omit<MessageTemplate, "id" | "createdAt" | "updatedAt">[] = [
@@ -92,6 +95,11 @@ const LEGAL_TEMPLATES: Omit<MessageTemplate, "id" | "createdAt" | "updatedAt">[]
         contentHtml: null,
         isActive: true,
     },
+    ...(auxilioMaternidadePreset ? [{
+        ...auxilioMaternidadePreset.campaignTemplate,
+        canal: auxilioMaternidadePreset.channel,
+        isActive: true,
+    }] : []),
 ];
 
 export default function TemplatesPage() {
@@ -118,7 +126,13 @@ export default function TemplatesPage() {
         setLoading(false);
     }, [filterCanal, searchTerm]);
 
-    useEffect(() => { void fetchTemplates(); }, [fetchTemplates]);
+    useEffect(() => {
+        const timeoutId = window.setTimeout(() => {
+            void fetchTemplates();
+        }, 0);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [fetchTemplates]);
 
     const openCreate = () => {
         setEditingId(null);

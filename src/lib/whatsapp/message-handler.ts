@@ -10,7 +10,7 @@ import type { MessageStatus } from "@/generated/prisma";
 import { storeWhatsAppMediaFile } from "@/lib/whatsapp/media-storage";
 import type { WhatsAppMediaDescriptor } from "@/lib/whatsapp/media-utils";
 import { processMeetingReplyFromConversation } from "@/lib/services/meeting-automation-service";
-import { runAttendanceAutomationForInboundMessage } from "@/lib/services/attendance-automation";
+import { scheduleAttendanceAutomationForInboundMessage } from "@/lib/services/attendance-automation";
 import {
   emitCommunicationMessageCreated,
   emitCommunicationMessageStatusUpdated,
@@ -280,12 +280,12 @@ async function processIncomingMessage(msg: {
     }
 
     try {
-      await runAttendanceAutomationForInboundMessage({
-        conversationId: conversation.id,
-        messageId: createdMessage.id,
-        incomingText: msg.content,
-        source: "baileys",
-      });
+        await scheduleAttendanceAutomationForInboundMessage({
+          conversationId: conversation.id,
+          messageId: createdMessage.id,
+          incomingText: msg.content,
+          source: "baileys",
+        });
     } catch (automationError) {
       console.error("[WhatsApp Handler] Error running attendance automation:", automationError);
     }

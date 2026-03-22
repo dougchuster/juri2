@@ -28,6 +28,15 @@ type CommunicationRealtimePayload =
           conversationId: string;
           messageId: string;
           status: MessageStatus;
+      }
+    | {
+          type: "whatsapp_connection_status_updated";
+          connectionId: string;
+          status: string;
+          qrCode: string | null;
+          qrCodeRaw: string | null;
+          connectedPhone: string | null;
+          connectedName: string | null;
       };
 
 const globalForCommunicationRealtime = globalThis as typeof globalThis & {
@@ -75,4 +84,18 @@ export function subscribeCommunicationRealtimeEvents(
     const emitter = getEmitter();
     emitter.on("event", listener);
     return () => emitter.off("event", listener);
+}
+
+export function emitWhatsappConnectionStatusUpdated(payload: {
+    connectionId: string;
+    status: string;
+    qrCode: string | null;
+    qrCodeRaw: string | null;
+    connectedPhone: string | null;
+    connectedName: string | null;
+}) {
+    emitCommunicationRealtimeEvent({
+        type: "whatsapp_connection_status_updated",
+        ...payload,
+    });
 }

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
     Search, Plus, Trash2, FileText, Layout,
-    ChevronLeft, ChevronRight, Loader2, Folder, Tag, Upload, Download, Eye
+    ChevronLeft, ChevronRight, Loader2, Folder, FolderOpen, FolderPlus,
+    Tag, Upload, Download, Eye, Users, User, ChevronDown, ChevronRight as ChevronRightIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,8 +39,24 @@ interface ModeloItem {
     ativo: boolean; _count?: { variaveis: number };
 }
 
+interface PastaSubItem {
+    id: string;
+    nome: string;
+    clienteId: string | null;
+    isRootClientes: boolean;
+    _count?: { documentos: number };
+    subPastas?: PastaSubItem[];
+}
+
 interface PastaItem {
-    id: string; nome: string; descricao: string | null;
+    id: string;
+    nome: string;
+    descricao: string | null;
+    clienteId: string | null;
+    isRootClientes: boolean;
+    cliente?: { id: string; nome: string } | null;
+    subPastas: PastaSubItem[];
+    _count?: { documentos: number };
 }
 
 interface CategoriaItem {
@@ -64,6 +81,24 @@ export function DocumentosManager({ documentos, modelos, pastas, categorias, tot
 
     const [showCreateModelo, setShowCreateModelo] = useState(false);
     const [showCreatePasta, setShowCreatePasta] = useState(false);
+    const [createPastaParentId, setCreatePastaParentId] = useState<string | undefined>(undefined);
+    const [expandedPastas, setExpandedPastas] = useState<Set<string>>(new Set());
+
+    function toggleExpand(id: string) {
+        setExpandedPastas(prev => {
+            const next = new Set(prev);
+            next.has(id) ? next.delete(id) : next.add(id);
+            return next;
+        });
+    }
+    function openCreateSubpasta(parentId: string) {
+        setCreatePastaParentId(parentId);
+        setShowCreatePasta(true);
+    }
+    function openCreateRootPasta() {
+        setCreatePastaParentId(undefined);
+        setShowCreatePasta(true);
+    }
     const [showCreateCategoria, setShowCreateCategoria] = useState(false);
     const [modeloConteudo, setModeloConteudo] = useState("");
     const [previewDoc, setPreviewDoc] = useState<DocumentoItem | null>(null);
@@ -105,9 +140,12 @@ export function DocumentosManager({ documentos, modelos, pastas, categorias, tot
             const f = new FormData(e.currentTarget);
             await createPasta({
                 nome: f.get("nome") as string,
-                descricao: f.get("descricao") as string,
+                descricao: (f.get("descricao") as string) || undefined,
+                parentId: createPastaParentId,
             });
             setShowCreatePasta(false);
+            setCreatePastaParentId(undefined);
+            if (createPastaParentId) setExpandedPastas(prev => new Set([...prev, createPastaParentId]));
             router.refresh();
         } finally {
             setActionLoading(false);
@@ -428,29 +466,142 @@ export function DocumentosManager({ documentos, modelos, pastas, categorias, tot
             {tab === "pastas" && (
                 <div>
                     <div className="flex justify-between items-center mb-4">
-                        <p className="text-sm text-text-muted">Organize seus arquivos de maneira hierárquica.</p>
-                        <Button size="sm" onClick={() => setShowCreatePasta(true)}><Plus size={16} className="mr-2" /> Nova Pasta</Button>
+                        <p className="text-sm text-text-muted">Organize seus arquivos de maneira hierárquica. A pasta <strong>Clientes</strong> é criada automaticamente ao anexar documentos.</p>
+                        <Button size="sm" onClick={openCreateRootPasta}><Plus size={16} className="mr-1" /> Nova Pasta</Button>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                        {pastas.length === 0 ? (
-                            <div className="col-span-full rounded-xl border border-dashed border-border p-12 text-center text-sm text-text-muted">
-                                Nenhuma pasta principal criada.
-                            </div>
-                        ) : pastas.map(p => (
-                            <div key={p.id} className="glass-card p-4 flex items-center justify-between group hover:border-accent/40 cursor-pointer transition-colors" onClick={() => { setTab("documentos"); router.push(buildUrl({ pastaId: p.id })); }}>
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-accent/10 text-accent rounded-lg group-hover:scale-110 transition-transform"><Folder fill="currentColor" size={20} /></div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-text-primary truncate">{p.nome}</p>
-                                        {p.descricao && <p className="text-[10px] text-text-muted truncate mt-0.5">{p.descricao}</p>}
+
+                    {pastas.length === 0 ? (
+                        <div className="rounded-xl border border-dashed border-border p-12 text-center text-sm text-text-muted">
+                            Nenhuma pasta criada ainda. Anexe um documento a um processo para criar automaticamente a pasta do cliente.
+                        </div>
+                    ) : (
+                        <div className="space-y-1">
+                            {pastas.map(pasta => {
+                                const isExpanded = expandedPastas.has(pasta.id);
+                                const hasChildren = pasta.subPastas && pasta.subPastas.length > 0;
+                                const isClientes = pasta.isRootClientes;
+                                const isClientePasta = !!pasta.clienteId;
+
+                                return (
+                                    <div key={pasta.id} className="rounded-xl border border-border overflow-hidden">
+                                        {/* Root pasta row */}
+                                        <div
+                                            className={`flex items-center gap-2 px-4 py-3 group hover:bg-bg-tertiary transition-colors cursor-pointer ${isClientes ? "bg-accent/5 border-b border-border/50" : ""}`}
+                                            onClick={() => hasChildren ? toggleExpand(pasta.id) : (setTab("documentos"), router.push(buildUrl({ pastaId: pasta.id })))}
+                                        >
+                                            {/* Expand toggle */}
+                                            <button
+                                                className="text-text-muted shrink-0"
+                                                onClick={(e) => { e.stopPropagation(); toggleExpand(pasta.id); }}
+                                            >
+                                                {hasChildren
+                                                    ? (isExpanded ? <ChevronDown size={16} /> : <ChevronRightIcon size={16} />)
+                                                    : <span className="w-4 inline-block" />
+                                                }
+                                            </button>
+
+                                            {/* Icon */}
+                                            <div className={`p-1.5 rounded-lg shrink-0 ${isClientes ? "bg-blue-500/10 text-blue-500" : isClientePasta ? "bg-amber-500/10 text-amber-600" : "bg-accent/10 text-accent"}`}>
+                                                {isClientes ? <Users size={18} /> : isClientePasta ? <User size={18} /> : (isExpanded ? <FolderOpen size={18} /> : <Folder size={18} />)}
+                                            </div>
+
+                                            {/* Name */}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2">
+                                                    <p className="text-sm font-medium text-text-primary truncate">{pasta.nome}</p>
+                                                    {isClientes && <span className="text-[10px] bg-blue-500/10 text-blue-500 px-1.5 py-0.5 rounded-full font-medium">AUTO</span>}
+                                                    {pasta._count && pasta._count.documentos > 0 && (
+                                                        <span className="text-[10px] bg-bg-tertiary text-text-muted px-1.5 py-0.5 rounded-full">{pasta._count.documentos} doc{pasta._count.documentos !== 1 ? "s" : ""}</span>
+                                                    )}
+                                                </div>
+                                                {pasta.descricao && <p className="text-[11px] text-text-muted truncate">{pasta.descricao}</p>}
+                                            </div>
+
+                                            {/* Actions */}
+                                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                                                <button
+                                                    title="Criar subpasta"
+                                                    onClick={(e) => { e.stopPropagation(); openCreateSubpasta(pasta.id); }}
+                                                    className="p-1.5 rounded text-text-muted hover:text-accent hover:bg-accent/10 transition-colors"
+                                                >
+                                                    <FolderPlus size={15} />
+                                                </button>
+                                                {!isClientes && (
+                                                    <button
+                                                        title="Excluir pasta"
+                                                        onClick={(e) => { e.stopPropagation(); handleDeletePasta(pasta.id); }}
+                                                        className="p-1.5 rounded text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+                                                    >
+                                                        <Trash2 size={15} />
+                                                    </button>
+                                                )}
+                                                <button
+                                                    title="Ver documentos"
+                                                    onClick={(e) => { e.stopPropagation(); setTab("documentos"); router.push(buildUrl({ pastaId: pasta.id })); }}
+                                                    className="p-1.5 rounded text-text-muted hover:text-accent hover:bg-accent/10 transition-colors"
+                                                >
+                                                    <Eye size={15} />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Subpastas */}
+                                        {isExpanded && hasChildren && (
+                                            <div className="border-t border-border/50">
+                                                {pasta.subPastas!.map(sub => {
+                                                    const isSubExp = expandedPastas.has(sub.id);
+                                                    const hasSubChildren = sub.subPastas && sub.subPastas.length > 0;
+                                                    return (
+                                                        <div key={sub.id}>
+                                                            <div
+                                                                className="flex items-center gap-2 pl-10 pr-4 py-2.5 group hover:bg-bg-tertiary transition-colors cursor-pointer border-b border-border/30 last:border-0"
+                                                                onClick={() => hasSubChildren ? toggleExpand(sub.id) : (setTab("documentos"), router.push(buildUrl({ pastaId: sub.id })))}
+                                                            >
+                                                                <button className="text-text-muted shrink-0" onClick={(e) => { e.stopPropagation(); toggleExpand(sub.id); }}>
+                                                                    {hasSubChildren ? (isSubExp ? <ChevronDown size={14} /> : <ChevronRightIcon size={14} />) : <span className="w-3.5 inline-block" />}
+                                                                </button>
+                                                                <div className={`p-1 rounded shrink-0 ${sub.clienteId ? "bg-amber-500/10 text-amber-600" : "bg-accent/10 text-accent"}`}>
+                                                                    {sub.clienteId ? <User size={14} /> : (isSubExp ? <FolderOpen size={14} /> : <Folder size={14} />)}
+                                                                </div>
+                                                                <span className="flex-1 text-sm text-text-primary truncate">{sub.nome}</span>
+                                                                {sub._count && sub._count.documentos > 0 && (
+                                                                    <span className="text-[10px] bg-bg-tertiary text-text-muted px-1.5 py-0.5 rounded-full mr-1">{sub._count.documentos}</span>
+                                                                )}
+                                                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    <button title="Criar subpasta" onClick={(e) => { e.stopPropagation(); openCreateSubpasta(sub.id); }} className="p-1 rounded text-text-muted hover:text-accent hover:bg-accent/10 transition-colors"><FolderPlus size={13} /></button>
+                                                                    <button title="Excluir" onClick={(e) => { e.stopPropagation(); handleDeletePasta(sub.id); }} className="p-1 rounded text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"><Trash2 size={13} /></button>
+                                                                    <button title="Ver docs" onClick={(e) => { e.stopPropagation(); setTab("documentos"); router.push(buildUrl({ pastaId: sub.id })); }} className="p-1 rounded text-text-muted hover:text-accent hover:bg-accent/10 transition-colors"><Eye size={13} /></button>
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Nível 3 */}
+                                                            {isSubExp && hasSubChildren && sub.subPastas!.map(sub2 => (
+                                                                <div
+                                                                    key={sub2.id}
+                                                                    className="flex items-center gap-2 pl-20 pr-4 py-2 group hover:bg-bg-tertiary transition-colors cursor-pointer border-b border-border/20 last:border-0"
+                                                                    onClick={() => { setTab("documentos"); router.push(buildUrl({ pastaId: sub2.id })); }}
+                                                                >
+                                                                    <div className="p-1 rounded bg-bg-tertiary text-text-muted shrink-0"><Folder size={13} /></div>
+                                                                    <span className="flex-1 text-sm text-text-secondary truncate">{sub2.nome}</span>
+                                                                    {sub2._count && sub2._count.documentos > 0 && (
+                                                                        <span className="text-[10px] bg-bg-tertiary text-text-muted px-1.5 py-0.5 rounded-full mr-1">{sub2._count.documentos}</span>
+                                                                    )}
+                                                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                        <button title="Criar subpasta" onClick={(e) => { e.stopPropagation(); openCreateSubpasta(sub2.id); }} className="p-1 rounded text-text-muted hover:text-accent hover:bg-accent/10"><FolderPlus size={12} /></button>
+                                                                        <button title="Excluir" onClick={(e) => { e.stopPropagation(); handleDeletePasta(sub2.id); }} className="p-1 rounded text-text-muted hover:text-danger hover:bg-danger/10"><Trash2 size={12} /></button>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                                <button onClick={(e) => { e.stopPropagation(); handleDeletePasta(p.id); }} className="p-1.5 rounded opacity-0 group-hover:opacity-100 text-text-muted hover:text-danger hover:bg-danger/10 transition-all ml-2">
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                        ))}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -512,12 +663,23 @@ export function DocumentosManager({ documentos, modelos, pastas, categorias, tot
             </Modal>
 
             {/* Create Pasta */}
-            <Modal isOpen={showCreatePasta} onClose={() => setShowCreatePasta(false)} title="Nova Pasta" size="md">
+            <Modal
+                isOpen={showCreatePasta}
+                onClose={() => { setShowCreatePasta(false); setCreatePastaParentId(undefined); }}
+                title={createPastaParentId ? "Nova Subpasta" : "Nova Pasta"}
+                size="md"
+            >
                 <form onSubmit={handleCreatePasta} className="space-y-4">
-                    <Input id="pasta-nome" name="nome" label="Nome da Pasta *" required placeholder="Ex: Contratos de Serviço" />
-                    <Textarea id="pasta-desc" name="descricao" label="Descrição" rows={3} placeholder="Opcional..." />
-                    <div className="flex justify-end gap-3 pt-4">
-                        <Button variant="secondary" type="button" onClick={() => setShowCreatePasta(false)}>Cancelar</Button>
+                    {createPastaParentId && (
+                        <div className="flex items-center gap-2 rounded-lg bg-accent/5 border border-accent/20 px-3 py-2 text-sm text-text-secondary">
+                            <FolderPlus size={14} className="text-accent shrink-0" />
+                            <span>Criando dentro de: <strong>{pastas.find(p => p.id === createPastaParentId)?.nome ?? pastas.flatMap(p => p.subPastas).find(s => s.id === createPastaParentId)?.nome ?? "pasta selecionada"}</strong></span>
+                        </div>
+                    )}
+                    <Input id="pasta-nome" name="nome" label="Nome da Pasta *" required placeholder="Ex: Contratos, Fotos, Documentos pessoais..." />
+                    <Textarea id="pasta-desc" name="descricao" label="Descrição" rows={2} placeholder="Opcional..." />
+                    <div className="flex justify-end gap-3 pt-2">
+                        <Button variant="secondary" type="button" onClick={() => { setShowCreatePasta(false); setCreatePastaParentId(undefined); }}>Cancelar</Button>
                         <Button type="submit" disabled={actionLoading}>{actionLoading ? <Loader2 size={16} className="animate-spin" /> : "Criar Pasta"}</Button>
                     </div>
                 </form>

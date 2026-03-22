@@ -4,17 +4,20 @@ import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
     Activity,
+    ArrowRight,
     Bot,
     Clock3,
     FileText,
     Layers,
     Mail,
+    Megaphone,
     MessageCircle,
     MessageSquareText,
     Pencil,
     Plus,
     RefreshCw,
     Save,
+    Scale,
     Sparkles,
     Trash2,
     X,
@@ -37,6 +40,10 @@ import {
     type AttendanceAutomationKeywordMode,
     type HumanizationStylePresetId,
 } from "@/lib/services/attendance-automation-config";
+import {
+    LEGAL_CAMPAIGN_PRESETS,
+    type LegalCampaignPreset,
+} from "@/lib/comunicacao/legal-campaign-presets";
 
 type AutomationFlow = {
     id: string;
@@ -162,6 +169,35 @@ const TEMPLATE_CATEGORIES = [
                 initialReplyTemplate: "Olá, {nome}! Ótimo que deseja agendar sua consulta. 📅\n\nNosso horário de atendimento é das {inicio} às {fim}.\n\nQual data e horário seria melhor para você?\n\nEnvie sua preferência e confirmaremos a disponibilidade.",
                 aiEnabled: false,
                 aiInstructions: "",
+            },
+        ],
+    },
+    {
+        id: "previdenciario",
+        label: "Previdenciario",
+        icon: "🏛️",
+        color: "#7A4B1F",
+        desc: "Triagem orientada para beneficios e campanhas do INSS",
+        templates: [
+            {
+                name: "Auxilio maternidade - triagem",
+                desc: "Abre triagem inicial para salario-maternidade sem prometer concessao.",
+                triggerType: "KEYWORD" as const,
+                keywords: ["auxilio maternidade", "salario maternidade", "gestante", "mei", "inss"],
+                keywordMode: "ANY" as const,
+                initialReplyTemplate: "Oi, {nome}. Posso fazer sua triagem inicial sobre salario-maternidade aqui no {escritorio}. Me diga se voce ja teve o bebe ou ainda esta gestante e como estava sua contribuicao ou atividade no periodo.",
+                aiEnabled: true,
+                aiInstructions: "Colete data do parto ou previsao, tipo de trabalho, contribuicao ao INSS e situacao documental. Nao garanta o beneficio antes da analise.",
+            },
+            {
+                name: "Planejamento previdenciario - aposentadoria",
+                desc: "Qualifica leads para consultoria de aposentadoria e tempo de contribuicao.",
+                triggerType: "KEYWORD" as const,
+                keywords: ["aposentadoria", "planejamento previdenciario", "tempo de contribuicao", "cnis", "inss"],
+                keywordMode: "ANY" as const,
+                initialReplyTemplate: "Oi, {nome}. Vamos abrir sua triagem de aposentadoria aqui no {escritorio}. Me informe sua idade, se esta trabalhando hoje e se ja consultou seu CNIS ou tempo de contribuicao.",
+                aiEnabled: true,
+                aiInstructions: "Colete idade, atividade atual, tempo de contribuicao e historico do CNIS. Direcione para consultoria previdenciaria.",
             },
         ],
     },
@@ -413,6 +449,34 @@ export function ComunicacaoAutomationPanel({ dashboard }: { dashboard: Dashboard
         setActiveView("fluxos");
     }
 
+    function applyLegalPresetToFlow(preset: LegalCampaignPreset) {
+        setSelectedFlowId(null);
+        setForm((current) => ({
+            ...mapFlowToForm(null),
+            name: preset.automationTemplate.name,
+            description: preset.automationTemplate.description,
+            triggerType: preset.automationTemplate.triggerType,
+            keywordMode: preset.automationTemplate.keywordMode,
+            keywords: preset.automationTemplate.keywords,
+            initialReplyTemplate: preset.automationTemplate.initialReplyTemplate,
+            aiEnabled: preset.automationTemplate.aiEnabled,
+            aiInstructions: preset.automationTemplate.aiInstructions,
+            humanizedStylePreset: current.humanizedStylePreset,
+            humanizedStyleCustom: current.humanizedStyleCustom,
+        }));
+        setFeedback({
+            tone: "success",
+            text: `Preset juridico aplicado: ${preset.title}. Ajuste os detalhes e salve o fluxo.`,
+        });
+        setPreviewOutput("");
+        setPreviewMeta(null);
+        setActiveView("fluxos");
+    }
+
+    function openCampaignFromPreset(preset: LegalCampaignPreset) {
+        router.push(`/crm/campanhas/nova?preset=${preset.id}`);
+    }
+
     function handleSave() {
         setFeedback(null);
         startTransition(async () => {
@@ -495,6 +559,85 @@ export function ComunicacaoAutomationPanel({ dashboard }: { dashboard: Dashboard
 
     return (
         <div className="space-y-5">
+            <section className="overflow-hidden rounded-[30px] border border-[var(--glass-card-border)] bg-[linear-gradient(135deg,rgba(6,27,44,0.96),rgba(24,53,78,0.94)_45%,rgba(198,123,44,0.20))] p-5 text-white shadow-[0_24px_70px_rgba(6,27,44,0.24)]">
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+                    <div>
+                        <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-white/80">
+                            <Scale size={12} />
+                            Playbooks juridicos
+                        </div>
+                        <h2 className="mt-4 max-w-3xl font-display text-[28px] font-bold leading-[1.05] tracking-[-0.04em] text-white sm:text-[34px]">
+                            Automacao pensada por tipo de atendimento, nao so por gatilho.
+                        </h2>
+                        <p className="mt-3 max-w-2xl text-sm leading-6 text-white/78">
+                            Monte fluxos e campanhas por area juridica, reaproveite abordagens do escritorio e saia do modo tecnico. Para o seu caso de agora, ja deixei uma jornada pronta para auxilio maternidade.
+                        </p>
+
+                        <div className="mt-5 flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                onClick={() => applyLegalPresetToFlow(LEGAL_CAMPAIGN_PRESETS[0])}
+                                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-white/90"
+                            >
+                                <Zap size={14} />
+                                Usar fluxo de auxilio maternidade
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => openCampaignFromPreset(LEGAL_CAMPAIGN_PRESETS[0])}
+                                className="inline-flex items-center gap-2 rounded-full border border-white/18 bg-transparent px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/8"
+                            >
+                                <Megaphone size={14} />
+                                Criar campanha pronta
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-3">
+                        {LEGAL_CAMPAIGN_PRESETS.map((preset) => (
+                            <div
+                                key={preset.id}
+                                className="rounded-[24px] border border-white/12 bg-white/6 p-4 backdrop-blur-sm"
+                            >
+                                <div className="flex items-start justify-between gap-3">
+                                    <div>
+                                        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/60">
+                                            {preset.area}
+                                        </p>
+                                        <h3 className="mt-1 text-base font-semibold text-white">{preset.title}</h3>
+                                    </div>
+                                    <span className="rounded-full border border-white/12 bg-white/8 px-2.5 py-1 text-[10px] font-semibold text-white/80">
+                                        {preset.channel}
+                                    </span>
+                                </div>
+                                <p className="mt-2 text-[13px] leading-5 text-white/72">{preset.summary}</p>
+                                <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/55">
+                                    CTA sugerido
+                                </p>
+                                <p className="mt-1 text-[12px] leading-5 text-white/82">{preset.callToAction}</p>
+                                <div className="mt-4 flex flex-wrap gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => applyLegalPresetToFlow(preset)}
+                                        className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[12px] font-semibold text-white transition hover:bg-white/16"
+                                    >
+                                        <Sparkles size={12} />
+                                        Usar no fluxo
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => openCampaignFromPreset(preset)}
+                                        className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-transparent px-3 py-2 text-[12px] font-semibold text-white transition hover:bg-white/8"
+                                    >
+                                        Ir para campanha
+                                        <ArrowRight size={12} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
             {/* ── Stats strip ─────────────────────────────────────────── */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
                 <StatCard icon={Sparkles} label="Total de fluxos" value={dashboard.stats.totalFlows} />
@@ -508,8 +651,8 @@ export function ComunicacaoAutomationPanel({ dashboard }: { dashboard: Dashboard
             <div className="glass-card overflow-x-auto rounded-[24px] border border-[var(--glass-card-border)]">
                 <div className="flex min-w-max items-center gap-1 p-1.5">
                     {([
-                        { key: "fluxos", label: "Meus Fluxos", icon: Layers, count: dashboard.flows.length },
-                        { key: "templates", label: "Templates jurídicos", icon: FileText, count: TEMPLATE_CATEGORIES.reduce((a, c) => a + c.templates.length, 0) },
+                        { key: "fluxos", label: "Fluxos e playbooks", icon: Layers, count: dashboard.flows.length },
+                        { key: "templates", label: "Biblioteca juridica", icon: FileText, count: TEMPLATE_CATEGORIES.reduce((a, c) => a + c.templates.length, 0) },
                         { key: "metricas", label: "Métricas", icon: Activity },
                     ] as const).map((tab) => {
                         const Icon = tab.icon;
@@ -836,7 +979,7 @@ export function ComunicacaoAutomationPanel({ dashboard }: { dashboard: Dashboard
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <p className="text-center text-sm text-text-muted py-6">Configure e clique em "Simular" para ver a prévia.</p>
+                                                <p className="text-center text-sm text-text-muted py-6">Configure o fluxo e use a simulacao para ver a previa.</p>
                                             )}
                                         </div>
                                         {previewMeta && <p className="mt-1.5 text-[11px] text-text-muted">{previewMeta}</p>}

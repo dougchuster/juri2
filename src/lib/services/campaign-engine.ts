@@ -1,7 +1,7 @@
 import "server-only";
 import { db } from "@/lib/db";
 import { RecipientStatus } from "@/generated/prisma";
-import { sendTextMessage } from "@/lib/integrations/evolution-api";
+import { sendWhatsappDirectText } from "@/lib/whatsapp/application/message-service";
 import { updateCampaignStatus } from "@/lib/dal/crm/campaigns";
 import { enqueueCampaignJob } from "@/lib/queue/campaign-queue";
 import { sendEmail } from "@/lib/integrations/email-service";
@@ -197,12 +197,12 @@ export async function processCampaignJob(data: { campaignId: string }) {
                 const rawContent = campaign.template?.content || "Mensagem da Campanha";
                 const content = mergeVars(rawContent, client);
 
-                const res = await sendTextMessage(recipient.phone, content);
+                const res = await sendWhatsappDirectText({ phone: recipient.phone, content });
                 if (!res.ok) throw new Error(res.error || "Erro na Evolution API");
 
                 await db.campaignRecipient.update({
                     where: { id: recipient.id },
-                    data: { status: "SENT", sentAt: new Date(), providerMsgId: res.data?.key?.id }
+                    data: { status: "SENT", sentAt: new Date(), providerMsgId: res.providerMessageId || null }
                 });
                 sentCount++;
             } else if (campaign.canal === "EMAIL") {

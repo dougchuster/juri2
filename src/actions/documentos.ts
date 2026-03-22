@@ -248,7 +248,12 @@ export async function deleteCategoria(id: string) {
 // Pasta Actions
 // ==========================================
 
-export async function createPasta(data: { nome: string; descricao?: string; parentId?: string }) {
+export async function createPasta(data: {
+    nome: string;
+    descricao?: string;
+    parentId?: string;
+    clienteId?: string;
+}) {
     try {
         const escritorio = await db.escritorio.findFirst();
         await db.pastaDocumento.create({
@@ -259,6 +264,51 @@ export async function createPasta(data: { nome: string; descricao?: string; pare
     } catch {
         return { success: false, error: "Erro ao criar pasta" };
     }
+}
+
+/**
+ * Garante que existe a estrutura:
+ *   Clientes (isRootClientes=true)
+ *     └── [Nome do Cliente] (clienteId=X)
+ *
+ * Retorna o id da pasta do cliente (nível 2).
+ */
+export async function getOrCreateClientePasta(
+    clienteId: string,
+    clienteNome: string,
+    escritorioId: string | null,
+): Promise<string> {
+    // 1. Pasta raiz "Clientes"
+    let raiz = await db.pastaDocumento.findFirst({
+        where: { escritorioId: escritorioId ?? undefined, isRootClientes: true, parentId: null },
+    });
+    if (!raiz) {
+        raiz = await db.pastaDocumento.create({
+            data: {
+                nome: "Clientes",
+                descricao: "Pasta raiz automática dos documentos de clientes",
+                escritorioId: escritorioId ?? undefined,
+                isRootClientes: true,
+            },
+        });
+    }
+
+    // 2. Subpasta com nome do cliente
+    let clientePasta = await db.pastaDocumento.findFirst({
+        where: { clienteId, parentId: raiz.id },
+    });
+    if (!clientePasta) {
+        clientePasta = await db.pastaDocumento.create({
+            data: {
+                nome: clienteNome,
+                escritorioId: escritorioId ?? undefined,
+                parentId: raiz.id,
+                clienteId,
+            },
+        });
+    }
+
+    return clientePasta.id;
 }
 
 export async function deletePasta(id: string) {
@@ -312,7 +362,12 @@ export async function importDocumentoToLibrary(input: {
         const processo = processoId
             ? await db.processo.findUnique({
                 where: { id: processoId },
-                select: { id: true, numeroCnj: true },
+                select: {
+                    id: true,
+                    numeroCnj: true,
+                    clienteId: true,
+                    cliente: { select: { id: true, nome: true } },
+                },
             })
             : null;
 
@@ -342,11 +397,25 @@ export async function importDocumentoToLibrary(input: {
             mimeType,
         });
 
+        // Auto-vincular à pasta do cliente se tiver processo com cliente e nenhuma pasta explícita
+        let resolvedPastaId = pastaId;
+        if (!resolvedPastaId && processo?.cliente) {
+            try {
+                resolvedPastaId = await getOrCreateClientePasta(
+                    processo.cliente.id,
+                    processo.cliente.nome,
+                    escritorioId,
+                );
+            } catch (e) {
+                console.warn("[importDocumento] Nao foi possivel criar pasta do cliente:", e);
+            }
+        }
+
         const documento = await db.$transaction(async (tx) => {
             const created = await createDocumentoWithInitialVersion(tx, {
                 processoId: processoId || null,
                 escritorioId,
-                pastaId: pastaId || null,
+                pastaId: resolvedPastaId || null,
                 titulo: tituloInformado || file.name,
                 conteudo: extraction.text || null,
                 arquivoUrl: stored.fileUrl,

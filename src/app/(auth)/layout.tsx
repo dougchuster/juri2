@@ -10,7 +10,7 @@ export default function AuthLayout({
         <div className="relative min-h-screen overflow-hidden px-4 py-4 lg:px-5 lg:py-5">
             <div className="adv-dashboard-bg absolute inset-0 pointer-events-none opacity-70" />
 
-            <div className="relative z-10 mx-auto flex min-h-[calc(100vh-32px)] w-full max-w-[1680px] overflow-hidden rounded-[30px] border border-[var(--dashboard-frame-border)] bg-[var(--dashboard-frame-bg)] shadow-[var(--dashboard-frame-shadow)] backdrop-blur-[18px]">
+            <div className="dashboard-content-frame relative z-10 mx-auto flex min-h-[calc(100vh-32px)] w-full max-w-[1680px] overflow-hidden rounded-[30px] border backdrop-blur-[18px]">
                 <div className="relative hidden overflow-hidden border-r border-[var(--border-color)] lg:flex lg:w-[56%]">
                     <Image
                         src="/images/backgroundLAW.jpg"

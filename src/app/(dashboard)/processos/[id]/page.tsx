@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getProcessoById, getAdvogados, getTiposAcao, getFasesProcessuais, getClientesForSelect, getDocumentosParaMovimentacao } from "@/lib/dal/processos";
+import { getTimelineProcesso, getTimelineStats } from "@/lib/dal/timeline";
 import { getSession } from "@/actions/auth";
 import { Badge } from "@/components/ui/badge";
 import { formatDate, formatCurrency } from "@/lib/utils";
@@ -50,6 +51,11 @@ export default async function ProcessoDetailPage({ params }: Props) {
     ]);
     if (!processo) notFound();
 
+    const [timelineResult, timelineStats] = await Promise.all([
+        getTimelineProcesso(id, { porPagina: 999 }),
+        getTimelineStats(id),
+    ]);
+
     const prazosPendentes = processo.prazos.filter((p) => p.status === "PENDENTE").length;
     const proximaAudiencia = processo.audiencias.find((a) => !a.realizada);
     const tarefasPendentes = processo.tarefas.filter((t) => !["CONCLUIDA", "CANCELADA"].includes(t.status)).length;
@@ -64,6 +70,8 @@ export default async function ProcessoDetailPage({ params }: Props) {
     const serializedFases = JSON.parse(JSON.stringify(fases));
     const serializedClientes = JSON.parse(JSON.stringify(clientes));
     const serializedDocumentosParaMovimentacao = JSON.parse(JSON.stringify(documentosParaMovimentacao));
+    const serializedTimelineEventos = JSON.parse(JSON.stringify(timelineResult.eventos));
+    const serializedTimelineStats = JSON.parse(JSON.stringify(timelineStats));
 
     return (
         <div className="p-6 space-y-6 animate-fade-in">
@@ -265,6 +273,8 @@ export default async function ProcessoDetailPage({ params }: Props) {
                 processo={serializedProcesso}
                 advogados={serializedAdvogados}
                 documentosDisponiveis={serializedDocumentosParaMovimentacao}
+                timelineEventos={serializedTimelineEventos}
+                timelineStats={serializedTimelineStats}
             />
         </div>
     );

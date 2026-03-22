@@ -1,14 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea } from "@/components/ui/form-fields";
 import { Badge } from "@/components/ui/badge";
 import {
+    buildCampaignTemplateFromPreset,
+    getLegalCampaignPreset,
+    getLegalCampaignCopyVariant,
+    matchCampaignTemplateFromPreset,
+} from "@/lib/comunicacao/legal-campaign-presets";
+import {
     ArrowLeft, ArrowRight, Save, Megaphone, CheckCircle2, Loader2,
     MessageCircle, Mail, Users, FileText, Calendar, Clock, Eye,
-    ListFilter, ChevronDown, ChevronUp, AlertCircle
+    ListFilter, ChevronDown, ChevronUp, AlertCircle, Target, ShieldCheck, Sparkles
 } from "lucide-react";
 
 type Template = {
@@ -20,6 +27,7 @@ type Template = {
     content: string;
     contentHtml?: string | null;
     isActive: boolean;
+    isPresetDraft?: boolean;
 };
 
 type Segment = { id: string; name: string; memberCount?: number | null };
@@ -44,17 +52,38 @@ type FormData = {
 
 const STEP_LABELS = ["Informações", "Público", "Mensagem", "Revisão & Envio"];
 
+const PRESET_TEMPLATE_PREFIX = "preset-template:";
+
+function buildPresetTemplateOption(
+    preset: NonNullable<ReturnType<typeof getLegalCampaignPreset>>,
+    copyVariantId?: string | null
+): Template {
+    const presetTemplate = buildCampaignTemplateFromPreset(preset, copyVariantId);
+    return {
+        id: `${PRESET_TEMPLATE_PREFIX}${preset.id}`,
+        name: presetTemplate.name,
+        canal: preset.channel,
+        category: presetTemplate.category,
+        subject: presetTemplate.subject,
+        content: presetTemplate.content,
+        contentHtml: presetTemplate.contentHtml ?? null,
+        isActive: true,
+        isPresetDraft: true,
+    };
+}
+
 export default function NovaCampanhaPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const preset = getLegalCampaignPreset(searchParams.get("preset"));
     const [step, setStep] = useState(1);
     const [saving, setSaving] = useState(false);
     const [segments, setSegments] = useState<Segment[]>([]);
     const [lists, setLists] = useState<CRMList[]>([]);
     const [templates, setTemplates] = useState<Template[]>([]);
-    const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [advancedOpen, setAdvancedOpen] = useState(false);
+    const [selectedPresetCopyId, setSelectedPresetCopyId] = useState("");
 
     const [formData, setFormData] = useState<FormData>({
         name: "",
@@ -90,11 +119,66 @@ export default function NovaCampanhaPage() {
         if (ids) {
             setFormData(f => ({ ...f, targetType: "all" }));
         }
-    }, [searchParams]);
 
+        if (preset) {
+            setFormData((current) => ({
+                ...current,
+                name: current.name || preset.campaignName,
+                description: current.description || preset.campaignDescription,
+                canal: preset.channel,
+            }));
+        }
+    }, [preset, searchParams]);
+
+    const defaultPresetCopyId = preset?.copyVariants[0]?.id || "";
+
+    useEffect(() => {
+        setSelectedPresetCopyId(defaultPresetCopyId);
+    }, [defaultPresetCopyId]);
+
+    const selectedPresetCopy = preset
+        ? getLegalCampaignCopyVariant(preset, selectedPresetCopyId)
+        : null;
+    const matchedPresetTemplate = preset
+        ? matchCampaignTemplateFromPreset(templates, preset)
+        : null;
+    const presetDraftTemplate =
+        preset && formData.canal === preset.channel
+            ? buildCampaignTemplateFromPreset(preset, selectedPresetCopy?.id)
+            : null;
+    const presetTemplateOption =
+        preset && presetDraftTemplate
+            ? buildPresetTemplateOption(preset, selectedPresetCopy?.id)
+            : null;
     const filteredTemplates = templates.filter(
         t => !t.canal || t.canal === formData.canal
     );
+    const availableTemplates = presetTemplateOption
+        ? [presetTemplateOption, ...filteredTemplates]
+        : filteredTemplates;
+    const selectedTemplate = availableTemplates.find((template) => template.id === formData.templateId) || null;
+
+    useEffect(() => {
+        if (!preset || formData.templateId) return;
+
+        if (presetTemplateOption) {
+            setFormData((current) => ({ ...current, templateId: presetTemplateOption.id }));
+            return;
+        }
+
+        if (matchedPresetTemplate) {
+            setFormData((current) => ({ ...current, templateId: matchedPresetTemplate.id }));
+        }
+    }, [formData.templateId, matchedPresetTemplate, preset, presetTemplateOption]);
+
+    useEffect(() => {
+        if (!formData.templateId) return;
+
+        if (selectedTemplate) return;
+
+        setFormData((current) => ({ ...current, templateId: "" }));
+        setPreviewOpen(false);
+    }, [formData.templateId, selectedTemplate]);
 
     const update = (key: keyof FormData, value: unknown) =>
         setFormData(f => ({ ...f, [key]: value }));
@@ -116,11 +200,61 @@ export default function NovaCampanhaPage() {
     const handleCreate = async () => {
         setSaving(true);
         try {
+            let resolvedTemplateId = formData.templateId || undefined;
+
+            if (resolvedTemplateId?.startsWith(PRESET_TEMPLATE_PREFIX) && preset && presetDraftTemplate) {
+                const templatePayload = {
+                    ...presetDraftTemplate,
+                    canal: preset.channel,
+                    isActive: true,
+                };
+
+                const createTemplateResponse = await fetch("/api/crm/templates", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(templatePayload),
+                });
+
+                if (createTemplateResponse.ok) {
+                    const createdTemplate = await createTemplateResponse.json() as Template;
+                    resolvedTemplateId = createdTemplate.id;
+                    setTemplates((current) => [createdTemplate, ...current]);
+                    setFormData((current) => ({ ...current, templateId: createdTemplate.id }));
+                } else if (createTemplateResponse.status === 409) {
+                    const refreshTemplatesResponse = await fetch(`/api/crm/templates?canal=${preset.channel}`);
+                    if (!refreshTemplatesResponse.ok) {
+                        const errorData = await createTemplateResponse.json().catch(() => null);
+                        throw new Error(errorData?.error || "Não foi possível reutilizar o template do preset.");
+                    }
+
+                    const refreshedTemplates = await refreshTemplatesResponse.json() as Template[];
+                    const existingTemplate =
+                        refreshedTemplates.find((template) => (
+                            template.name.trim().toLowerCase() === presetDraftTemplate.name.trim().toLowerCase()
+                        ))
+                        || matchCampaignTemplateFromPreset(refreshedTemplates, preset)
+                        || refreshedTemplates.find((template) => (
+                            template.name.trim().toLowerCase() === preset.campaignTemplate.name.trim().toLowerCase()
+                        ));
+
+                    if (!existingTemplate) {
+                        throw new Error("O template recomendado do preset já existe, mas não foi encontrado para vincular a campanha.");
+                    }
+
+                    resolvedTemplateId = existingTemplate.id;
+                    setTemplates(refreshedTemplates);
+                    setFormData((current) => ({ ...current, templateId: existingTemplate.id }));
+                } else {
+                    const errorData = await createTemplateResponse.json().catch(() => null);
+                    throw new Error(errorData?.error || "Erro ao criar o template recomendado do preset.");
+                }
+            }
+
             const payload: Record<string, unknown> = {
                 name: formData.name,
                 description: formData.description,
                 canal: formData.canal,
-                templateId: formData.templateId || undefined,
+                templateId: resolvedTemplateId,
                 rateLimit: formData.rateLimit,
                 intervalMs: formData.intervalMs,
             };
@@ -179,6 +313,86 @@ export default function NovaCampanhaPage() {
                 </h1>
                 <p className="text-sm text-text-muted mt-1">Configure e dispare mensagens em lote para seus contatos.</p>
             </div>
+
+            {preset && (
+                <div className="rounded-2xl border border-accent/20 bg-[linear-gradient(135deg,rgba(198,123,44,0.12),rgba(8,20,36,0.02))] p-5">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                        <div className="max-w-2xl">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <Badge variant="info">{preset.area}</Badge>
+                                <Badge variant="muted">{preset.channel}</Badge>
+                                <Badge variant="success">Preset jurídico</Badge>
+                            </div>
+                            <h2 className="mt-3 text-lg font-bold text-text-primary">
+                                Jornada pronta: {preset.title}
+                            </h2>
+                            <p className="mt-2 text-sm text-text-secondary">{preset.summary}</p>
+                        </div>
+                        <div className="rounded-xl border border-border bg-bg-primary/70 px-4 py-3 text-sm text-text-secondary">
+                            <div className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">CTA recomendado</div>
+                            <div className="mt-1 font-medium text-text-primary">{preset.callToAction}</div>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                        <div className="rounded-xl border border-border bg-bg-primary/70 p-4">
+                            <div className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">Público sugerido</div>
+                            <p className="mt-2 text-sm text-text-secondary">{preset.audience}</p>
+                        </div>
+                        <div className="rounded-xl border border-border bg-bg-primary/70 p-4">
+                            <div className="text-[11px] font-semibold uppercase tracking-wider text-text-muted">Template sugerido</div>
+                            <p className="mt-2 text-sm text-text-secondary">
+                                {selectedTemplate
+                                    ? `${selectedTemplate.name} (${selectedTemplate.category})`
+                                    : "Nenhum template compatível foi encontrado automaticamente. Você pode escolher um template na etapa 3."}
+                            </p>
+                        </div>
+                        <div className="rounded-xl border border-border bg-bg-primary/70 p-4">
+                            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                                <Target size={12} />
+                                Meta de conversão
+                            </div>
+                            <p className="mt-2 text-sm text-text-secondary">{preset.conversionGoal}</p>
+                        </div>
+                        <div className="rounded-xl border border-border bg-bg-primary/70 p-4">
+                            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-text-muted">
+                                <Clock size={12} />
+                                Janela recomendada
+                            </div>
+                            <p className="mt-2 text-sm font-medium text-text-primary">{preset.recommendedSendWindows[0]?.label || "Definir estrategia"}</p>
+                            <p className="mt-1 text-xs text-text-secondary">{preset.recommendedSendWindows[0]?.rationale}</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-4 grid gap-3 lg:grid-cols-[1.1fr_0.9fr]">
+                        <div className="rounded-2xl border border-border bg-bg-primary/75 p-4">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                                <Sparkles size={15} className="text-accent" />
+                                Ângulo principal da campanha
+                            </div>
+                            <p className="mt-2 text-sm text-text-secondary">{preset.primaryAngle}</p>
+                            {matchedPresetTemplate && (
+                                <p className="mt-3 text-xs text-text-muted">
+                                    Já existe um template parecido cadastrado: <span className="font-medium text-text-primary">{matchedPresetTemplate.name}</span>. Mesmo assim, o preset continua disponível com copy otimizada para esta campanha.
+                                </p>
+                            )}
+                        </div>
+                        <div className="rounded-2xl border border-border bg-bg-primary/75 p-4">
+                            <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                                <ShieldCheck size={15} className="text-accent" />
+                                Cuidados de abordagem
+                            </div>
+                            <div className="mt-2 space-y-2">
+                                {preset.complianceNotes.slice(0, 3).map((note) => (
+                                    <div key={note} className="rounded-xl border border-border/80 bg-bg-secondary/70 px-3 py-2 text-xs text-text-secondary">
+                                        {note}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Stepper */}
             <div className="flex items-center relative">
@@ -273,6 +487,48 @@ export default function NovaCampanhaPage() {
                             ))}
                         </div>
 
+                        {preset && (
+                            <div className="rounded-2xl border border-accent/15 bg-[linear-gradient(145deg,rgba(198,123,44,0.10),rgba(255,255,255,0.02))] p-4">
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                    <div>
+                                        <div className="text-sm font-semibold text-text-primary">Segmentação recomendada para {preset.title}</div>
+                                        <p className="mt-1 text-xs text-text-secondary">Use essas trilhas para montar seu segmento ou lista antes do disparo.</p>
+                                    </div>
+                                    <Badge variant="info">{preset.recommendedSendWindows[0]?.label || "Janela recomendada"}</Badge>
+                                </div>
+
+                                <div className="mt-4 grid gap-3 lg:grid-cols-3">
+                                    {preset.recommendedTargeting.map((recommendation) => (
+                                        <button
+                                            key={recommendation.id}
+                                            type="button"
+                                            onClick={() => update("targetType", recommendation.recommendedTargetType)}
+                                            className={`rounded-2xl border p-4 text-left transition-all ${
+                                                formData.targetType === recommendation.recommendedTargetType
+                                                    ? "border-accent bg-accent/10"
+                                                    : "border-border bg-bg-primary/75 hover:border-accent/35"
+                                            }`}
+                                        >
+                                            <div className="flex items-center justify-between gap-3">
+                                                <div className="font-semibold text-sm text-text-primary">{recommendation.title}</div>
+                                                <Badge variant={formData.targetType === recommendation.recommendedTargetType ? "success" : "muted"}>
+                                                    {recommendation.recommendedTargetType}
+                                                </Badge>
+                                            </div>
+                                            <p className="mt-2 text-xs text-text-secondary">{recommendation.summary}</p>
+                                            <div className="mt-3 space-y-2">
+                                                {recommendation.filters.map((filter) => (
+                                                    <div key={filter} className="rounded-lg bg-bg-secondary/80 px-2.5 py-2 text-[11px] text-text-muted">
+                                                        {filter}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         {formData.targetType === "segment" && (
                             <div className="space-y-3">
                                 <label className="block text-sm font-medium text-text-secondary">Selecionar Segmento *</label>
@@ -291,7 +547,7 @@ export default function NovaCampanhaPage() {
                                     ))}
                                     {segments.length === 0 && (
                                         <div className="p-4 text-center text-text-muted text-sm border border-dashed border-border rounded-lg">
-                                            Nenhum segmento criado. <a href="/crm/segmentos" className="text-accent hover:underline">Criar segmento →</a>
+                                            Nenhum segmento criado. <Link href="/crm/segmentos" className="text-accent hover:underline">Criar segmento →</Link>
                                         </div>
                                     )}
                                 </div>
@@ -316,7 +572,7 @@ export default function NovaCampanhaPage() {
                                     ))}
                                     {lists.length === 0 && (
                                         <div className="p-4 text-center text-text-muted text-sm border border-dashed border-border rounded-lg">
-                                            Nenhuma lista criada. <a href="/crm/listas" className="text-accent hover:underline">Criar lista →</a>
+                                            Nenhuma lista criada. <Link href="/crm/listas" className="text-accent hover:underline">Criar lista →</Link>
                                         </div>
                                     )}
                                 </div>
@@ -337,20 +593,61 @@ export default function NovaCampanhaPage() {
                     <div className="space-y-4 animate-fade-in">
                         <h2 className="font-bold text-lg mb-4">Mensagem & Template</h2>
 
-                        {filteredTemplates.length === 0 ? (
+                        {preset && selectedPresetCopy && (
+                            <div className="rounded-2xl border border-accent/15 bg-[linear-gradient(145deg,rgba(198,123,44,0.08),rgba(255,255,255,0.02))] p-4">
+                                <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                                    <Sparkles size={15} className="text-accent" />
+                                    Escolha o ângulo da copy
+                                </div>
+                                <p className="mt-1 text-xs text-text-secondary">
+                                    Essas variações foram pensadas para o momento de decisão da lead. Ao escolher uma delas, o template recomendado do preset passa a usar essa versão.
+                                </p>
+
+                                <div className="mt-4 grid gap-3 lg:grid-cols-3">
+                                    {preset.copyVariants.map((variant) => (
+                                        <button
+                                            key={variant.id}
+                                            type="button"
+                                            onClick={() => {
+                                                setSelectedPresetCopyId(variant.id);
+                                                if (presetTemplateOption) {
+                                                    update("templateId", presetTemplateOption.id);
+                                                }
+                                                setPreviewOpen(true);
+                                            }}
+                                            className={`rounded-2xl border p-4 text-left transition-all ${
+                                                selectedPresetCopy?.id === variant.id
+                                                    ? "border-accent bg-accent/10 shadow-[0_12px_32px_rgba(198,123,44,0.12)]"
+                                                    : "border-border bg-bg-primary/75 hover:border-accent/35"
+                                            }`}
+                                        >
+                                            <div className="flex items-center justify-between gap-3">
+                                                <div className="font-semibold text-sm text-text-primary">{variant.label}</div>
+                                                {selectedPresetCopy?.id === variant.id && (
+                                                    <Badge variant="success">Ativo</Badge>
+                                                )}
+                                            </div>
+                                            <p className="mt-2 text-xs text-text-secondary">{variant.strategy}</p>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {availableTemplates.length === 0 ? (
                             <div className="p-6 border border-dashed border-border rounded-xl text-center text-text-muted space-y-3">
                                 <FileText size={32} className="mx-auto opacity-40" />
                                 <p className="text-sm">Nenhum template disponível para <strong>{formData.canal}</strong>.</p>
-                                <a href="/crm/templates" className="text-accent hover:underline text-sm">
+                                <Link href="/crm/templates" className="text-accent hover:underline text-sm">
                                     Criar template de mensagem →
-                                </a>
+                                </Link>
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 gap-3 max-h-72 overflow-y-auto pr-1">
-                                {filteredTemplates.map(tpl => (
+                                {availableTemplates.map(tpl => (
                                     <button
                                         key={tpl.id}
-                                        onClick={() => { update("templateId", tpl.id); setSelectedTemplate(tpl); }}
+                                        onClick={() => { update("templateId", tpl.id); }}
                                         className={`w-full text-left p-4 rounded-xl border-2 transition-all ${formData.templateId === tpl.id
                                             ? "border-accent bg-accent/10"
                                             : "border-border hover:border-accent/40 bg-bg-tertiary"}`}
@@ -360,6 +657,11 @@ export default function NovaCampanhaPage() {
                                             <span className="font-bold text-sm text-text-primary">{tpl.name}</span>
                                             <span className="ml-auto text-xs text-text-muted">{tpl.category}</span>
                                         </div>
+                                        {tpl.isPresetDraft && (
+                                            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-accent">
+                                                Sugerido pelo preset. Será criado automaticamente ao salvar a campanha.
+                                            </p>
+                                        )}
                                         {tpl.subject && <p className="text-xs text-text-muted mb-1">Assunto: {tpl.subject}</p>}
                                         <p className="text-xs text-text-secondary line-clamp-2">{tpl.content}</p>
                                     </button>
@@ -473,8 +775,11 @@ export default function NovaCampanhaPage() {
                             <div className="p-4 bg-bg-tertiary rounded-xl border border-border">
                                 <div className="text-xs text-text-muted uppercase mb-1">Template</div>
                                 <div className="font-bold text-text-primary">
-                                    {templates.find(t => t.id === formData.templateId)?.name || "Nenhum selecionado"}
+                                    {availableTemplates.find(t => t.id === formData.templateId)?.name || "Nenhum selecionado"}
                                 </div>
+                                {preset && selectedPresetCopy && (
+                                    <div className="mt-1 text-xs text-text-muted">Ângulo ativo: {selectedPresetCopy.label}</div>
+                                )}
                             </div>
                             <div className="p-4 bg-bg-tertiary rounded-xl border border-border">
                                 <div className="text-xs text-text-muted uppercase mb-1">Envio</div>
@@ -483,6 +788,38 @@ export default function NovaCampanhaPage() {
                                 </div>
                             </div>
                         </div>
+
+                        {preset && (
+                            <div className="grid gap-4 lg:grid-cols-2">
+                                <div className="rounded-2xl border border-border bg-bg-tertiary/70 p-4">
+                                    <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                                        <Target size={15} className="text-accent" />
+                                        Checklist de triagem
+                                    </div>
+                                    <div className="mt-3 space-y-2">
+                                        {preset.qualificationChecklist.map((item) => (
+                                            <div key={item} className="rounded-xl bg-bg-secondary/80 px-3 py-2 text-xs text-text-secondary">
+                                                {item}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="rounded-2xl border border-border bg-bg-tertiary/70 p-4">
+                                    <div className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+                                        <Clock size={15} className="text-accent" />
+                                        Janela e cuidados
+                                    </div>
+                                    <div className="mt-3 space-y-2">
+                                        {preset.recommendedSendWindows.map((window) => (
+                                            <div key={window.label} className="rounded-xl bg-bg-secondary/80 px-3 py-2">
+                                                <div className="text-xs font-semibold text-text-primary">{window.label}</div>
+                                                <div className="mt-1 text-xs text-text-secondary">{window.rationale}</div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Scheduling */}
                         <div className="p-4 border border-border rounded-xl space-y-4">

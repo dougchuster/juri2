@@ -198,6 +198,25 @@ function ConversationSwitcherSection({
   );
 }
 
+function playNotificationSound() {
+  try {
+    const ctx = new AudioContext();
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+    oscillator.type = "sine";
+    oscillator.frequency.setValueAtTime(880, ctx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.22, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.38);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.38);
+  } catch {
+    // som nao disponivel no navegador
+  }
+}
+
 export function FloatingChatWidget({ currentUser }: Props) {
   const pathname = usePathname();
   if (pathname === "/chat") {
@@ -219,6 +238,7 @@ function FloatingChatWidgetPanel({ currentUser }: Props) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [isConversationSwitcherOpen, setIsConversationSwitcherOpen] = useState(false);
   const messagesViewportRef = useRef<HTMLDivElement | null>(null);
+  const prevUnreadCountRef = useRef<number | null>(null);
 
   const selectedConversation = controller.selectedConversation;
 
@@ -264,6 +284,18 @@ function FloatingChatWidgetPanel({ currentUser }: Props) {
     if (!viewport) return;
     viewport.scrollTo({ top: viewport.scrollHeight, behavior: "smooth" });
   }, [controller.messages, controller.selectedConversationId, isOpen]);
+
+  useEffect(() => {
+    const current = controller.globalUnreadCount;
+    if (prevUnreadCountRef.current === null) {
+      prevUnreadCountRef.current = current;
+      return;
+    }
+    if (current > prevUnreadCountRef.current) {
+      playNotificationSound();
+    }
+    prevUnreadCountRef.current = current;
+  }, [controller.globalUnreadCount]);
 
   const switcherConversations = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -819,8 +851,11 @@ function FloatingChatWidgetPanel({ currentUser }: Props) {
         >
           <MessageCircleMore size={22} />
           {controller.globalUnreadCount > 0 ? (
-            <span className="absolute -right-1 -top-1 inline-flex min-w-6 items-center justify-center rounded-full bg-danger px-1.5 py-1 text-[11px] font-bold text-white">
-              {controller.globalUnreadCount > 99 ? "99+" : controller.globalUnreadCount}
+            <span className="absolute -right-1.5 -top-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-danger opacity-60" />
+              <span className="relative inline-flex min-w-[22px] items-center justify-center rounded-full bg-danger px-1.5 py-0.5 text-[11px] font-bold text-white">
+                {controller.globalUnreadCount > 99 ? "99+" : controller.globalUnreadCount}
+              </span>
             </span>
           ) : null}
         </button>

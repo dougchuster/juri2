@@ -1,33 +1,54 @@
 import { NextResponse } from "next/server";
-import { whatsappService } from "@/lib/integrations/baileys-service";
-import * as fs from "fs";
-import * as path from "path";
+import {
+  getPrimaryWhatsappConnection,
+  updateWhatsappConnection,
+} from "@/lib/whatsapp/application/connection-service";
+import { getWhatsappProviderAdapter } from "@/lib/whatsapp/providers/provider-registry";
+import { withLegacyWhatsappHeaders } from "@/app/api/comunicacao/whatsapp/compat";
 
 export const dynamic = "force-dynamic";
 
-function hardResetAuthState() {
-  const authDir = path.join(process.cwd(), ".whatsapp-auth");
-  try {
-    if (fs.existsSync(authDir)) {
-      fs.rmSync(authDir, { recursive: true, force: true });
-    }
-    fs.mkdirSync(authDir, { recursive: true });
-  } catch (error) {
-    console.error("[API] Hard reset auth state failed:", error);
-  }
-}
-
+/**
+ * Legacy compatibility endpoint.
+ * New admin flows should use /api/admin/whatsapp/connections/[id]/disconnect.
+ */
 export async function POST() {
   try {
-    await whatsappService.disconnect();
-    return NextResponse.json({ success: true, message: "WhatsApp desconectado" });
+    const connection = await getPrimaryWhatsappConnection();
+    if (!connection) {
+      return NextResponse.json(
+        { success: true, message: "Nenhuma conexao primaria configurada" },
+        withLegacyWhatsappHeaders(
+          undefined,
+          "/api/admin/whatsapp/connections/[id]/disconnect"
+        )
+      );
+    }
+
+    const provider = getWhatsappProviderAdapter(connection.providerType);
+    await provider.disconnect(connection);
+    await updateWhatsappConnection(connection.id, {
+      status: "DISCONNECTED",
+      connectedPhone: null,
+      connectedName: null,
+      lastError: null,
+    });
+
+    return NextResponse.json(
+      { success: true, message: "WhatsApp desconectado" },
+      withLegacyWhatsappHeaders(
+        undefined,
+        "/api/admin/whatsapp/connections/[id]/disconnect"
+      )
+    );
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erro desconhecido";
-    hardResetAuthState();
-    return NextResponse.json({
-      success: true,
-      message: "Sessao do WhatsApp resetada",
-      warning: message,
-    });
+    return NextResponse.json(
+      { success: false, message: "Falha ao desconectar WhatsApp", warning: message },
+      withLegacyWhatsappHeaders(
+        { status: 500 },
+        "/api/admin/whatsapp/connections/[id]/disconnect"
+      )
+    );
   }
 }

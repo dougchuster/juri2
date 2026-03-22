@@ -217,6 +217,11 @@ class BaileysService {
             console.log("[Baileys] Logged out. Clearing auth state...");
             await this.clearAuth();
             this.notifyConnectionHandlers();
+          } else if (reason === DisconnectReason.connectionReplaced) {
+            // Another session took over — stop reconnecting to avoid infinite loop.
+            // The user must disconnect the other active session first.
+            console.log("[Baileys] Connection replaced by another session. Stopping auto-reconnect.");
+            this.notifyConnectionHandlers();
           } else if (
             reason !== DisconnectReason.loggedOut &&
             this.reconnectAttempts < this.maxReconnectAttempts
@@ -881,10 +886,9 @@ class BaileysService {
 
 const globalForBaileys = globalThis as unknown as { baileysService?: BaileysService };
 
-export const whatsappService =
-  globalForBaileys.baileysService ?? new BaileysService();
-
-if (process.env.NODE_ENV !== "production") {
-  globalForBaileys.baileysService = whatsappService;
+if (!globalForBaileys.baileysService) {
+  globalForBaileys.baileysService = new BaileysService();
 }
+
+export const whatsappService = globalForBaileys.baileysService;
 

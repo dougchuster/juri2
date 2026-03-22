@@ -6,7 +6,6 @@ import { useRef, useState } from "react";
 import {
     ScrollText, Gavel, FileText, DollarSign, Users,
     Plus, Loader2, Trash2, CheckCircle, CalendarClock, Upload, ArrowUpRight,
-    RefreshCw, ChevronDown,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,8 @@ import {
     addDocumento, deleteDocumento,
 } from "@/actions/processos";
 import { importDocumentoAction } from "@/actions/documentos";
+import { TimelineFeed } from "@/components/processos/timeline/timeline-feed";
+import type { EventoTimeline, TimelineStats } from "@/lib/dal/timeline";
 
 // ==========================
 // Types
@@ -102,24 +103,19 @@ export function ProcessoDetailTabs({
     processo,
     advogados,
     documentosDisponiveis,
+    timelineEventos,
+    timelineStats,
 }: {
     processo: ProcessoDetail;
     advogados: AdvOption[];
     documentosDisponiveis: DocumentoMovimentacaoOption[];
+    timelineEventos: EventoTimeline[];
+    timelineStats: TimelineStats;
 }) {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<TabId>("movimentacoes");
 
-    // Paginação de movimentações
-    const MOV_PAGE_SIZE = 20;
-    const [movPage, setMovPage] = useState(1);
-
-    // Sync DataJud
-    const [syncingDataJud, setSyncingDataJud] = useState(false);
-    const [syncResult, setSyncResult] = useState<{ message: string; ok: boolean } | null>(null);
-
     // Modal states
-    const [showAddMov, setShowAddMov] = useState(false);
     const [showAddParte, setShowAddParte] = useState(false);
     const [showAddAudiencia, setShowAddAudiencia] = useState(false);
     const [showAddPrazo, setShowAddPrazo] = useState(false);
@@ -130,32 +126,8 @@ export function ProcessoDetailTabs({
     const [uploadingDocumento, setUploadingDocumento] = useState(false);
     const [deletingId, setDeletingId] = useState<{ type: string; id: string } | null>(null);
     const [uploadFeedback, setUploadFeedback] = useState<{ tone: "success" | "error" | "warning"; message: string } | null>(null);
-    const [movimentacaoFeedback, setMovimentacaoFeedback] = useState<string | null>(null);
     const uploadInputRef = useRef<HTMLInputElement>(null);
-    const movimentacaoArquivoInputRef = useRef<HTMLInputElement>(null);
-    const [movimentacaoArquivoNome, setMovimentacaoArquivoNome] = useState("");
 
-    const ultimaMovimentacao = processo.movimentacoes[0] || null;
-    const movimentacoesComFonte = processo.movimentacoes.filter((item) => Boolean(item.fonte)).length;
-
-    // Movimentações paginadas
-    const movimentacoesPaginadas = processo.movimentacoes.slice(0, movPage * MOV_PAGE_SIZE);
-    const temMaisMov = processo.movimentacoes.length > movPage * MOV_PAGE_SIZE;
-
-    async function handleSyncDataJud() {
-        setSyncingDataJud(true);
-        setSyncResult(null);
-        try {
-            const res = await fetch(`/api/datajud/sync/${processo.id}`, { method: "POST" });
-            const data = await res.json();
-            setSyncResult({ message: data.message || (res.ok ? "Sincronizado!" : "Falha ao sincronizar."), ok: res.ok });
-            if (res.ok && data.movimentosCriados > 0) router.refresh();
-        } catch {
-            setSyncResult({ message: "Erro de conexão com DataJud.", ok: false });
-        } finally {
-            setSyncingDataJud(false);
-        }
-    }
     const documentosPublicados = processo.documentos.filter((item) => item.statusFluxo === "PUBLICADA").length;
     const documentosMovimentacaoOptions = documentosDisponiveis.map((documento) => ({
         value: documento.id,
@@ -218,30 +190,6 @@ export function ProcessoDetailTabs({
             if (uploadInputRef.current) uploadInputRef.current.value = "";
             setUploadingDocumento(false);
         }
-    }
-
-    // ==========================
-    // Add Movimentacao
-    // ==========================
-    async function handleAddMov(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setMovimentacaoFeedback(null);
-        setLoading(true);
-        const f = new FormData(e.currentTarget);
-        const result = await addMovimentacaoComDocumento(processo.id, f);
-        setLoading(false);
-
-        if (!result.success) {
-            const formError = result.error && "_form" in result.error ? result.error._form?.[0] : null;
-            setMovimentacaoFeedback(formError || "Nao foi possivel salvar o andamento.");
-            return;
-        }
-
-        setShowAddMov(false);
-        e.currentTarget.reset();
-        setMovimentacaoArquivoNome("");
-        if (movimentacaoArquivoInputRef.current) movimentacaoArquivoInputRef.current.value = "";
-        router.refresh();
     }
 
     // ==========================
@@ -366,117 +314,20 @@ export function ProcessoDetailTabs({
             <div className="rounded-xl border border-border bg-bg-secondary">
 
                 {/* ============================== */}
-                {/* MOVIMENTAÇÕES TAB              */}
+                {/* MOVIMENTAÇÕES TAB — TIMELINE   */}
                 {/* ============================== */}
                 {activeTab === "movimentacoes" && (
-                    <div>
-                        <div className="flex flex-col gap-3 border-b border-border px-4 py-3">
-                            <span className="text-xs font-medium text-text-muted uppercase">{processo.movimentacoes.length} movimentações</span>
-                            <div className="flex items-center justify-between gap-3">
-                                <div className="flex items-center gap-2 flex-wrap">
-                                    <Button size="sm" variant="outline" onClick={() => uploadInputRef.current?.click()} disabled={uploadingDocumento}>
-                                        {uploadingDocumento ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
-                                        Subir documento
-                                    </Button>
-                                    <Button size="sm" variant="secondary" onClick={() => setShowAddMov(true)}><Plus size={14} /> Adicionar</Button>
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={handleSyncDataJud}
-                                        disabled={syncingDataJud}
-                                        title="Buscar movimentações no DataJud (CNJ)"
-                                    >
-                                        {syncingDataJud
-                                            ? <Loader2 size={14} className="animate-spin" />
-                                            : <RefreshCw size={14} />}
-                                        Sincronizar DataJud
-                                    </Button>
-                                </div>
-                            </div>
-                            {syncResult && (
-                                <div className={`text-xs rounded-lg px-3 py-2 ${syncResult.ok ? "bg-success/10 text-success" : "bg-danger/10 text-danger"}`}>
-                                    {syncResult.message}
-                                </div>
-                            )}
-                            <div className="grid gap-3 md:grid-cols-3">
-                                <div className="rounded-2xl border border-border bg-bg-tertiary/40 px-3 py-3">
-                                    <p className="text-[11px] uppercase tracking-[0.14em] text-text-muted">Ultima atualizacao</p>
-                                    <p className="mt-2 text-sm font-medium text-text-primary">
-                                        {ultimaMovimentacao ? formatDate(ultimaMovimentacao.data) : "Sem registros"}
-                                    </p>
-                                    <p className="mt-1 text-xs text-text-muted">{ultimaMovimentacao?.tipo || "Sem classificacao"}</p>
-                                </div>
-                                <div className="rounded-2xl border border-border bg-bg-tertiary/40 px-3 py-3">
-                                    <p className="text-[11px] uppercase tracking-[0.14em] text-text-muted">Com origem identificada</p>
-                                    <p className="mt-2 text-sm font-medium text-text-primary">{movimentacoesComFonte}</p>
-                                    <p className="mt-1 text-xs text-text-muted">Ajuda a rastrear alteracoes e comprovacoes.</p>
-                                </div>
-                                <div className="rounded-2xl border border-border bg-bg-tertiary/40 px-3 py-3">
-                                    <p className="text-[11px] uppercase tracking-[0.14em] text-text-muted">Documentos publicados</p>
-                                    <p className="mt-2 text-sm font-medium text-text-primary">{documentosPublicados}</p>
-                                    <p className="mt-1 text-xs text-text-muted">Uploads feitos aqui tambem entram na biblioteca.</p>
-                                </div>
-                            </div>
-                        </div>
-                        {processo.movimentacoes.length === 0 ? (
-                            <div className="p-8 text-center">
-                                <ScrollText size={40} className="mx-auto text-text-muted/30 mb-3" />
-                                <p className="text-sm text-text-muted">Nenhuma movimentação registrada.</p>
-                                <div className="mt-5 flex items-center justify-center gap-2">
-                                    <Button size="sm" className="mt-0" onClick={() => setShowAddMov(true)}><Plus size={14} /> Primeira Movimentacao</Button>
-                                    <Button size="sm" variant="outline" onClick={() => uploadInputRef.current?.click()} disabled={uploadingDocumento}>
-                                        {uploadingDocumento ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
-                                        Subir documento
-                                    </Button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="divide-y divide-border">
-                                {movimentacoesPaginadas.map((mov) => (
-                                    <div key={mov.id} className="px-4 py-3 hover:bg-bg-tertiary transition-colors group">
-                                        <div className="flex items-center justify-between mb-1">
-                                            <div className="flex items-center gap-2 flex-wrap">
-                                                <span className="text-xs font-mono text-text-muted">{formatDate(mov.data)}</span>
-                                                {mov.tipo && <Badge variant="muted">{mov.tipo}</Badge>}
-                                                {mov.fonte === "DATAJUD" && (
-                                                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2 py-0.5 text-[10px] font-semibold text-blue-500 border border-blue-500/20">
-                                                        CNJ · DataJud
-                                                    </span>
-                                                )}
-                                                {mov.fonte === "PUBLICACAO" && (
-                                                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold text-amber-600 border border-amber-500/20">
-                                                        Diário Oficial
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <button onClick={() => setDeletingId({ type: "movimentacao", id: mov.id })}
-                                                className="opacity-0 group-hover:opacity-100 rounded-lg p-1 text-text-muted hover:text-danger transition-all">
-                                                <Trash2 size={14} />
-                                            </button>
-                                        </div>
-                                        <p className="text-sm text-text-primary">{mov.descricao}</p>
-                                        {mov.tipo === "DOCUMENTO" && (
-                                            <div className="mt-1">
-                                                <Badge variant="info">Alteracao vinculada a documento</Badge>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                                {temMaisMov && (
-                                    <div className="px-4 py-3 text-center">
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={() => setMovPage((p) => p + 1)}
-                                        >
-                                            <ChevronDown size={14} />
-                                            Ver mais ({processo.movimentacoes.length - movPage * MOV_PAGE_SIZE} restantes)
-                                        </Button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                    <TimelineFeed
+                        processoId={processo.id}
+                        processoNumeroCnj={null}
+                        eventos={timelineEventos}
+                        stats={timelineStats}
+                        advogados={advogados}
+                        uploadInputRef={uploadInputRef}
+                        uploadingDocumento={uploadingDocumento}
+                        uploadFeedback={uploadFeedback}
+                        onUpload={handleProcessDocumentUpload}
+                    />
                 )}
 
                 {/* ============================== */}
@@ -763,94 +614,6 @@ export function ProcessoDetailTabs({
             {/* ============================== */}
             {/* MODAIS                         */}
             {/* ============================== */}
-
-            {/* Add Movimentação Modal */}
-            <Modal
-                isOpen={showAddMov}
-                onClose={() => {
-                    setShowAddMov(false);
-                    setMovimentacaoArquivoNome("");
-                    if (movimentacaoArquivoInputRef.current) movimentacaoArquivoInputRef.current.value = "";
-                }}
-                title="Nova Movimentação"
-                size="md"
-            >
-                <form onSubmit={handleAddMov} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <Input id="mov-data" name="data" label="Data *" type="date" required />
-                        <Input id="mov-tipo" name="tipo" label="Tipo" placeholder="Ex: Despacho, Decisão..." />
-                    </div>
-                    <Textarea id="mov-descricao" name="descricao" label="Descrição *" required rows={3} placeholder="Descreva a movimentação..." />
-                    <Input id="mov-fonte" name="fonte" label="Fonte" placeholder="Ex: TJ-SP, Diário Oficial..." />
-                    <Select
-                        id="mov-documento-existente"
-                        name="documentoExistenteId"
-                        label="Documento do sistema"
-                        placeholder="Nao vincular documento existente"
-                        options={documentosMovimentacaoOptions}
-                    />
-                    <div className="space-y-2">
-                        <label htmlFor="mov-arquivo" className="text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-                            Novo arquivo
-                        </label>
-                        <input
-                            ref={movimentacaoArquivoInputRef}
-                            id="mov-arquivo"
-                            name="arquivo"
-                            type="file"
-                            accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.txt"
-                            className="hidden"
-                            onChange={(event) => setMovimentacaoArquivoNome(event.target.files?.[0]?.name || "")}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => movimentacaoArquivoInputRef.current?.click()}
-                            className="flex w-full items-center justify-between gap-3 rounded-[20px] border border-border-hover bg-[linear-gradient(135deg,color-mix(in_srgb,var(--glass-input-bg)_78%,white_12%),color-mix(in_srgb,var(--surface-soft)_88%,transparent))] px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_10px_24px_color-mix(in_srgb,var(--shadow-color)_8%,transparent)] transition-all hover:border-accent/35 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_12px_30px_color-mix(in_srgb,var(--shadow-color)_12%,transparent)]"
-                        >
-                            <div className="flex min-w-0 items-center gap-3">
-                                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-accent/10 text-accent">
-                                    <Upload size={16} />
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="text-sm font-medium text-text-primary">
-                                        {movimentacaoArquivoNome || "Selecionar arquivo"}
-                                    </p>
-                                    <p className="truncate text-xs text-text-muted">
-                                        {movimentacaoArquivoNome || "PDF, Word, imagem ou texto para vincular ao andamento"}
-                                    </p>
-                                </div>
-                            </div>
-                            <span className="shrink-0 rounded-full border border-border bg-bg-primary/70 px-3 py-1 text-xs font-medium text-text-secondary">
-                                Escolher
-                            </span>
-                        </button>
-                    </div>
-                    <p className="text-xs text-text-muted">
-                        Use um documento existente ou envie um novo arquivo para deixar o andamento vinculado.
-                    </p>
-                    {movimentacaoFeedback && (
-                        <div className="rounded-2xl border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
-                            {movimentacaoFeedback}
-                        </div>
-                    )}
-                    <div className="flex justify-end gap-3">
-                        <Button
-                            variant="secondary"
-                            type="button"
-                            onClick={() => {
-                                setShowAddMov(false);
-                                setMovimentacaoArquivoNome("");
-                                if (movimentacaoArquivoInputRef.current) movimentacaoArquivoInputRef.current.value = "";
-                            }}
-                        >
-                            Cancelar
-                        </Button>
-                        <Button type="submit" disabled={loading}>
-                            {loading ? <><Loader2 size={16} className="animate-spin" />Salvando...</> : "Adicionar"}
-                        </Button>
-                    </div>
-                </form>
-            </Modal>
 
             {/* Add Parte Modal */}
             <Modal isOpen={showAddParte} onClose={() => setShowAddParte(false)} title="Nova Parte do Processo" size="md">

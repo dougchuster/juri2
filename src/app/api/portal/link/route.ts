@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
             const numero = cliente.whatsapp || cliente.celular;
             if (numero) {
                 try {
-                    const { sendTextMessage } = await import("@/lib/integrations/evolution-api");
+                    const { sendWhatsappDirectText } = await import("@/lib/whatsapp/application/message-service");
                     const msg = `⚖️ *Portal do Cliente - Acesso Exclusivo*\n\nOlá, *${cliente.nome}*!\n\nSeu acesso personalizado ao portal está disponível:\n${portalUrl}\n\n_Link válido por 30 dias._`;
-                    await sendTextMessage(numero, msg);
+                    await sendWhatsappDirectText({ phone: numero, content: msg });
                 } catch (err) {
                     console.error("[Portal] Erro ao enviar WhatsApp:", err);
                 }

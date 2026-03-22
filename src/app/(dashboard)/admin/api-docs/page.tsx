@@ -2,8 +2,6 @@ import { getSession } from "@/actions/auth";
 import { redirect } from "next/navigation";
 import { Code, Lock, Zap, Globe } from "lucide-react";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
 interface Endpoint {
     method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
     path: string;
@@ -21,41 +19,39 @@ interface ApiGroup {
     endpoints: Endpoint[];
 }
 
-// ─── API Catalog ─────────────────────────────────────────────────────────────
-
 const API_GROUPS: ApiGroup[] = [
     {
         name: "Busca Universal",
-        description: "Pesquisa full-text em todos os módulos do sistema.",
+        description: "Pesquisa full-text em todos os modulos do sistema.",
         base: "/api/busca",
         endpoints: [
             {
                 method: "GET", path: "/api/busca", auth: true,
                 description: "Busca clientes, processos, tarefas, prazos e documentos.",
-                params: [{ name: "q", type: "string", required: true, desc: "Termo de busca (mínimo 2 caracteres)" }],
+                params: [{ name: "q", type: "string", required: true, desc: "Termo de busca (minimo 2 caracteres)" }],
                 response: `{ results: { clientes[], processos[], tarefas[], prazos[], documentos[] } }`,
             },
         ],
     },
     {
         name: "Financeiro",
-        description: "Cobranças, previsão de caixa e rentabilidade.",
+        description: "Cobrancas, previsao de caixa e rentabilidade.",
         base: "/api/financeiro",
         endpoints: [
             {
                 method: "POST", path: "/api/financeiro/cobrancas", auth: true,
-                description: "Gera, sincroniza ou cancela cobranças via Asaas/PIX.",
-                params: [{ name: "action", type: "gerar | sincronizar | cancelar", required: true, desc: "Ação a executar" }],
+                description: "Gera, sincroniza ou cancela cobrancas via Asaas/PIX.",
+                params: [{ name: "action", type: "gerar | sincronizar | cancelar", required: true, desc: "Acao a executar" }],
                 body: [
                     { name: "clienteId", type: "string", required: true, desc: "ID do cliente" },
-                    { name: "valor", type: "number", required: true, desc: "Valor da cobrança em reais" },
+                    { name: "valor", type: "number", required: true, desc: "Valor da cobranca em reais" },
                     { name: "vencimento", type: "string (ISO date)", required: true, desc: "Data de vencimento" },
                 ],
                 response: `{ success: boolean; cobrancaId?: string; linkPagamento?: string }`,
             },
             {
                 method: "GET", path: "/api/financeiro/previsao-caixa", auth: true,
-                description: "Retorna a previsão de fluxo de caixa por período.",
+                description: "Retorna a previsao de fluxo de caixa por periodo.",
                 params: [
                     { name: "de", type: "string (ISO date)", required: false, desc: "Data inicial" },
                     { name: "ate", type: "string (ISO date)", required: false, desc: "Data final" },
@@ -66,8 +62,8 @@ const API_GROUPS: ApiGroup[] = [
                 method: "GET", path: "/api/financeiro/rentabilidade", auth: true,
                 description: "Calcula rentabilidade por advogado, cliente ou processo.",
                 params: [
-                    { name: "tipo", type: "advogado | cliente | processo", required: true, desc: "Dimensão do relatório" },
-                    { name: "periodo", type: "string (YYYY-MM)", required: false, desc: "Mês de referência" },
+                    { name: "tipo", type: "advogado | cliente | processo", required: true, desc: "Dimensao do relatorio" },
+                    { name: "periodo", type: "string (YYYY-MM)", required: false, desc: "Mes de referencia" },
                 ],
                 response: `{ itens: [{ id, nome, receita, despesa, lucro, margem }] }`,
             },
@@ -75,18 +71,18 @@ const API_GROUPS: ApiGroup[] = [
     },
     {
         name: "DataJud",
-        description: "Integração com o DataJud (CNJ) para captura de processos e movimentações.",
+        description: "Integracao com o DataJud (CNJ) para captura de processos e movimentacoes.",
         base: "/api/datajud",
         endpoints: [
             {
                 method: "GET", path: "/api/datajud/processo", auth: true,
-                description: "Busca processo no DataJud pelo número CNJ.",
-                params: [{ name: "cnj", type: "string", required: true, desc: "Número CNJ no formato 0000000-00.0000.0.00.0000" }],
+                description: "Busca processo no DataJud pelo numero CNJ.",
+                params: [{ name: "cnj", type: "string", required: true, desc: "Numero CNJ no formato 0000000-00.0000.0.00.0000" }],
                 response: `{ processo: { cnj, tribunal, vara, partes[], movimentacoes[], ... } }`,
             },
             {
                 method: "POST", path: "/api/datajud/sync", auth: true,
-                description: "Sincroniza movimentações de um processo com o DataJud.",
+                description: "Sincroniza movimentacoes de um processo com o DataJud.",
                 body: [{ name: "processoId", type: "string", required: true, desc: "ID interno do processo" }],
                 response: `{ success: boolean; novas: number; movimentacoes: [...] }`,
             },
@@ -106,16 +102,16 @@ const API_GROUPS: ApiGroup[] = [
         ],
     },
     {
-        name: "Agentes Jurídicos (IA)",
-        description: "Endpoints dos agentes de IA para peças, interpretação de publicações e sugestão de prazos.",
+        name: "Agentes Juridicos (IA)",
+        description: "Endpoints dos agentes de IA para pecas, interpretacao de publicacoes e sugestao de prazos.",
         base: "/api/juridico-agents",
         endpoints: [
             {
                 method: "POST", path: "/api/juridico-agents/gerar-peca", auth: true,
-                description: "Gera uma peça jurídica via IA.",
+                description: "Gera uma peca juridica via IA.",
                 body: [
-                    { name: "tipoPeca", type: "string", required: true, desc: "Tipo da peça (ex: PETICAO_INICIAL)" },
-                    { name: "area", type: "string", required: true, desc: "Área jurídica (CIVIL, TRABALHISTA, etc.)" },
+                    { name: "tipoPeca", type: "string", required: true, desc: "Tipo da peca (ex: PETICAO_INICIAL)" },
+                    { name: "area", type: "string", required: true, desc: "Area juridica (CIVIL, TRABALHISTA, etc.)" },
                     { name: "fatos", type: "string", required: true, desc: "Fatos do caso para o prompt da IA" },
                     { name: "processoId", type: "string", required: false, desc: "Vincula ao processo (opcional)" },
                 ],
@@ -123,10 +119,10 @@ const API_GROUPS: ApiGroup[] = [
             },
             {
                 method: "POST", path: "/api/juridico-agents/interpretar-publicacao", auth: true,
-                description: "Usa IA para interpretar uma publicação e sugerir prazos.",
+                description: "Usa IA para interpretar uma publicacao e sugerir prazos.",
                 body: [
-                    { name: "publicacaoId", type: "string", required: true, desc: "ID da publicação" },
-                    { name: "conteudo", type: "string", required: false, desc: "Conteúdo bruto (se não informar publicacaoId)" },
+                    { name: "publicacaoId", type: "string", required: true, desc: "ID da publicacao" },
+                    { name: "conteudo", type: "string", required: false, desc: "Conteudo bruto (se nao informar publicacaoId)" },
                 ],
                 response: `{ prazoSugerido?: { dias, tipo, descricao }; resumo: string }`,
             },
@@ -134,39 +130,80 @@ const API_GROUPS: ApiGroup[] = [
     },
     {
         name: "WhatsApp",
-        description: "Integração via Baileys (WhatsApp Web) para envio de mensagens.",
-        base: "/api/whatsapp",
+        description: "Gestao multiprovedor do WhatsApp com conexoes Meta Cloud API, Evolution + Whatsmeow e envio unificado.",
+        base: "/api/admin/whatsapp/connections",
         endpoints: [
             {
-                method: "GET", path: "/api/whatsapp/status", auth: true,
-                description: "Retorna o status da conexão WhatsApp.",
-                response: `{ status: "CONNECTED" | "DISCONNECTED" | "QR_READY"; qrCode?: string }`,
+                method: "GET", path: "/api/admin/whatsapp/connections", auth: true,
+                description: "Lista as conexoes WhatsApp do escritorio autenticado.",
+                response: `{ connections: [{ id, providerType, displayName, status, isPrimary, connectedPhone }] }`,
             },
             {
-                method: "POST", path: "/api/whatsapp/send", auth: true,
-                description: "Envia mensagem de texto ou template para um número.",
+                method: "POST", path: "/api/admin/whatsapp/connections", auth: true,
+                description: "Cria uma conexao Meta Cloud API, Evolution + Whatsmeow ou legado embutido.",
                 body: [
-                    { name: "numero", type: "string", required: true, desc: "Número no formato internacional (55119...)" },
-                    { name: "mensagem", type: "string", required: true, desc: "Texto da mensagem" },
-                    { name: "clienteId", type: "string", required: false, desc: "Registra no histórico do cliente" },
+                    { name: "providerType", type: "META_CLOUD_API | EVOLUTION_WHATSMEOW | EMBEDDED_BAILEYS_LEGACY", required: true, desc: "Provider da conexao" },
+                    { name: "displayName", type: "string", required: true, desc: "Nome interno da conexao" },
+                    { name: "credenciais", type: "object", required: true, desc: "Segredos do provider escolhido" },
                 ],
-                response: `{ success: boolean; messageId?: string }`,
+                response: `{ ok: true; connection: { id, providerType, status } }`,
+            },
+            {
+                method: "POST", path: "/api/admin/whatsapp/connections/{id}/validate", auth: true,
+                description: "Valida as credenciais da conexao antes do uso operacional.",
+                response: `{ ok: boolean; error?: string; metadata?: object }`,
+            },
+            {
+                method: "POST", path: "/api/admin/whatsapp/connections/{id}/connect", auth: true,
+                description: "Inicia a conexao operacional. Em Evolution pode retornar QR Code; em Meta apenas valida e ativa.",
+                response: `{ ok: boolean; status: string; qrCode?: string | null }`,
+            },
+            {
+                method: "POST", path: "/api/comunicacao/send", auth: true,
+                description: "Envia mensagem unificada por WhatsApp ou email vinculando ao historico da conversa.",
+                body: [
+                    { name: "canal", type: "WHATSAPP | EMAIL", required: true, desc: "Canal de envio" },
+                    { name: "conversationId", type: "string", required: true, desc: "Conversa alvo" },
+                    { name: "content", type: "string", required: false, desc: "Texto da mensagem" },
+                    { name: "attachment", type: "object", required: false, desc: "Midia ou anexo publico para envio" },
+                ],
+                response: `{ ok: true; messageId: string }`,
             },
         ],
     },
     {
         name: "Webhooks",
-        description: "Recebe eventos de sistemas externos (pagamentos, tribunais, etc.).",
+        description: "Recebe eventos de sistemas externos (pagamentos, tribunais e provedores de mensagens).",
         base: "/api/webhooks",
         endpoints: [
             {
                 method: "POST", path: "/api/webhooks/asaas", auth: false,
-                description: "Recebe notificações de pagamento do Asaas (boleto/PIX).",
+                description: "Recebe notificacoes de pagamento do Asaas (boleto/PIX).",
                 body: [
                     { name: "event", type: "string", required: true, desc: "Tipo do evento (PAYMENT_RECEIVED, etc.)" },
                     { name: "payment", type: "object", required: true, desc: "Objeto de pagamento do Asaas" },
                 ],
                 response: `{ received: true }`,
+            },
+            {
+                method: "GET", path: "/api/webhooks/whatsapp/meta", auth: false,
+                description: "Handshake de verificacao do webhook da Meta Cloud API.",
+                params: [
+                    { name: "hub.mode", type: "string", required: true, desc: "Modo enviado pela Meta" },
+                    { name: "hub.verify_token", type: "string", required: true, desc: "Token configurado na conexao" },
+                    { name: "hub.challenge", type: "string", required: true, desc: "Desafio devolvido para confirmacao" },
+                ],
+                response: `Texto puro com o valor de hub.challenge`,
+            },
+            {
+                method: "POST", path: "/api/webhooks/whatsapp/meta", auth: false,
+                description: "Recebe mensagens e status da Meta Cloud API e normaliza para o modulo de comunicacao.",
+                response: `{ ok: true; processed: number }`,
+            },
+            {
+                method: "POST", path: "/api/webhooks/evolution/messages", auth: false,
+                description: "Recebe eventos do Evolution/Whatsmeow, resolve a conexao pela instancia e atualiza conversas.",
+                response: `{ ok: true; processed: number }`,
             },
         ],
     },
@@ -177,12 +214,12 @@ const API_GROUPS: ApiGroup[] = [
         endpoints: [
             {
                 method: "GET", path: "/api/chat/conversations", auth: true,
-                description: "Lista conversas do usuário autenticado.",
+                description: "Lista conversas do usuario autenticado.",
                 response: `{ conversations: [{ id, participantes[], ultimaMensagem, naoLidas }] }`,
             },
             {
                 method: "PATCH", path: "/api/chat/presence", auth: true,
-                description: "Atualiza status de presença (Online/Ausente/Ocupado).",
+                description: "Atualiza status de presenca (Online/Ausente/Ocupado).",
                 body: [{ name: "manualStatus", type: "ONLINE | AWAY | BUSY | null", required: true, desc: "Novo status" }],
                 response: `{ success: boolean }`,
             },
@@ -190,14 +227,12 @@ const API_GROUPS: ApiGroup[] = [
     },
 ];
 
-// ─── Method Badge ─────────────────────────────────────────────────────────────
-
 function MethodBadge({ method }: { method: Endpoint["method"] }) {
     const colors: Record<string, string> = {
-        GET:    "bg-success/15 text-success border-success/30",
-        POST:   "bg-accent/15 text-accent border-accent/30",
-        PATCH:  "bg-warning/15 text-warning border-warning/30",
-        PUT:    "bg-warning/15 text-warning border-warning/30",
+        GET: "bg-success/15 text-success border-success/30",
+        POST: "bg-accent/15 text-accent border-accent/30",
+        PATCH: "bg-warning/15 text-warning border-warning/30",
+        PUT: "bg-warning/15 text-warning border-warning/30",
         DELETE: "bg-danger/15 text-danger border-danger/30",
     };
     return (
@@ -206,8 +241,6 @@ function MethodBadge({ method }: { method: Endpoint["method"] }) {
         </span>
     );
 }
-
-// ─── Endpoint Card ────────────────────────────────────────────────────────────
 
 function EndpointCard({ ep }: { ep: Endpoint }) {
     return (
@@ -233,7 +266,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
                                     <code className="rounded bg-bg-tertiary/60 px-1.5 py-0.5 text-accent shrink-0">{p.name}</code>
                                     <span className="text-text-muted">{p.type}</span>
                                     {p.required && <span className="text-danger text-[10px]">*</span>}
-                                    <span className="text-text-secondary">— {p.desc}</span>
+                                    <span className="text-text-secondary">- {p.desc}</span>
                                 </div>
                             ))}
                         </div>
@@ -249,7 +282,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
                                     <code className="rounded bg-bg-tertiary/60 px-1.5 py-0.5 text-highlight shrink-0">{b.name}</code>
                                     <span className="text-text-muted">{b.type}</span>
                                     {b.required && <span className="text-danger text-[10px]">*</span>}
-                                    <span className="text-text-secondary">— {b.desc}</span>
+                                    <span className="text-text-secondary">- {b.desc}</span>
                                 </div>
                             ))}
                         </div>
@@ -269,8 +302,6 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
     );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export default async function ApiDocsPage() {
     const session = await getSession();
     if (!session) redirect("/login");
@@ -279,17 +310,15 @@ export default async function ApiDocsPage() {
 
     return (
         <div className="p-6 space-y-8 animate-fade-in max-w-4xl">
-            {/* Header */}
             <div>
                 <h1 className="font-display text-2xl font-bold text-text-primary flex items-center gap-2">
-                    <Globe size={22} className="text-accent" /> API Pública — Documentação
+                    <Globe size={22} className="text-accent" /> API Publica - Documentacao
                 </h1>
                 <p className="text-sm text-text-muted mt-1">
-                    Referência completa das {totalEndpoints} rotas disponíveis no sistema.
+                    Referencia completa das {totalEndpoints} rotas disponiveis no sistema.
                 </p>
             </div>
 
-            {/* Overview */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="glass-card p-4 space-y-1">
                     <div className="flex items-center gap-2 text-accent">
@@ -299,7 +328,7 @@ export default async function ApiDocsPage() {
                 </div>
                 <div className="glass-card p-4 space-y-1">
                     <div className="flex items-center gap-2 text-accent">
-                        <Lock size={14} /> <span className="text-xs font-semibold uppercase tracking-wider">Autenticação</span>
+                        <Lock size={14} /> <span className="text-xs font-semibold uppercase tracking-wider">Autenticacao</span>
                     </div>
                     <p className="text-xs text-text-secondary">Cookie <code className="text-accent">session_token</code> (HTTP-only)</p>
                 </div>
@@ -307,19 +336,18 @@ export default async function ApiDocsPage() {
                     <div className="flex items-center gap-2 text-accent">
                         <Zap size={14} /> <span className="text-xs font-semibold uppercase tracking-wider">Formato</span>
                     </div>
-                    <p className="text-xs text-text-secondary">JSON · UTF-8 · REST</p>
+                    <p className="text-xs text-text-secondary">JSON - UTF-8 - REST</p>
                 </div>
             </div>
 
-            {/* Auth guide */}
             <div className="glass-card p-5 space-y-3">
                 <h2 className="font-semibold text-text-primary flex items-center gap-2 text-sm">
-                    <Lock size={15} className="text-accent" /> Autenticação
+                    <Lock size={15} className="text-accent" /> Autenticacao
                 </h2>
                 <p className="text-xs text-text-secondary leading-relaxed">
-                    Todas as rotas marcadas com <Lock size={9} className="inline" /> <strong>Auth</strong> requerem uma sessão ativa.
+                    Todas as rotas marcadas com <Lock size={9} className="inline" /> <strong>Auth</strong> requerem uma sessao ativa.
                     Autentique-se via <code className="rounded bg-bg-tertiary/60 px-1.5 py-0.5 text-accent">POST /api/auth/login</code> e
-                    o cookie <code className="rounded bg-bg-tertiary/60 px-1.5 py-0.5 text-accent">session_token</code> será definido automaticamente.
+                    o cookie <code className="rounded bg-bg-tertiary/60 px-1.5 py-0.5 text-accent">session_token</code> sera definido automaticamente.
                 </p>
                 <pre className="rounded-xl bg-bg-tertiary/60 px-4 py-3 text-[11px] font-mono text-text-secondary overflow-x-auto">{`POST /api/auth/login
 Content-Type: application/json
@@ -328,24 +356,23 @@ Content-Type: application/json
 
 // Response: 200 OK + Set-Cookie: session_token=...`}</pre>
                 <div className="rounded-lg border border-warning/20 bg-warning/5 px-4 py-2.5 text-xs text-warning">
-                    Rotas de webhook (<code>/api/webhooks/*</code>) são autenticadas via assinatura HMAC no header <code>X-Webhook-Signature</code>.
+                    Rotas de webhook (<code>/api/webhooks/*</code>) sao autenticadas via assinatura HMAC ou handshake do provedor.
                 </div>
             </div>
 
-            {/* Errors */}
             <div className="glass-card p-5 space-y-3">
                 <h2 className="font-semibold text-text-primary flex items-center gap-2 text-sm">
-                    <Code size={15} className="text-accent" /> Códigos de Resposta
+                    <Code size={15} className="text-accent" /> Codigos de Resposta
                 </h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {[
                         { code: "200", label: "OK", desc: "Sucesso" },
                         { code: "201", label: "Created", desc: "Recurso criado" },
-                        { code: "400", label: "Bad Request", desc: "Parâmetros inválidos" },
-                        { code: "401", label: "Unauthorized", desc: "Sessão inválida" },
-                        { code: "403", label: "Forbidden", desc: "Sem permissão" },
-                        { code: "404", label: "Not Found", desc: "Recurso não encontrado" },
-                        { code: "422", label: "Unprocessable", desc: "Validação falhou" },
+                        { code: "400", label: "Bad Request", desc: "Parametros invalidos" },
+                        { code: "401", label: "Unauthorized", desc: "Sessao invalida" },
+                        { code: "403", label: "Forbidden", desc: "Sem permissao" },
+                        { code: "404", label: "Not Found", desc: "Recurso nao encontrado" },
+                        { code: "422", label: "Unprocessable", desc: "Validacao falhou" },
                         { code: "500", label: "Server Error", desc: "Erro interno" },
                     ].map((s) => (
                         <div key={s.code} className="rounded-lg border border-border bg-bg-secondary/40 px-3 py-2">
@@ -359,7 +386,6 @@ Content-Type: application/json
                 </div>
             </div>
 
-            {/* Endpoint groups */}
             {API_GROUPS.map((group) => (
                 <section key={group.name} className="space-y-4">
                     <div className="flex items-center gap-3 border-b border-border pb-3">
@@ -380,7 +406,7 @@ Content-Type: application/json
             ))}
 
             <div className="rounded-xl border border-border bg-bg-secondary/40 px-5 py-4 text-xs text-text-muted">
-                Documentação gerada automaticamente em 14/03/2026. Para solicitar acesso à API ou reportar problemas, contate o administrador do sistema.
+                Documentacao atualizada para a arquitetura multiprovedor de comunicacao em 19/03/2026.
             </div>
         </div>
     );

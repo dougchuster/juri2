@@ -1,6 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
-import { sendTextMessage } from "@/lib/integrations/evolution-api";
+import { sendWhatsappDirectText } from "@/lib/whatsapp/application/message-service";
 import { sendEmail } from "@/lib/integrations/email-service";
 
 function isWithinWorkingHours(now: Date) {
@@ -88,7 +88,7 @@ export async function processCampaignBatch() {
 
                     const base = campaign.template?.content || "Mensagem automatica do CRM.";
                     const content = base.replace(/\{\{nome\}\}|\{nome\}|\{nome_cliente\}/g, recipient.cliente.nome.split(" ")[0] || recipient.cliente.nome);
-                    const res = await sendTextMessage(phone, content);
+                    const res = await sendWhatsappDirectText({ phone, content });
                     if (!res.ok) throw new Error(res.error || "Falha no envio WhatsApp");
 
                     await db.campaignRecipient.update({
@@ -96,7 +96,7 @@ export async function processCampaignBatch() {
                         data: {
                             status: "SENT",
                             sentAt: new Date(),
-                            providerMsgId: res.data?.key?.id || null,
+                            providerMsgId: res.providerMessageId || null,
                             errorMessage: null,
                         },
                     });

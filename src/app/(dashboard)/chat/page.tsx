@@ -14,8 +14,8 @@ export default async function ChatPage() {
   }
 
   return (
-    <div className="space-y-6 p-6 animate-fade-in">
-      <div>
+    <div className="flex h-full animate-fade-in flex-col gap-3 px-6 pb-4 pt-5">
+      <div className="shrink-0">
         <h1 className="font-display text-2xl font-bold text-text-primary">Chat Interno</h1>
         <p className="mt-1 text-sm text-text-muted">
           Mensageria privada entre membros do escritorio com presenca, leitura e anexos.
@@ -23,6 +23,7 @@ export default async function ChatPage() {
       </div>
 
       <InternalChatPage
+        data-page-chat
         currentUser={{
           id: currentUser.id,
           name: currentUser.name,

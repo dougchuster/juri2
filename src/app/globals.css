@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@source not "../../.next";
+@source not "../../.claude";
+@source not "../../.runtime-logs";
+@source not "../../backups";
 
 @theme {
   --breakpoint-xs: 375px;
@@ -509,7 +513,7 @@
   background: radial-gradient(circle, color-mix(in srgb, var(--info) 18%, var(--highlight) 28%), transparent 74%);
 }
 
-/* Footer: reduz o brilho das orbs no final da página */
+/* Footer: reduz o brilho das orbs no final da pÃ¡gina */
 .footer-benefits.benefits-aurora-card::before,
 .footer-benefits.benefits-aurora-card::after {
   opacity: 0.25;
@@ -1508,6 +1512,17 @@
   }
 }
 
+@media (max-width: 1024px), (pointer: coarse) {
+  body {
+    background-attachment: scroll;
+  }
+
+  body::before,
+  body::after {
+    position: absolute;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   *,
@@ -1738,7 +1753,7 @@
   }
 }
 
-/* Stack Integrado Card - Classes específicas */
+/* Stack Integrado Card - Classes especÃ­ficas */
 .stack-integrado-card {
   background-color: rgba(243, 239, 233, 0.85) !important;
   border: 1px solid rgba(255, 255, 255, 0.24);
@@ -1789,8 +1804,7 @@
   background-color: #ffffff6e;
 }
 
-/* ─── Hero dark content — wrapper do conteúdo da hero section ─────────────── */
-/* Garante contexto de stacking correto e text-rendering otimizado no fundo marrom */
+/* Hero dark content: wrapper do conteudo da hero section */
 .hero-dark-content {
   position: relative;
   z-index: 1;
@@ -1800,7 +1814,6 @@
 
 /* Fallback para navegadores sem suporte a backdrop-filter */
 @supports not ((-webkit-backdrop-filter: blur(2px)) or (backdrop-filter: blur(2px))) {
-
   .glass-panel,
   .glass-card,
   .surface-soft,
@@ -1812,15 +1825,12 @@
   }
 }
 
-/* ─── Otimizações de performance para mobile ──────────────────────────────── */
-/* Reduz animações pesadas em telas pequenas/touch */
+/* Otimizacoes de performance para mobile */
 @media (max-width: 767px) {
-  /* Desativa aurora animation em mobile — economiza GPU */
   .animate-\[aurora_34s_linear_infinite\] {
     animation: none;
   }
 
-  /* Reduz blur pesado em mobile */
   .blur-\[12px\] {
     filter: blur(6px);
   }
@@ -1830,7 +1840,7 @@
   }
 }
 
-/* Respeita preferência por menos movimento */
+/* Respeita preferencia por menos movimento */
 @media (prefers-reduced-motion: reduce) {
   .animate-\[aurora_34s_linear_infinite\] {
     animation: none;
@@ -1843,7 +1853,7 @@
   }
 }
 
-/* Modo de atualização lenta: reduz custo de animações contínuas */
+/* Modo de atualizacao lenta: reduz custo de animacoes continuas */
 @media (update: slow) {
   .landing-marquee-track,
   .testimonials-column-track,
@@ -1852,3 +1862,4 @@
     transform: none !important;
   }
 }
+
