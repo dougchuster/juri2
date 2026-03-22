@@ -6,7 +6,7 @@
     "dev": "ts-node --transpile-only -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" server.ts dev",
     "dev:next": "next dev --webpack",
     "dev:fast": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "ts-node --transpile-only -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" server.ts start",
     "lint": "eslint",
     "db:generate": "prisma generate",
