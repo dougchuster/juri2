@@ -99,7 +99,7 @@ services:
       AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
       DATABASE_ENABLED: "true"
       DATABASE_PROVIDER: "postgresql"
-      DATABASE_CONNECTION_URI: "postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}"
+      DATABASE_CONNECTION_URI: "postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/evolution_db"
       DATABASE_CONNECTION_CLIENT_NAME: "evolution"
       CACHE_REDIS_ENABLED: "true"
       CACHE_REDIS_URI: "redis://:${REDIS_PASSWORD}@redis:6379"
