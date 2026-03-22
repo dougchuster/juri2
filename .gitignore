@@ -51,7 +51,15 @@ next-env.d.ts
 .whatsapp-auth/
 
 # claude worktrees e logs temporários
-.claude/worktrees/
+.claude/
 .runtime-logs/
 .tmp/
 backups/
+
+# agent tools e scripts internos
+.agent/
+
+# scripts de deploy local
+deploy_fix_vps.py
+setup_clean_vps.sh
+deploy.sh

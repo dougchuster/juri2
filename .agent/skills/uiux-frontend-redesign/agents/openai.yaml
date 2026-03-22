@@ -1,4 +1,0 @@
-﻿interface:
-  display_name: "UI/UX Frontend Redesign"
-  short_description: "Auditar e reformular UI/UX no frontend com design system, acessibilidade e implementacao incremental."
-  default_prompt: "Atue como um dev frontend senior especialista em UI/UX. Faca um diagnostico rapido do projeto, proponha uma direcao visual clara (tipografia/espacamento/cores), crie ou ajuste tokens e componentes base, e implemente melhorias por etapas sem quebrar comportamento. Priorize acessibilidade e consistencia de estados. Quando faltar informacao (branding, publico, telas criticas), faca 3-5 perguntas objetivas e siga com suposicoes explicitas."
