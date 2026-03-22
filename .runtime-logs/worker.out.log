@@ -1,7 +1,0 @@
-[Worker] national-orchestrator (concurrency=2) pronto
-[Worker] crm-campaign-queue (concurrency=1) pronto
-[Worker] attendance-automation-queue (concurrency=4) pronto
-[Worker] attendance-automation-queue (concurrency=4) processando attendance-cmmup1kci004yqgmhp7idpq7j-cmmxxhve6000ajomhwno4gkcp
-[Worker] attendance-automation-queue (concurrency=4) concluiu attendance-cmmup1kci004yqgmhp7idpq7j-cmmxxhve6000ajomhwno4gkcp
-[Worker] attendance-automation-queue (concurrency=4) processando attendance-cmmup1kci004yqgmhp7idpq7j-cmmxxpwwb000kjomhcqacqane
-[Worker] attendance-automation-queue (concurrency=4) concluiu attendance-cmmup1kci004yqgmhp7idpq7j-cmmxxpwwb000kjomhcqacqane
