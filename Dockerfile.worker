@@ -24,6 +24,10 @@ RUN npx prisma generate
 # server-only é uma guarda para bundles do browser — no worker Node.js é desnecessário
 RUN echo "// no-op in worker context" > /app/node_modules/server-only/index.js
 
+# Criar diretórios necessários com permissão correta antes de trocar de usuário
+RUN mkdir -p /app/.whatsapp-auth /app/public/uploads \
+ && chown -R worker:nodejs /app/.whatsapp-auth /app/public/uploads
+
 USER worker
 
 CMD ["npm", "run", "worker:start"]
