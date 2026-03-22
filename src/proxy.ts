@@ -116,7 +116,8 @@ export default function proxy(request: NextRequest) {
         !pathname.startsWith("/_next") &&
         !pathname.startsWith("/favicon") &&
         !pathname.startsWith("/icons") &&
-        !pathname.startsWith("/images");
+        !pathname.startsWith("/images") &&
+        !pathname.startsWith("/uploads");
 
     // Protect page routes - require session_token for regular app, not root-admin pages
     if (isPageRoute && !sessionToken && pathname !== "/login" && !pathname.startsWith("/root-admin") && !pathname.startsWith("/admin-login")) {
