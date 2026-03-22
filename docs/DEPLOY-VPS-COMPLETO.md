@@ -1,266 +1,178 @@
-# 🚀 Deploy Completo — Local → VPS
+# Deploy Completo — Local → VPS (Do Zero)
 
-> Transfere **tudo**: código, banco de dados, uploads e configurações.
+> Leva **tudo**: código, banco de dados, uploads, configurações.
 > Pré-requisito: você não se importa em perder o que está na VPS hoje.
 
 ---
 
-## 📋 Informações do seu ambiente local
+## Arquitetura na VPS
 
-| Item | Valor |
-|------|-------|
-| Banco local | `postgresql://juridico:juridico123@localhost:5432/sistema_juridico` |
-| Uploads | `public/uploads/` (chat-interno, comunicacao, documentos, funcionarios, imgs, whatsapp) |
-| Start | `npm start` (ts-node server.ts) + worker separado |
-| Build | `npm run build` |
+```
+VPS
+├── Docker containers (postgres, redis, evolution-api)
+├── PM2 processos
+│   ├── sistema-juridico        → Next.js app (porta 3000)
+│   └── sistema-juridico-worker → BullMQ worker
+└── /var/www/sistema-juridico/  → código clonado do GitHub
+```
 
 ---
 
-## ETAPA 1 — Commitar tudo localmente
-
-Execute no terminal do projeto (Windows):
+## PASSO 1 — Commitar e fazer push (local, Windows)
 
 ```bash
-cd "C:/Users/dougc/Documents/Sistema Juridico ADV"
-
+# No terminal do projeto
 git add -A
-
-git commit -m "feat: timeline unificada, CRM melhorado, chat interno, automações, seed Douglas, correções gerais"
-
+git commit -m "sua mensagem"
 git push origin main
 ```
 
 ---
 
-## ETAPA 2 — Preparar a VPS (execute via SSH)
+## PASSO 2 — Preparar e enviar banco + uploads (local, Windows PowerShell)
 
-### 2.1 — Parar tudo que está rodando
-```bash
-pm2 delete all
-# ou se usar systemd:
-# systemctl stop sistema-juridico
+Execute o script `prepare-deploy.ps1` passando o IP da sua VPS:
+
+```powershell
+cd "C:\Users\dougc\Documents\Sistema Juridico ADV"
+
+.\scripts\prepare-deploy.ps1 -VPS_IP "SEU_IP_AQUI" -VPS_USER "root"
 ```
 
-### 2.2 — Instalar dependências do sistema (se necessário)
-```bash
-# Node.js 20+
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
+**O script faz automaticamente:**
+- Dump do banco PostgreSQL (via Docker local)
+- Envia o dump para `/tmp/db_backup_deploy.dump` na VPS
+- Sincroniza `public/uploads/` para a VPS
+- Envia o `.env` para a VPS
 
-# PostgreSQL (se não tiver)
-sudo apt-get install -y postgresql postgresql-contrib
-
-# rsync (para uploads)
-sudo apt-get install -y rsync
-```
+> Requisito: ter `scp` disponível no PowerShell (instale OpenSSH ou use Git Bash)
 
 ---
 
-## ETAPA 3 — Banco de dados: dump local → VPS
-
-### 3.1 — Exportar banco LOCAL (execute no Windows, no PowerShell/CMD)
+## PASSO 3 — Executar deploy na VPS (via SSH)
 
 ```bash
-# No terminal do Windows (com pg_dump do PostgreSQL instalado)
-pg_dump -U juridico -h localhost -d sistema_juridico -F c -f C:\backup-juridico.dump
+# 1. Conectar na VPS
+ssh root@SEU_IP
+
+# 2. Baixar e executar o script de deploy
+# Se for a primeira vez (sem o projeto clonado ainda):
+curl -fsSL https://raw.githubusercontent.com/dougchuster/sistema_juridico/main/scripts/vps-deploy.sh | bash
+
+# OU, se já tiver o projeto clonado:
+bash /var/www/sistema-juridico/scripts/vps-deploy.sh
 ```
 
-> Se não tiver `pg_dump` no PATH, está em: `C:\Program Files\PostgreSQL\16\bin\pg_dump.exe`
-
-```bash
-"C:\Program Files\PostgreSQL\16\bin\pg_dump.exe" -U juridico -h localhost -d sistema_juridico -F c -f C:\backup-juridico.dump
-```
-
-### 3.2 — Enviar o dump para a VPS
-```bash
-# Substitua IP_DA_VPS e usuario_ssh
-scp C:\backup-juridico.dump usuario_ssh@IP_DA_VPS:/tmp/backup-juridico.dump
-```
-
-### 3.3 — Restaurar na VPS (via SSH na VPS)
-```bash
-# Criar usuário e banco (se não existir)
-sudo -u postgres psql -c "CREATE USER juridico WITH PASSWORD 'juridico123';"
-sudo -u postgres psql -c "DROP DATABASE IF EXISTS sistema_juridico;"
-sudo -u postgres psql -c "CREATE DATABASE sistema_juridico OWNER juridico;"
-sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE sistema_juridico TO juridico;"
-
-# Restaurar o dump
-pg_restore -U juridico -h localhost -d sistema_juridico -F c /tmp/backup-juridico.dump
-
-# Limpar o arquivo temporário
-rm /tmp/backup-juridico.dump
-```
+**O script `vps-deploy.sh` faz automaticamente:**
+1. Instala Node.js 20, Docker, PM2 (se necessário)
+2. Clona o repositório (ou atualiza se já existir)
+3. Sobe Docker: postgres, redis
+4. Restaura o dump do banco
+5. Verifica o `.env`
+6. `npm install` + `prisma generate` + `prisma migrate deploy`
+7. `npm run build`
+8. Sobe Evolution API via Docker
+9. Inicia app + worker via PM2
+10. Verifica se tudo está respondendo
 
 ---
 
-## ETAPA 4 — Código: clonar/atualizar na VPS
+## PASSO 4 — Ajustar .env na VPS
 
-```bash
-# Se for a primeira vez (clone):
-git clone https://github.com/SEU_USUARIO/SEU_REPO.git /var/www/sistema-juridico
-cd /var/www/sistema-juridico
-
-# Se já existir (atualizar):
-cd /var/www/sistema-juridico
-git fetch --all
-git reset --hard origin/main
-```
-
----
-
-## ETAPA 5 — Configurar .env na VPS
+Após o deploy, edite o `.env` na VPS para ajustar as URLs:
 
 ```bash
 nano /var/www/sistema-juridico/.env
 ```
 
-Conteúdo mínimo (ajuste os valores para a VPS):
+Variáveis que **precisam mudar** do local para produção:
 
 ```env
+# Banco (já aponta para localhost — OK)
 DATABASE_URL="postgresql://juridico:juridico123@localhost:5432/sistema_juridico"
-NEXTAUTH_SECRET="sua_chave_secreta_aqui"
+
+# URL da aplicação — MUDAR para domínio/IP real
+BETTER_AUTH_URL="https://seudominio.com.br"
 NEXTAUTH_URL="https://seudominio.com.br"
 
-# Copie as demais variáveis do seu .env local
-# (API keys, Evolution API, SMTP, etc.)
+# Evolution API — MUDAR para IP/domínio da VPS
+EVOLUTION_API_URL="http://SEU_IP:8080"
+
+# Redis (já OK)
+REDIS_URL="redis://localhost:6379"
 ```
 
-> ⚠️ **Nunca commite o `.env` no git.** Copie manualmente ou use `scp`.
-
-Para copiar o .env local direto:
+Após editar o .env:
 ```bash
-scp "C:\Users\dougc\Documents\Sistema Juridico ADV\.env" usuario_ssh@IP_DA_VPS:/var/www/sistema-juridico/.env
-```
-
-Depois ajuste apenas o `NEXTAUTH_URL` para o domínio da VPS.
-
----
-
-## ETAPA 6 — Instalar dependências e buildar
-
-```bash
-cd /var/www/sistema-juridico
-
-npm install
-
-# Gerar o Prisma Client
-npx prisma generate
-
-# NÃO rodar migrate (banco já veio do dump com estrutura correta)
-# Se quiser garantir migrations aplicadas:
-npx prisma migrate deploy
-
-# Build da aplicação
-npm run build
+pm2 restart all
 ```
 
 ---
 
-## ETAPA 7 — Transferir uploads
-
-```bash
-# Do Windows para VPS (execute no terminal local)
-scp -r "C:\Users\dougc\Documents\Sistema Juridico ADV\public\uploads\" usuario_ssh@IP_DA_VPS:/var/www/sistema-juridico/public/uploads/
-```
-
----
-
-## ETAPA 8 — Iniciar com PM2
-
-```bash
-cd /var/www/sistema-juridico
-
-# Iniciar app principal
-pm2 start npm --name "sistema-juridico" -- start
-
-# Iniciar worker (automações, filas)
-pm2 start npm --name "sistema-juridico-worker" -- run worker:start
-
-# Salvar para reiniciar com o servidor
-pm2 save
-pm2 startup
-
-# Verificar status
-pm2 status
-pm2 logs sistema-juridico --lines 50
-```
-
----
-
-## ETAPA 9 — Verificação final
-
-```bash
-# Checar se a aplicação responde
-curl http://localhost:3000
-
-# Checar banco
-psql -U juridico -h localhost -d sistema_juridico -c "\dt" | head -20
-
-# Ver logs em tempo real
-pm2 logs --lines 100
-```
-
----
-
-## 🔁 Deploys futuros (após o primeiro)
-
-Para próximas atualizações de código (sem precisar do banco):
+## Deploys futuros (só código, sem recriar banco)
 
 ```bash
 # Na VPS
-cd /var/www/sistema-juridico
-git pull origin main
-npm install
-npm run build
-npx prisma migrate deploy   # só aplica migrations novas
-pm2 restart all
+bash /var/www/sistema-juridico/scripts/vps-update.sh
+```
+
+Ou localmente, o script faz push + envia o update:
+```bash
+git push origin main
+ssh root@SEU_IP "bash /var/www/sistema-juridico/scripts/vps-update.sh"
 ```
 
 ---
 
-## ⚡ Script automático (opcional)
-
-Salve como `scripts/deploy-vps.sh` e rode na VPS:
+## Comandos úteis na VPS
 
 ```bash
-#!/bin/bash
-set -e
-APP_DIR="/var/www/sistema-juridico"
+# Status geral
+pm2 status
+docker compose -f /var/www/sistema-juridico/docker-compose.yml ps
 
-echo "🔄 Atualizando código..."
-cd $APP_DIR
-git fetch --all
-git reset --hard origin/main
+# Logs
+pm2 logs sistema-juridico --lines 100
+pm2 logs sistema-juridico-worker --lines 50
+docker compose -f /var/www/sistema-juridico/docker-compose.yml logs evolution-api
 
-echo "📦 Instalando dependências..."
-npm install
-
-echo "🔧 Gerando Prisma..."
-npx prisma generate
-npx prisma migrate deploy
-
-echo "🏗️  Building..."
-npm run build
-
-echo "🚀 Reiniciando serviços..."
+# Reiniciar
 pm2 restart all
 
-echo "✅ Deploy concluído!"
-pm2 status
+# Banco
+docker exec -it sistema-juridico-db psql -U juridico -d sistema_juridico
+
+# Parar tudo
+pm2 stop all
+docker compose -f /var/www/sistema-juridico/docker-compose.yml down
 ```
 
 ---
 
-## 📌 Checklist final
+## Checklist do deploy
 
-- [ ] `git push` feito com todos os arquivos
-- [ ] Dump do banco gerado localmente
-- [ ] Dump enviado e restaurado na VPS
-- [ ] `.env` configurado na VPS (com NEXTAUTH_URL correto)
-- [ ] `npm install && npm run build` executados
-- [ ] `prisma generate` executado
-- [ ] Uploads transferidos via scp
-- [ ] PM2 rodando app + worker
-- [ ] `pm2 save && pm2 startup` executados
-- [ ] Testado via browser
+### Local (antes de começar)
+- [ ] `git push origin main` feito com todas as mudanças
+- [ ] Docker local rodando (para o pg_dump)
+- [ ] `.\scripts\prepare-deploy.ps1 -VPS_IP "SEU_IP"` executado com sucesso
+
+### VPS
+- [ ] `bash vps-deploy.sh` executado sem erros
+- [ ] `.env` ajustado com URLs de produção
+- [ ] `pm2 restart all` feito após ajustar .env
+- [ ] `pm2 status` mostra app + worker como `online`
+- [ ] `docker compose ps` mostra postgres, redis, evolution como `Up`
+- [ ] Acesso pelo browser funcionando
+- [ ] Login funcionando
+- [ ] WhatsApp / Evolution API conectando
+
+---
+
+## Arquivos criados neste deploy
+
+| Arquivo | Descrição |
+|---------|-----------|
+| `scripts/prepare-deploy.ps1` | Script Windows para preparar e enviar tudo à VPS |
+| `scripts/vps-deploy.sh` | Script VPS para deploy completo do zero |
+| `scripts/vps-update.sh` | Script VPS para updates rápidos de código |
+| `ecosystem.config.js` | Configuração PM2 (app + worker) |
