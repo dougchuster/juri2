@@ -27,7 +27,6 @@ const nextConfig: NextConfig = {
     "@google/genai",
     "@hapi/boom",
   ],
-  turbopack: {},
 };
 
 export default nextConfig;
