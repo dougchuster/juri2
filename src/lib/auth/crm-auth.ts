@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import type { Role } from "@/generated/prisma";
+import { getUserOrganizationMappings, resolveUserOrganization } from "@/lib/root-admin/user-organization";
 
 const CRM_ALLOWED_ROLES = new Set<Role>([
     "ADMIN",
@@ -60,6 +61,7 @@ export async function getCRMAuthUser(): Promise<CRMAuthUser | null> {
             user: {
                 select: {
                     id: true,
+                    email: true,
                     role: true,
                     isActive: true,
                     advogado: {
@@ -86,13 +88,22 @@ export async function getCRMAuthUser(): Promise<CRMAuthUser | null> {
         return null;
     }
 
-    const escritorio = await db.escritorio.findFirst({ select: { id: true } });
+    const [escritorios, mappings] = await Promise.all([
+        db.escritorio.findMany({ select: { id: true, nome: true, email: true, slug: true } }),
+        getUserOrganizationMappings(),
+    ]);
+
+    const resolved = resolveUserOrganization(
+        { id: session.user.id, email: session.user.email },
+        escritorios,
+        mappings
+    );
 
     return {
         id: session.user.id,
         role: session.user.role,
         isActive: session.user.isActive,
-        escritorioId: escritorio?.id || null,
+        escritorioId: resolved?.id || null,
         advogadoId: session.user.advogado?.id || null,
         teamIds: (session.user.advogado?.timeMembros || []).map((item) => item.time.id),
         teamNames: (session.user.advogado?.timeMembros || []).map((item) => item.time.nome),
