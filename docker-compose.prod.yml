@@ -89,6 +89,40 @@ services:
     networks:
       - backend
 
+  # ── Evolution API (WhatsApp) ────────────────────────────────────
+  evolution-api:
+    image: atendai/evolution-api:v2.2.3
+    container_name: juridico-evolution
+    restart: unless-stopped
+    environment:
+      SERVER_URL: "https://adv.chuster.com.br/evolution"
+      AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
+      DATABASE_ENABLED: "true"
+      DATABASE_PROVIDER: "postgresql"
+      DATABASE_CONNECTION_URI: "postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}"
+      DATABASE_CONNECTION_CLIENT_NAME: "evolution"
+      CACHE_REDIS_ENABLED: "true"
+      CACHE_REDIS_URI: "redis://:${REDIS_PASSWORD}@redis:6379"
+      CACHE_REDIS_PREFIX_KEY: "evolution"
+      CACHE_LOCAL_ENABLED: "false"
+      LOG_LEVEL: "ERROR"
+      LOG_COLOR: "false"
+      DEL_INSTANCE: "false"
+      QRCODE_LIMIT: "30"
+      WEBHOOK_GLOBAL_ENABLED: "false"
+      CONFIG_SESSION_PHONE_CLIENT: "JuridicoADV"
+      CONFIG_SESSION_PHONE_NAME: "Chrome"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+      - frontend
+    volumes:
+      - evolution_data:/evolution/instances
+
   # ── Nginx Reverse Proxy ─────────────────────────────────────────
   nginx:
     image: nginx:1.27-alpine
@@ -143,4 +177,6 @@ volumes:
   certbot_www:
     driver: local
   uploads_data:
+    driver: local
+  evolution_data:
     driver: local
