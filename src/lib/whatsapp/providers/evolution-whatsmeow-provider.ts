@@ -6,6 +6,7 @@ import {
 } from "@/lib/whatsapp/application/connection-service";
 import type {
     ConnectionSnapshot,
+    NormalizedWebhookEvent,
     WhatsappConnectionWithSecret,
     WhatsappProviderAdapter,
 } from "@/lib/whatsapp/providers/types";
