@@ -43,6 +43,7 @@ let escritorioBId: string;
 let clienteAId: string;
 let clienteBId: string;
 let processoAId: string;
+let advogadoAId: string;
 
 // ─── Setup: garante 2 escritórios distintos ──────────────────────────────────
 
@@ -60,6 +61,11 @@ async function setup() {
         select: { id: true },
     });
     escritorioBId = escrB.id;
+
+    // Usa qualquer advogado existente no banco para FK obrigatória
+    const anyAdvogado = await db.advogado.findFirst({ select: { id: true } });
+    if (!anyAdvogado) throw new Error("Nenhum advogado encontrado — crie um antes de rodar este teste.");
+    advogadoAId = anyAdvogado.id;
 
     console.log(`  Escritório A: ${escritorioAId}`);
     console.log(`  Escritório B: ${escritorioBId}`);
@@ -138,7 +144,8 @@ async function testarWithTenantRLS() {
 
         return tx.processo.create({
             data: {
-                numero: `${PREFIXO}_001`,
+                numeroCnj: `${PREFIXO}_001`,
+                advogadoId: advogadoAId,
                 clienteId: clienteAId,
                 escritorioId: escritorioAId,
             },
@@ -172,7 +179,7 @@ async function testarFindManyComFiltro() {
     const processosBVendoA = await db.processo.findMany({
         where: {
             escritorioId: escritorioBId,
-            numero: { startsWith: PREFIXO },
+            numeroCnj: { startsWith: PREFIXO },
         },
     });
     if (processosBVendoA.length === 0) {
@@ -183,10 +190,10 @@ async function testarFindManyComFiltro() {
 
     // Conta total por tenant — deve ser separado
     const countA = await db.processo.count({
-        where: { escritorioId: escritorioAId, numero: { startsWith: PREFIXO } },
+        where: { escritorioId: escritorioAId, numeroCnj: { startsWith: PREFIXO } },
     });
     const countB = await db.processo.count({
-        where: { escritorioId: escritorioBId, numero: { startsWith: PREFIXO } },
+        where: { escritorioId: escritorioBId, numeroCnj: { startsWith: PREFIXO } },
     });
     if (countA === 1 && countB === 0) {
         ok(`Count isolado: A=${countA}, B=${countB} ✓`);
