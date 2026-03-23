@@ -88,6 +88,7 @@ export default async function DemandasPage({ searchParams }: Props) {
                   where: {
                       advogadoId: advogadoSessaoId,
                       status: { in: ["A_FAZER", "EM_ANDAMENTO", "REVISAO"] },
+                      ...(session?.escritorioId ? { escritorioId: session.escritorioId } : {}),
                       OR: [
                           { dataLimite: { lte: hojeFim } },
                           { dataLimite: null },

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getSession } from "@/actions/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -63,6 +64,11 @@ interface RentabilidadeResponse {
 
 export async function GET(request: NextRequest) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+        }
+
         const { searchParams } = new URL(request.url);
         const inicioParam = searchParams.get("inicio");
         const fimParam = searchParams.get("fim");
@@ -81,6 +87,7 @@ export async function GET(request: NextRequest) {
             where: {
                 createdAt: { gte: inicio, lte: fim },
                 advogado: { ativo: true },
+                ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}),
             },
             select: {
                 id: true,

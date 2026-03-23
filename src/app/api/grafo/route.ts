@@ -42,6 +42,7 @@ export async function GET(req: Request) {
         const limit = Math.min(parseInt(searchParams.get("limit") ?? "50", 10), 200);
 
         const processoWhere: Record<string, unknown> = {};
+        if (session.escritorioId) processoWhere.escritorioId = session.escritorioId;
         if (clienteId) processoWhere.clienteId = clienteId;
         if (advogadoId) processoWhere.advogadoId = advogadoId;
         if (processoId) processoWhere.id = processoId;

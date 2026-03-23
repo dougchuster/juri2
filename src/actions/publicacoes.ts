@@ -16,6 +16,7 @@ import type {
     CapturaOabFormData,
 } from "@/lib/validators/publicacao";
 import { revalidatePath } from "next/cache";
+import { getEscritorioId, tenantFilter } from "@/lib/tenant";
 import {
     extractOabsFromText,
     findAdvogadoByOab,
@@ -337,6 +338,7 @@ async function detectarCompatPrazoIa(): Promise<PrazoIaCompat> {
 async function gerarPrazosAPartirDePublicacoes(
     data: z.infer<typeof gerarPrazosPublicacoesSchema>
 ): Promise<GerarPrazosResultado> {
+    const filter = await tenantFilter();
     const where: Prisma.PublicacaoWhereInput = {
         ...(data.ids?.length ? { id: { in: data.ids } } : {}),
         ...(data.somentePendentes ? { status: { in: ["PENDENTE", "VINCULADA", "DISTRIBUIDA"] } } : {}),
@@ -369,7 +371,7 @@ async function gerarPrazosAPartirDePublicacoes(
     if (data.incluirSemProcessoVinculado || data.criarProcessoSemVinculo) {
         const [candidatos, advogadosAtivos] = await Promise.all([
             db.processo.findMany({
-                where: { numeroCnj: { not: null } },
+                where: { numeroCnj: { not: null }, ...filter },
                 select: {
                     id: true,
                     advogadoId: true,
@@ -393,8 +395,8 @@ async function gerarPrazosAPartirDePublicacoes(
         advogadoFallbackId = advogadosAtivos[0]?.id || null;
     }
     if (data.criarProcessoSemVinculo && data.clientePadraoId) {
-        const clientePadrao = await db.cliente.findUnique({
-            where: { id: data.clientePadraoId },
+        const clientePadrao = await db.cliente.findFirst({
+            where: { id: data.clientePadraoId, ...filter },
             select: { id: true },
         });
         clientePadraoValidoId = clientePadrao?.id || null;
@@ -446,8 +448,8 @@ async function gerarPrazosAPartirDePublicacoes(
 
             let processo =
                 pub.processoId
-                    ? await db.processo.findUnique({
-                          where: { id: pub.processoId },
+                    ? await db.processo.findFirst({
+                          where: { id: pub.processoId, ...filter },
                           select: {
                               id: true,
                               advogadoId: true,
@@ -495,6 +497,7 @@ async function gerarPrazosAPartirDePublicacoes(
                                 resultado: "PENDENTE",
                                 advogadoId: advogadoIdOrigem,
                                 clienteId: clientePadraoValidoId,
+                                escritorioId: filter.escritorioId,
                                 observacoes: clientePadraoValidoId
                                     ? `Criado pela rotina de publicacoes com cliente definido manualmente em ${new Date().toISOString()}.`
                                     : `Criado pela rotina de publicacoes (triagem, sem cliente) em ${new Date().toISOString()}.`,
@@ -515,7 +518,7 @@ async function gerarPrazosAPartirDePublicacoes(
                         if (prismaError?.code !== "P2002") throw processoCreateError;
 
                         const existente = await db.processo.findFirst({
-                            where: { numeroCnj: cnjDetectado },
+                            where: { numeroCnj: cnjDetectado, ...filter },
                             select: { id: true, advogadoId: true, numeroCnj: true },
                         });
                         if (existente) {
@@ -1581,9 +1584,10 @@ export async function criarProcessoParaPublicacao(
     const payload = parsed.data;
 
     try {
+        const filter = await tenantFilter();
         const [cliente, pub] = await Promise.all([
-            db.cliente.findUnique({
-                where: { id: payload.clienteId },
+            db.cliente.findFirst({
+                where: { id: payload.clienteId, ...filter },
                 select: { id: true },
             }),
             db.publicacao.findUnique({
@@ -1629,7 +1633,7 @@ export async function criarProcessoParaPublicacao(
         const processoExistente =
             cnjDetectado
                 ? await db.processo.findFirst({
-                      where: { numeroCnj: cnjDetectado },
+                      where: { numeroCnj: cnjDetectado, ...filter },
                       select: { id: true, numeroCnj: true, cliente: { select: { nome: true } } },
                   })
                 : null;
@@ -1656,6 +1660,7 @@ export async function criarProcessoParaPublicacao(
                     advogadoId: advogadoEscolhidoId,
                     clienteId: payload.clienteId,
                     tribunal: pub.tribunal,
+                    escritorioId: filter.escritorioId,
                     observacoes: `Processo criado manualmente a partir da publicacao ${pub.id}.`,
                 },
                 select: { id: true },
@@ -2613,10 +2618,11 @@ export async function vincularPublicacoesEmLote(
 
     try {
         const actor = await getAuditoriaActor();
+        const filter = await tenantFilter();
         const payload = parsed.data;
         const [processo, publicacoes] = await Promise.all([
-            db.processo.findUnique({
-                where: { id: payload.processoId },
+            db.processo.findFirst({
+                where: { id: payload.processoId, ...filter },
                 select: { id: true, numeroCnj: true },
             }),
             db.publicacao.findMany({
@@ -2714,9 +2720,10 @@ export async function criarProcessosParaPublicacoesEmLote(
 
     try {
         const actor = await getAuditoriaActor();
+        const filter = await tenantFilter();
         const [cliente, advogadosAtivos, publicacoes] = await Promise.all([
-            db.cliente.findUnique({
-                where: { id: payload.clienteId },
+            db.cliente.findFirst({
+                where: { id: payload.clienteId, ...filter },
                 select: { id: true, nome: true },
             }),
             db.advogado.findMany({
@@ -2784,7 +2791,7 @@ export async function criarProcessosParaPublicacoesEmLote(
 
                 let processo = cnjDetectado
                     ? await db.processo.findFirst({
-                          where: { numeroCnj: cnjDetectado },
+                          where: { numeroCnj: cnjDetectado, ...filter },
                           select: { id: true, numeroCnj: true },
                       })
                     : null;
@@ -2800,6 +2807,7 @@ export async function criarProcessosParaPublicacoesEmLote(
                                 advogadoId: advogadoIdEscolhido,
                                 clienteId: payload.clienteId,
                                 tribunal: pub.tribunal,
+                                escritorioId: filter.escritorioId,
                                 observacoes: `Processo criado em lote a partir da publicacao ${pub.id}.`,
                             },
                             select: { id: true, numeroCnj: true },
@@ -2811,7 +2819,7 @@ export async function criarProcessosParaPublicacoesEmLote(
                         if (!(prismaError && prismaError.code === "P2002" && cnjDetectado)) throw error;
 
                         const processoExistente = await db.processo.findFirst({
-                            where: { numeroCnj: cnjDetectado },
+                            where: { numeroCnj: cnjDetectado, ...filter },
                             select: { id: true, numeroCnj: true },
                         });
                         if (!processoExistente) throw error;

@@ -329,6 +329,7 @@ export const getSession = cache(async () => {
                         avatarUrl: true,
                         isActive: true,
                         onboardingCompleted: true,
+                        escritorioId: true,
                         advogado: {
                             select: { id: true, oab: true, seccional: true },
                         },

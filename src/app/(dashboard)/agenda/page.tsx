@@ -129,6 +129,7 @@ export default async function AgendaPage({ searchParams }: Props) {
         db.processo.findMany({
             where: {
                 status: { notIn: ["ENCERRADO", "ARQUIVADO"] },
+                ...(user.escritorioId ? { escritorioId: user.escritorioId } : {}),
                 ...(user.role === "ADVOGADO" && user.advogado?.id ? { advogadoId: user.advogado.id } : {}),
             },
             select: { id: true, numeroCnj: true, cliente: { select: { nome: true } } },

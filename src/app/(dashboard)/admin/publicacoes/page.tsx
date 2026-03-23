@@ -10,10 +10,14 @@ import {
 import { listarAutomacaoJobsRecentes } from "@/lib/services/automacao-nacional";
 import { getDataJudMonitorState } from "@/lib/services/datajud-monitor";
 import { getDataJudAliasesState } from "@/lib/services/datajud-aliases";
+import { getSession } from "@/actions/auth";
 import { db } from "@/lib/db";
 
 export default async function AdminPublicacoesPage() {
     await ensureCatalogoTribunaisNacional(false);
+
+    const session = await getSession();
+    const escritorioFilter = session?.escritorioId ? { escritorioId: session.escritorioId } : {};
 
     const [config, jobState, catalogo, jobsAutomacao, monitor, aliases, advogados, clientes] = await Promise.all([
         getPublicacoesConfig(),
@@ -29,7 +33,7 @@ export default async function AdminPublicacoesPage() {
             take: 200,
         }),
         db.cliente.findMany({
-            where: { status: { in: ["ATIVO", "PROSPECTO"] } },
+            where: { status: { in: ["ATIVO", "PROSPECTO"] }, ...escritorioFilter },
             select: { id: true, nome: true },
             orderBy: { nome: "asc" },
             take: 400,

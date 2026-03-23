@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { getSession } from "@/actions/auth";
+import { getEscritorioId, tenantFilter } from "@/lib/tenant";
 import { revalidatePath } from "next/cache";
 import {
     getOrCreateConversation, createMessage, getConversations as dalGetConversations,
@@ -378,8 +379,10 @@ async function safeGetSession() {
 
 async function ensureConversationAttendance(conversationId: string) {
     const session = await safeGetSession();
-    const conversation = await db.conversation.findUnique({
-        where: { id: conversationId },
+    const escritorioId = session?.escritorioId ?? null;
+    const tenantWhere = escritorioId ? { id: conversationId, escritorioId } : { id: conversationId };
+    const conversation = await db.conversation.findFirst({
+        where: tenantWhere,
         include: {
             cliente: {
                 select: {
@@ -656,8 +659,9 @@ export async function sendEmailMessage(
         }
         : clienteIdOrInput;
 
-    const cliente = await db.cliente.findUnique({
-        where: { id: input.clienteId },
+    const filter = await tenantFilter();
+    const cliente = await db.cliente.findFirst({
+        where: { id: input.clienteId, ...filter },
         select: { id: true, email: true, nome: true },
     });
 
@@ -666,8 +670,8 @@ export async function sendEmailMessage(
 
     const [existingConversation, emailService] = await Promise.all([
         input.conversationId
-            ? db.conversation.findUnique({
-                where: { id: input.conversationId },
+            ? db.conversation.findFirst({
+                where: { id: input.conversationId, ...filter },
                 select: { id: true, canal: true, subject: true },
             })
             : Promise.resolve(null),
@@ -811,8 +815,8 @@ export async function sendTemplateMessage(
     const template = await db.messageTemplate.findUnique({ where: { name: templateName } });
     if (!template) return { error: "Template não encontrado" };
 
-    const cliente = await db.cliente.findUnique({
-        where: { id: clienteId },
+    const cliente = await db.cliente.findFirst({
+        where: { id: clienteId, ...await tenantFilter() },
         select: { id: true, nome: true, email: true, whatsapp: true, celular: true },
     });
     if (!cliente) return { error: "Cliente não encontrado" };
@@ -864,8 +868,9 @@ export async function fetchMessages(conversationId: string, page?: number) {
 }
 
 export async function markConversationAsRead(conversationId: string) {
-    await db.conversation.update({
-        where: { id: conversationId },
+    const filter = await tenantFilter();
+    await db.conversation.updateMany({
+        where: { id: conversationId, ...filter },
         data: { unreadCount: 0 },
     });
     await db.message.updateMany({
@@ -876,24 +881,27 @@ export async function markConversationAsRead(conversationId: string) {
 }
 
 export async function closeConversation(conversationId: string) {
-    await db.conversation.update({
-        where: { id: conversationId },
+    const filter = await tenantFilter();
+    await db.conversation.updateMany({
+        where: { id: conversationId, ...filter },
         data: { status: "CLOSED" },
     });
     revalidatePath("/comunicacao");
 }
 
 export async function reopenConversation(conversationId: string) {
-    await db.conversation.update({
-        where: { id: conversationId },
+    const filter = await tenantFilter();
+    await db.conversation.updateMany({
+        where: { id: conversationId, ...filter },
         data: { status: "OPEN" },
     });
     revalidatePath("/comunicacao");
 }
 
 export async function unlinkConversationProcess(conversationId: string) {
-    await db.conversation.update({
-        where: { id: conversationId },
+    const filter = await tenantFilter();
+    await db.conversation.updateMany({
+        where: { id: conversationId, ...filter },
         data: { processoId: null },
     });
     revalidatePath("/comunicacao");
@@ -901,8 +909,9 @@ export async function unlinkConversationProcess(conversationId: string) {
 }
 
 export async function deleteConversationPermanent(conversationId: string) {
-    await db.conversation.delete({
-        where: { id: conversationId },
+    const filter = await tenantFilter();
+    await db.conversation.deleteMany({
+        where: { id: conversationId, ...filter },
     });
     revalidatePath("/comunicacao");
     return { success: true };
@@ -974,8 +983,8 @@ export async function fetchClientChatProfile(clienteId: string) {
 
     try {
         const [cliente, escritorio] = await Promise.all([
-            db.cliente.findUnique({
-                where: { id: clienteId },
+            db.cliente.findFirst({
+                where: { id: clienteId, ...await tenantFilter() },
                 select: {
                     id: true,
                     nome: true,
@@ -1097,6 +1106,10 @@ export async function updateClientChatProfile(data: {
     const whatsapp = data.whatsapp?.trim() ? autoFormatPhoneForStorage(data.whatsapp) : null;
     const primaryPhone = whatsapp || celular;
 
+    const filter = await tenantFilter();
+    const owned = await db.cliente.findFirst({ where: { id: data.id, ...filter }, select: { id: true } });
+    if (!owned) return { error: "Cliente não encontrado ou sem permissão." };
+
     const cliente = await db.cliente.update({
         where: { id: data.id },
         data: {
@@ -1165,9 +1178,10 @@ export async function fetchConversationWorkspace(conversationId: string) {
 
     try {
         const session = await safeGetSession();
+        const filter = await tenantFilter();
         const attendance = await ensureConversationAttendance(conversationId);
-        const conversation = await db.conversation.findUnique({
-            where: { id: conversationId },
+        const conversation = await db.conversation.findFirst({
+            where: { id: conversationId, ...filter },
             select: {
                 id: true,
                 clienteId: true,
@@ -1246,7 +1260,7 @@ export async function fetchConversationWorkspace(conversationId: string) {
                 orderBy: { name: "asc" },
             }),
             db.processo.findMany({
-                where: { clienteId: conversation.clienteId },
+                where: { clienteId: conversation.clienteId, ...filter },
                 select: { id: true, numeroCnj: true, objeto: true, status: true },
                 orderBy: { updatedAt: "desc" },
                 take: 20,
@@ -1538,8 +1552,8 @@ export async function saveConversationWorkspace(input: {
         }),
     ]);
 
-    const channel = await db.conversation.findUnique({
-        where: { id: input.conversationId },
+    const channel = await db.conversation.findFirst({
+        where: { id: input.conversationId, ...await tenantFilter() },
         select: { canal: true },
     });
 
@@ -1616,8 +1630,8 @@ export async function convertConversationLeadToClient(conversationId: string) {
     const session = await getSession();
     if (!session) return { error: "Nao autenticado" };
 
-    const conversation = await db.conversation.findUnique({
-        where: { id: conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: conversationId, ...await tenantFilter() },
         select: { clienteId: true, canal: true, atendimentoId: true },
     });
     if (!conversation) return { error: "Conversa nao encontrada" };
@@ -1667,8 +1681,8 @@ export async function createConversationTask(input: {
     const session = await getSession();
     if (!session) return { error: "Nao autenticado" };
 
-    const conversation = await db.conversation.findUnique({
-        where: { id: input.conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: input.conversationId, ...await tenantFilter() },
         include: { cliente: { select: { nome: true } } },
     });
     const attendance = await ensureConversationAttendance(input.conversationId);
@@ -1710,8 +1724,8 @@ export async function createConversationPrazo(input: {
     const session = await getSession();
     if (!session) return { error: "Nao autenticado" };
 
-    const conversation = await db.conversation.findUnique({
-        where: { id: input.conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: input.conversationId, ...await tenantFilter() },
         select: { canal: true },
     });
     const attendance = await ensureConversationAttendance(input.conversationId);
@@ -1761,8 +1775,8 @@ export async function createConversationMeeting(input: {
     const session = await getSession();
     if (!session) return { error: "Nao autenticado" };
 
-    const conversation = await db.conversation.findUnique({
-        where: { id: input.conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: input.conversationId, ...await tenantFilter() },
         include: { cliente: { select: { nome: true } } },
     });
     const attendance = await ensureConversationAttendance(input.conversationId);
@@ -1811,8 +1825,8 @@ export async function createConversationDocumentDraft(input: {
     const session = await getSession();
     if (!session) return { error: "Nao autenticado" };
 
-    const conversation = await db.conversation.findUnique({
-        where: { id: input.conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: input.conversationId, ...await tenantFilter() },
         include: {
             cliente: { select: { id: true, nome: true } },
             processo: { select: { id: true, numeroCnj: true } },
@@ -1821,7 +1835,7 @@ export async function createConversationDocumentDraft(input: {
     const attendance = await ensureConversationAttendance(input.conversationId);
     if (!conversation || !attendance) return { error: "Atendimento nao encontrado para a conversa" };
 
-    const escritorioId = await getDefaultEscritorioId();
+    const escritorioId = await getEscritorioId();
     if (!escritorioId) return { error: "Escritorio nao configurado" };
 
     const now = new Date();
@@ -1883,8 +1897,8 @@ export async function requestDocumentsFromConversation(conversationId: string) {
     const session = await getSession();
     if (!session) return { error: "Nao autenticado" };
 
-    const conversation = await db.conversation.findUnique({
-        where: { id: conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: conversationId, ...await tenantFilter() },
         include: { cliente: { select: { id: true, nome: true } } },
     });
     const attendance = await ensureConversationAttendance(conversationId);
@@ -1925,15 +1939,15 @@ export async function closeConversationAttendance(conversationId: string) {
     const session = await getSession();
     if (!session) return { error: "Nao autenticado" };
 
-    const conversation = await db.conversation.findUnique({
-        where: { id: conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: conversationId, ...await tenantFilter() },
         select: { canal: true },
     });
     const attendance = await ensureConversationAttendance(conversationId);
     if (!conversation || !attendance) return { error: "Atendimento nao encontrado para a conversa" };
 
-    await db.conversation.update({
-        where: { id: conversationId },
+    await db.conversation.updateMany({
+        where: { id: conversationId, ...await tenantFilter() },
         data: { status: "CLOSED" },
     });
     await db.atendimento.update({

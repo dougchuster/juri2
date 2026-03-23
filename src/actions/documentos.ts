@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getSession } from "@/actions/auth";
+import { getEscritorioId, tenantFilter } from "@/lib/tenant";
 import { registrarLogAuditoria } from "@/lib/services/audit-log";
 import {
     DocumentoVersioningError,
@@ -75,14 +76,6 @@ async function getAuditActor() {
         userId: session?.id || null,
         nome: session?.name || null,
     };
-}
-
-async function getDefaultEscritorioId() {
-    const escritorio = await db.escritorio.findFirst({
-        orderBy: { createdAt: "asc" },
-        select: { id: true },
-    });
-    return escritorio?.id || null;
 }
 
 function safeRevalidate(pathname: string) {
@@ -354,14 +347,15 @@ export async function importDocumentoToLibrary(input: {
         const mimeType = file.type || "application/octet-stream";
 
         const [escritorioId, pastaValida, actor] = await Promise.all([
-            getDefaultEscritorioId(),
+            getEscritorioId(),
             pastaId ? db.pastaDocumento.findUnique({ where: { id: pastaId } }) : Promise.resolve(null),
             getAuditActor(),
         ]);
 
+        const filter = await tenantFilter();
         const processo = processoId
-            ? await db.processo.findUnique({
-                where: { id: processoId },
+            ? await db.processo.findFirst({
+                where: { id: processoId, ...filter },
                 select: {
                     id: true,
                     numeroCnj: true,

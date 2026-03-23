@@ -34,8 +34,8 @@ export async function POST(
         const { id } = await context.params;
         const { incomingTextOverride, previewOnly, recentInboundCount } = parsedBody.data;
 
-        const conversation = await db.conversation.findUnique({
-            where: { id },
+        const conversation = await db.conversation.findFirst({
+            where: { id, ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}) },
             select: {
                 id: true,
                 canal: true,

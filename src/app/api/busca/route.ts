@@ -13,10 +13,12 @@ export async function GET(req: NextRequest) {
 
     const scopedAdvogadoId =
         session.role === "ADVOGADO" ? (session.advogado?.id ?? null) : null;
+    const escritorioFilter = session.escritorioId ? { escritorioId: session.escritorioId } : {};
 
     const [clientes, processos, tarefas, prazos, documentos] = await Promise.all([
         db.cliente.findMany({
             where: {
+                ...escritorioFilter,
                 OR: [
                     { nome: { contains: q, mode: "insensitive" } },
                     { email: { contains: q, mode: "insensitive" } },
@@ -30,6 +32,7 @@ export async function GET(req: NextRequest) {
 
         db.processo.findMany({
             where: {
+                ...escritorioFilter,
                 ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}),
                 OR: [
                     { numeroCnj: { contains: q, mode: "insensitive" } },
@@ -50,6 +53,7 @@ export async function GET(req: NextRequest) {
 
         db.tarefa.findMany({
             where: {
+                ...escritorioFilter,
                 ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}),
                 titulo: { contains: q, mode: "insensitive" },
                 status: { not: "CANCELADA" },

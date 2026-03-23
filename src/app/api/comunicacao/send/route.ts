@@ -28,8 +28,8 @@ export async function POST(request: NextRequest) {
     }
 
     const input = parsed.data;
-    const conversation = await db.conversation.findUnique({
-        where: { id: input.conversationId },
+    const conversation = await db.conversation.findFirst({
+        where: { id: input.conversationId, ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}) },
         include: {
             cliente: { select: { id: true } },
             processo: { select: { id: true } },

@@ -29,8 +29,8 @@ export async function PATCH(
             ? new Date(Date.now() + pausarPorMinutos * 60 * 1000)
             : null;
 
-        const conversation = await db.conversation.findUnique({
-            where: { id },
+        const conversation = await db.conversation.findFirst({
+            where: { id, ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}) },
         });
 
         if (!conversation) {

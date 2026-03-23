@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { getSession } from "@/actions/auth";
 import { gerarTokenPortal } from "@/lib/portal/portal-token";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,11 @@ const schema = z.object({
 
 export async function POST(request: NextRequest) {
     try {
+        const session = await getSession();
+        if (!session) {
+            return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+        }
+
         const body = await request.json();
         const parsed = schema.safeParse(body);
         if (!parsed.success) {
@@ -21,9 +27,9 @@ export async function POST(request: NextRequest) {
 
         const { clienteId, enviarEmail, enviarWhatsapp } = parsed.data;
 
-        // Verifica se cliente existe
-        const cliente = await db.cliente.findUnique({
-            where: { id: clienteId },
+        // Verifica se cliente existe e pertece ao mesmo escritório
+        const cliente = await db.cliente.findFirst({
+            where: { id: clienteId, ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}) },
             select: { id: true, nome: true, email: true, celular: true, whatsapp: true },
         });
 

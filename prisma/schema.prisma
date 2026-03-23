@@ -13,6 +13,7 @@ model User {
   name                             String
   passwordHash                     String
   role                             Role                             @default(ADVOGADO)
+  escritorioId                     String?
   avatarUrl                        String?
   isActive                         Boolean                          @default(true)
   lastLoginAt                      DateTime?
@@ -21,6 +22,7 @@ model User {
   whatsapp                         String?
   onboardingCompleted              Boolean                          @default(false)
   advogado                         Advogado?
+  escritorio                       Escritorio?                      @relation(fields: [escritorioId], references: [id])
   agendaCompartilhamentos          AgendaCompartilhamento[]         @relation("AgendaCompartilhamentoUsuario")
   comentariosAgenda                AgendamentoComentario[]          @relation("AgendamentoComentarioAutor")
   filtrosSalvos                    AgendamentoFiltroSalvo[]         @relation("AgendamentoFiltroSalvoUsuario")
@@ -76,6 +78,7 @@ model User {
 
   @@index([email])
   @@index([role])
+  @@index([escritorioId])
   @@map("users")
 }
 
@@ -225,6 +228,12 @@ model Escritorio {
   pastasDocumento                 PastaDocumento[]                 @relation("EscritorioPastas")
   tiposAcao                       TipoAcao[]
   whatsappConnections             WhatsappConnection[]
+  agendamentosEscritorio          Agendamento[]
+  clientesEscritorio              Cliente[]
+  conversationsEscritorio         Conversation[]
+  processosEscritorio             Processo[]
+  tarefasEscritorio               Tarefa[]
+  usersEscritorio                 User[]
 
   @@map("escritorios")
 }
@@ -330,6 +339,8 @@ model Cliente {
   updatedAt                       DateTime                         @updatedAt
   areasJuridicas                  String[]
   canalPreferido                  CanalPreferido?
+  escritorioId                    String?
+  escritorio                      Escritorio?                      @relation(fields: [escritorioId], references: [id])
   agendamentos                    Agendamento[]                    @relation("AgendamentoCliente")
   atendimentos                    Atendimento[]
   calculos                        Calculo[]                        @relation("CalculoCliente")
@@ -367,6 +378,7 @@ model Cliente {
   @@index([status])
   @@index([inadimplente])
   @@index([origemId])
+  @@index([escritorioId])
   @@index([createdAt])
   @@index([lastContactAt])
   @@index([crmScore])
@@ -487,6 +499,7 @@ model Processo {
   dataEncerramento                DateTime?                        @db.Date
   advogadoId                      String
   clienteId                       String?
+  escritorioId                    String?
   observacoes                     String?
   dataUltimaMovimentacao          DateTime?
   createdAt                       DateTime                         @default(now())
@@ -515,6 +528,7 @@ model Processo {
   atribuicoesLog                  ProcessoAtribuicaoLog[]
   advogado                        Advogado                         @relation(fields: [advogadoId], references: [id])
   cliente                         Cliente?                         @relation(fields: [clienteId], references: [id])
+  escritorio                      Escritorio?                      @relation(fields: [escritorioId], references: [id])
   faseProcessual                  FaseProcessual?                  @relation(fields: [faseProcessualId], references: [id])
   tipoAcao                        TipoAcao?                        @relation(fields: [tipoAcaoId], references: [id])
   vinculosDestino                 ProcessoVinculado[]              @relation("ProcessoDestino")
@@ -528,6 +542,7 @@ model Processo {
   @@index([tipo])
   @@index([advogadoId])
   @@index([clienteId])
+  @@index([escritorioId])
   @@index([faseProcessualId])
   @@index([tipoAcaoId])
   @@index([dataDistribuicao])
@@ -734,6 +749,7 @@ model Tarefa {
   processoId         String?
   advogadoId         String
   criadoPorId        String
+  escritorioId       String?
   horasEstimadas     Float?
   horasGastas        Float?               @default(0)
   workflowTemplateId String?
@@ -748,11 +764,13 @@ model Tarefa {
   registrosHora      TarefaRegistroHora[]
   advogado           Advogado             @relation(fields: [advogadoId], references: [id])
   coluna             KanbanColuna?        @relation(fields: [colunaId], references: [id])
+  escritorio         Escritorio?          @relation(fields: [escritorioId], references: [id])
   processo           Processo?            @relation(fields: [processoId], references: [id])
   quadro             KanbanQuadro?        @relation(fields: [quadroId], references: [id])
 
   @@index([advogadoId])
   @@index([processoId])
+  @@index([escritorioId])
   @@index([status])
   @@index([prioridade])
   @@index([dataLimite])
@@ -1786,6 +1804,7 @@ model Conversation {
   subject                String?
   processoId             String?
   assignedToId           String?
+  escritorioId           String?
   lastMessageAt          DateTime?
   unreadCount            Int                           @default(0)
   createdAt              DateTime                      @default(now())
@@ -1803,6 +1822,7 @@ model Conversation {
   assignedTo             User?                         @relation(fields: [assignedToId], references: [id])
   atendimento            Atendimento?                  @relation(fields: [atendimentoId], references: [id])
   cliente                Cliente                       @relation(fields: [clienteId], references: [id])
+  escritorio             Escritorio?                   @relation(fields: [escritorioId], references: [id])
   processo               Processo?                     @relation(fields: [processoId], references: [id])
   messages               Message[]
   whatsappConnection     WhatsappConnection?           @relation(fields: [whatsappConnectionId], references: [id])
@@ -1811,6 +1831,7 @@ model Conversation {
   @@index([status])
   @@index([canal])
   @@index([atendimentoId])
+  @@index([escritorioId])
   @@index([lastMessageAt])
   @@index([whatsappConnectionId])
   @@map("conversations")
@@ -2855,6 +2876,7 @@ model Agendamento {
   criadoPorId         String
   processoId          String?
   clienteId           String?
+  escritorioId        String?
   publicacaoOrigemId  String?
   prazoLegadoId       String?                 @unique
   audienciaLegadaId   String?                 @unique
@@ -2875,6 +2897,7 @@ model Agendamento {
   concluidoPorUser    User?                   @relation("AgendamentoConcluido", fields: [concluidoPorId], references: [id])
   conferidoPor        User?                   @relation("AgendamentoConferidoPor", fields: [conferidoPorId], references: [id])
   criadoPor           User                    @relation("AgendamentoCriadoPor", fields: [criadoPorId], references: [id])
+  escritorio          Escritorio?             @relation(fields: [escritorioId], references: [id])
   processo            Processo?               @relation("AgendamentoProcesso", fields: [processoId], references: [id])
   publicacaoOrigem    Publicacao?             @relation("AgendamentoPublicacao", fields: [publicacaoOrigemId], references: [id])
   recorrencia         AgendamentoRecorrencia? @relation(fields: [recorrenciaId], references: [id])
@@ -2887,6 +2910,7 @@ model Agendamento {
   @@index([criadoPorId])
   @@index([processoId])
   @@index([clienteId])
+  @@index([escritorioId])
   @@index([tipo])
   @@index([status])
   @@index([dataInicio])

@@ -20,7 +20,7 @@ async function advogadoCanAccessProcesso(user: Awaited<ReturnType<typeof getSess
     if (!isScopedAdvogado(user)) return true;
     if (!user?.advogado?.id) return false;
     const found = await db.processo.findFirst({
-        where: { id: processoId, advogadoId: user.advogado.id },
+        where: { id: processoId, advogadoId: user.advogado.id, ...(user.escritorioId ? { escritorioId: user.escritorioId } : {}) },
         select: { id: true },
     });
     return Boolean(found);

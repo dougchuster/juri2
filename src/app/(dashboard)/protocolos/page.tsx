@@ -21,7 +21,10 @@ export default async function ProtocolosPage({ searchParams }: Props) {
         getProtocolos({ search, tipo, status, page }),
         getProtocoloStats(),
         db.processo.findMany({
-            where: { status: { notIn: ["ENCERRADO", "ARQUIVADO"] } },
+            where: {
+                status: { notIn: ["ENCERRADO", "ARQUIVADO"] },
+                ...(session?.escritorioId ? { escritorioId: session.escritorioId } : {}),
+            },
             select: { id: true, numeroCnj: true, cliente: { select: { nome: true } } },
             orderBy: { updatedAt: "desc" },
             take: 100,

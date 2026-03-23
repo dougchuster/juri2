@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { tarefaSchema, tarefaComentarioSchema, tarefaChecklistSchema } from "@/lib/validators/tarefa";
 import type { TarefaFormData } from "@/lib/validators/tarefa";
+import { getEscritorioId, tenantFilter } from "@/lib/tenant";
 import { fireEvent } from "@/lib/services/event-triggers";
 import { registrarLogAuditoria } from "@/lib/services/audit-log";
 import {
@@ -84,6 +85,7 @@ export async function createTarefa(formData: TarefaFormData, criadoPorId: string
         }
 
         const actorId = session.id || criadoPorId || "system";
+        const escritorioId = await getEscritorioId();
 
         const tarefa = await db.tarefa.create({
             data: {
@@ -97,6 +99,7 @@ export async function createTarefa(formData: TarefaFormData, criadoPorId: string
                 advogadoId: d.advogadoId,
                 criadoPorId: actorId,
                 horasEstimadas: d.horasEstimadas || null,
+                escritorioId,
             },
         });
 
@@ -141,8 +144,9 @@ export async function updateTarefa(id: string, formData: TarefaFormData) {
 
         const canAccessCurrent = await canAccessTarefa(session, id);
         if (!canAccessCurrent) return { success: false, error: { _form: ["Sem permissao para atualizar esta tarefa."] } };
-        const tarefaAntes = await db.tarefa.findUnique({
-            where: { id },
+        const filter = await tenantFilter();
+        const tarefaAntes = await db.tarefa.findFirst({
+            where: { id, ...filter },
             select: {
                 titulo: true,
                 status: true,
@@ -152,6 +156,7 @@ export async function updateTarefa(id: string, formData: TarefaFormData) {
                 dataLimite: true,
             },
         });
+        if (!tarefaAntes) return { success: false, error: { _form: ["Tarefa não encontrada ou sem permissão."] } };
 
         const d = parsed.data;
         const scopedAdvogadoId = getScopedAdvogadoId(session);
@@ -219,15 +224,17 @@ export async function moveTarefa(id: string, newStatus: StatusTarefa) {
 
         const canAccess = await canAccessTarefa(session, id);
         if (!canAccess) return { success: false, error: "Sem permissao para mover esta tarefa." };
-        const tarefaAntes = await db.tarefa.findUnique({
-            where: { id },
+        const filter = await tenantFilter();
+        const tarefaAntes = await db.tarefa.findFirst({
+            where: { id, ...filter },
             select: { status: true, concluidaEm: true, categoriaEntrega: true },
         });
+        if (!tarefaAntes) return { success: false, error: "Tarefa não encontrada ou sem permissão." };
 
         const updateData: Record<string, unknown> = { status: newStatus };
 
         if (newStatus === "CONCLUIDA") {
-            const tarefa = await db.tarefa.findUnique({ where: { id }, select: { dataLimite: true } });
+            const tarefa = await db.tarefa.findFirst({ where: { id, ...filter }, select: { dataLimite: true } });
             updateData.concluidaEm = new Date();
 
             if (tarefa?.dataLimite) {
@@ -294,8 +301,9 @@ export async function deleteTarefa(id: string) {
 
         const canAccess = await canAccessTarefa(session, id);
         if (!canAccess) return { success: false, error: "Sem permissao para excluir esta tarefa." };
-        const tarefaAntes = await db.tarefa.findUnique({
-            where: { id },
+        const filter = await tenantFilter();
+        const tarefaAntes = await db.tarefa.findFirst({
+            where: { id, ...filter },
             select: {
                 titulo: true,
                 status: true,
@@ -304,6 +312,7 @@ export async function deleteTarefa(id: string) {
                 processoId: true,
             },
         });
+        if (!tarefaAntes) return { success: false, error: "Tarefa não encontrada ou sem permissão." };
         await db.tarefa.delete({ where: { id } });
         await removeLegacyAgendamentoRef("tarefa", id).catch((error) => {
             console.warn("[tarefas] Falha ao remover tarefa legada da agenda central:", error);

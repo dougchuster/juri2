@@ -19,6 +19,7 @@ export async function GET(request: Request) {
 
     const where: Record<string, unknown> = {
       status: { in: ["OPEN", "CLOSED"] },
+      ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}),
     };
     if (canal && canal !== "all") where.canal = canal;
     if (search) {

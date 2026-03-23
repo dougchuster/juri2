@@ -53,7 +53,7 @@ export default async function DashboardPage() {
     nextWeek.setDate(nextWeek.getDate() + 7);
 
     const [processosAtivos, finStats, atendimentoStats, iaStats, agendaSemana, advogados, processosPorTipo] = await Promise.all([
-        db.processo.count({ where: { status: { notIn: ["ENCERRADO", "ARQUIVADO"] }, ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}) } }),
+        db.processo.count({ where: { status: { notIn: ["ENCERRADO", "ARQUIVADO"] }, ...(session?.escritorioId ? { escritorioId: session.escritorioId } : {}), ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}) } }),
         getFinanceiroStats(visibilityScope),
         getAtendimentoStats(scopedAdvogadoId || undefined),
         getPublicacaoStats(),
@@ -69,7 +69,7 @@ export default async function DashboardPage() {
         db.processo.groupBy({
             by: ["tipo"],
             _count: { id: true },
-            where: { status: { notIn: ["ENCERRADO", "ARQUIVADO"] }, ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}) },
+            where: { status: { notIn: ["ENCERRADO", "ARQUIVADO"] }, ...(session?.escritorioId ? { escritorioId: session.escritorioId } : {}), ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}) },
         }),
     ]);
 

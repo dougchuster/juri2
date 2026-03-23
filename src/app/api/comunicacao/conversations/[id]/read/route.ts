@@ -21,8 +21,8 @@ export async function POST(_request: Request, context: RouteContext) {
         const { id } = await context.params;
         const readAt = new Date();
 
-        await db.conversation.update({
-            where: { id },
+        await db.conversation.updateMany({
+            where: { id, ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}) },
             data: { unreadCount: 0 },
         });
 

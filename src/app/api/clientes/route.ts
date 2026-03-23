@@ -23,6 +23,10 @@ export async function GET(request: Request) {
 
         const where: Prisma.ClienteWhereInput = {};
 
+        if (session.escritorioId) {
+            where.escritorioId = session.escritorioId;
+        }
+
         if (search) {
             where.OR = [
                 { nome: { contains: search, mode: "insensitive" } },
@@ -119,6 +123,7 @@ export async function POST(request: Request) {
                 origemId: origemId || null,
                 status: status as StatusCliente,
                 observacoes: observacoes?.trim() || null,
+                escritorioId: session.escritorioId ?? null,
             },
         });
 

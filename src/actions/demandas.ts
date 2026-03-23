@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getSession } from "@/actions/auth";
+import { getEscritorioIdOptional } from "@/lib/tenant";
 import { getDemandasOverview } from "@/lib/dal/demandas";
 import { askKimiChat, isKimiConfigured } from "@/lib/services/ai-kimi";
 import { Prisma, type Role } from "@/generated/prisma";
@@ -898,6 +899,7 @@ export async function aplicarPlanejamentoDiarioDemandasIA(
                         processoId: null,
                         advogadoId: responsavel.advogadoId,
                         criadoPorId: actorUserId,
+                        escritorioId: session?.escritorioId ?? null,
                     },
                 });
             }
@@ -2851,6 +2853,7 @@ export async function executarRotinasRecorrentesDemandas(
                 processoId: null,
                 advogadoId: responsavel.id,
                 criadoPorId: session?.id || responsavel.userId,
+                escritorioId: session?.escritorioId ?? null,
             },
         });
 

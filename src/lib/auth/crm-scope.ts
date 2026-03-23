@@ -46,11 +46,16 @@ function buildScopedCardConditions(user: CRMAuthUser): Prisma.CRMCardWhereInput[
 }
 
 export function buildContatoVisibilityWhere(user: CRMAuthUser): Prisma.ClienteWhereInput {
-    if (!isUserScopedCRM(user)) return {};
+    const tenantFilter: Prisma.ClienteWhereInput = user.escritorioId
+        ? { escritorioId: user.escritorioId }
+        : {};
+
+    if (!isUserScopedCRM(user)) return tenantFilter;
 
     const cardScope = buildCardVisibilityWhere(user);
 
     return {
+        ...tenantFilter,
         OR: [
             { crmCards: { some: cardScope } },
             { crmActivities: { some: { ownerId: user.id } } },

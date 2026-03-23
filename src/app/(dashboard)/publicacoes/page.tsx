@@ -5,6 +5,7 @@
     getAnaliseDistribuicaoPublicacoes,
 } from "@/lib/dal/publicacoes";
 import { getAdvogados } from "@/lib/dal/processos";
+import { getSession } from "@/actions/auth";
 import { PublicacoesManager } from "@/components/publicacoes/publicacoes-manager";
 import { Newspaper, Clock, Send, LinkIcon } from "lucide-react";
 import { db } from "@/lib/db";
@@ -16,6 +17,8 @@ interface Props {
 
 export default async function PublicacoesPage({ searchParams }: Props) {
     const params = await searchParams;
+    const session = await getSession();
+    const escritorioFilter = session?.escritorioId ? { escritorioId: session.escritorioId } : {};
     const search = typeof params.search === "string" ? params.search : "";
     const status = typeof params.status === "string" ? (params.status as StatusPublicacao) : undefined;
     const grupoStatus =
@@ -33,13 +36,16 @@ export default async function PublicacoesPage({ searchParams }: Props) {
         getTribunais(),
         getAdvogados(),
         db.processo.findMany({
-            where: { status: { notIn: ["ENCERRADO", "ARQUIVADO"] } },
+            where: {
+                status: { notIn: ["ENCERRADO", "ARQUIVADO"] },
+                ...escritorioFilter,
+            },
             select: { id: true, numeroCnj: true, cliente: { select: { nome: true } } },
             orderBy: { updatedAt: "desc" },
             take: 100,
         }),
         db.cliente.findMany({
-            where: { status: { in: ["ATIVO", "PROSPECTO"] } },
+            where: { status: { in: ["ATIVO", "PROSPECTO"] }, ...escritorioFilter },
             select: { id: true, nome: true },
             orderBy: { nome: "asc" },
             take: 200,

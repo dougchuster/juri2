@@ -23,8 +23,8 @@ export async function POST(
 
   const { processoId } = await params;
 
-  const processo = await db.processo.findUnique({
-    where: { id: processoId },
+  const processo = await db.processo.findFirst({
+    where: { id: processoId, ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}) },
     select: {
       id: true,
       numeroCnj: true,

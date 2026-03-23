@@ -252,13 +252,13 @@ export async function POST(req: NextRequest) {
     // Verificação de duplicata por CPF, CNPJ ou email
     let existing = null;
     if (cpfNorm && cpfNorm.length === 11) {
-      existing = await db.cliente.findFirst({ where: { cpf: cpfNorm }, select: { id: true } });
+      existing = await db.cliente.findFirst({ where: { cpf: cpfNorm, ...(escritorioId ? { escritorioId } : {}) }, select: { id: true } });
     }
     if (!existing && cnpjNorm && cnpjNorm.length === 14) {
-      existing = await db.cliente.findFirst({ where: { cnpj: cnpjNorm }, select: { id: true } });
+      existing = await db.cliente.findFirst({ where: { cnpj: cnpjNorm, ...(escritorioId ? { escritorioId } : {}) }, select: { id: true } });
     }
     if (!existing && emailNorm) {
-      existing = await db.cliente.findFirst({ where: { email: emailNorm }, select: { id: true } });
+      existing = await db.cliente.findFirst({ where: { email: emailNorm, ...(escritorioId ? { escritorioId } : {}) }, select: { id: true } });
     }
 
     const data = {
@@ -302,12 +302,12 @@ export async function POST(req: NextRequest) {
           result.atualizados++;
         } else {
           // CREATE: cria mesmo havendo duplicata
-          const created = await db.cliente.create({ data, select: { id: true } });
+          const created = await db.cliente.create({ data: { ...data, escritorioId: escritorioId ?? null }, select: { id: true } });
           clienteId = created.id;
           result.importados++;
         }
       } else {
-        const created = await db.cliente.create({ data, select: { id: true } });
+        const created = await db.cliente.create({ data: { ...data, escritorioId: escritorioId ?? null }, select: { id: true } });
         clienteId = created.id;
         result.importados++;
       }

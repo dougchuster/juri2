@@ -163,7 +163,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
         const { id } = await params;
         const body = await request.json();
-        const escritorioId = auth.user.escritorioId ?? (await resolveEscritorioId());
+        const escritorioId = auth.user.escritorioId;
         const scopeWhere = buildContatoVisibilityWhere(auth.user);
 
         const scoped = await db.cliente.findFirst({

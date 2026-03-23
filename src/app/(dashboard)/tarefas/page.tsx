@@ -22,6 +22,7 @@ export default async function TarefasPage() {
         db.processo.findMany({
             where: {
                 status: { notIn: ["ENCERRADO", "ARQUIVADO"] },
+                ...(session?.escritorioId ? { escritorioId: session.escritorioId } : {}),
                 ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}),
             },
             select: { id: true, numeroCnj: true, cliente: { select: { nome: true } } },

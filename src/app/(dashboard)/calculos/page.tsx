@@ -12,7 +12,10 @@ export default async function CalculosPage() {
         getCalculos({}, userId),
         getCalculoStats(userId),
         db.processo.findMany({
-            where: { status: { notIn: ["ENCERRADO", "ARQUIVADO"] } },
+            where: {
+                status: { notIn: ["ENCERRADO", "ARQUIVADO"] },
+                ...(session?.escritorioId ? { escritorioId: session.escritorioId } : {}),
+            },
             select: { id: true, numeroCnj: true, cliente: { select: { nome: true } } },
             orderBy: { updatedAt: "desc" },
             take: 100,

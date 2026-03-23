@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { getEscritorioId, tenantFilter } from "@/lib/tenant";
 import { clienteSchema, type ClienteFormData } from "@/lib/validators/cliente";
 import { revalidatePath } from "next/cache";
 import {
@@ -67,6 +68,8 @@ export async function createCliente(formData: ClienteFormData) {
             data.whatsapp = autoFormatPhoneForStorage(data.whatsapp);
         }
 
+        const escritorioId = await getEscritorioId();
+        data.escritorioId = escritorioId;
         const cliente = await db.cliente.create({
             data: data as Parameters<typeof db.cliente.create>[0]["data"],
         });
@@ -118,6 +121,10 @@ export async function updateCliente(id: string, formData: ClienteFormData) {
     }
 
     try {
+        const filter = await tenantFilter();
+        const owned = await db.cliente.findFirst({ where: { id, ...filter }, select: { id: true } });
+        if (!owned) return { success: false, error: { _form: ["Cliente não encontrado ou sem permissão."] } };
+
         const data = cleanEmptyStrings(parsed.data) as Record<string, unknown>;
 
         if (data.dataNascimento && data.dataNascimento !== null) {
@@ -198,6 +205,10 @@ export async function updateCliente(id: string, formData: ClienteFormData) {
 
 export async function deleteCliente(id: string) {
     try {
+        const filter = await tenantFilter();
+        const owned = await db.cliente.findFirst({ where: { id, ...filter }, select: { id: true } });
+        if (!owned) return { success: false, error: "Cliente não encontrado ou sem permissão." };
+
         const [processosCount, atendimentosCount, honorariosCount, faturasCount, partesCount] =
             await Promise.all([
                 db.processo.count({ where: { clienteId: id } }),
@@ -244,6 +255,10 @@ export async function deleteCliente(id: string) {
 
 export async function toggleInadimplente(id: string, inadimplente: boolean) {
     try {
+        const filter = await tenantFilter();
+        const owned = await db.cliente.findFirst({ where: { id, ...filter }, select: { id: true } });
+        if (!owned) return { success: false, error: "Cliente não encontrado ou sem permissão." };
+
         await db.cliente.update({
             where: { id },
             data: { inadimplente },

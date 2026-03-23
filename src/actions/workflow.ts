@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { workflowTemplateSchema, workflowEtapaSchema } from "@/lib/validators/workflow";
 import type { WorkflowTemplateFormData, WorkflowEtapaFormData } from "@/lib/validators/workflow";
 import { revalidatePath } from "next/cache";
+import { getEscritorioIdOptional } from "@/lib/tenant";
 
 function emptyToNull(val: unknown) {
     return val === "" ? null : val;
@@ -114,6 +115,7 @@ export async function applyWorkflowToProcesso(templateId: string, processoId: st
             return { success: false, error: "Workflow sem etapas." };
         }
 
+        const escritorioId = await getEscritorioIdOptional();
         const now = new Date();
         for (const etapa of template.etapas) {
             const dataLimite = new Date(now);
@@ -130,6 +132,7 @@ export async function applyWorkflowToProcesso(templateId: string, processoId: st
                     dataLimite,
                     status: "A_FAZER",
                     prioridade: "NORMAL",
+                    escritorioId: escritorioId ?? null,
                 },
             });
         }

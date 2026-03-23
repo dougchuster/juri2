@@ -16,7 +16,10 @@ export default async function ComunicacaoPage() {
     ]);
 
     const conversations = await db.conversation.findMany({
-        where: { status: { in: ["OPEN", "CLOSED"] } },
+        where: {
+            status: { in: ["OPEN", "CLOSED"] },
+            ...(session?.escritorioId ? { escritorioId: session.escritorioId } : {}),
+        },
         include: {
             cliente: { select: { id: true, nome: true, email: true, celular: true, whatsapp: true } },
             processo: { select: { id: true, numeroCnj: true } },

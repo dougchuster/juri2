@@ -13,6 +13,7 @@ import {
 } from "@/generated/prisma";
 import { db } from "@/lib/db";
 import { registrarLogAuditoria } from "@/lib/services/audit-log";
+import { getEscritorioId } from "@/lib/tenant";
 import { getFinanceiroConfig, saveFinanceiroConfig } from "@/lib/services/financeiro-config";
 import {
     atualizarLancamentoStatusSchema,
@@ -99,9 +100,7 @@ function canManageRole(role?: Role | null) {
 }
 
 async function ensureEscritorioId() {
-    const escritorio = await db.escritorio.findFirst({ select: { id: true }, orderBy: { createdAt: "asc" } });
-    if (!escritorio) throw new Error("Nenhum escritorio cadastrado para o modulo financeiro.");
-    return escritorio.id;
+    return getEscritorioId();
 }
 
 async function ensureProcessAccess(user: Awaited<ReturnType<typeof getSession>>, processoId: string) {
@@ -109,7 +108,7 @@ async function ensureProcessAccess(user: Awaited<ReturnType<typeof getSession>>,
     if (canManageRole(user.role)) return true;
     if (user.role !== "ADVOGADO" || !user.advogado?.id) return false;
     const processo = await db.processo.findFirst({
-        where: { id: processoId, advogadoId: user.advogado.id },
+        where: { id: processoId, advogadoId: user.advogado.id, ...(user.escritorioId ? { escritorioId: user.escritorioId } : {}) },
         select: { id: true },
     });
     return Boolean(processo);

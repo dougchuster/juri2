@@ -235,6 +235,7 @@ export async function POST(request: Request) {
                     dadosOrigem: body.dadosOrigem,
                     dadosOrigemDetalhe: body.dadosOrigemDetalhe,
                     observacoes: body.observacoes,
+                    escritorioId: auth.user.escritorioId ?? null,
                 },
             });
 

@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { Prisma } from "@/generated/prisma";
+import { getEscritorioId, tenantFilter } from "@/lib/tenant";
 import {
     processoSchema, movimentacaoSchema,
     parteProcessoSchema, audienciaSchema,
@@ -120,13 +121,6 @@ type ActionResult<T> =
     | { success: true; data: T }
     | { success: false; error: unknown };
 
-async function getOrCreateDefaultEscritorioId() {
-    const existing = await db.escritorio.findFirst({ orderBy: { createdAt: "asc" }, select: { id: true } });
-    if (existing) return existing.id;
-    const created = await db.escritorio.create({ data: { nome: "Escritorio" } });
-    return created.id;
-}
-
 const sugestaoAdvogadoSchema = z.object({
     objeto: z.string().optional().or(z.literal("")),
     tipoAcaoId: z.string().optional().or(z.literal("")),
@@ -227,6 +221,7 @@ export async function createProcesso(formData: ProcessoFormData) {
     try {
         const d = parsed.data;
         const actorUserId = await getAuditActorId();
+        const escritorioId = await getEscritorioId();
         const processo = await db.processo.create({
             data: {
                 tipo: d.tipo,
@@ -248,6 +243,7 @@ export async function createProcesso(formData: ProcessoFormData) {
                 advogadoId: d.advogadoId,
                 clienteId: emptyToNull(d.clienteId || "") as string | null,
                 observacoes: emptyToNull(d.observacoes) as string | null,
+                escritorioId,
             },
         });
         await registrarLogAuditoria({
@@ -284,10 +280,11 @@ export async function updateProcesso(id: string, formData: ProcessoFormData) {
     try {
         const d = parsed.data;
         const actorUserId = await getAuditActorId();
+        const filter = await tenantFilter();
 
-        // Get old status for comparison
-        const oldProcesso = await db.processo.findUnique({
-            where: { id },
+        // Get old status for comparison — also verifies tenant ownership
+        const oldProcesso = await db.processo.findFirst({
+            where: { id, ...filter },
             select: {
                 status: true,
                 clienteId: true,
@@ -366,8 +363,9 @@ export async function updateProcesso(id: string, formData: ProcessoFormData) {
 export async function deleteProcesso(id: string) {
     try {
         const actorUserId = await getAuditActorId();
-        const processoAntes = await db.processo.findUnique({
-            where: { id },
+        const filter = await tenantFilter();
+        const processoAntes = await db.processo.findFirst({
+            where: { id, ...filter },
             select: {
                 numeroCnj: true,
                 status: true,
@@ -376,6 +374,7 @@ export async function deleteProcesso(id: string) {
                 clienteId: true,
             },
         });
+        if (!processoAntes) return { success: false, error: "Processo não encontrado ou sem permissão." };
         await db.$transaction(async (tx) => {
             await cleanupProcessoDeletionDependencies(tx, [id]);
             await tx.processo.delete({ where: { id } });
@@ -429,7 +428,8 @@ function buildProcessoWhereFromSearchParams(params: Record<string, string>) {
 
 export async function listarIdsProcessosFiltrados(params: Record<string, string>) {
     try {
-        const where = buildProcessoWhereFromSearchParams(params);
+        const filter = await tenantFilter();
+        const where = { ...buildProcessoWhereFromSearchParams(params), ...filter };
         const rows = await db.processo.findMany({
             where,
             select: { id: true },
@@ -453,10 +453,11 @@ export async function excluirProcessosEmLote(data: z.infer<typeof bulkIdsSchema>
 
     try {
         const actorUserId = await getAuditActorId();
+        const filter = await tenantFilter();
         const ids = parsed.data.ids;
         const res = await db.$transaction(async (tx) => {
             await cleanupProcessoDeletionDependencies(tx, ids);
-            return tx.processo.deleteMany({ where: { id: { in: ids } } });
+            return tx.processo.deleteMany({ where: { id: { in: ids }, ...filter } });
         });
         safeRevalidate("/processos");
         safeRevalidate("/prazos");
@@ -486,8 +487,9 @@ export async function atualizarStatusProcessosEmLote(data: z.infer<typeof bulkSt
 
     try {
         const actorUserId = await getAuditActorId();
+        const filter = await tenantFilter();
         const res = await db.processo.updateMany({
-            where: { id: { in: parsed.data.ids } },
+            where: { id: { in: parsed.data.ids }, ...filter },
             data: { status: parsed.data.status as never },
         });
         safeRevalidate("/processos");
@@ -516,9 +518,10 @@ export async function atribuirClienteProcessosEmLote(data: z.infer<typeof bulkCl
 
     try {
         const actorUserId = await getAuditActorId();
+        const filter = await tenantFilter();
         const clienteId = emptyToNull(parsed.data.clienteId || "") as string | null;
         const res = await db.processo.updateMany({
-            where: { id: { in: parsed.data.ids } },
+            where: { id: { in: parsed.data.ids }, ...filter },
             data: { clienteId },
         });
         safeRevalidate("/processos");
@@ -547,8 +550,9 @@ export async function atribuirAdvogadoProcessosEmLote(data: z.infer<typeof bulkA
 
     try {
         const actorUserId = await getAuditActorId();
+        const filter = await tenantFilter();
         const res = await db.processo.updateMany({
-            where: { id: { in: parsed.data.ids } },
+            where: { id: { in: parsed.data.ids }, ...filter },
             data: { advogadoId: parsed.data.advogadoId },
         });
         safeRevalidate("/processos");
@@ -584,7 +588,7 @@ export async function createTipoAcao(
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     try {
-        const escritorioId = await getOrCreateDefaultEscritorioId();
+        const escritorioId = await getEscritorioId();
         const d = parsed.data;
         const nome = normalizeMojibake(d.nome).trim();
         const grupo = normalizeNullableMojibake(emptyToNull(d.grupo) as string | null);
@@ -627,7 +631,7 @@ export async function createFaseProcessual(
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     try {
-        const escritorioId = await getOrCreateDefaultEscritorioId();
+        const escritorioId = await getEscritorioId();
         const d = parsed.data;
         const nome = normalizeMojibake(d.nome).trim();
 
@@ -671,8 +675,9 @@ export async function createFaseProcessual(
 
 export async function getProcessoEditData(id: string): Promise<ActionResult<Record<string, unknown>>> {
     try {
-        const p = await db.processo.findUnique({
-            where: { id },
+        const filter = await tenantFilter();
+        const p = await db.processo.findFirst({
+            where: { id, ...filter },
             select: {
                 id: true,
                 tipo: true,
