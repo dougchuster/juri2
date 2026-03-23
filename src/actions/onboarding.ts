@@ -129,7 +129,25 @@ export async function concluirOnboarding() {
             data: { onboardingCompleted: true },
         });
         revalidatePath("/dashboard");
-        return { success: true };
+
+        // Disparar busca de processos no DataJud (fire-and-forget via worker queue)
+        if (session.advogado?.id) {
+            const advogadoId = session.advogado.id;
+            void (async () => {
+                try {
+                    const { iniciarAutomacaoBuscaNacional } = await import("@/lib/services/automacao-nacional");
+                    await iniciarAutomacaoBuscaNacional({
+                        advogadoId,
+                        lookbackDays: 365,
+                        runNow: false,
+                    });
+                } catch (err) {
+                    console.error("[onboarding] Erro ao enfileirar busca DataJud:", err);
+                }
+            })();
+        }
+
+        return { success: true, processosAgendados: Boolean(session.advogado?.id) };
     } catch (error) {
         console.error("Error completing onboarding:", error);
         return { success: false, error: "Erro ao concluir onboarding." };

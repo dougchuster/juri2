@@ -188,13 +188,15 @@ export function OnboardingWizard({ userName, userOab, userUfOab }: Props) {
                             <div className="rounded-lg border border-success/30 bg-success/10 p-4">
                                 <div className="flex items-center gap-2 mb-2">
                                     <CheckCircle size={16} className="text-success" />
-                                    <span className="text-sm font-medium text-success">Advogado encontrado!</span>
+                                    <span className="text-sm font-medium text-success">OAB registrado!</span>
                                 </div>
                                 <div className="text-xs text-text-secondary space-y-1">
-                                    <div className="flex justify-between"><span className="text-text-muted">Nome:</span><span className="font-medium">{oabNome}</span></div>
+                                    <div className="flex justify-between"><span className="text-text-muted">Titular:</span><span className="font-medium">{oabNome}</span></div>
                                     <div className="flex justify-between"><span className="text-text-muted">OAB:</span><span className="font-mono">{oab} — {uf}</span></div>
-                                    <div className="flex justify-between"><span className="text-text-muted">Status:</span><span className="text-success font-medium">Ativo</span></div>
                                 </div>
+                                <p className="text-xs text-text-muted mt-3 border-t border-success/20 pt-2">
+                                    🔍 Seus processos serão buscados automaticamente no DataJud ao finalizar a configuração.
+                                </p>
                             </div>
                         )}
                     </div>
@@ -241,9 +243,12 @@ export function OnboardingWizard({ userName, userOab, userUfOab }: Props) {
                                 <span className="text-sm font-semibold text-text-primary">OAB</span>
                             </div>
                             {oabVerificado ? (
-                                <div className="flex items-center gap-2">
-                                    <CheckCircle size={14} className="text-success" />
-                                    <span className="text-sm text-text-secondary">{oabNome} — OAB {oab}/{uf}</span>
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle size={14} className="text-success" />
+                                        <span className="text-sm text-text-secondary">{oabNome} — OAB {oab}/{uf}</span>
+                                    </div>
+                                    <p className="text-xs text-text-muted pl-5">🔍 Processos importados automaticamente via DataJud ao concluir</p>
                                 </div>
                             ) : (
                                 <div className="text-sm text-text-muted">OAB não vinculado (pode configurar depois)</div>
