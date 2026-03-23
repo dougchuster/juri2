@@ -44,7 +44,7 @@ const TIPO_COLOR: Record<string, string> = {
 
 export default async function DashboardPage() {
     const session = await getSession();
-    if (session && !session.onboardingCompleted) redirect("/onboarding");
+    if (session && !session.onboardingCompleted && session.role === "ADMIN") redirect("/onboarding");
     const visibilityScope = session ? { role: session.role, advogadoId: session.advogado?.id || null } : undefined;
     const scopedAdvogadoId = visibilityScope?.role === "ADVOGADO" ? visibilityScope.advogadoId : null;
     const today = new Date();
