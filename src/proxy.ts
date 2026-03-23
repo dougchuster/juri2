@@ -28,6 +28,11 @@ const PROTECTED_API_PREFIXES = [
     "/root-admin/api", // Root admin APIs (validam própria autenticação)
 ];
 
+// Cookies de sessão e MFA
+const SESSION_COOKIE = "session_token";
+const MFA_CHALLENGE_COOKIE = "mfa_challenge_token";
+const MFA_SETUP_REQUIRED_COOKIE = "mfa_setup_required";
+
 // Métodos que modificam estado — sujeitos à verificação CSRF
 const MUTATION_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
 
@@ -97,32 +102,48 @@ export default function proxy(request: NextRequest) {
     const response = NextResponse.next();
     addSecurityHeaders(response);
 
-    if (isPublicRoute(pathname)) {
+    // Assets e internos do Next.js — sempre passam
+    if (
+        pathname.startsWith("/_next") ||
+        pathname.startsWith("/favicon") ||
+        pathname.startsWith("/icons") ||
+        pathname.startsWith("/images") ||
+        pathname.startsWith("/uploads")
+    ) {
         return response;
     }
 
-    if (pathname === "/login" || pathname === "/") {
-        return response;
-    }
-
-    const sessionToken = request.cookies.get("session_token")?.value;
-
-    // Allow all API routes to pass - they validate their own authentication
+    // APIs — lidam com autenticação internamente
     if (pathname.startsWith("/api") || pathname.startsWith("/root-admin/api")) {
         return response;
     }
 
-    const isPageRoute =
-        !pathname.startsWith("/_next") &&
-        !pathname.startsWith("/favicon") &&
-        !pathname.startsWith("/icons") &&
-        !pathname.startsWith("/images") &&
-        !pathname.startsWith("/uploads");
+    const sessionToken = request.cookies.get(SESSION_COOKIE)?.value;
+    const mfaChallenge = request.cookies.get(MFA_CHALLENGE_COOKIE)?.value;
+    const mfaSetupRequired = request.cookies.get(MFA_SETUP_REQUIRED_COOKIE)?.value;
 
-    // Protect page routes - require session_token for regular app, not root-admin pages
-    if (isPageRoute && !sessionToken && pathname !== "/login" && !pathname.startsWith("/root-admin") && !pathname.startsWith("/admin-login")) {
+    // Rotas públicas de auth
+    if (isPublicRoute(pathname) || pathname === "/") {
+        // Redirecionar usuário já autenticado (sem MFA pendente) para o dashboard
+        if (
+            sessionToken &&
+            !mfaChallenge &&
+            !mfaSetupRequired &&
+            pathname !== "/" &&
+            !pathname.startsWith("/admin-login") &&
+            !pathname.startsWith("/root-admin")
+        ) {
+            return NextResponse.redirect(new URL("/dashboard", request.url));
+        }
+        return response;
+    }
+
+    // Rotas protegidas — exigem session_token
+    if (!sessionToken && !pathname.startsWith("/root-admin") && !pathname.startsWith("/admin-login")) {
         const loginUrl = new URL("/login", request.url);
-        loginUrl.searchParams.set("callbackUrl", pathname);
+        if (pathname !== "/dashboard") {
+            loginUrl.searchParams.set("callbackUrl", pathname);
+        }
         return NextResponse.redirect(loginUrl);
     }
 
