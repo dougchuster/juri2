@@ -2,6 +2,7 @@ import "server-only";
 
 import type { StatusOperacionalAtendimento } from "@/generated/prisma";
 import { db } from "@/lib/db";
+import { getSession } from "@/actions/auth";
 import { ATENDIMENTO_KANBAN_COLUMNS } from "@/lib/atendimentos-workflow";
 
 export interface AtendimentoFilters {
