@@ -271,3 +271,27 @@ export async function toggleInadimplente(id: string, inadimplente: boolean) {
         return { success: false, error: "Erro ao atualizar status de inadimplencia." };
     }
 }
+
+export async function addClienteNota(id: string, nota: string) {
+    try {
+        const filter = await tenantFilter();
+        const cliente = await db.cliente.findFirst({ where: { id, ...filter }, select: { id: true, observacoes: true } });
+        if (!cliente) return { success: false, error: "Cliente não encontrado." };
+
+        const timestamp = new Date().toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+        const novaObservacao = `[${timestamp}] ${nota.trim()}`;
+        const observacoesAtualizadas = cliente.observacoes
+            ? `${novaObservacao}\n\n${cliente.observacoes}`
+            : novaObservacao;
+
+        await db.cliente.update({
+            where: { id },
+            data: { observacoes: observacoesAtualizadas },
+        });
+        safeRevalidate(`/clientes/${id}`);
+        return { success: true };
+    } catch (error) {
+        console.error("Error adding nota:", error);
+        return { success: false, error: "Erro ao salvar anotação." };
+    }
+}
