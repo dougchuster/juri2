@@ -5,7 +5,7 @@ import { OnboardingWizard } from "@/components/onboarding/onboarding-wizard";
 export default async function OnboardingPage() {
     const session = await getSession();
     if (!session) redirect("/login");
-    if (session.onboardingCompleted || session.role !== "ADMIN") redirect("/dashboard");
+    if (session.onboardingCompleted || session.role !== "ADMIN" || session.escritorioId) redirect("/dashboard");
 
     return (
         <div className="min-h-screen bg-bg-primary flex items-center justify-center p-6">
