@@ -78,6 +78,7 @@ export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, se
             local: local || undefined,
             sala: sala || undefined,
             processoId: processoId || undefined,
+            clienteId: defaultClienteId || undefined,
             responsavelId,
             prioridade,
             fatal: fields.showFatal ? fatal : undefined,
