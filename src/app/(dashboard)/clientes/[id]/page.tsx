@@ -85,7 +85,12 @@ export default async function ClienteDetailPage({ params }: Props) {
                     </div>
                 </div>
 
-                <ClienteQuickActions clienteId={cliente.id} />
+                <ClienteQuickActions
+                    clienteId={cliente.id}
+                    advogados={advogados}
+                    processos={processosParaAgenda}
+                    sessionAdvogadoId={session?.advogado?.id}
+                />
             </div>
 
             {/* Info Cards */}
