@@ -1,5 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
+import { getSession } from "@/actions/auth";
 import type { Role, StatusProcesso, TipoProcesso } from "@/generated/prisma";
 import { normalizeMojibake } from "@/lib/text-normalization";
 import { cache, CacheKeys } from "@/lib/cache";
