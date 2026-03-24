@@ -27,12 +27,20 @@ interface Props {
 
 export default async function ClienteDetailPage({ params }: Props) {
     const { id } = await params;
-    const [cliente, origens] = await Promise.all([
+    const [cliente, origens, advogados, session] = await Promise.all([
         getClienteById(id),
         getOrigensCliente(),
+        getAdvogados(),
+        getSession(),
     ]);
     if (!cliente) notFound();
     const timelineResult = await getTimelineCliente(id, { porPagina: 999 });
+
+    const processosParaAgenda = cliente.processos.map((p) => ({
+        id: p.id,
+        numeroCnj: p.numeroCnj ?? null,
+        cliente: { nome: cliente.nome },
+    }));
 
     const statusConfig = STATUS_CLIENTE_BADGE[cliente.status];
 
