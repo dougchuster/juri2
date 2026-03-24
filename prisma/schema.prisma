@@ -16,6 +16,7 @@ model User {
   escritorioId                     String?
   avatarUrl                        String?
   isActive                         Boolean                          @default(true)
+  permissionVersion                Int                              @default(0)
   lastLoginAt                      DateTime?
   createdAt                        DateTime                         @default(now())
   updatedAt                        DateTime                         @updatedAt
@@ -64,6 +65,8 @@ model User {
   trustedDevices                   MfaTrustedDevice[]
   notifications                    Notificacao[]
   passwordResetTokens              PasswordResetToken[]
+  permissionOverrides              UserPermissionOverride[]
+  permissionsGranted               UserPermissionOverride[]         @relation("PermissionGranter")
   pecasIACriadas                   PecaIA[]                         @relation("PecaIACriadaPor")
   atribuicoesProcessoExecutadas    ProcessoAtribuicaoLog[]          @relation("ProcessoAtribuicaoExecutadaPor")
   protocolosCriados                Protocolo[]                      @relation("ProtocoloCriadoPor")
@@ -226,6 +229,7 @@ model Escritorio {
   lgpdRequests                    LgpdRequest[]
   modelosDocumento                ModeloDocumento[]
   pastasDocumento                 PastaDocumento[]                 @relation("EscritorioPastas")
+  rolePermissions                 RolePermission[]
   tiposAcao                       TipoAcao[]
   whatsappConnections             WhatsappConnection[]
   agendamentosEscritorio          Agendamento[]
@@ -354,7 +358,7 @@ model Cliente {
   contatos                        ContatoCliente[]
   conversations                   Conversation[]
   crmActivities                   CRMActivity[]
-  pastasDocumento                 PastaDocumento[] @relation("ClientePastas")
+  pastasDocumento                 PastaDocumento[]                 @relation("ClientePastas")
   crmCards                        CRMCard[]
   crmDocuments                    CRMCommercialDocument[]
   crmConflicts                    CRMConflictCheck[]
@@ -599,10 +603,10 @@ model Movimentacao {
   id            String    @id @default(cuid())
   processoId    String
   data          DateTime  @db.Date
-  hora          String?   // HH:MM para exibir na timeline
+  hora          String? // HH:MM para exibir na timeline
   descricao     String
   tipo          String?
-  subTipo       String?   // REUNIAO | CONTATO_TELEFONICO | EMAIL | ANOTACAO | JUDICIAL
+  subTipo       String? // REUNIAO | CONTATO_TELEFONICO | EMAIL | ANOTACAO | JUDICIAL
   fonte         String?
   responsavelId String?
   privado       Boolean   @default(false)
@@ -1756,13 +1760,13 @@ model ClientPhone {
 }
 
 model WhatsappConnection {
-  id                   String                   @id @default(cuid())
+  id                   String                    @id @default(cuid())
   escritorioId         String
   providerType         WhatsappProviderType
-  status               WhatsappConnectionStatus @default(DRAFT)
+  status               WhatsappConnectionStatus  @default(DRAFT)
   displayName          String
-  isPrimary            Boolean                  @default(false)
-  isActive             Boolean                  @default(true)
+  isPrimary            Boolean                   @default(false)
+  isActive             Boolean                   @default(true)
   connectedPhone       String?
   connectedName        String?
   externalInstanceName String?
@@ -1773,10 +1777,10 @@ model WhatsappConnection {
   lastConnectedAt      DateTime?
   lastSyncAt           DateTime?
   lastError            String?
-  createdAt            DateTime                 @default(now())
-  updatedAt            DateTime                 @updatedAt
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
   conversations        Conversation[]
-  escritorio           Escritorio               @relation(fields: [escritorioId], references: [id], onDelete: Cascade)
+  escritorio           Escritorio                @relation(fields: [escritorioId], references: [id], onDelete: Cascade)
   secret               WhatsappConnectionSecret?
 
   @@index([escritorioId, providerType])
@@ -3216,6 +3220,53 @@ model PasswordResetToken {
 
   @@index([userId])
   @@map("password_reset_tokens")
+}
+
+model Permission {
+  id              String                   @id @default(cuid())
+  key             String                   @unique
+  module          String
+  resource        String
+  action          String
+  description     String?
+  rolePermissions RolePermission[]
+  userOverrides   UserPermissionOverride[]
+
+  @@index([module])
+  @@index([module, resource])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String      @id @default(cuid())
+  role         Role
+  permissionId String
+  permission   Permission  @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  escritorioId String?
+  escritorio   Escritorio? @relation(fields: [escritorioId], references: [id], onDelete: Cascade)
+
+  @@unique([role, permissionId, escritorioId])
+  @@index([role, escritorioId])
+  @@map("role_permissions")
+}
+
+model UserPermissionOverride {
+  id            String     @id @default(cuid())
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permissionId  String
+  permission    Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  granted       Boolean
+  grantedBy     String?
+  grantedByUser User?      @relation("PermissionGranter", fields: [grantedBy], references: [id], onDelete: SetNull)
+  reason        String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@unique([userId, permissionId])
+  @@index([userId])
+  @@index([grantedBy])
+  @@map("user_permission_overrides")
 }
 
 model CampoValor {

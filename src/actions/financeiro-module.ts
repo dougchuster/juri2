@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { getSession } from "@/actions/auth";
+import { hasAnyPermission } from "@/lib/rbac/check-permission";
 import {
     Prisma,
     type FormaPagamentoFinanceira,
@@ -95,8 +96,21 @@ async function getFinanceiroActor() {
     return session;
 }
 
-function canManageRole(role?: Role | null) {
-    return role ? MANAGE_ROLES.includes(role) : false;
+async function canManageRole(role?: Role | null) {
+    if (role && MANAGE_ROLES.includes(role)) {
+        return true;
+    }
+
+    return hasAnyPermission([
+        "financeiro:dashboard:gerenciar",
+        "financeiro:escritorio:editar",
+        "financeiro:casos:editar",
+        "financeiro:funcionarios:gerenciar",
+        "financeiro:contas-pagar:gerenciar",
+        "financeiro:contas-receber:gerenciar",
+        "financeiro:repasses:gerenciar",
+        "financeiro:configuracoes:gerenciar",
+    ]);
 }
 
 async function ensureEscritorioId() {
@@ -105,7 +119,7 @@ async function ensureEscritorioId() {
 
 async function ensureProcessAccess(user: Awaited<ReturnType<typeof getSession>>, processoId: string) {
     if (!user) return false;
-    if (canManageRole(user.role)) return true;
+    if (await canManageRole(user.role)) return true;
     if (user.role !== "ADVOGADO" || !user.advogado?.id) return false;
     const processo = await db.processo.findFirst({
         where: { id: processoId, advogadoId: user.advogado.id, ...(user.escritorioId ? { escritorioId: user.escritorioId } : {}) },
@@ -116,7 +130,16 @@ async function ensureProcessAccess(user: Awaited<ReturnType<typeof getSession>>,
 
 async function ensureDeletePermission(role?: Role | null) {
     const config = await getFinanceiroConfig();
-    return Boolean(role && config.permissaoExclusao.includes(role));
+    if (role && config.permissaoExclusao.includes(role)) {
+        return true;
+    }
+
+    return hasAnyPermission([
+        "financeiro:contas-pagar:excluir",
+        "financeiro:contas-receber:excluir",
+        "financeiro:funcionarios:excluir",
+        "financeiro:dashboard:gerenciar",
+    ]);
 }
 
 function participantStatus(previsto: number, pago: number): StatusRateioHonorario {
@@ -186,7 +209,7 @@ export async function createFinanceiroEscritorioLancamento(input: EscritorioLanc
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     const session = await getFinanceiroActor();
-    if (!session || !canManageRole(session.role)) {
+    if (!session || !(await canManageRole(session.role))) {
         return { success: false, error: "Sem permissao para lancamentos do escritorio." };
     }
 
@@ -253,7 +276,7 @@ export async function updateFinanceiroEscritorioStatus(input: AtualizarLancament
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     const session = await getFinanceiroActor();
-    if (!session || !canManageRole(session.role)) {
+    if (!session || !(await canManageRole(session.role))) {
         return { success: false, error: "Sem permissao para atualizar este lancamento." };
     }
 
@@ -427,7 +450,7 @@ export async function createRepasseHonorario(input: RepasseHonorarioInput): Prom
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     const session = await getFinanceiroActor();
-    if (!session || !canManageRole(session.role)) {
+    if (!session || !(await canManageRole(session.role))) {
         return { success: false, error: "Sem permissao para criar repasses." };
     }
 
@@ -485,7 +508,7 @@ export async function registrarPagamentoRepasse(input: PagamentoRepasseInput): P
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     const session = await getFinanceiroActor();
-    if (!session || !canManageRole(session.role)) {
+    if (!session || !(await canManageRole(session.role))) {
         return { success: false, error: "Sem permissao para pagar repasses." };
     }
 
@@ -590,7 +613,7 @@ export async function saveFuncionarioFinanceiroAction(input: FuncionarioFinancei
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     const session = await getFinanceiroActor();
-    if (!session || !canManageRole(session.role)) {
+    if (!session || !(await canManageRole(session.role))) {
         return { success: false, error: "Sem permissao para controlar funcionarios." };
     }
 
@@ -660,7 +683,7 @@ export async function saveFuncionarioLancamentoAction(input: FuncionarioLancamen
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     const session = await getFinanceiroActor();
-    if (!session || !canManageRole(session.role)) {
+    if (!session || !(await canManageRole(session.role))) {
         return { success: false, error: "Sem permissao para lancamentos de funcionarios." };
     }
 
@@ -733,7 +756,7 @@ export async function saveFinanceiroConfigAction(input: FinanceiroConfigInput): 
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     const session = await getFinanceiroActor();
-    if (!session || !canManageRole(session.role)) {
+    if (!session || !(await canManageRole(session.role))) {
         return { success: false, error: "Sem permissao para alterar configuracoes financeiras." };
     }
 

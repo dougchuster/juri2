@@ -25,6 +25,7 @@
     "test:meeting-automation:smoke": "ts-node -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/smoke-meeting-automation.ts",
     "test:meeting-automation:regression": "ts-node -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/test-meeting-automation-regressions.ts",
     "test:automacao:nacional": "ts-node -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/test-automacao-nacional-e2e.ts",
+    "test:tenant-isolation": "ts-node -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/test-tenant-isolation.ts",
     "test:crm:hardening": "ts-node -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/test-crm-hardening.ts",
     "test:crm:funcional": "ts-node -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/test-crm-funcional.ts",
     "test:autorizacao:rn25": "ts-node -r tsconfig-paths/register -O \"{\\\"module\\\":\\\"commonjs\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" scripts/test-autorizacao-rn25.ts",

@@ -9,6 +9,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 type MobileSidebarProps = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    navigationPermissions: string[];
     user: {
         id: string;
         name: string;
@@ -24,7 +25,7 @@ type MobileSidebarProps = {
     };
 };
 
-export function MobileSidebar({ open, onOpenChange, user }: MobileSidebarProps) {
+export function MobileSidebar({ open, onOpenChange, navigationPermissions, user }: MobileSidebarProps) {
     useEffect(() => {
         if (!open) return;
 
@@ -69,6 +70,7 @@ export function MobileSidebar({ open, onOpenChange, user }: MobileSidebarProps) 
 
                             <Sidebar
                                 user={user}
+                                navigationPermissions={navigationPermissions}
                                 forceExpanded
                                 hideCollapseToggle
                                 className="h-full w-full"

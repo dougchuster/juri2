@@ -4,6 +4,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, Role, TipoPessoa, StatusCliente, LeadTemperatura } from "../src/generated/prisma";
 import bcrypt from "bcryptjs";
 import { seedFinanceiroDemo } from "./seed-financeiro";
+import { seedPermissions } from "./seeds/seed-permissions";
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -165,17 +166,21 @@ async function main() {
     const passwordHash = await bcrypt.hash("123456", 10);
     await prisma.user.upsert({
         where: { email: "dougcruvinel@gmail.com" },
-        update: { passwordHash },
+        update: { passwordHash, escritorioId: escritorio.id },
         create: {
             name: "Douglas Cruvinel",
             email: "dougcruvinel@gmail.com",
             passwordHash,
             role: Role.ADMIN,
+            escritorioId: escritorio.id,
         },
     });
     console.log("âÅ“â€¦ Usuário admin criado (dougcruvinel@gmail.com / 123456)");
 
     // 8. Templates de Mensagem (Comunicação)
+    await seedPermissions(prisma);
+    console.log("RBAC permissions seeded");
+
     const templates = [
         {
             name: "prazo_lembrete_d5",

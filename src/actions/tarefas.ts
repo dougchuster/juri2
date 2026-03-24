@@ -13,6 +13,7 @@ import {
 import type { StatusTarefa, CategoriaEntrega } from "@/generated/prisma";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/actions/auth";
+import { requirePermission } from "@/lib/rbac/check-permission";
 
 function emptyToNull(val: unknown) {
     return val === "" ? null : val;
@@ -57,6 +58,23 @@ async function canAccessChecklistItem(session: Awaited<ReturnType<typeof getSess
     return Boolean(checklistItem);
 }
 
+async function requireTarefaPermission(
+    permissionKey: string,
+    errorMessage: string,
+    fallbackRoles?: ("ADMIN" | "SOCIO" | "ADVOGADO" | "CONTROLADOR" | "ASSISTENTE" | "FINANCEIRO" | "SECRETARIA")[],
+) {
+    const result = await requirePermission(permissionKey, {
+        fallbackRoles,
+        errorMessage,
+    });
+
+    if ("error" in result) {
+        return result.error;
+    }
+
+    return null;
+}
+
 // =============================================================
 // TAREFA CRUD
 // =============================================================
@@ -69,6 +87,14 @@ export async function createTarefa(formData: TarefaFormData, criadoPorId: string
         const d = parsed.data;
         const session = await getSession();
         if (!session) return { success: false, error: { _form: ["Sessao expirada. Faca login novamente."] } };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:criar",
+            "Sem permissao para criar tarefas.",
+            ["ADMIN", "SOCIO", "ADVOGADO", "ASSISTENTE"],
+        );
+        if (permissionError) {
+            return { success: false, error: { _form: [permissionError] } };
+        }
 
         const scopedAdvogadoId = getScopedAdvogadoId(session);
         const processoId = (emptyToNull(d.processoId) as string | null) || null;
@@ -141,6 +167,14 @@ export async function updateTarefa(id: string, formData: TarefaFormData) {
     try {
         const session = await getSession();
         if (!session) return { success: false, error: { _form: ["Sessao expirada. Faca login novamente."] } };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:editar",
+            "Sem permissao para atualizar tarefas.",
+            ["ADMIN", "SOCIO", "ADVOGADO", "ASSISTENTE"],
+        );
+        if (permissionError) {
+            return { success: false, error: { _form: [permissionError] } };
+        }
 
         const canAccessCurrent = await canAccessTarefa(session, id);
         if (!canAccessCurrent) return { success: false, error: { _form: ["Sem permissao para atualizar esta tarefa."] } };
@@ -221,6 +255,12 @@ export async function moveTarefa(id: string, newStatus: StatusTarefa) {
     try {
         const session = await getSession();
         if (!session) return { success: false, error: "Sessao expirada. Faca login novamente." };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:editar",
+            "Sem permissao para mover esta tarefa.",
+            ["ADMIN", "SOCIO", "ADVOGADO", "ASSISTENTE"],
+        );
+        if (permissionError) return { success: false, error: permissionError };
 
         const canAccess = await canAccessTarefa(session, id);
         if (!canAccess) return { success: false, error: "Sem permissao para mover esta tarefa." };
@@ -298,6 +338,12 @@ export async function deleteTarefa(id: string) {
     try {
         const session = await getSession();
         if (!session) return { success: false, error: "Sessao expirada. Faca login novamente." };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:excluir",
+            "Sem permissao para excluir tarefas.",
+            ["ADMIN", "SOCIO"],
+        );
+        if (permissionError) return { success: false, error: permissionError };
 
         const canAccess = await canAccessTarefa(session, id);
         if (!canAccess) return { success: false, error: "Sem permissao para excluir esta tarefa." };
@@ -345,6 +391,12 @@ export async function addComentario(tarefaId: string, userId: string, conteudo: 
     try {
         const session = await getSession();
         if (!session) return { success: false, error: "Sessao expirada. Faca login novamente." };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:ver",
+            "Sem permissao para comentar nesta tarefa.",
+            ["ADMIN", "SOCIO", "ADVOGADO", "ASSISTENTE"],
+        );
+        if (permissionError) return { success: false, error: permissionError };
 
         const canAccess = await canAccessTarefa(session, tarefaId);
         if (!canAccess) return { success: false, error: "Sem permissao para comentar nesta tarefa." };
@@ -374,6 +426,12 @@ export async function addChecklistItem(tarefaId: string, texto: string) {
     try {
         const session = await getSession();
         if (!session) return { success: false, error: "Sessao expirada. Faca login novamente." };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:editar",
+            "Sem permissao para alterar checklist desta tarefa.",
+            ["ADMIN", "SOCIO", "ADVOGADO", "ASSISTENTE"],
+        );
+        if (permissionError) return { success: false, error: permissionError };
 
         const canAccess = await canAccessTarefa(session, tarefaId);
         if (!canAccess) return { success: false, error: "Sem permissao para alterar checklist desta tarefa." };
@@ -400,6 +458,12 @@ export async function toggleChecklistItem(id: string) {
     try {
         const session = await getSession();
         if (!session) return { success: false, error: "Sessao expirada. Faca login novamente." };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:editar",
+            "Sem permissao para alterar este item.",
+            ["ADMIN", "SOCIO", "ADVOGADO", "ASSISTENTE"],
+        );
+        if (permissionError) return { success: false, error: permissionError };
 
         const canAccess = await canAccessChecklistItem(session, id);
         if (!canAccess) return { success: false, error: "Sem permissao para alterar este item." };
@@ -424,6 +488,12 @@ export async function deleteChecklistItem(id: string) {
     try {
         const session = await getSession();
         if (!session) return { success: false, error: "Sessao expirada. Faca login novamente." };
+        const permissionError = await requireTarefaPermission(
+            "tarefas:lista:editar",
+            "Sem permissao para excluir este item.",
+            ["ADMIN", "SOCIO", "ADVOGADO", "ASSISTENTE"],
+        );
+        if (permissionError) return { success: false, error: permissionError };
 
         const canAccess = await canAccessChecklistItem(session, id);
         if (!canAccess) return { success: false, error: "Sem permissao para excluir este item." };

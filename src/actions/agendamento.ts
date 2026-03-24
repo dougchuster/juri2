@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { getSession } from "@/actions/auth";
+import { hasAnyPermission } from "@/lib/rbac/check-permission";
 import { revalidatePath } from "next/cache";
 import type {
     TipoAgendamento,
@@ -19,6 +20,38 @@ async function requireSession() {
     const session = await getSession();
     if (!session) throw new Error("Nao autenticado");
     return session;
+}
+
+async function canReviewAgenda(session: Awaited<ReturnType<typeof getSession>>) {
+    if (!session) return false;
+    if (["ADMIN", "SOCIO", "CONTROLADOR"].includes(session.role)) return true;
+
+    return hasAnyPermission([
+        "agenda:eventos:editar",
+        "agenda:eventos:gerenciar",
+        "admin:operacoes:editar",
+    ]);
+}
+
+async function canDeleteFatalAgenda(session: Awaited<ReturnType<typeof getSession>>) {
+    if (!session) return false;
+    if (["ADMIN", "SOCIO"].includes(session.role)) return true;
+
+    return hasAnyPermission([
+        "agenda:eventos:excluir",
+        "agenda:eventos:gerenciar",
+        "admin:operacoes:editar",
+    ]);
+}
+
+async function canDeleteAgendaComment(session: Awaited<ReturnType<typeof getSession>>) {
+    if (!session) return false;
+    if (session.role === "ADMIN") return true;
+
+    return hasAnyPermission([
+        "agenda:eventos:gerenciar",
+        "admin:painel:gerenciar",
+    ]);
 }
 
 async function logHistorico(
@@ -237,7 +270,7 @@ export async function conferirAgendamento(id: string) {
     const session = await requireSession();
 
     const papel = session.role;
-    if (!["ADMIN", "SOCIO", "CONTROLADOR"].includes(papel)) {
+    if (!(await canReviewAgenda(session))) {
         return { success: false, error: "Sem permissao para conferir" };
     }
 
@@ -271,8 +304,7 @@ export async function rejeitarConferencia(id: string, motivo: string) {
         return { success: false, error: "Informe o motivo da rejeicao" };
     }
 
-    const papel = session.role;
-    if (!["ADMIN", "SOCIO", "CONTROLADOR"].includes(papel)) {
+    if (!(await canReviewAgenda(session))) {
         return { success: false, error: "Sem permissao para rejeitar conferencia" };
     }
 
@@ -307,7 +339,7 @@ export async function cancelarAgendamento(id: string, motivo: string) {
 
     // Prazo fatal: apenas ADMIN/SOCIO podem cancelar
     if ((atual.tipo === "PRAZO_FATAL" || atual.tipo === "PRAZO_IA") &&
-        !["ADMIN", "SOCIO"].includes(session.role)) {
+        !(await canDeleteFatalAgenda(session))) {
         return { success: false, error: "Apenas ADMIN ou SOCIO podem cancelar prazos fatais" };
     }
 
@@ -417,7 +449,7 @@ export async function deleteComentario(comentarioId: string) {
     });
 
     // Somente o autor ou ADMIN pode deletar
-    if (comentario.userId !== session.id && session.role !== "ADMIN") {
+    if (comentario.userId !== session.id && !(await canDeleteAgendaComment(session))) {
         return { success: false, error: "Sem permissao para deletar este comentario" };
     }
 
@@ -473,7 +505,7 @@ export async function deleteAgendamento(id: string) {
 
     // Prazo Fatal: apenas ADMIN/SOCIO
     if ((atual.tipo === "PRAZO_FATAL" || atual.tipo === "PRAZO_IA") &&
-        !["ADMIN", "SOCIO"].includes(session.role)) {
+        !(await canDeleteFatalAgenda(session))) {
         return { success: false, error: "Sem permissao para excluir prazos fatais" };
     }
 

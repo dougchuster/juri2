@@ -2,6 +2,8 @@ import { AdminOperacoesJuridicas } from "@/components/admin/admin-operacoes-juri
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { getOperacoesJuridicasData } from "@/lib/dal/admin";
 
+export const dynamic = "force-dynamic";
+
 export default async function OperacoesJuridicasPage() {
     const { metrics, advogados, processos, slaConversas, slaAtendimentos, atribuicoesRecentes, config } =
         await getOperacoesJuridicasData();

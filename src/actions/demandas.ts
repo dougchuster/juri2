@@ -4,7 +4,7 @@ import crypto from "node:crypto";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getSession } from "@/actions/auth";
-import { getEscritorioIdOptional } from "@/lib/tenant";
+import { hasAnyPermission } from "@/lib/rbac/check-permission";
 import { getDemandasOverview } from "@/lib/dal/demandas";
 import { askKimiChat, isKimiConfigured } from "@/lib/services/ai-kimi";
 import { Prisma, type Role } from "@/generated/prisma";
@@ -200,12 +200,26 @@ const executarPlanejamentoAgendadoSchema = z.object({
     simular: z.coerce.boolean().default(false),
 });
 
-function canApplyDemandasLote(role: Role) {
-    return DEMANDAS_LOTE_ALLOWED_ROLES.includes(role);
+async function canApplyDemandasLote(role: Role) {
+    if (DEMANDAS_LOTE_ALLOWED_ROLES.includes(role)) {
+        return true;
+    }
+
+    return hasAnyPermission([
+        "demandas:lista:editar",
+        "demandas:lista:gerenciar",
+    ]);
 }
 
-function canManageDemandasAdmin(role: Role) {
-    return DEMANDAS_ADMIN_ALLOWED_ROLES.includes(role);
+async function canManageDemandasAdmin(role: Role) {
+    if (DEMANDAS_ADMIN_ALLOWED_ROLES.includes(role)) {
+        return true;
+    }
+
+    return hasAnyPermission([
+        "admin:demandas:editar",
+        "admin:demandas:gerenciar",
+    ]);
 }
 
 function getPermissaoErrorForRole(role: Role) {
@@ -657,7 +671,7 @@ export async function aplicarPlanejamentoDiarioDemandasIA(
     const session = await getSession();
     const manualMode = parsed.data.modo === "MANUAL";
     if (manualMode && !session) return { success: false, error: "Nao autenticado." };
-    if (manualMode && session && !canApplyDemandasLote(session.role)) {
+    if (manualMode && session && !(await canApplyDemandasLote(session.role))) {
         return { success: false, error: getPermissaoErrorForRole(session.role) };
     }
 
@@ -1454,7 +1468,7 @@ export async function aplicarSugestoesRedistribuicaoDemandas(
 
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canApplyDemandasLote(session.role)) {
+    if (!(await canApplyDemandasLote(session.role))) {
         return { success: false, error: getPermissaoErrorForRole(session.role) };
     }
 
@@ -1560,7 +1574,7 @@ export async function atualizarStatusPlanoDemandasIA(
         return { success: false, error: "Plano nao encontrado." };
     }
 
-    const canManage = canApplyDemandasLote(session.role) || alvo.solicitadoPorId === session.id;
+    const canManage = (await canApplyDemandasLote(session.role)) || alvo.solicitadoPorId === session.id;
     if (!canManage) {
         return { success: false, error: "Sem permissao para alterar este plano." };
     }
@@ -1605,7 +1619,7 @@ export async function updatePlanejamentoAgendadoConfigDemandas(
 
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -1646,7 +1660,7 @@ export async function salvarPlanejamentoAgendadoEscopoDemandas(
 
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -1703,7 +1717,7 @@ export async function deletePlanejamentoAgendadoEscopoDemandas(id: string) {
 
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -1798,7 +1812,7 @@ export async function executarPlanejamentoAgendadoDemandas(
     const session = await getSession();
     if (parsed.data.modo === "MANUAL") {
         if (!session) return { success: false, error: "Nao autenticado." };
-        if (!canManageDemandasAdmin(session.role)) {
+        if (!(await canManageDemandasAdmin(session.role))) {
             return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
         }
     }
@@ -2181,7 +2195,7 @@ export async function salvarTemplateRotinaDemandas(
 
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -2220,7 +2234,7 @@ export async function salvarTemplateRotinaDemandas(
 export async function deleteTemplateRotinaDemandas(id: string) {
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -2260,7 +2274,7 @@ export async function salvarRegraRotinaDemandas(
 
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -2315,7 +2329,7 @@ export async function salvarRegraRotinaDemandas(
 export async function deleteRegraRotinaDemandas(id: string) {
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -2356,7 +2370,7 @@ export async function aplicarAcaoLoteRegrasDemandas(
 
     const session = await getSession();
     if (!session) return { success: false, error: "Nao autenticado." };
-    if (!canManageDemandasAdmin(session.role)) {
+    if (!(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 
@@ -2421,7 +2435,7 @@ export async function executarRegrasGeracaoRotinasDemandas(
     if (parsed.data.modo === "MANUAL" && !session) {
         return { success: false, error: "Nao autenticado." };
     }
-    if (parsed.data.modo === "MANUAL" && session && !canManageDemandasAdmin(session.role)) {
+    if (parsed.data.modo === "MANUAL" && session && !(await canManageDemandasAdmin(session.role))) {
         return { success: false, error: getAdminPermissaoErrorForRole(session.role) };
     }
 

@@ -72,6 +72,7 @@ type SidebarUser = {
 
 type SidebarProps = {
     user?: SidebarUser;
+    navigationPermissions: string[];
     forceExpanded?: boolean;
     forceCollapsed?: boolean;
     hideCollapseToggle?: boolean;
@@ -478,6 +479,7 @@ function SidebarItem({
 
 export function Sidebar({
     user,
+    navigationPermissions,
     forceExpanded = false,
     forceCollapsed = false,
     hideCollapseToggle = false,
@@ -486,9 +488,36 @@ export function Sidebar({
 }: SidebarProps) {
     const pathname = usePathname();
     const { theme, toggleTheme } = useTheme();
+    const navigationPermissionSet = useMemo(
+        () => new Set(navigationPermissions),
+        [navigationPermissions],
+    );
+    const visibleSidebarItems = useMemo(() => SIDEBAR_ITEMS
+        .map((item) => ({
+            ...item,
+            subItems: item.subItems?.filter((subItem) =>
+                !subItem.permissionKey || navigationPermissionSet.has(subItem.permissionKey),
+            ),
+        }))
+        .filter((item) => {
+            const hasVisibleChildren = Boolean(item.subItems && item.subItems.length > 0);
+            if (Array.isArray(item.subItems)) {
+                return hasVisibleChildren;
+            }
+
+            if (!item.permissionKey) {
+                return true;
+            }
+
+            return navigationPermissionSet.has(item.permissionKey);
+        }),
+    [navigationPermissionSet]);
+    const visibleAdminItems = useMemo(() => ADMIN_ITEMS.filter((item) =>
+        !item.permissionKey || navigationPermissionSet.has(item.permissionKey),
+    ), [navigationPermissionSet]);
     const activeGroup = useMemo(() => {
-        return SIDEBAR_ITEMS.find((item) => item.subItems?.some((subItem) => pathname === subItem.href))?.label ?? null;
-    }, [pathname]);
+        return visibleSidebarItems.find((item) => item.subItems?.some((subItem) => pathname === subItem.href))?.label ?? null;
+    }, [pathname, visibleSidebarItems]);
     const [collapsed, setCollapsed] = useState(() => {
         if (typeof window === "undefined") {
             return false;
@@ -757,7 +786,7 @@ export function Sidebar({
                         </p>
                     ) : null}
                     <div className="space-y-2">
-                        {SIDEBAR_ITEMS.map((item) => (
+                        {visibleSidebarItems.map((item) => (
                             <SidebarItem
                                 key={item.label}
                                 item={item}
@@ -783,7 +812,7 @@ export function Sidebar({
                         </p>
                     ) : null}
                     <div className="space-y-2">
-                        {ADMIN_ITEMS.map((item) => (
+                        {visibleAdminItems.map((item) => (
                             <SidebarItem
                                 key={item.href}
                                 item={item}

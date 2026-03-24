@@ -5,6 +5,10 @@ import { db } from "@/lib/db";
 import { GlobalMessageModal } from "@/components/comunicacao/global-message-modal";
 import { FloatingChatWidget } from "@/components/chat/floating-chat-widget";
 import { getPresenceSnapshotForUser } from "@/lib/chat/presence";
+import { getCurrentNavigationPermissions } from "@/lib/rbac/check-permission";
+import { guardCurrentDashboardRoute } from "@/lib/rbac/route-guard";
+
+export const dynamic = "force-dynamic";
 
 function sanitizeManualStatus(status: "ONLINE" | "AWAY" | "BUSY" | "OFFLINE" | null) {
     return status === "ONLINE" || status === "AWAY" || status === "BUSY" ? status : null;
@@ -17,8 +21,9 @@ export default async function DashboardLayout({
 }) {
     const user = await getSession();
     if (!user) redirect("/login");
+    await guardCurrentDashboardRoute();
 
-    const [unreadNotifications, recentNotifications, chatPresence] = await Promise.all([
+    const [unreadNotifications, recentNotifications, chatPresence, navigationPermissions] = await Promise.all([
         db.notificacao.count({
             where: { userId: user.id, lida: false },
         }),
@@ -36,6 +41,7 @@ export default async function DashboardLayout({
             },
         }),
         getPresenceSnapshotForUser(user.id),
+        getCurrentNavigationPermissions(),
     ]);
 
     const sidebarPresence = chatPresence || {
@@ -69,6 +75,7 @@ export default async function DashboardLayout({
                         connected: sidebarPresence.connected,
                     },
                 }}
+                navigationPermissions={navigationPermissions}
                 unreadNotifications={unreadNotifications}
                 notifications={recentNotifications}
             >
@@ -76,14 +83,16 @@ export default async function DashboardLayout({
             </DashboardShell>
 
             <GlobalMessageModal />
-            <FloatingChatWidget
-                currentUser={{
-                    id: user.id,
-                    name: user.name,
-                    role: user.role,
-                    avatarUrl: user.avatarUrl || null,
-                }}
-            />
+            {navigationPermissions.includes("chat:mensagens:ver") ? (
+                <FloatingChatWidget
+                    currentUser={{
+                        id: user.id,
+                        name: user.name,
+                        role: user.role,
+                        avatarUrl: user.avatarUrl || null,
+                    }}
+                />
+            ) : null}
         </>
     );
 }

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
     BarChart3,
     Calendar,
+    KeyRound,
     MessageCircle,
     Newspaper,
     Settings2,
@@ -75,6 +76,12 @@ const ADMIN_NAV_ITEMS: AdminNavItem[] = [
         label: "Integracoes",
         icon: Calendar,
         match: (pathname) => pathname.startsWith("/admin/integracoes"),
+    },
+    {
+        href: "/admin/permissoes",
+        label: "Permissoes",
+        icon: KeyRound,
+        match: (pathname) => pathname.startsWith("/admin/permissoes"),
     },
     {
         href: "/admin/operacoes-juridicas",

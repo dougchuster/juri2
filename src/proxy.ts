@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { decodePermissionCache, PERMISSION_CACHE_COOKIE_NAME } from "@/lib/rbac/permission-cache";
+import { getRequiredPermissionForPath, RBAC_ENABLED } from "@/lib/rbac/permissions";
 
-// Rotas públicas que não precisam de autenticação
 const PUBLIC_ROUTES = [
     "/login",
     "/admin-login",
@@ -12,72 +13,19 @@ const PUBLIC_ROUTES = [
     "/api/webhooks",
 ];
 
-// Rotas de API que devem ser protegidas (exigem sessão)
-const PROTECTED_API_PREFIXES = [
-    "/api/admin",
-    "/api/clientes",
-    "/api/processos",
-    "/api/financeiro",
-    "/api/comunicacao",
-    "/api/agenda",
-    "/api/documentos",
-    "/api/crm",
-    "/api/grafo",
-    "/api/bi",
-    "/api/datajud",
-    "/root-admin/api", // Root admin APIs (validam própria autenticação)
-];
-
-// Cookies de sessão e MFA
 const SESSION_COOKIE = "session_token";
 const MFA_CHALLENGE_COOKIE = "mfa_challenge_token";
 const MFA_SETUP_REQUIRED_COOKIE = "mfa_setup_required";
 
-// Métodos que modificam estado — sujeitos à verificação CSRF
-const MUTATION_METHODS = new Set(["POST", "PATCH", "PUT", "DELETE"]);
-
-function isPublicRoute(pathname: string): boolean {
+function isPublicRoute(pathname: string) {
     return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 }
 
-function isProtectedApiRoute(pathname: string): boolean {
-    return PROTECTED_API_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-}
-
-function checkCsrf(request: NextRequest): boolean {
-    const origin = request.headers.get("origin");
-    if (!origin) return true;
-
-    // Prefer explicit base URL from env; fallback to host header for proxied setups
-    const configuredBase = process.env.NEXT_PUBLIC_BASE_URL;
-    if (configuredBase) {
-        try {
-            return new URL(configuredBase).origin === origin;
-        } catch {
-            // fall through
-        }
-    }
-
-    // Compare origin host with the request Host header (reliable in proxy setups)
-    const host = request.headers.get("host");
-    if (!host) return false;
-
-    try {
-        const originHost = new URL(origin).host;
-        return originHost === host;
-    } catch {
-        return false;
-    }
-}
-
-function addSecurityHeaders(response: NextResponse): NextResponse {
+function addSecurityHeaders(response: NextResponse) {
     response.headers.set("X-Frame-Options", "DENY");
     response.headers.set("X-Content-Type-Options", "nosniff");
     response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-    response.headers.set(
-        "Permissions-Policy",
-        "camera=(), microphone=(), geolocation=()"
-    );
+    response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
     response.headers.set("X-XSS-Protection", "1; mode=block");
 
     const csp = [
@@ -97,12 +45,19 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
 
 export default function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    const httpMethod = request.method;
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-rbac-pathname", pathname);
 
-    const response = NextResponse.next();
-    addSecurityHeaders(response);
+    function nextResponse() {
+        const response = NextResponse.next({
+            request: {
+                headers: requestHeaders,
+            },
+        });
 
-    // Assets e internos do Next.js — sempre passam
+        return addSecurityHeaders(response);
+    }
+
     if (
         pathname.startsWith("/_next") ||
         pathname.startsWith("/favicon") ||
@@ -110,21 +65,18 @@ export default function proxy(request: NextRequest) {
         pathname.startsWith("/images") ||
         pathname.startsWith("/uploads")
     ) {
-        return response;
+        return nextResponse();
     }
 
-    // APIs — lidam com autenticação internamente
     if (pathname.startsWith("/api") || pathname.startsWith("/root-admin/api")) {
-        return response;
+        return nextResponse();
     }
 
     const sessionToken = request.cookies.get(SESSION_COOKIE)?.value;
     const mfaChallenge = request.cookies.get(MFA_CHALLENGE_COOKIE)?.value;
     const mfaSetupRequired = request.cookies.get(MFA_SETUP_REQUIRED_COOKIE)?.value;
 
-    // Rotas públicas de auth
     if (isPublicRoute(pathname) || pathname === "/") {
-        // Redirecionar usuário já autenticado (sem MFA pendente) para o dashboard
         if (
             sessionToken &&
             !mfaChallenge &&
@@ -135,10 +87,10 @@ export default function proxy(request: NextRequest) {
         ) {
             return NextResponse.redirect(new URL("/dashboard", request.url));
         }
-        return response;
+
+        return nextResponse();
     }
 
-    // Rotas protegidas — exigem session_token
     if (!sessionToken && !pathname.startsWith("/root-admin") && !pathname.startsWith("/admin-login")) {
         const loginUrl = new URL("/login", request.url);
         if (pathname !== "/dashboard") {
@@ -147,7 +99,24 @@ export default function proxy(request: NextRequest) {
         return NextResponse.redirect(loginUrl);
     }
 
-    return response;
+    if (RBAC_ENABLED && !pathname.startsWith("/root-admin") && !pathname.startsWith("/admin-login")) {
+        const permCacheRaw = request.cookies.get(PERMISSION_CACHE_COOKIE_NAME)?.value;
+        if (permCacheRaw) {
+            const parsed = decodePermissionCache(permCacheRaw);
+            if (!parsed) {
+                const response = nextResponse();
+                response.cookies.delete(PERMISSION_CACHE_COOKIE_NAME);
+                return response;
+            }
+
+            const requiredPermission = getRequiredPermissionForPath(pathname);
+            if (requiredPermission && !parsed.permissions.includes(requiredPermission)) {
+                requestHeaders.set("x-rbac-cookie-miss", requiredPermission);
+            }
+        }
+    }
+
+    return nextResponse();
 }
 
 export const config = {

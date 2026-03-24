@@ -1,18 +1,30 @@
 import "server-only";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import type { Role } from "@/generated/prisma";
+import { getSession } from "@/actions/auth";
 import { getUserOrganizationMappings, resolveUserOrganization } from "@/lib/root-admin/user-organization";
+import { RBAC_ENABLED } from "@/lib/rbac/permissions";
+import { resolveUserPermissions } from "@/lib/rbac/resolve-permissions";
 
-const CRM_ALLOWED_ROLES = new Set<Role>([
-    "ADMIN",
-    "SOCIO",
-    "ADVOGADO",
-    "CONTROLADOR",
-    "ASSISTENTE",
-    "SECRETARIA",
-]);
+const CRM_VIEW_PERMISSIONS = [
+    "crm:contatos:ver",
+    "crm:listas:ver",
+    "crm:segmentos:ver",
+    "crm:pipeline:ver",
+    "crm:atividades:ver",
+    "crm:campanhas:ver",
+    "crm:fluxos:ver",
+    "crm:analytics:ver",
+    "crm:configuracoes:ver",
+];
+
+const CRM_MANAGE_CONFIGURATION_PERMISSIONS = [
+    "crm:configuracoes:editar",
+    "crm:configuracoes:gerenciar",
+    "crm:campanhas:gerenciar",
+    "crm:fluxos:gerenciar",
+];
 
 export type CRMAuthUser = {
     id: string;
@@ -23,6 +35,7 @@ export type CRMAuthUser = {
     teamIds: string[];
     teamNames: string[];
     crmAreas: string[];
+    permissions: string[];
 };
 
 function normalizeArea(value: string) {
@@ -50,29 +63,23 @@ function parseCRMUserAreas(raw?: string | null) {
 }
 
 export async function getCRMAuthUser(): Promise<CRMAuthUser | null> {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("session_token")?.value;
-    if (!token) return null;
+    const session = await getSession();
+    if (!session?.id || !session.isActive) return null;
 
-    const session = await db.session.findUnique({
-        where: { token },
+    const user = await db.user.findUnique({
+        where: { id: session.id },
         select: {
-            expiresAt: true,
-            user: {
+            id: true,
+            email: true,
+            role: true,
+            isActive: true,
+            advogado: {
                 select: {
                     id: true,
-                    email: true,
-                    role: true,
-                    isActive: true,
-                    advogado: {
+                    especialidades: true,
+                    timeMembros: {
                         select: {
-                            id: true,
-                            especialidades: true,
-                            timeMembros: {
-                                select: {
-                                    time: { select: { id: true, nome: true } },
-                                },
-                            },
+                            time: { select: { id: true, nome: true } },
                         },
                     },
                 },
@@ -80,11 +87,19 @@ export async function getCRMAuthUser(): Promise<CRMAuthUser | null> {
         },
     });
 
-    if (!session || session.expiresAt < new Date() || !session.user.isActive) {
+    if (!user?.isActive) {
         return null;
     }
 
-    if (!CRM_ALLOWED_ROLES.has(session.user.role)) {
+    const permissions = RBAC_ENABLED
+        ? Array.from(await resolveUserPermissions({
+            userId: user.id,
+            role: user.role,
+            escritorioId: session.escritorioId,
+        }))
+        : CRM_VIEW_PERMISSIONS;
+
+    if (RBAC_ENABLED && !CRM_VIEW_PERMISSIONS.some((permission) => permissions.includes(permission))) {
         return null;
     }
 
@@ -94,25 +109,32 @@ export async function getCRMAuthUser(): Promise<CRMAuthUser | null> {
     ]);
 
     const resolved = resolveUserOrganization(
-        { id: session.user.id, email: session.user.email },
+        { id: user.id, email: user.email },
         escritorios,
         mappings
     );
 
     return {
-        id: session.user.id,
-        role: session.user.role,
-        isActive: session.user.isActive,
+        id: user.id,
+        role: user.role,
+        isActive: user.isActive,
         escritorioId: resolved?.id || null,
-        advogadoId: session.user.advogado?.id || null,
-        teamIds: (session.user.advogado?.timeMembros || []).map((item) => item.time.id),
-        teamNames: (session.user.advogado?.timeMembros || []).map((item) => item.time.nome),
-        crmAreas: parseCRMUserAreas(session.user.advogado?.especialidades),
+        advogadoId: user.advogado?.id || null,
+        teamIds: (user.advogado?.timeMembros || []).map((item) => item.time.id),
+        teamNames: (user.advogado?.timeMembros || []).map((item) => item.time.nome),
+        crmAreas: parseCRMUserAreas(user.advogado?.especialidades),
+        permissions,
     };
 }
 
 export function canManageCRMConfiguration(user: CRMAuthUser) {
-    return user.role === "ADMIN" || user.role === "SOCIO" || user.role === "CONTROLADOR";
+    if (!RBAC_ENABLED) {
+        return user.role === "ADMIN" || user.role === "SOCIO" || user.role === "CONTROLADOR";
+    }
+
+    return CRM_MANAGE_CONFIGURATION_PERMISSIONS.some((permission) =>
+        user.permissions.includes(permission),
+    );
 }
 
 export function isUserScopedCRM(user: CRMAuthUser) {

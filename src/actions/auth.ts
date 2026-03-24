@@ -9,6 +9,9 @@ import { db } from "@/lib/db";
 import { registrarLogAuditoria } from "@/lib/services/audit-log";
 import { createMfaSecurityNotification } from "@/lib/services/mfa-alerts";
 import { checkRateLimitAsync, getClientIp } from "@/lib/middleware/rate-limit";
+import { encodePermissionCache, PERMISSION_CACHE_COOKIE_NAME } from "@/lib/rbac/permission-cache";
+import { getNavigationPermissionKeys, RBAC_ENABLED } from "@/lib/rbac/permissions";
+import { resolveUserPermissions } from "@/lib/rbac/resolve-permissions";
 import {
     consumeTrustedDevice,
     MfaError,
@@ -41,6 +44,54 @@ function isSessionInfrastructureError(error: unknown) {
 async function setSessionCookie(token: string) {
     const cookieStore = await cookies();
     cookieStore.set("session_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: SESSION_COOKIE_MAX_AGE_SEC,
+        path: "/",
+    });
+}
+
+async function syncPermissionCacheCookie(userId: string) {
+    const cookieStore = await cookies();
+
+    if (!RBAC_ENABLED) {
+        cookieStore.delete(PERMISSION_CACHE_COOKIE_NAME);
+        return;
+    }
+
+    const user = await db.user.findUnique({
+        where: { id: userId },
+        select: {
+            id: true,
+            role: true,
+            escritorioId: true,
+            permissionVersion: true,
+        },
+    });
+
+    if (!user) {
+        cookieStore.delete(PERMISSION_CACHE_COOKIE_NAME);
+        return;
+    }
+
+    const permissions = await resolveUserPermissions({
+        userId: user.id,
+        role: user.role,
+        escritorioId: user.escritorioId,
+    });
+
+    const encoded = encodePermissionCache({
+        permissions: getNavigationPermissionKeys(permissions),
+        version: user.permissionVersion,
+    });
+
+    if (!encoded) {
+        cookieStore.delete(PERMISSION_CACHE_COOKIE_NAME);
+        return;
+    }
+
+    cookieStore.set(PERMISSION_CACHE_COOKIE_NAME, encoded, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
@@ -104,6 +155,7 @@ async function createAuthenticatedSession(userId: string) {
     });
 
     await setSessionCookie(token);
+    await syncPermissionCacheCookie(userId);
 }
 
 export async function login(formData: FormData) {
@@ -304,6 +356,7 @@ export async function logout() {
     }
 
     cookieStore.delete("session_token");
+    cookieStore.delete(PERMISSION_CACHE_COOKIE_NAME);
     cookieStore.delete(MFA_COOKIE_NAME);
     cookieStore.delete(MFA_SETUP_REQUIRED_COOKIE_NAME);
 
@@ -330,6 +383,7 @@ export const getSession = cache(async () => {
                         isActive: true,
                         onboardingCompleted: true,
                         escritorioId: true,
+                        permissionVersion: true,
                         advogado: {
                             select: { id: true, oab: true, seccional: true },
                         },

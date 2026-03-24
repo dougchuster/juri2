@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { Prisma, Role } from "@/generated/prisma";
 import { getSession } from "@/actions/auth";
+import { requirePermission } from "@/lib/rbac/check-permission";
 import {
     type DistributionCandidate,
     type DistributionProcess,
@@ -38,6 +39,10 @@ export async function createFeriado(formData: z.infer<typeof feriadoSchema>) {
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     try {
+        if (!(await requireAdminOperationalSession())) {
+            return { success: false, error: { _form: ["Nao autorizado."] } };
+        }
+
         await db.feriado.create({
             data: {
                 nome: parsed.data.nome,
@@ -60,6 +65,10 @@ export async function updateFeriado(id: string, formData: z.infer<typeof feriado
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     try {
+        if (!(await requireAdminOperationalSession())) {
+            return { success: false, error: { _form: ["Nao autorizado."] } };
+        }
+
         await db.feriado.update({
             where: { id },
             data: {
@@ -80,6 +89,10 @@ export async function updateFeriado(id: string, formData: z.infer<typeof feriado
 
 export async function deleteFeriado(id: string) {
     try {
+        if (!(await requireAdminOperationalSession())) {
+            return { success: false, error: "Nao autorizado." };
+        }
+
         await db.feriado.delete({ where: { id } });
         revalidatePath("/admin");
         return { success: true };
@@ -103,6 +116,10 @@ export async function updateEscritorio(id: string, formData: z.infer<typeof escr
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
 
     try {
+        if (!(await requireAdminOperationalSession())) {
+            return { success: false, error: { _form: ["Nao autorizado."] } };
+        }
+
         const nome = parsed.data.nome.trim();
         const cnpj = parsed.data.cnpj?.trim() || null;
         const telefone = parsed.data.telefone?.trim() || null;
@@ -162,6 +179,10 @@ export async function updateEscritorio(id: string, formData: z.infer<typeof escr
 // ── Gestão de Usuários ──
 export async function toggleUserActive(userId: string) {
     try {
+        if (!(await requireAdminUserActionSession())) {
+            return { success: false, error: "Nao autorizado." };
+        }
+
         const user = await db.user.findUnique({
             where: { id: userId },
             select: { id: true, isActive: true },
@@ -217,7 +238,32 @@ function buildTemporaryPassword(length = 12) {
 
 async function requireAdminUserActionSession() {
     const session = await getSession();
-    if (!session?.id || !["ADMIN", "SOCIO"].includes(String(session.role))) {
+    if (!session?.id) {
+        return null;
+    }
+
+    const permission = await requirePermission("admin:equipe:editar", {
+        fallbackRoles: ["ADMIN", "SOCIO"],
+        errorMessage: "Nao autorizado.",
+    });
+    if ("error" in permission) {
+        return null;
+    }
+
+    return session;
+}
+
+async function requireAdminOperationalSession() {
+    const session = await getSession();
+    if (!session?.id) {
+        return null;
+    }
+
+    const permission = await requirePermission("admin:operacoes:editar", {
+        fallbackRoles: ["ADMIN", "SOCIO"],
+        errorMessage: "Nao autorizado.",
+    });
+    if ("error" in permission) {
         return null;
     }
 

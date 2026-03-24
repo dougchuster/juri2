@@ -61,6 +61,9 @@ const REQUIRED_DELEGATES = [
   "internalChatRead",
   "internalChatPresence",
   "passwordResetToken",
+  "permission",
+  "rolePermission",
+  "userPermissionOverride",
   // Root Admin models
   "superAdmin",
   "superAdminSession",
