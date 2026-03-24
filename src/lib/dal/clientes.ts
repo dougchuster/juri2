@@ -63,8 +63,10 @@ export async function getClientes(filters: ClienteFilters = {}) {
 }
 
 export async function getClienteById(id: string) {
-    return db.cliente.findUnique({
-        where: { id },
+    const session = await getSession();
+    const escritorioId = session?.escritorioId;
+    return db.cliente.findFirst({
+        where: { id, ...(escritorioId ? { escritorioId } : {}) },
         include: {
             origem: true,
             processos: {
