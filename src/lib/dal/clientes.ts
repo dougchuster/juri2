@@ -95,11 +95,13 @@ export async function getOrigensCliente() {
 }
 
 export async function getClienteStats() {
+    const session = await getSession();
+    const tenantFilter = session?.escritorioId ? { escritorioId: session.escritorioId } : {};
     const [total, ativos, prospectos, inadimplentes] = await Promise.all([
-        db.cliente.count(),
-        db.cliente.count({ where: { status: "ATIVO" } }),
-        db.cliente.count({ where: { status: "PROSPECTO" } }),
-        db.cliente.count({ where: { inadimplente: true } }),
+        db.cliente.count({ where: tenantFilter }),
+        db.cliente.count({ where: { ...tenantFilter, status: "ATIVO" } }),
+        db.cliente.count({ where: { ...tenantFilter, status: "PROSPECTO" } }),
+        db.cliente.count({ where: { ...tenantFilter, inadimplente: true } }),
     ]);
 
     return { total, ativos, prospectos, inadimplentes };
