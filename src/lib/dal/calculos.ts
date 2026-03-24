@@ -50,8 +50,10 @@ export async function getCalculoStats(userId?: string) {
 }
 
 export async function getCalculoById(id: string) {
-    return db.calculo.findUnique({
-        where: { id },
+    const session = await getSession();
+    const escritorioId = session?.escritorioId;
+    return db.calculo.findFirst({
+        where: { id, ...(escritorioId ? { cliente: { escritorioId } } : {}) },
         include: {
             processo: { select: { id: true, numeroCnj: true, cliente: { select: { nome: true } } } },
             cliente: { select: { id: true, nome: true } },
