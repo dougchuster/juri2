@@ -360,8 +360,10 @@ export async function getAgendamentosForKanban(
 }
 
 export async function getAgendamentoById(id: string) {
-    return db.agendamento.findUnique({
-        where: { id },
+    const session = await getSession();
+    const escritorioId = session?.escritorioId;
+    return db.agendamento.findFirst({
+        where: { id, ...(escritorioId ? { escritorioId } : {}) },
         include: {
             responsavel: { include: { user: { select: { id: true, name: true, avatarUrl: true } } } },
             criadoPor: { select: { id: true, name: true, avatarUrl: true } },
