@@ -21,6 +21,7 @@ interface Props {
     sessionAdvogadoId?: string;
     defaultTipo?: TipoAgendamento;
     defaultDate?: string;
+    defaultClienteId?: string;
 }
 
 const TIPO_FIELDS: Record<TipoAgendamento, { showProcesso: boolean; showCliente: boolean; showLocal: boolean; showFatal: boolean }> = {
