@@ -152,8 +152,10 @@ export async function getAtendimentosPipeline() {
 }
 
 export async function getAtendimentoById(id: string) {
-    return db.atendimento.findUnique({
-        where: { id },
+    const session = await getSession();
+    const escritorioId = session?.escritorioId;
+    return db.atendimento.findFirst({
+        where: { id, ...(escritorioId ? { cliente: { escritorioId } } : {}) },
         include: {
             cliente: true,
             advogado: { include: { user: true } },
