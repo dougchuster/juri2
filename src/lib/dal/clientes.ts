@@ -1,5 +1,6 @@
 import "server-only";
 import { db } from "@/lib/db";
+import { getSession } from "@/actions/auth";
 import type { StatusCliente, TipoPessoa } from "@/generated/prisma";
 
 export interface ClienteFilters {
