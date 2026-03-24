@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getClienteById, getOrigensCliente } from "@/lib/dal/clientes";
 import { getTimelineCliente } from "@/lib/dal/timeline";
+import { getAdvogados } from "@/lib/dal/processos";
+import { getSession } from "@/actions/auth";
 import { Badge, STATUS_CLIENTE_BADGE } from "@/components/ui/badge";
 import { getInitials, formatDate } from "@/lib/utils";
 import {
