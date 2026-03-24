@@ -110,7 +110,7 @@ export async function requirePermissionOrRedirect(
 
     const allowed = await hasPermission(permissionKey);
     if (!allowed) {
-        redirect("/dashboard?erro=sem-permissao");
+        redirect("/sem-acesso");
     }
 }
 
