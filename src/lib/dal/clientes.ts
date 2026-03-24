@@ -24,7 +24,9 @@ export async function getClientes(filters: ClienteFilters = {}) {
         pageSize = 10,
     } = filters;
 
+    const session = await getSession();
     const where: Record<string, unknown> = {};
+    if (session?.escritorioId) where.escritorioId = session.escritorioId;
 
     if (search) {
         where.OR = [
