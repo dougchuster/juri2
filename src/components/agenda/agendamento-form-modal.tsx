@@ -37,7 +37,7 @@ const TIPO_FIELDS: Record<TipoAgendamento, { showProcesso: boolean; showCliente:
     DILIGENCIA:        { showProcesso: true,  showCliente: false, showLocal: true,  showFatal: false },
 };
 
-export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, sessionAdvogadoId, defaultTipo, defaultDate }: Props) {
+export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, sessionAdvogadoId, defaultTipo, defaultDate, defaultClienteId }: Props) {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
