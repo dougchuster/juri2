@@ -116,9 +116,12 @@ export async function getProcessoById(id: string, scope?: ProcessoVisibilityScop
     const scopedAdvogadoId = getScopedAdvogadoId(scope);
     if (scope?.role === "ADVOGADO" && !scopedAdvogadoId) return null;
 
+    const session = await getSession();
+    const escritorioId = session?.escritorioId;
     return db.processo.findFirst({
         where: {
             id,
+            ...(escritorioId ? { escritorioId } : {}),
             ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}),
         },
         include: {
