@@ -318,6 +318,8 @@ function SidebarItem({
     const Icon = iconMap[item.icon as keyof typeof iconMap] ?? SquaresFour;
     const isActive = item.href ? pathname === item.href : item.subItems?.some((subItem) => pathname === subItem.href);
     const isOpen = !collapsed && openGroup === item.label;
+    const chatUnreadCount = useInternalChatStore((s) => s.globalUnreadCount);
+    const isChatItem = item.href === "/chat";
     const isFlyoutOpen = collapsed && openGroup === item.label;
 
     if (item.subItems?.length) {
