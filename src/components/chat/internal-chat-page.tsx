@@ -599,6 +599,7 @@ export function InternalChatPage({
           )}
         >
           <ChatTeamPanel
+            currentUserId={currentUser.id}
             onStartDirect={async (userId) => {
               await controller.createDirectConversation(userId);
               setMobileView("thread");
