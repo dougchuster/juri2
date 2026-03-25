@@ -355,3 +355,71 @@
  POST /api/jobs/process 200 in 19ms (compile: 2ms, proxy.ts: 2ms, render: 15ms)
  POST /api/jobs/process 200 in 20ms (compile: 4ms, proxy.ts: 3ms, render: 13ms)
  POST /api/jobs/demandas 200 in 23ms (compile: 2ms, proxy.ts: 3ms, render: 17ms)
+ POST /api/jobs/process 200 in 16ms (compile: 1530µs, proxy.ts: 2ms, render: 13ms)
+⨯ Error: Cookies can only be modified in a Server Action or Route Handler. Read more: https://nextjs.org/docs/app/api-reference/functions/cookies#options
+    at <unknown> (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\auth.ts:406:69)
+  404 |         if (!session || session.expiresAt < now || !session.user.isActive) {
+  405 |             if (session) {
+> 406 |                 await db.session.delete({ where: { id: session.id } });
+      |                                                                     ^
+  407 |             }
+  408 |             // Limpa o cookie stale para evitar loop de redirect
+  409 |             cookieStore.delete("session_token"); {
+  digest: '4211866228'
+}
+⨯ Error: Cookies can only be modified in a Server Action or Route Handler. Read more: https://nextjs.org/docs/app/api-reference/functions/cookies#options
+    at <unknown> (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\actions\auth.ts:406:69)
+  404 |         if (!session || session.expiresAt < now || !session.user.isActive) {
+  405 |             if (session) {
+> 406 |                 await db.session.delete({ where: { id: session.id } });
+      |                                                                     ^
+  407 |             }
+  408 |             // Limpa o cookie stale para evitar loop de redirect
+  409 |             cookieStore.delete("session_token"); {
+  digest: '4211866228'
+}
+ GET /dashboard 500 in 64ms (compile: 6ms, proxy.ts: 3ms, render: 55ms)
+⨯ Error: Cookies can only be modified in a Server Action or Route Handler. Read more: https://nextjs.org/docs/app/api-reference/functions/cookies#options
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\ssr\src_11a0e2ee._.js:3514:47)
+    at async HomePage (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\app\page.tsx:24:17)
+  22 |         url: "/images/backgroundLAW.jpg",
+  23 |         width: 1600,
+> 24 |         height: 1067,
+     |                 ^
+  25 |         alt: "Juridico ADV - Plataforma jurídica completa",
+  26 |       },
+  27 |     ], {
+  digest: '900427064'
+}
+ GET / 500 in 1395ms (compile: 1196ms, proxy.ts: 3ms, render: 196ms)
+⨯ Error: Cookies can only be modified in a Server Action or Route Handler. Read more: https://nextjs.org/docs/app/api-reference/functions/cookies#options
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\ssr\src_11a0e2ee._.js:3514:47)
+    at async HomePage (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\app\page.tsx:24:17)
+  22 |         url: "/images/backgroundLAW.jpg",
+  23 |         width: 1600,
+> 24 |         height: 1067,
+     |                 ^
+  25 |         alt: "Juridico ADV - Plataforma jurídica completa",
+  26 |       },
+  27 |     ], {
+  digest: '900427064'
+}
+ GET / 500 in 40ms (compile: 2ms, proxy.ts: 2ms, render: 35ms)
+⨯ Error: Cookies can only be modified in a Server Action or Route Handler. Read more: https://nextjs.org/docs/app/api-reference/functions/cookies#options
+    at <unknown> (C:\Users\dougc\Documents\Sistema Juridico ADV\.next\dev\server\chunks\ssr\src_11a0e2ee._.js:3514:47)
+    at async HomePage (file:\C:\Users\dougc\Documents\Sistema%20Juridico%20ADV\src\app\page.tsx:24:17)
+  22 |         url: "/images/backgroundLAW.jpg",
+  23 |         width: 1600,
+> 24 |         height: 1067,
+     |                 ^
+  25 |         alt: "Juridico ADV - Plataforma jurídica completa",
+  26 |       },
+  27 |     ], {
+  digest: '900427064'
+}
+ GET / 500 in 53ms (compile: 3ms, proxy.ts: 2ms, render: 48ms)
+✓ Compiled in 191ms
+ GET / 200 in 1472ms (compile: 939ms, proxy.ts: 2ms, render: 530ms)
+ POST /api/jobs/process 200 in 18ms (compile: 1766µs, proxy.ts: 3ms, render: 14ms)
+ POST /api/jobs/demandas 200 in 2.7s (compile: 2.6s, proxy.ts: 2ms, render: 49ms)
+ POST /api/jobs/process 200 in 17ms (compile: 1700µs, proxy.ts: 2ms, render: 13ms)
