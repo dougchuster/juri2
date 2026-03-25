@@ -189,7 +189,7 @@ function SkeletonRow() {
   );
 }
 
-export function ChatTeamPanel({ onStartDirect, className }: Props) {
+export function ChatTeamPanel({ currentUserId, onStartDirect, className }: Props) {
   const [sections, setSections] = useState<Section[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
