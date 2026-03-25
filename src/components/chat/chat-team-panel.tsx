@@ -80,40 +80,42 @@ function MemberAvatar({
 
 function MemberRow({
   member,
+  isSelf,
   onStartDirect,
 }: {
   member: Member;
+  isSelf: boolean;
   onStartDirect: (userId: string) => void;
 }) {
-  const [hovered, setHovered] = useState(false);
-
   return (
-    <div
-      className="group flex items-center gap-3 rounded-[18px] border border-transparent px-3 py-2 transition-all hover:border-[var(--card-border)] hover:bg-[var(--surface-soft)]"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="group flex items-center gap-3 rounded-[18px] border border-transparent px-3 py-2 transition-all hover:border-[var(--card-border)] hover:bg-[var(--surface-soft)]">
       <MemberAvatar name={member.name} avatarUrl={member.avatarUrl} presence={member.presence} />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-[var(--text-primary)]">{member.name}</p>
+        <div className="flex items-center gap-1.5">
+          <p className="truncate text-sm font-semibold text-[var(--text-primary)]">{member.name}</p>
+          {isSelf && (
+            <span className="shrink-0 rounded-full bg-[var(--accent-subtle)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[var(--accent-hover)]">
+              Você
+            </span>
+          )}
+        </div>
         <p className="truncate text-[11px] text-[var(--text-muted)]">
           {formatLastSeen(member.lastSeenAt, member.presence)}
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={() => onStartDirect(member.id)}
-        className={cn(
-          "flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--card-border)] bg-white/70 px-3 py-1.5 text-[11px] font-semibold text-[var(--text-secondary)] transition-all hover:border-[color:color-mix(in_srgb,var(--accent)_30%,white)] hover:bg-[color:color-mix(in_srgb,var(--accent)_8%,white)] hover:text-[var(--accent-hover)] dark:bg-white/6 dark:hover:bg-white/10",
-          hovered ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-        )}
-        aria-label={`Mensagem para ${member.name}`}
-      >
-        <MessageCircle size={11} />
-        Mensagem
-      </button>
+      {!isSelf && (
+        <button
+          type="button"
+          onClick={() => onStartDirect(member.id)}
+          className="flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--card-border)] bg-white/70 px-3 py-1.5 text-[11px] font-semibold text-[var(--text-secondary)] opacity-0 transition-all group-hover:opacity-100 hover:border-[color:color-mix(in_srgb,var(--accent)_30%,white)] hover:bg-[color:color-mix(in_srgb,var(--accent)_8%,white)] hover:text-[var(--accent-hover)] dark:bg-white/6 dark:hover:bg-white/10"
+          aria-label={`Mensagem para ${member.name}`}
+        >
+          <MessageCircle size={11} />
+          Mensagem
+        </button>
+      )}
     </div>
   );
 }
