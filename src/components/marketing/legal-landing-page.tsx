@@ -18,6 +18,7 @@ import {
   Layers3,
   LockKeyhole,
   LogIn,
+  Menu,
   MessageCircle,
   MessageSquareText,
   Scale,
@@ -25,6 +26,7 @@ import {
   Sparkles,
   Wallet,
   Workflow,
+  X,
 } from "lucide-react";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { AuroraBackground } from "@/components/ui/aurora-background";
