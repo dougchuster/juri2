@@ -38,7 +38,7 @@ export interface EventoTimeline {
     fonte: FonteEvento;
     responsavel?: { id: string; nome: string; oab?: string };
     entidadeId: string;
-    entidadeTabela: "movimentacao" | "prazo" | "audiencia" | "documento" | "honorario";
+    entidadeTabela: "movimentacao" | "prazo" | "audiencia" | "documento" | "honorario" | "agendamento";
     documentoUrl?: string;
     documentoNome?: string;
     privado?: boolean;
