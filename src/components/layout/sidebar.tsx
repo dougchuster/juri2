@@ -472,9 +472,23 @@ function SidebarItem({
             title={collapsed ? item.label : undefined}
             aria-label={item.label}
         >
-            <Icon size={20} weight={isActive ? "fill" : "regular"} className="shrink-0" />
+            <div className="relative shrink-0">
+                <Icon size={20} weight={isActive ? "fill" : "regular"} />
+                {isChatItem && chatUnreadCount > 0 && (
+                    <span className="absolute -right-1.5 -top-1.5 flex min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold leading-none text-white shadow-sm">
+                        {chatUnreadCount > 99 ? "99+" : chatUnreadCount}
+                    </span>
+                )}
+            </div>
             {!collapsed ? (
-                <span className="min-w-0 truncate text-[14px] font-medium">{item.label}</span>
+                <>
+                    <span className="min-w-0 flex-1 truncate text-[14px] font-medium">{item.label}</span>
+                    {isChatItem && chatUnreadCount > 0 && (
+                        <span className="ml-auto flex min-w-[20px] items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),var(--highlight))] px-1.5 py-0.5 text-[10px] font-bold text-white shadow-[0_4px_10px_color-mix(in_srgb,var(--accent)_28%,transparent)]">
+                            {chatUnreadCount > 99 ? "99+" : chatUnreadCount}
+                        </span>
+                    )}
+                </>
             ) : null}
         </Link>
     );
