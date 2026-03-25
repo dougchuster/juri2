@@ -424,7 +424,7 @@ export function LegalLandingPage() {
                 </Link>
               </div>
 
-              <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div className="mt-10 grid grid-cols-1 gap-4 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3">
                 {[
                   { value: "20+", label: "Módulos", description: "Gestão completa do escritório" },
                   { value: "99.9%", label: "Uptime", description: "Infraestrutura de alta disponibilidade" },
