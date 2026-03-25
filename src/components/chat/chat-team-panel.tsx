@@ -122,10 +122,12 @@ function MemberRow({
 
 function SectionBlock({
   section,
+  currentUserId,
   onStartDirect,
   query,
 }: {
   section: Section;
+  currentUserId?: string;
   onStartDirect: (userId: string) => void;
   query: string;
 }) {
@@ -162,7 +164,12 @@ function SectionBlock({
       {open && (
         <div className="space-y-0.5 px-2 pb-2">
           {filtered.map((member) => (
-            <MemberRow key={member.id} member={member} onStartDirect={onStartDirect} />
+            <MemberRow
+              key={member.id}
+              member={member}
+              isSelf={member.id === currentUserId}
+              onStartDirect={onStartDirect}
+            />
           ))}
         </div>
       )}
