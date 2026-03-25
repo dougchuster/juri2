@@ -575,6 +575,31 @@ export function useInternalChatController(options: ChatControllerOptions) {
     }
   }
 
+  async function deleteMessage(messageId: string) {
+    if (!selectedConversationId) return;
+    setError(null);
+    try {
+      await getJson(
+        `${CHAT_ROUTE_BASE}/conversations/${selectedConversationId}/messages/${messageId}`,
+        { method: "DELETE" }
+      );
+      // Optimistic update: mark as deleted in local state
+      setMessages((current) =>
+        current.map((msg) =>
+          msg.id === messageId
+            ? { ...msg, deletedAt: new Date().toISOString(), text: null }
+            : msg
+        )
+      );
+    } catch (mutationError) {
+      setError(
+        mutationError instanceof Error
+          ? mutationError.message
+          : "Falha ao apagar mensagem."
+      );
+    }
+  }
+
   function emitTyping(active: boolean) {
     if (!selectedConversationId || !socketRef.current) return;
     socketRef.current.emit(CHAT_SOCKET_EVENTS.typingSet, {
