@@ -33,6 +33,7 @@ export function ChatComposer({
   const [isUploading, setIsUploading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDocPickerOpen, setIsDocPickerOpen] = useState(false);
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
