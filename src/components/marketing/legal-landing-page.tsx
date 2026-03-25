@@ -170,7 +170,23 @@ export function LegalLandingPage() {
   const [autoPlay, setAutoPlay] = useState(0);
   const [useLiteMode, setUseLiteMode] = useState(false);
   const [menuLogoBroken, setMenuLogoBroken] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+
+  // Fecha menu mobile ao redimensionar para lg+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setMobileOpen(false);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Trava scroll quando menu mobile está aberto
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
 
   // Landing page sempre em light mode — tema único, sem toggle
   useEffect(() => {
