@@ -274,6 +274,7 @@ export function ChatTeamPanel({ currentUserId, onStartDirect, className }: Props
             <SectionBlock
               key={section.setor}
               section={section}
+              currentUserId={currentUserId}
               onStartDirect={onStartDirect}
               query={query}
             />
