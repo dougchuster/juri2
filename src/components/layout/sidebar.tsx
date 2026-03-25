@@ -54,6 +54,7 @@ import {
     type ChatPresenceStatus,
 } from "@/lib/chat/presence-ui";
 import { useChatPresenceStore } from "@/store/use-chat-presence-store";
+import { useInternalChatStore } from "@/store/use-internal-chat-store";
 import { cn, getInitials } from "@/lib/utils";
 
 type SidebarUser = {
