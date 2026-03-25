@@ -178,6 +178,18 @@ export function ChatComposer({
                   }}
                 />
               </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDocPickerOpen(true);
+                  setIsMenuOpen(false);
+                }}
+                disabled={disabled || isUploading || isSending}
+                className="mt-1 flex w-full items-center gap-2 rounded-[12px] px-3 py-2 text-left text-[14px] text-text-primary transition-colors hover:bg-[var(--surface-soft)]"
+              >
+                <FolderOpen size={15} />
+                Documentos do Sistema
+              </button>
               <div className="pointer-events-none absolute -bottom-1 left-5 size-3 rotate-45 border-b border-r border-[var(--card-border)] bg-[rgba(248,242,236,0.96)]" />
             </div>
           ) : null}
