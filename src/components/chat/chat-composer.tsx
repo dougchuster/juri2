@@ -215,6 +215,15 @@ export function ChatComposer({
           Enviar
         </Button>
       </div>
+
+      <ChatDocumentPicker
+        open={isDocPickerOpen}
+        onClose={() => setIsDocPickerOpen(false)}
+        onSelectDocument={(attachment) => {
+          setDraftAttachment(attachment);
+          setIsDocPickerOpen(false);
+        }}
+      />
     </div>
   );
 }
