@@ -340,40 +340,120 @@ export async function getTimelineCliente(
 ): Promise<{ eventos: EventoTimelineCliente[]; total: number; totalPaginas: number; pagina: number }> {
     const { pagina = 1, porPagina = 30, busca, tipos, dataInicio, dataFim } = filtros;
 
-    // Buscar todos os processos do cliente
-    const processos = await db.processo.findMany({
-        where: { clienteId },
-        select: { id: true, numeroCnj: true, objeto: true },
-        orderBy: { createdAt: "desc" },
-        take: 50,
-    });
-
-    if (processos.length === 0) return { eventos: [], total: 0, totalPaginas: 1, pagina: 1 };
-
-    // Buscar timeline de cada processo em paralelo
-    const resultados = await Promise.all(
-        processos.map((proc) => getTimelineProcesso(proc.id, { porPagina: 999 }))
-    );
+    // Buscar processos, dados do cliente e agendamentos em paralelo
+    const [processos, cliente, agendamentos] = await Promise.all([
+        db.processo.findMany({
+            where: { clienteId },
+            select: { id: true, numeroCnj: true, objeto: true },
+            orderBy: { createdAt: "desc" },
+            take: 50,
+        }),
+        db.cliente.findUnique({
+            where: { id: clienteId },
+            select: { observacoes: true },
+        }),
+        db.agendamento.findMany({
+            where: { clienteId },
+            select: {
+                id: true,
+                tipo: true,
+                titulo: true,
+                descricao: true,
+                dataInicio: true,
+                status: true,
+                processoId: true,
+                responsavel: { select: { id: true, user: { select: { name: true } } } },
+            },
+            orderBy: { dataInicio: "desc" },
+            take: 200,
+        }),
+    ]);
 
     const processosMap = new Map(processos.map((p) => [
         p.id,
         p.numeroCnj ?? (p.objeto ? p.objeto.slice(0, 40) + (p.objeto.length > 40 ? "…" : "") : p.id),
     ]));
 
-    // Unificar e enriquecer com info do processo
     let todos: EventoTimelineCliente[] = [];
-    for (let i = 0; i < processos.length; i++) {
-        const proc = processos[i];
-        const label = processosMap.get(proc.id) ?? proc.id;
-        for (const ev of resultados[i].eventos) {
-            todos.push({ ...ev, processoId: proc.id, processoLabel: label });
+
+    // ── 1. Eventos dos processos ─────────────────────────────────────────────
+    if (processos.length > 0) {
+        const resultados = await Promise.all(
+            processos.map((proc) => getTimelineProcesso(proc.id, { porPagina: 999 }))
+        );
+        for (let i = 0; i < processos.length; i++) {
+            const proc = processos[i];
+            const label = processosMap.get(proc.id) ?? proc.id;
+            for (const ev of resultados[i].eventos) {
+                todos.push({ ...ev, processoId: proc.id, processoLabel: label });
+            }
         }
     }
 
-    // Filtros
+    // ── 2. Agendamentos vinculados ao cliente ────────────────────────────────
+    const TIPO_AG_MAP: Record<string, TipoEvento> = {
+        COMPROMISSO: "MANUAL",
+        AUDIENCIA:   "AUDIENCIA_AGENDADA",
+        PRAZO_FATAL: "PRAZO_CRIADO",
+        TAREFA:      "MANUAL",
+        REUNIAO:     "REUNIAO_CLIENTE",
+        DILIGENCIA:  "MANUAL",
+    };
+
+    for (const ag of agendamentos) {
+        const tipo: TipoEvento = TIPO_AG_MAP[ag.tipo] ?? "MANUAL";
+        const processoId   = ag.processoId ?? "";
+        const processoLabel = ag.processoId
+            ? (processosMap.get(ag.processoId) ?? ag.processoId)
+            : "Sem processo";
+
+        todos.push({
+            id:              `ag-${ag.id}`,
+            processoId,
+            processoLabel,
+            data:            ag.dataInicio,
+            tipo,
+            titulo:          ag.titulo,
+            descricao:       ag.descricao ?? "",
+            fonte:           "SISTEMA",
+            entidadeId:      ag.id,
+            entidadeTabela:  "agendamento",
+            responsavel:     ag.responsavel
+                ? { id: ag.responsavel.id, nome: ag.responsavel.user.name ?? "Advogado" }
+                : undefined,
+        });
+    }
+
+    // ── 3. Anotações do cliente (campo observacoes) ──────────────────────────
+    if (cliente?.observacoes) {
+        const blocos = cliente.observacoes.split(/\n\n+/);
+        for (const bloco of blocos) {
+            const match = bloco.match(/^\[(\d{2}\/\d{2}\/\d{4}),?\s*(\d{2}:\d{2})\]\s*([\s\S]+)$/);
+            if (!match) continue;
+            const [, dataBR, hora, texto] = match;
+            const [dia, mes, ano] = dataBR.split("/").map(Number);
+            const data = new Date(ano, mes - 1, dia);
+            if (isNaN(data.getTime())) continue;
+            todos.push({
+                id:             `nota-${clienteId}-${data.getTime()}-${texto.slice(0, 8)}`,
+                processoId:     "",
+                processoLabel:  "Anotação do cliente",
+                data,
+                hora,
+                tipo:           "ANOTACAO_INTERNA",
+                titulo:         "Anotação interna",
+                descricao:      texto.trim(),
+                fonte:          "MANUAL",
+                entidadeId:     clienteId,
+                entidadeTabela: "movimentacao",
+            });
+        }
+    }
+
+    // ── Filtros ──────────────────────────────────────────────────────────────
     if (tipos && tipos.length > 0) todos = todos.filter((e) => tipos.includes(e.tipo));
     if (dataInicio) todos = todos.filter((e) => e.data >= dataInicio);
-    if (dataFim) todos = todos.filter((e) => e.data <= dataFim);
+    if (dataFim)    todos = todos.filter((e) => e.data <= dataFim);
     if (busca && busca.trim()) {
         const q = busca.toLowerCase();
         todos = todos.filter(
@@ -381,15 +461,15 @@ export async function getTimelineCliente(
                 e.titulo.toLowerCase().includes(q) ||
                 e.descricao.toLowerCase().includes(q) ||
                 e.processoLabel.toLowerCase().includes(q) ||
-                e.responsavel?.nome.toLowerCase().includes(q)
+                (e.responsavel?.nome ?? "").toLowerCase().includes(q)
         );
     }
 
     todos.sort((a, b) => b.data.getTime() - a.data.getTime());
 
-    const total = todos.length;
+    const total       = todos.length;
     const totalPaginas = Math.max(1, Math.ceil(total / porPagina));
-    const offset = (pagina - 1) * porPagina;
+    const offset      = (pagina - 1) * porPagina;
 
     return { eventos: todos.slice(offset, offset + porPagina), total, totalPaginas, pagina };
 }
