@@ -9,21 +9,15 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Exclui arquivos de log/cache/config do file watcher do HMR
-  // evita loop infinito de recompilação quando esses arquivos são escritos
+  // Exclui arquivos de log/cache/config do file watcher do HMR.
+  // Usa RegExp (mais confiável que globs no Windows) para evitar
+  // loop infinito quando .claude/, .logs/ ou *.log são escritos.
   webpack: (config, { dev }) => {
     if (dev) {
       config.watchOptions = {
         ...config.watchOptions,
-        ignored: [
-          "**/node_modules/**",
-          "**/.git/**",
-          "**/.next/**",
-          "**/.claude/**",
-          "**/.logs/**",
-          "**/*.log",
-          "**/prisma/migrations/**",
-        ],
+        ignored: /node_modules|\.git|\.next|\.claude|\.logs|\.next-dev\.log|.*\.log$/,
+        poll: false,
       };
     }
     return config;
