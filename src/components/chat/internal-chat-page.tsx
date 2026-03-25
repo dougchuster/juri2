@@ -110,6 +110,12 @@ export function InternalChatPage({
   const [mobileView, setMobileView] = useState<MobileView>("sidebar");
   const [showTeamPanel, setShowTeamPanel] = useState(false);
   const messagesViewportRef = useRef<HTMLDivElement | null>(null);
+  const setGlobalUnreadCount = useInternalChatStore((s) => s.setGlobalUnreadCount);
+
+  // Sync unread count to global Zustand store for sidebar badge
+  useEffect(() => {
+    setGlobalUnreadCount(controller.globalUnreadCount);
+  }, [controller.globalUnreadCount, setGlobalUnreadCount]);
 
   const groupedMessages = useMemo(() => {
     const map = new Map<string, ChatMessageItem[]>();
