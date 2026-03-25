@@ -403,7 +403,7 @@ export function LegalLandingPage() {
                 Plataforma 100% operacional
               </div>
 
-              <h1 className="mt-6 font-display text-5xl leading-[0.92] tracking-[-0.05em] text-white md:text-6xl lg:text-[72px] [text-shadow:0_1px_2px_rgba(0,0,0,0.3)]">
+              <h1 className="mt-6 font-display text-[2.4rem] leading-[0.92] tracking-[-0.05em] text-white sm:text-5xl md:text-6xl lg:text-[72px] [text-shadow:0_1px_2px_rgba(0,0,0,0.3)]">
                 Operação jurídica com{" "}
                 <em className="not-italic text-white">clareza</em>,{" "}
                 cadência e controle.
