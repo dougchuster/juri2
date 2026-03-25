@@ -279,7 +279,8 @@ export function LegalLandingPage() {
         {/* ─── NAVBAR ─── */}
         <header className="sticky top-0 z-30 pt-4">
           <div className="glass-panel flex items-center justify-between gap-4 px-5 py-3.5 md:px-7">
-            <Link href="/" className="flex items-center gap-3">
+            {/* Logo */}
+            <Link href="/" className="flex shrink-0 items-center gap-3">
               <div className="relative h-9 w-9 overflow-hidden rounded-xl bg-transparent p-[3px] shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]">
                 {!menuLogoBroken ? (
                   <img
@@ -303,6 +304,7 @@ export function LegalLandingPage() {
               </span>
             </Link>
 
+            {/* Desktop nav links */}
             <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
               {navLinks.map(([label, href]) => (
                 <Link
@@ -315,21 +317,79 @@ export function LegalLandingPage() {
               ))}
             </nav>
 
-            <div className="flex items-center gap-3">
+            {/* Desktop actions + hamburger */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Entrar — visível a partir de sm */}
               <Link
                 href="/login"
-                className="group hidden items-center gap-2 rounded-full border border-[color:var(--border-hover)] bg-white/[0.04] px-4 py-2 text-sm font-semibold text-[color:var(--text-secondary)] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--accent)]/40 hover:bg-white/[0.08] hover:text-[color:var(--text-primary)] md:inline-flex"
+                className="group hidden items-center gap-2 rounded-full border border-[color:var(--border-hover)] bg-white/[0.04] px-4 py-2 text-sm font-semibold text-[color:var(--text-secondary)] backdrop-blur-sm transition-all duration-300 hover:border-[color:var(--accent)]/40 hover:bg-white/[0.08] hover:text-[color:var(--text-primary)] sm:inline-flex"
               >
                 <LogIn className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
                 Entrar
               </Link>
-              <Link href="#cta-final" className={cn(primaryCta, "btn-gradient h-10 px-5 text-sm")}>
+              {/* Agendar demo — visível a partir de sm, escondido em mobile xs */}
+              <Link href="#cta-final" className={cn(primaryCta, "btn-gradient hidden h-10 px-4 text-sm sm:inline-flex sm:px-5")}>
                 <span className="relative z-10 inline-flex items-center gap-2">
                   Agendar demo <ArrowRight className="h-4 w-4" />
                 </span>
               </Link>
+              {/* Hamburger — apenas mobile/tablet (< lg) */}
+              <button
+                type="button"
+                onClick={() => setMobileOpen((v) => !v)}
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-[color:var(--border-hover)] bg-white/[0.04] text-[color:var(--text-secondary)] transition hover:bg-white/[0.08] hover:text-[color:var(--text-primary)] lg:hidden"
+                aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
+                aria-expanded={mobileOpen}
+                aria-controls="mobile-menu"
+              >
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
             </div>
           </div>
+
+          {/* ─── Mobile menu ─── */}
+          <AnimatePresence>
+            {mobileOpen && (
+              <motion.div
+                id="mobile-menu"
+                initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="glass-panel mt-2 flex flex-col gap-1 overflow-hidden p-3 lg:hidden"
+              >
+                {navLinks.map(([label, href]) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-xl px-4 py-3 text-sm font-medium text-[color:var(--text-secondary)] transition hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--text-primary)]"
+                  >
+                    {label}
+                  </Link>
+                ))}
+                <div className="mt-2 flex flex-col gap-2 border-t border-[color:var(--border-color)] pt-3">
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-[color:var(--text-secondary)] transition hover:bg-[color:var(--surface-soft)] hover:text-[color:var(--text-primary)]"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    Entrar
+                  </Link>
+                  <Link
+                    href="#cta-final"
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(primaryCta, "btn-gradient h-11 w-full justify-center text-sm")}
+                  >
+                    <span className="relative z-10 inline-flex items-center gap-2">
+                      Agendar demo <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </header>
 
         {/* ─── HERO ─── */}
