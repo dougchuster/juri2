@@ -611,6 +611,7 @@ export function InternalChatPage({
         {showTeamPanel && (
           <div className="hidden xl:block">
             <ChatTeamPanel
+              currentUserId={currentUser.id}
               onStartDirect={controller.createDirectConversation}
             />
           </div>
