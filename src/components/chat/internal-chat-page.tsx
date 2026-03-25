@@ -22,6 +22,7 @@ import { useInternalChatController, type ChatCurrentUser } from "@/lib/chat/clie
 import { getChatPresenceDescription } from "@/lib/chat/presence-ui";
 import type { ChatConversationItem, ChatMessageItem } from "@/lib/chat/types";
 import { cn } from "@/lib/utils";
+import { useInternalChatStore } from "@/store/use-internal-chat-store";
 
 type Props = {
   currentUser: ChatCurrentUser;
