@@ -1,9 +1,10 @@
 "use client";
 
-import { Loader2, Paperclip, Plus, Send, X } from "lucide-react";
+import { FolderOpen, Loader2, Paperclip, Plus, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { ChatAudioRecorder } from "@/components/chat/chat-audio-recorder";
+import { ChatDocumentPicker } from "@/components/chat/chat-document-picker";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/form-fields";
 import type { ChatDraftAttachment } from "@/lib/chat/client";
