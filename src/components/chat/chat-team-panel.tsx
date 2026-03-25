@@ -25,6 +25,7 @@ type Section = {
 };
 
 type Props = {
+  currentUserId?: string;
   onStartDirect: (userId: string) => void;
   className?: string;
 };
