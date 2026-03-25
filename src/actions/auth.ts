@@ -405,9 +405,6 @@ export const getSession = cache(async () => {
             if (session) {
                 await db.session.delete({ where: { id: session.id } });
             }
-            // Limpa o cookie stale para evitar loop de redirect
-            cookieStore.delete("session_token");
-            cookieStore.delete(PERMISSION_CACHE_COOKIE_NAME);
             return null;
         }
 
