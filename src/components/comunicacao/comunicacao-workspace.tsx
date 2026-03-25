@@ -6,10 +6,11 @@ import {
     Check,
     CheckCheck,
     Download,
+    Facebook,
     FilePlus2,
     FolderKanban,
+    Instagram,
     Loader2,
-    Mail,
     MessageCircle,
     Mic,
     Paperclip,
@@ -40,7 +41,6 @@ import {
     removeTagFromClient,
     requestDocumentsFromConversation,
     saveConversationWorkspace,
-    sendEmailMessage,
     sendTemplateMessage,
     sendWhatsAppMediaMessage,
     sendWhatsAppMessage,
@@ -49,10 +49,12 @@ import {
 import { getInitials } from "@/lib/utils";
 import type { StatusCliente } from "@/generated/prisma";
 
+type CanalTipo = "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM";
+
 interface ConversationItem {
     id: string;
     clienteId: string;
-    canal: "WHATSAPP" | "EMAIL";
+    canal: CanalTipo;
     status: string;
     subject: string | null;
     lastMessageAt: string | null;
@@ -78,7 +80,7 @@ interface ConversationItem {
 interface MessageItem {
     id: string;
     direction: "INBOUND" | "OUTBOUND";
-    canal: "WHATSAPP" | "EMAIL";
+    canal: CanalTipo;
     content: string;
     contentHtml: string | null;
     templateVars?: Record<string, unknown> | null;
@@ -108,14 +110,6 @@ interface ClienteOption {
     nome: string;
 }
 
-interface EmailSenderProfile {
-    id: string;
-    label: string;
-    fromName: string;
-    fromEmail: string;
-    replyTo?: string | null;
-}
-
 interface TagCategory {
     id: string;
     name: string;
@@ -133,7 +127,7 @@ interface ClientTag {
 interface Workspace {
     conversation: {
         id: string;
-        canal: "WHATSAPP" | "EMAIL";
+        canal: CanalTipo;
         status: string;
         subject: string | null;
         processoId: string | null;
@@ -241,7 +235,6 @@ interface Props {
     conversations: ConversationItem[];
     clientes: ClienteOption[];
     templates: Template[];
-    emailSenderProfiles: EmailSenderProfile[];
 }
 
 interface DraftAttachment {
@@ -404,7 +397,7 @@ function colorMix(color: string, percentage: number) {
 const CHAT_ATTACHMENT_ACCEPT = "image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv";
 const QUICK_EMOJIS = ["🙂", "👍", "🙏", "✅", "📎", "🎧", "📄", "⚖️"];
 
-export function ComunicacaoWorkspace({ conversations: initialConversations, clientes, templates, emailSenderProfiles }: Props) {
+export function ComunicacaoWorkspace({ conversations: initialConversations, clientes, templates }: Props) {
     const [conversations, setConversations] = useState(initialConversations);
     const [selectedId, setSelectedId] = useState<string | null>(initialConversations[0]?.id || null);
     const [messages, setMessages] = useState<MessageItem[]>([]);
@@ -417,14 +410,12 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     const [workspaceSaving, setWorkspaceSaving] = useState(false);
     const [newMessage, setNewMessage] = useState("");
     const [draftAttachments, setDraftAttachments] = useState<DraftAttachment[]>([]);
-    const [emailDraftSubject, setEmailDraftSubject] = useState("");
-    const [emailSenderProfileId, setEmailSenderProfileId] = useState(emailSenderProfiles[0]?.id || "");
     const [uploadingAttachment, setUploadingAttachment] = useState(false);
     const [recordingAudio, setRecordingAudio] = useState(false);
     const [sending, setSending] = useState(false);
     const [showEmojiPanel, setShowEmojiPanel] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filter, setFilter] = useState<"all" | "WHATSAPP" | "EMAIL">("all");
+    const [filter, setFilter] = useState<"all" | "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM">("all");
     const [focusFilter, setFocusFilter] = useState<ConversationFocusFilter>("all");
     const [feedback, setFeedback] = useState<{ tone: "success" | "danger" | "warning"; text: string } | null>(null);
     const [showNewConversation, setShowNewConversation] = useState(false);
@@ -497,7 +488,6 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     const prependSnapshotRef = useRef<{ scrollTop: number; scrollHeight: number } | null>(null);
     const avatarLoadingRef = useRef<Set<string>>(new Set());
     const workspaceRequestRef = useRef(0);
-    const initializedEmailConversationRef = useRef<string | null>(null);
 
     const selectedConversation = conversations.find((item) => item.id === selectedId) || null;
     const filteredConversations = conversations.filter((item) => {
@@ -793,29 +783,6 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     }, [consumeConversationUnread, loadMessages, loadWorkspace, selectedId]);
 
     useEffect(() => {
-        if (selectedConversation?.canal !== "EMAIL") {
-            initializedEmailConversationRef.current = null;
-            return;
-        }
-
-        if (initializedEmailConversationRef.current === selectedConversation.id) return;
-
-        setEmailDraftSubject(
-            workspace?.atendimento?.assunto?.trim()
-            || selectedConversation.subject
-            || "Comunicação"
-        );
-        setEmailSenderProfileId((current) => current || emailSenderProfiles[0]?.id || "");
-        initializedEmailConversationRef.current = selectedConversation.id;
-    }, [
-        emailSenderProfiles,
-        selectedConversation?.canal,
-        selectedConversation?.id,
-        selectedConversation?.subject,
-        workspace?.atendimento?.assunto,
-    ]);
-
-    useEffect(() => {
         const node = messagesContainerRef.current;
         if (!node) return;
 
@@ -1067,21 +1034,14 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                 );
                 if ("error" in result && result.error) throw new Error(result.error);
             } else {
-                const result = await sendEmailMessage({
-                    clienteId: selectedConversation.clienteId,
-                    conversationId: selectedConversation.id,
-                    subject: emailDraftSubject.trim() || workspace?.atendimento?.assunto || selectedConversation.subject || "Comunicação",
-                    content: newMessage.trim(),
-                    processoId: workspace?.atendimento?.processoId || undefined,
-                    senderProfileId: emailSenderProfileId || emailSenderProfiles[0]?.id || undefined,
-                    attachments: draftAttachments.map((attachment) => ({
-                        fileUrl: attachment.fileUrl,
-                        fileName: attachment.fileName,
-                        mimeType: attachment.mimeType,
-                        fileSize: attachment.fileSize,
-                    })),
+                // Facebook Messenger ou Instagram DM via API unificada
+                const res = await fetch("/api/comunicacao/send", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ conversationId: selectedConversation.id, content: newMessage.trim(), type: "text" }),
                 });
-                if ("error" in result && result.error) throw new Error(result.error);
+                const data = await res.json() as { error?: string };
+                if (data.error) throw new Error(data.error);
             }
             setNewMessage("");
             setDraftAttachments([]);
@@ -1378,7 +1338,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                 </div>
                             </div>
                             <p className="text-sm leading-5 text-text-muted">
-                                Caixa unificada de WhatsApp e e-mail com leitura operacional.
+                                Caixa unificada de WhatsApp, Facebook, Instagram e e-mail.
                             </p>
                         </div>
 
@@ -1392,23 +1352,25 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                     className="w-full rounded-[20px] border border-border bg-[var(--glass-input-bg)] px-11 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-accent"
                                 />
                             </div>
-                            <div className="grid grid-cols-3 overflow-hidden rounded-[22px] border border-border bg-[var(--surface-soft)]">
+                            <div className="flex overflow-hidden rounded-[22px] border border-border bg-[var(--surface-soft)]">
                                 {[
-                                    { key: "all", label: "Todos" },
-                                    { key: "WHATSAPP", label: "WhatsApp" },
-                                    { key: "EMAIL", label: "E-mail" },
-                                ].map((tab) => (
+                                    { key: "all", label: "Todos", icon: null },
+                                    { key: "WHATSAPP", label: "WhatsApp", icon: <MessageCircle size={12} className="text-emerald-500" /> },
+                                    { key: "EMAIL", label: "E-mail", icon: null },
+                                    { key: "FACEBOOK_MESSENGER", label: "Facebook", icon: <Facebook size={12} className="text-[#1877F2]" /> },
+                                    { key: "INSTAGRAM_DM", label: "Instagram", icon: <Instagram size={12} className="text-[#E1306C]" /> },
+                                ].map((tab, idx) => (
                                     <button
                                         key={tab.key}
                                         type="button"
-                                        onClick={() => setFilter(tab.key as "all" | "WHATSAPP" | "EMAIL")}
-                                        className={`relative px-3 py-4 text-[13px] font-semibold transition ${
+                                        onClick={() => setFilter(tab.key as "all" | "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM")}
+                                        className={`flex flex-1 items-center justify-center gap-1 px-2 py-3.5 text-[11px] font-semibold transition ${
                                             filter === tab.key
                                                 ? "bg-[color:color-mix(in_srgb,var(--accent)_8%,white_92%)] text-accent"
                                                 : "bg-transparent text-text-secondary hover:bg-white/55 hover:text-text-primary"
-                                        } ${tab.key !== "all" ? "border-l border-border" : ""}`}
+                                        } ${idx !== 0 ? "border-l border-border" : ""}`}
                                     >
-                                        {tab.label}
+                                        {tab.icon}{tab.label}
                                     </button>
                                 ))}
                             </div>
@@ -1476,7 +1438,14 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                         {getInitials(conversation.cliente.nome)}
                                                     </div>
                                                 )}
-                                                <span className={`absolute -bottom-0.5 -right-0.5 inline-flex h-3.5 w-3.5 rounded-full border-2 border-[color:var(--bg-primary)] ${conversation.canal === "WHATSAPP" ? "bg-success" : "bg-info"}`} />
+                                                <span className={`absolute -bottom-0.5 -right-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-[color:var(--bg-primary)] ${
+                                                    conversation.canal === "WHATSAPP" ? "bg-emerald-500"
+                                                    : conversation.canal === "FACEBOOK_MESSENGER" ? "bg-[#1877F2]"
+                                                    : conversation.canal === "INSTAGRAM_DM" ? "bg-[#E1306C]"
+                                                    : "bg-info"}`}>
+                                                    {conversation.canal === "FACEBOOK_MESSENGER" && <Facebook size={7} className="text-white" />}
+                                                    {conversation.canal === "INSTAGRAM_DM" && <Instagram size={7} className="text-white" />}
+                                                </span>
                                             </div>
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-start justify-between gap-2">
@@ -1500,8 +1469,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                     </div>
                                                 </div>
                                                 <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                                                    <Badge variant={conversation.canal === "WHATSAPP" ? "success" : "info"} size="sm" dot className="px-2 py-0.5 text-[10px] shadow-none">
-                                                        {conversation.canal === "WHATSAPP" ? "WhatsApp" : "E-mail"}
+                                                    <Badge variant={conversation.canal === "WHATSAPP" ? "success" : conversation.canal === "FACEBOOK_MESSENGER" ? "info" : conversation.canal === "INSTAGRAM_DM" ? "muted" : "default"} size="sm" dot className="px-2 py-0.5 text-[10px] shadow-none">
+                                                        {conversation.canal === "WHATSAPP" ? "WhatsApp" : conversation.canal === "FACEBOOK_MESSENGER" ? "Messenger" : conversation.canal === "INSTAGRAM_DM" ? "Instagram" : conversation.canal}
                                                     </Badge>
                                                     <Badge variant={automationBadge.variant} size="sm" dot={automationBadge.variant !== "warning"} className="px-2 py-0.5 text-[10px] shadow-none">
                                                         {automationBadge.label}
@@ -1567,8 +1536,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                             <h3 className="text-[14px] font-semibold tracking-[-0.02em] text-text-primary">
                                                                 {selectedConversation.cliente.nome}
                                                             </h3>
-                                                            <Badge variant={selectedConversation.canal === "WHATSAPP" ? "success" : "info"} size="sm" dot className="px-2 py-0.5 text-[10px] shadow-none">
-                                                                {selectedConversation.canal === "WHATSAPP" ? "WhatsApp" : "E-mail"}
+                                                            <Badge variant={selectedConversation.canal === "WHATSAPP" ? "success" : selectedConversation.canal === "FACEBOOK_MESSENGER" ? "info" : selectedConversation.canal === "INSTAGRAM_DM" ? "muted" : "default"} size="sm" dot className="px-2 py-0.5 text-[10px] shadow-none">
+                                                                {selectedConversation.canal === "WHATSAPP" ? "WhatsApp" : selectedConversation.canal === "FACEBOOK_MESSENGER" ? "Facebook Messenger" : selectedConversation.canal === "INSTAGRAM_DM" ? "Instagram DM" : selectedConversation.canal}
                                                             </Badge>
                                                             <Badge variant={getOperationalVariant(workspace?.atendimento?.statusOperacional)} size="sm" className="px-2 py-0.5 text-[10px] shadow-none">
                                                                 {formatEnumLabel(workspace?.atendimento?.statusOperacional, "sem atendimento")}
@@ -1631,8 +1600,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                     Contato
                                                 </span>
                                                 <p className="mt-1 flex-1 break-all text-[12px] font-medium text-text-secondary">
-                                                    {selectedConversation.canal === "EMAIL"
-                                                        ? (selectedConversation.cliente.email || selectedConversation.cliente.whatsapp || "—")
+                                                    {selectedConversation.canal === "FACEBOOK_MESSENGER" || selectedConversation.canal === "INSTAGRAM_DM"
+                                                        ? "Via " + (selectedConversation.canal === "FACEBOOK_MESSENGER" ? "Facebook Messenger" : "Instagram DM")
                                                         : (selectedConversation.cliente.whatsapp || selectedConversation.cliente.email || "—")}
                                                 </p>
                                             </div>
@@ -1854,7 +1823,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                 WhatsApp desconectado. Conecte em Administracao &gt; Comunicacao para enviar mensagens.
                                             </div>
                                         )}
-                                        {selectedConversation.canal === "WHATSAPP" && showEmojiPanel && (
+                                        {showEmojiPanel && (
                                             <div className="mb-2.5 flex flex-wrap gap-2 rounded-[20px] border border-border bg-[var(--bg-primary)] p-2.5 shadow-[0_8px_20px_rgba(0,0,0,0.04)] dark:bg-[rgba(49,36,31,0.94)]">
                                                 {QUICK_EMOJIS.map((emoji) => (
                                                     <button
@@ -1866,26 +1835,6 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                         {emoji}
                                                     </button>
                                                 ))}
-                                            </div>
-                                        )}
-                                        {selectedConversation.canal === "EMAIL" && (
-                                            <div className="mb-2.5 grid gap-2 md:grid-cols-[minmax(0,1fr)_280px]">
-                                                <Input
-                                                    label="Assunto"
-                                                    value={emailDraftSubject}
-                                                    onChange={(event) => setEmailDraftSubject(event.target.value)}
-                                                    placeholder="Assunto do e-mail"
-                                                />
-                                                <Select
-                                                    label="Remetente"
-                                                    value={emailSenderProfileId}
-                                                    onChange={(event) => setEmailSenderProfileId(event.target.value)}
-                                                    options={emailSenderProfiles.map((profile) => ({
-                                                        value: profile.id,
-                                                        label: `${profile.label} <${profile.fromEmail}>`,
-                                                    }))}
-                                                    placeholder="Selecionar remetente"
-                                                />
                                             </div>
                                         )}
                                         {draftAttachments.length > 0 && (
@@ -1913,16 +1862,14 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                         <div className="w-full rounded-[24px] border border-border bg-[color:color-mix(in_srgb,var(--surface-soft-strong)_92%,white_8%)] p-1.5 shadow-[0_8px_20px_rgba(0,0,0,0.04)]">
                                             <div className="flex w-full items-end gap-1.5">
                                                 <div className="flex shrink-0 items-center gap-1.5">
-                                                    {selectedConversation.canal === "WHATSAPP" && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setShowEmojiPanel((current) => !current)}
-                                                            className="inline-flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full border border-border bg-[var(--bg-primary)] text-text-secondary transition hover:border-border-hover hover:text-text-primary"
-                                                            title="Inserir emoji"
-                                                        >
-                                                            <Smile size={16} />
-                                                        </button>
-                                                    )}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setShowEmojiPanel((current) => !current)}
+                                                        className="inline-flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full border border-border bg-[var(--bg-primary)] text-text-secondary transition hover:border-border-hover hover:text-text-primary"
+                                                        title="Inserir emoji"
+                                                    >
+                                                        <Smile size={16} />
+                                                    </button>
                                                     <input
                                                         ref={fileInputRef}
                                                         type="file"
@@ -1936,7 +1883,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                         onClick={() => fileInputRef.current?.click()}
                                                         disabled={uploadingAttachment || sending || recordingAudio}
                                                         className="inline-flex h-[40px] w-[40px] shrink-0 items-center justify-center rounded-full border border-border bg-[var(--bg-primary)] text-text-secondary transition hover:border-border-hover hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-50"
-                                                        title={selectedConversation.canal === "EMAIL" ? "Anexar ao e-mail" : "Anexar arquivo"}
+                                                        title="Anexar arquivo"
                                                     >
                                                         {uploadingAttachment ? <Loader2 size={15} className="animate-spin" /> : <Paperclip size={15} />}
                                                     </button>
@@ -1966,7 +1913,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                             }
                                                         }}
                                                         rows={1}
-                                                        placeholder={selectedConversation.canal === "WHATSAPP" ? "Escreva uma mensagem..." : "Escreva o corpo do e-mail..."}
+                                                        placeholder={selectedConversation.canal === "WHATSAPP" ? "Escreva uma mensagem..." : selectedConversation.canal === "FACEBOOK_MESSENGER" ? "Responder no Messenger..." : selectedConversation.canal === "INSTAGRAM_DM" ? "Responder no Instagram..." : "Escreva uma mensagem..."}
                                                         className="block h-[40px] max-h-[120px] w-full resize-none overflow-auto rounded-[20px] border border-transparent bg-[var(--bg-primary)] px-3.5 py-[10px] text-[13px] leading-5 text-text-primary outline-none transition placeholder:text-text-muted focus:border-accent/18"
                                                     />
                                                 </div>
@@ -2366,22 +2313,18 @@ function NewConversationModal({
     whatsAppConnected: boolean;
     onSent: () => Promise<void>;
 }) {
-    const [canal, setCanal] = useState<"WHATSAPP" | "EMAIL">("WHATSAPP");
     const [clienteId, setClienteId] = useState("");
     const [templateName, setTemplateName] = useState("");
-    const [subject, setSubject] = useState("");
     const [content, setContent] = useState("");
     const [sending, setSending] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const availableTemplates = templates.filter((item) => !item.canal || item.canal === canal);
+    const availableTemplates = templates.filter((item) => !item.canal || item.canal === "WHATSAPP");
 
     useEffect(() => {
         if (!isOpen) {
-            setCanal("WHATSAPP");
             setClienteId("");
             setTemplateName("");
-            setSubject("");
             setContent("");
             setError(null);
         }
@@ -2392,7 +2335,6 @@ function NewConversationModal({
         const selected = templates.find((item) => item.name === name);
         if (!selected) return;
         setContent(selected.content);
-        if (selected.subject) setSubject(selected.subject);
     }
 
     async function handleSend() {
@@ -2401,9 +2343,8 @@ function NewConversationModal({
         setError(null);
         try {
             let result: { error?: string } | undefined;
-            if (templateName) result = await sendTemplateMessage(clienteId, templateName, canal);
-            else if (canal === "WHATSAPP") result = await sendWhatsAppMessage(clienteId, content.trim());
-            else result = await sendEmailMessage(clienteId, subject || "Comunicacao", content.trim());
+            if (templateName) result = await sendTemplateMessage(clienteId, templateName, "WHATSAPP");
+            else result = await sendWhatsAppMessage(clienteId, content.trim());
             if (result?.error) throw new Error(result.error);
             await onSent();
         } catch (issue) {
@@ -2414,25 +2355,20 @@ function NewConversationModal({
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Nova mensagem" size="md">
+        <Modal isOpen={isOpen} onClose={onClose} title="Nova mensagem WhatsApp" size="md">
             <div className="space-y-4">
                 {error && <div className="rounded-[18px] border border-danger/20 bg-danger/8 px-4 py-3 text-sm text-danger">{error}</div>}
-                <div className="grid grid-cols-2 gap-3">
-                    <button type="button" onClick={() => setCanal("WHATSAPP")} className={`rounded-[18px] border px-4 py-3 text-sm font-semibold transition ${canal === "WHATSAPP" ? "border-success/30 bg-success/8 text-success" : "border-border bg-[var(--surface-soft)] text-text-secondary"}`}>
-                        <div className="flex items-center justify-center gap-2"><MessageCircle size={16} />WhatsApp</div>
-                    </button>
-                    <button type="button" onClick={() => setCanal("EMAIL")} className={`rounded-[18px] border px-4 py-3 text-sm font-semibold transition ${canal === "EMAIL" ? "border-info/30 bg-info/8 text-info" : "border-border bg-[var(--surface-soft)] text-text-secondary"}`}>
-                        <div className="flex items-center justify-center gap-2"><Mail size={16} />E-mail</div>
-                    </button>
+                <div className="flex items-center gap-2 rounded-[18px] border border-success/30 bg-success/8 px-4 py-3 text-sm font-semibold text-success">
+                    <MessageCircle size={16} /> WhatsApp
                 </div>
-                {canal === "WHATSAPP" && !whatsAppConnected && <div className="rounded-[18px] border border-warning/20 bg-warning/8 px-4 py-3 text-sm text-warning">WhatsApp nao conectado. Conecte o canal antes de enviar novas mensagens.</div>}
+                <p className="text-xs text-text-muted">Para iniciar uma conversa via Facebook Messenger ou Instagram DM, o contato deve enviar uma mensagem primeiro — você poderá responder diretamente pela caixa de entrada.</p>
+                {!whatsAppConnected && <div className="rounded-[18px] border border-warning/20 bg-warning/8 px-4 py-3 text-sm text-warning">WhatsApp nao conectado. Conecte em Administracao &gt; Comunicacao para enviar novas mensagens.</div>}
                 <Select label="Cliente" value={clienteId} onChange={(event) => setClienteId(event.target.value)} options={clientes.map((item) => ({ value: item.id, label: item.nome }))} placeholder="Selecione um cliente" />
                 <Select label="Template (opcional)" value={templateName} onChange={(event) => applyTemplate(event.target.value)} options={availableTemplates.map((item) => ({ value: item.name, label: `[${item.category}] ${item.name}` }))} placeholder="Sem template" />
-                {canal === "EMAIL" && <Input label="Assunto" value={subject} onChange={(event) => setSubject(event.target.value)} />}
                 <Textarea label="Mensagem" rows={5} value={content} onChange={(event) => setContent(event.target.value)} />
                 <div className="flex justify-end gap-3">
                     <Button variant="outline" onClick={onClose}>Cancelar</Button>
-                    <Button variant="gradient" onClick={() => void handleSend()} disabled={sending || !clienteId || !content.trim() || (canal === "WHATSAPP" && !whatsAppConnected)}>
+                    <Button variant="gradient" onClick={() => void handleSend()} disabled={sending || !clienteId || !content.trim() || !whatsAppConnected}>
                         {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                         Enviar
                     </Button>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input, Select, Textarea } from "@/components/ui/form-fields";
 import { Settings, Save, Plus, Trash2, RefreshCw } from "lucide-react";
+import { MetaSocialSettings } from "@/components/crm/meta-social-settings";
 
 type CRMScoreCriterion = {
     code: string;
@@ -676,6 +677,10 @@ export default function CRMConfiguracoesPage() {
                         </div>
                     ))}
                 </div>
+            </div>
+
+            <div className="glass-card p-5">
+                <MetaSocialSettings />
             </div>
         </div>
     );

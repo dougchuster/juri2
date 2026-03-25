@@ -250,6 +250,7 @@ export type UpdateCardInput = Partial<Prisma.CRMCardUncheckedUpdateInput> & {
     tipoAcao?: string;
     varaOrgaoJulgador?: string;
     changedById?: string | null;
+    stageTransitionNotes?: string;
 };
 
 export async function updateCard(cardId: string, data: UpdateCardInput) {
@@ -302,6 +303,7 @@ export async function updateCard(cardId: string, data: UpdateCardInput) {
         delete (updatePayload as Record<string, unknown>).tipoAcao;
         delete (updatePayload as Record<string, unknown>).varaOrgaoJulgador;
         delete (updatePayload as Record<string, unknown>).changedById;
+        delete (updatePayload as Record<string, unknown>).stageTransitionNotes;
 
         const updated = await tx.cRMCard.update({
             where: { id: cardId },
@@ -332,7 +334,7 @@ export async function updateCard(cardId: string, data: UpdateCardInput) {
                     fromStage: current.stage,
                     toStage: updated.stage,
                     changedById: data.changedById ?? null,
-                    notes: `Mudanca de etapa: ${current.stage} -> ${updated.stage}`,
+                    notes: data.stageTransitionNotes?.trim() || `Mudanca de etapa: ${current.stage} -> ${updated.stage}`,
                 },
             });
         }

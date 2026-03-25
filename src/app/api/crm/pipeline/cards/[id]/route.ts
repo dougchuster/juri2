@@ -77,7 +77,42 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
         const card = await getScopedCard(id, escritorioId, cardScope);
         if (!card) return NextResponse.json({ error: "Oportunidade nao encontrada." }, { status: 404 });
 
-        return NextResponse.json({ card });
+        const [activities, stageTransitions] = await Promise.all([
+            db.cRMActivity.findMany({
+                where: { cardId: id },
+                include: { owner: { select: { name: true } } },
+                orderBy: { createdAt: "desc" },
+                take: 50,
+            }),
+            db.cRMStageTransition.findMany({
+                where: { cardId: id },
+                include: { changedBy: { select: { name: true } } },
+                orderBy: { changedAt: "desc" },
+                take: 30,
+            }),
+        ]);
+
+        return NextResponse.json({
+            ...card,
+            activities: activities.map(a => ({
+                id: a.id,
+                type: a.type,
+                subject: a.subject,
+                notes: a.description,
+                outcome: a.outcome,
+                scheduledAt: a.scheduledAt,
+                createdAt: a.createdAt,
+                owner: a.owner,
+            })),
+            stageTransitions: stageTransitions.map(t => ({
+                id: t.id,
+                fromStage: t.fromStage,
+                toStage: t.toStage,
+                notes: t.notes,
+                createdAt: t.changedAt,
+                user: t.changedBy,
+            })),
+        });
     } catch (error: unknown) {
         console.error("[API] Error fetching pipeline card:", error);
         const message = error instanceof Error ? error.message : "Internal Server Error";
@@ -193,6 +228,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
                     ? { varaOrgaoJulgador: normalizeNullableString(body.varaOrgaoJulgador) ?? undefined }
                     : {}),
                 ...(body.changedById !== undefined ? { changedById: normalizeNullableString(body.changedById) } : {}),
+                ...(body.stageTransitionNotes !== undefined && typeof body.stageTransitionNotes === "string"
+                    ? { stageTransitionNotes: body.stageTransitionNotes }
+                    : {}),
             });
         }
 

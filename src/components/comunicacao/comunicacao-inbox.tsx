@@ -27,6 +27,8 @@ import {
   Link2Off,
   Mic,
   Square,
+  Facebook,
+  Instagram,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -48,10 +50,12 @@ import {
 import { getInitials } from "@/lib/utils";
 import type { StatusCliente } from "@/generated/prisma";
 
+type CanalTipo = "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM";
+
 interface ConversationItem {
   id: string;
   clienteId: string;
-  canal: "WHATSAPP" | "EMAIL";
+  canal: CanalTipo;
   status: string;
   subject: string | null;
   lastMessageAt: string | null;
@@ -65,7 +69,7 @@ interface ConversationItem {
 interface MessageItem {
   id: string;
   direction: "INBOUND" | "OUTBOUND";
-  canal: "WHATSAPP" | "EMAIL";
+  canal: CanalTipo;
   content: string;
   contentHtml: string | null;
   status: string;
@@ -169,7 +173,7 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
   const [recordingAudio, setRecordingAudio] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
-  const [filter, setFilter] = useState<"all" | "WHATSAPP" | "EMAIL">("all");
+  const [filter, setFilter] = useState<"all" | "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM">("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [showNewMessage, setShowNewMessage] = useState(false);
 
@@ -971,10 +975,12 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
               <input type="text" placeholder="Buscar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full bg-transparent text-sm text-text-primary placeholder:text-text-muted outline-none" />
             </div>
 
-            <div className="flex gap-1">
-              {(["all", "WHATSAPP", "EMAIL"] as const).map((f) => (
-                <button key={f} onClick={() => setFilter(f)} className={`flex-1 px-2 py-1.5 text-[11px] font-medium rounded-lg transition-all ${filter === f ? "bg-accent/10 text-accent border border-accent/20" : "text-text-muted hover:bg-bg-tertiary/50"}`}>
-                  {f === "all" ? "Todos" : f === "WHATSAPP" ? "WhatsApp" : "E-mail"}
+            <div className="flex gap-1 flex-wrap">
+              {(["all", "WHATSAPP", "EMAIL", "FACEBOOK_MESSENGER", "INSTAGRAM_DM"] as const).map((f) => (
+                <button key={f} onClick={() => setFilter(f)} className={`flex-1 px-2 py-1.5 text-[11px] font-medium rounded-lg transition-all flex items-center justify-center gap-1 ${filter === f ? "bg-accent/10 text-accent border border-accent/20" : "text-text-muted hover:bg-bg-tertiary/50"}`}>
+                  {f === "FACEBOOK_MESSENGER" && <Facebook size={10} />}
+                  {f === "INSTAGRAM_DM" && <Instagram size={10} />}
+                  {f === "all" ? "Todos" : f === "WHATSAPP" ? "WhatsApp" : f === "EMAIL" ? "E-mail" : f === "FACEBOOK_MESSENGER" ? "Facebook" : "Instagram"}
                 </button>
               ))}
             </div>
@@ -1013,8 +1019,8 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
                           {getInitials(conv.cliente.nome)}
                         </div>
                       )}
-                      <div className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-bg-secondary flex items-center justify-center ${conv.canal === "WHATSAPP" ? "bg-emerald-500" : "bg-info"}`}>
-                        {conv.canal === "WHATSAPP" ? <MessageCircle size={8} className="text-white" /> : <Mail size={8} className="text-white" />}
+                      <div className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-bg-secondary flex items-center justify-center ${conv.canal === "WHATSAPP" ? "bg-emerald-500" : conv.canal === "FACEBOOK_MESSENGER" ? "bg-[#1877F2]" : conv.canal === "INSTAGRAM_DM" ? "bg-[#E1306C]" : "bg-info"}`}>
+                        {conv.canal === "WHATSAPP" ? <MessageCircle size={8} className="text-white" /> : conv.canal === "FACEBOOK_MESSENGER" ? <Facebook size={8} className="text-white" /> : conv.canal === "INSTAGRAM_DM" ? <Instagram size={8} className="text-white" /> : <Mail size={8} className="text-white" />}
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -1077,7 +1083,11 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-text-primary truncate">{selected.cliente.nome}</p>
                     <div className="flex items-center gap-2 text-[11px] text-text-muted">
-                      <Badge variant={selected.canal === "WHATSAPP" ? "success" : "info"} size="sm">{selected.canal === "WHATSAPP" ? "WhatsApp" : "E-mail"}</Badge>
+                      <Badge variant={selected.canal === "WHATSAPP" ? "success" : selected.canal === "FACEBOOK_MESSENGER" ? "info" : selected.canal === "INSTAGRAM_DM" ? "muted" : "info"} size="sm" className="flex items-center gap-1">
+                        {selected.canal === "FACEBOOK_MESSENGER" && <Facebook size={9} />}
+                        {selected.canal === "INSTAGRAM_DM" && <Instagram size={9} />}
+                        {selected.canal === "WHATSAPP" ? "WhatsApp" : selected.canal === "FACEBOOK_MESSENGER" ? "Messenger" : selected.canal === "INSTAGRAM_DM" ? "Instagram" : "E-mail"}
+                      </Badge>
                       {(selected.cliente.celular || selected.cliente.whatsapp) && <span className="flex items-center gap-1"><Phone size={10} />{selected.cliente.celular || selected.cliente.whatsapp}</span>}
                       {selected.processo?.numeroCnj && <span className="font-mono">{selected.processo.numeroCnj}</span>}
                     </div>
@@ -1324,7 +1334,11 @@ export function ComunicacaoInbox({ conversations: initialConversations, clientes
                   <div className="grid grid-cols-2 gap-2 text-[11px]">
                     <div className="rounded-lg border border-border bg-bg-tertiary/60 px-2.5 py-2">
                       <p className="text-text-muted">Canal</p>
-                      <p className="text-text-primary font-medium">{selected.canal === "WHATSAPP" ? "WhatsApp" : "E-mail"}</p>
+                      <p className="text-text-primary font-medium flex items-center gap-1">
+                        {selected.canal === "FACEBOOK_MESSENGER" && <Facebook size={11} className="text-[#1877F2]" />}
+                        {selected.canal === "INSTAGRAM_DM" && <Instagram size={11} className="text-[#E1306C]" />}
+                        {selected.canal === "WHATSAPP" ? "WhatsApp" : selected.canal === "FACEBOOK_MESSENGER" ? "Messenger" : selected.canal === "INSTAGRAM_DM" ? "Instagram DM" : "E-mail"}
+                      </p>
                     </div>
                     <div className="rounded-lg border border-border bg-bg-tertiary/60 px-2.5 py-2">
                       <p className="text-text-muted">Processo</p>

@@ -3,16 +3,14 @@ import { ComunicacaoPageShell } from "@/components/comunicacao/comunicacao-page-
 import { getCommunicationStats } from "@/lib/dal/comunicacao";
 import { getClientesForSelect } from "@/lib/dal/processos";
 import { db } from "@/lib/db";
-import { listEmailSenderProfiles } from "@/lib/integrations/email-service";
 import { getAttendanceAutomationDashboard } from "@/lib/services/attendance-automation";
 
 export default async function ComunicacaoPage() {
-    const [stats, clientes, templates, session, emailSenderProfiles] = await Promise.all([
+    const [stats, clientes, templates, session] = await Promise.all([
         getCommunicationStats(),
         getClientesForSelect(),
         db.messageTemplate.findMany({ where: { isActive: true }, orderBy: { category: "asc" } }),
         getSession(),
-        Promise.resolve(listEmailSenderProfiles()),
     ]);
 
     const conversations = await db.conversation.findMany({
@@ -68,7 +66,6 @@ export default async function ComunicacaoPage() {
                 }))))}
                 clientes={JSON.parse(JSON.stringify(clientes))}
                 templates={JSON.parse(JSON.stringify(templates))}
-                emailSenderProfiles={JSON.parse(JSON.stringify(emailSenderProfiles))}
                 canManageAutomation={canManageAutomation}
                 automationDashboard={automationDashboard ? JSON.parse(JSON.stringify(automationDashboard)) : null}
             />

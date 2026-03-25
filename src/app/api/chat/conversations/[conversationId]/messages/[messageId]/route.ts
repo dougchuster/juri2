@@ -19,7 +19,7 @@ type RouteContext = {
  */
 export async function DELETE(request: Request, context: RouteContext) {
   try {
-    const { userId } = await getChatAuthOrThrow();
+    const { id: userId } = await getChatAuthOrThrow();
     const { conversationId, messageId } = await context.params;
 
     // Verify message exists and belongs to this conversation

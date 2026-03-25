@@ -1,26 +1,11 @@
 import type { NextConfig } from "next";
 
+// TypeScript e ESLint são verificados em dev — no build de produção
+// desabilitamos ignoreBuildErrors para evitar OOM em VPS com RAM limitada.
+// No Next.js 16, o ESLint não roda durante o build por padrão.
 const nextConfig: NextConfig = {
-  // TypeScript e ESLint são verificados em dev — no build de produção
-  // desabilitamos para evitar OOM em VPS com RAM limitada.
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  // Exclui arquivos de log/cache/config do file watcher do HMR.
-  // Usa RegExp (mais confiável que globs no Windows) para evitar
-  // loop infinito quando .claude/, .logs/ ou *.log são escritos.
-  webpack: (config, { dev }) => {
-    if (dev) {
-      config.watchOptions = {
-        ...config.watchOptions,
-        ignored: /node_modules|\.git|\.next|\.claude|\.logs|\.next-dev\.log|.*\.log$/,
-        poll: false,
-      };
-    }
-    return config;
   },
   images: {
     remotePatterns: [

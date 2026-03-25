@@ -20,18 +20,12 @@ interface ClienteOption {
     nome: string;
 }
 
-interface EmailSenderProfile {
-    id: string;
-    label: string;
-    fromName: string;
-    fromEmail: string;
-    replyTo?: string | null;
-}
+type CanalTipo = "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM";
 
 interface ConversationItem {
     id: string;
     clienteId: string;
-    canal: "WHATSAPP" | "EMAIL";
+    canal: CanalTipo;
     status: string;
     subject: string | null;
     lastMessageAt: string | null;
@@ -62,7 +56,6 @@ export function ComunicacaoPageShell({
     conversations,
     clientes,
     templates,
-    emailSenderProfiles,
     canManageAutomation,
     automationDashboard,
 }: {
@@ -70,7 +63,6 @@ export function ComunicacaoPageShell({
     conversations: ConversationItem[];
     clientes: ClienteOption[];
     templates: Template[];
-    emailSenderProfiles: EmailSenderProfile[];
     canManageAutomation: boolean;
     automationDashboard: DashboardPayload | null;
 }) {
@@ -87,7 +79,7 @@ export function ComunicacaoPageShell({
             {
                 key: "inbox",
                 label: "Caixa operacional",
-                description: "WhatsApp e e-mail em atendimento",
+                description: "WhatsApp, Facebook, Instagram e e-mail",
                 icon: MessageSquareText,
                 badge: `${conversations.length}`,
             },
@@ -178,7 +170,6 @@ export function ComunicacaoPageShell({
                     conversations={conversations}
                     clientes={clientes}
                     templates={templates}
-                    emailSenderProfiles={emailSenderProfiles}
                 />
             )}
         </div>

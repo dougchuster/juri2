@@ -1,7 +1,0 @@
-
-> sistema-juridico@0.1.0 worker:start
-> ts-node -r tsconfig-paths/register -O "{\"module\":\"commonjs\",\"moduleResolution\":\"node\"}" src/worker/index.ts
-
-[Worker] national-orchestrator pronto (concurrency=2)
-[Worker] Processando automacao-cmmg5bs19000158mh9k7hh8x9
-[Worker] Concluido automacao-cmmg5bs19000158mh9k7hh8x9

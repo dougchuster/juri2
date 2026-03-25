@@ -200,6 +200,7 @@ model Escritorio {
   assinaturas                     Assinatura?
   automationFlows                 AutomationFlow[]
   campaigns                       Campaign[]
+  metaSocialConnections           MetaSocialConnection[]
   casosFinanceiros                CasoFinanceiro[]
   categoriasDocumento             CategoriaDocumento[]             @relation("EscritorioCategorias")
   centrosCusto                    CentroCusto[]
@@ -1800,6 +1801,28 @@ model WhatsappConnectionSecret {
   @@map("whatsapp_connection_secrets")
 }
 
+model MetaSocialConnection {
+  id                 String         @id @default(cuid())
+  escritorioId       String
+  displayName        String
+  pageId             String
+  pageName           String?
+  pageAccessToken    String
+  instagramAccountId String?
+  instagramUsername  String?
+  verifyToken        String
+  isActive           Boolean        @default(true)
+  lastWebhookAt      DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  conversations      Conversation[]
+  escritorio         Escritorio     @relation(fields: [escritorioId], references: [id], onDelete: Cascade)
+
+  @@index([escritorioId])
+  @@index([pageId])
+  @@map("meta_social_connections")
+}
+
 model Conversation {
   id                     String                        @id @default(cuid())
   clienteId              String
@@ -1819,6 +1842,8 @@ model Conversation {
   iaDesabilitadaEm       DateTime?
   iaDesabilitadaPor      String?
   whatsappConnectionId   String?
+  metaSocialConnectionId String?
+  externalSenderId       String?
   motivoPausa            String?
   pausadoAte             DateTime?
   automationEvents       AttendanceAutomationEvent[]
@@ -1830,6 +1855,7 @@ model Conversation {
   processo               Processo?                     @relation(fields: [processoId], references: [id])
   messages               Message[]
   whatsappConnection     WhatsappConnection?           @relation(fields: [whatsappConnectionId], references: [id])
+  metaSocialConnection   MetaSocialConnection?         @relation(fields: [metaSocialConnectionId], references: [id])
 
   @@index([clienteId])
   @@index([status])
@@ -1838,6 +1864,7 @@ model Conversation {
   @@index([escritorioId])
   @@index([lastMessageAt])
   @@index([whatsappConnectionId])
+  @@index([metaSocialConnectionId])
   @@map("conversations")
 }
 
@@ -4004,6 +4031,8 @@ enum WhatsappConnectionStatus {
 enum CanalComunicacao {
   WHATSAPP
   EMAIL
+  FACEBOOK_MESSENGER
+  INSTAGRAM_DM
 }
 
 enum CanalPreferido {
