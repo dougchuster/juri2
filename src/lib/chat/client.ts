@@ -634,6 +634,7 @@ export function useInternalChatController(options: ChatControllerOptions) {
     sendAttachmentMessage,
     uploadAttachment,
     updateManualStatus,
+    deleteMessage,
     emitTyping,
   };
 }
