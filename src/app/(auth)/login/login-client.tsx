@@ -39,9 +39,18 @@ export default function LoginPageClient() {
             if (result?.mfaRequired) {
                 router.push("/login/mfa");
                 setIsLoading(false);
+                return;
             }
+            // Hard reload garante que o cookie de sessão seja lido
+            // corretamente pelo servidor antes de navegar
+            window.location.href = "/dashboard";
         } catch (err) {
-            if (isRedirectError(err)) throw err;
+            // redirect() do Server Action lança NEXT_REDIRECT —
+            // fazemos hard reload para garantir commit do cookie
+            if (isRedirectError(err)) {
+                window.location.href = "/dashboard";
+                return;
+            }
             setIsLoading(false);
         }
     }

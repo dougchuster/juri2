@@ -21,9 +21,9 @@ import {
     verifyMfaLoginChallenge,
 } from "@/lib/services/mfa-service";
 
-const SESSION_INACTIVITY_MS = 30 * 60 * 1000; // 30 minutes
-const SESSION_COOKIE_MAX_AGE_SEC = 30 * 24 * 60 * 60; // 30 days
-const SESSION_REFRESH_THRESHOLD_MS = 10 * 60 * 1000; // refresh DB expiry when < 10 min left
+const SESSION_INACTIVITY_MS = 8 * 60 * 60 * 1000; // 8 horas de inatividade
+const SESSION_COOKIE_MAX_AGE_SEC = 30 * 24 * 60 * 60; // 30 dias (cookie no browser)
+const SESSION_REFRESH_THRESHOLD_MS = 30 * 60 * 1000; // renovar DB quando restar < 30 min
 const MFA_COOKIE_NAME = "mfa_challenge_token";
 const MFA_SETUP_REQUIRED_COOKIE_NAME = "mfa_setup_required";
 const MFA_TRUSTED_DEVICE_COOKIE_NAME = "mfa_trusted_device";
