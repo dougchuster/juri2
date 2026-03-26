@@ -12,7 +12,14 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "conversationId required" }, { status: 400 });
     }
 
-    const result = await fetchConversationWorkspace(conversationId);
+    const TIMEOUT_MS = 12_000;
+    const result = await Promise.race([
+      fetchConversationWorkspace(conversationId),
+      new Promise<{ error: string }>((resolve) =>
+        setTimeout(() => resolve({ error: "Tempo limite ao carregar painel da conversa." }), TIMEOUT_MS)
+      ),
+    ]);
+
     if (!result || !("success" in result) || !result.success) {
       return NextResponse.json(result || { error: "Falha ao carregar workspace" }, { status: 500 });
     }

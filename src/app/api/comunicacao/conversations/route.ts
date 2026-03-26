@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { Prisma } from "@/generated/prisma";
 import { getSession } from "@/actions/auth";
 
 export const dynamic = "force-dynamic";
@@ -17,22 +18,30 @@ export async function GET(request: Request) {
     const page = Math.max(1, Number(searchParams.get("page") || 1));
     const pageSize = Math.min(100, Math.max(10, Number(searchParams.get("pageSize") || 50)));
 
-    const where: Record<string, unknown> = {
-      status: { in: ["OPEN", "CLOSED"] },
-      ...(session.escritorioId ? { escritorioId: session.escritorioId } : {}),
-    };
-    if (canal && canal !== "all") where.canal = canal;
-    if (search) {
-      where.OR = [
-        { cliente: { is: { nome: { contains: search, mode: "insensitive" } } } },
-        { cliente: { is: { email: { contains: search, mode: "insensitive" } } } },
-        { cliente: { is: { celular: { contains: search } } } },
-        { cliente: { is: { whatsapp: { contains: search } } } },
-        { subject: { contains: search, mode: "insensitive" } },
-        { processo: { is: { numeroCnj: { contains: search, mode: "insensitive" } } } },
-        { assignedTo: { is: { name: { contains: search, mode: "insensitive" } } } },
-      ];
+    // Build AND conditions to avoid OR clauses overwriting each other
+    const andConditions: Prisma.ConversationWhereInput[] = [{ status: { in: ["OPEN", "CLOSED"] } }];
+
+    if (session.escritorioId) {
+      andConditions.push({ OR: [{ escritorioId: session.escritorioId }, { escritorioId: null }] });
     }
+    if (canal && canal !== "all") {
+      andConditions.push({ canal: canal as Prisma.EnumCanalComunicacaoFilter });
+    }
+    if (search) {
+      andConditions.push({
+        OR: [
+          { cliente: { is: { nome: { contains: search, mode: "insensitive" } } } },
+          { cliente: { is: { email: { contains: search, mode: "insensitive" } } } },
+          { cliente: { is: { celular: { contains: search } } } },
+          { cliente: { is: { whatsapp: { contains: search } } } },
+          { subject: { contains: search, mode: "insensitive" } },
+          { processo: { is: { numeroCnj: { contains: search, mode: "insensitive" } } } },
+          { assignedTo: { is: { name: { contains: search, mode: "insensitive" } } } },
+        ],
+      });
+    }
+
+    const where = { AND: andConditions };
 
     const [conversations, total] = await Promise.all([
       db.conversation.findMany({

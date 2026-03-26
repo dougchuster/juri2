@@ -48,6 +48,12 @@ import {
 } from "@/actions/comunicacao";
 import { getInitials } from "@/lib/utils";
 import type { StatusCliente } from "@/generated/prisma";
+import { useConversationStore } from "@/stores/conversation-store";
+import { useMessageStore } from "@/stores/message-store";
+import { useWorkspaceStore } from "@/stores/workspace-store";
+import { ConversationListPanel } from "@/components/comunicacao/conversation-list/conversation-list-panel";
+import { WorkspaceCockpit, WorkspaceCockpitSkeleton } from "@/components/comunicacao/workspace-panel/workspace-cockpit";
+import type { WorkspaceData } from "@/stores/comunicacao-types";
 
 type CanalTipo = "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM";
 
@@ -231,10 +237,14 @@ interface Workspace {
 
 type ConversationFocusFilter = "all" | "unread" | "paused" | "assigned" | "unassigned";
 
+type InboxMode = "all" | "social" | "email";
+
 interface Props {
     conversations: ConversationItem[];
     clientes: ClienteOption[];
     templates: Template[];
+    /** "social" = WA+FB+IG, "email" = só e-mail, "all" = todos */
+    mode?: InboxMode;
 }
 
 interface DraftAttachment {
@@ -397,7 +407,22 @@ function colorMix(color: string, percentage: number) {
 const CHAT_ATTACHMENT_ACCEPT = "image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv";
 const QUICK_EMOJIS = ["🙂", "👍", "🙏", "✅", "📎", "🎧", "📄", "⚖️"];
 
-export function ComunicacaoWorkspace({ conversations: initialConversations, clientes, templates }: Props) {
+export function ComunicacaoWorkspace({ conversations: initialConversations, clientes, templates, mode = "all" }: Props) {
+    // ── Inicializar stores Zustand com dados do servidor ──────────────────────
+    // Os stores são a fonte de verdade para Etapa 4 (decomposição).
+    // Por ora inicializam em paralelo com o useState local (migração incremental).
+    const storeInit = useConversationStore((s) => s.init);
+    const storeDebouncedRefresh = useConversationStore((s) => s.debouncedRefresh);
+    const storeLoadWorkspace = useWorkspaceStore((s) => s.loadWorkspace);
+    const storeLoadMessages = useMessageStore((s) => s.loadMessages);
+
+    useEffect(() => {
+        storeInit(initialConversations, initialConversations[0]?.id ?? null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // ─────────────────────────────────────────────────────────────────────────
+
     const [conversations, setConversations] = useState(initialConversations);
     const [selectedId, setSelectedId] = useState<string | null>(initialConversations[0]?.id || null);
     const [messages, setMessages] = useState<MessageItem[]>([]);
@@ -415,9 +440,18 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     const [sending, setSending] = useState(false);
     const [showEmojiPanel, setShowEmojiPanel] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filter, setFilter] = useState<"all" | "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM">("all");
+    const [filter, setFilter] = useState<"all" | "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM">(
+        mode === "email" ? "EMAIL" : "all"
+    );
     const [focusFilter, setFocusFilter] = useState<ConversationFocusFilter>("all");
     const [feedback, setFeedback] = useState<{ tone: "success" | "danger" | "warning"; text: string } | null>(null);
+
+    useEffect(() => {
+        if (!feedback || feedback.tone !== "success") return;
+        const timer = setTimeout(() => setFeedback(null), 4_000);
+        return () => clearTimeout(timer);
+    }, [feedback]);
+
     const [showNewConversation, setShowNewConversation] = useState(false);
     const [activeModal, setActiveModal] = useState<null | "task" | "prazo" | "meeting">(null);
     const [activeCockpitTab, setActiveCockpitTab] = useState<"overview" | "customer" | "tags">("overview");
@@ -490,7 +524,14 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     const workspaceRequestRef = useRef(0);
 
     const selectedConversation = conversations.find((item) => item.id === selectedId) || null;
+    const socialCanais = new Set<string>(["WHATSAPP", "FACEBOOK_MESSENGER", "INSTAGRAM_DM"]);
+
     const filteredConversations = conversations.filter((item) => {
+        // Filtro por mode (rota dedicada)
+        if (mode === "social" && !socialCanais.has(item.canal)) return false;
+        if (mode === "email" && item.canal !== "EMAIL") return false;
+
+        // Filtro por tab (sub-filtro dentro do mode)
         if (filter !== "all" && item.canal !== filter) return false;
 
         if (focusFilter === "unread" && item.unreadCount <= 0) return false;
@@ -556,6 +597,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         const payload = await res.json();
         const items: ConversationItem[] = Array.isArray(payload) ? payload : (payload.items || []);
         setConversations(items);
+        // Mantém o store Zustand sincronizado (base para Etapa 4)
+        useConversationStore.getState().setConversations(items);
         if (!selectedId && items[0]?.id) setSelectedId(items[0].id);
     }, [filter, searchTerm, selectedId]);
 
@@ -664,14 +707,20 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         setWorkspaceLoading(true);
         let result: { success?: boolean; error?: string; workspace?: Workspace } | null = null;
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15_000);
+
         try {
             const response = await fetch(`/api/comunicacao/workspace?conversationId=${conversationId}`, {
                 cache: "no-store",
+                signal: controller.signal,
             });
             result = await response.json();
-        } catch {
-            result = { error: "Falha de rede ao carregar o cockpit operacional." };
+        } catch (err) {
+            const isAbort = err instanceof Error && err.name === "AbortError";
+            result = { error: isAbort ? "Tempo limite ao carregar o painel. Tente novamente." : "Falha de rede ao carregar o cockpit operacional." };
         } finally {
+            clearTimeout(timeoutId);
             if (workspaceRequestRef.current === requestId) {
                 setWorkspaceLoading(false);
             }
@@ -749,6 +798,43 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
             local: "",
             descricao: nextWorkspace.atendimento?.observacoesReuniao || "",
         });
+        // Sync forms to WorkspaceCockpit (useWorkspaceStore)
+        const wsStore = useWorkspaceStore.getState();
+        wsStore.updateClientForm({
+            nome: nextWorkspace.clientProfile?.nome || nextWorkspace.conversation.cliente.nome || "",
+            email: nextWorkspace.clientProfile?.email || nextWorkspace.conversation.cliente.email || "",
+            celular: nextWorkspace.clientProfile?.celular || nextWorkspace.conversation.cliente.celular || "",
+            whatsapp: nextWorkspace.clientProfile?.whatsapp || nextWorkspace.conversation.cliente.whatsapp || "",
+            status: (nextWorkspace.clientProfile?.status || nextWorkspace.conversation.cliente.status) as StatusCliente,
+            observacoes: nextWorkspace.clientProfile?.observacoes || nextWorkspace.conversation.cliente.observacoes || "",
+            inadimplente: Boolean(nextWorkspace.clientProfile?.inadimplente || nextWorkspace.conversation.cliente.inadimplente),
+        });
+        wsStore.updateOpsForm({
+            assignedToId: nextWorkspace.conversation.assignedTo?.id || nextWorkspace.atendimento?.advogado.user.id || "",
+            advogadoId: nextWorkspace.atendimento?.advogadoId || nextWorkspace.advogados[0]?.id || "",
+            processoId: getDefaultProcessoId(nextWorkspace),
+            tipoRegistro: nextWorkspace.atendimento?.tipoRegistro || "LEAD",
+            cicloVida: nextWorkspace.atendimento?.cicloVida || "LEAD",
+            statusOperacional: nextWorkspace.atendimento?.statusOperacional || "NOVO",
+            prioridade: nextWorkspace.atendimento?.prioridade || "NORMAL",
+            areaJuridica: nextWorkspace.atendimento?.areaJuridica || "",
+            subareaJuridica: nextWorkspace.atendimento?.subareaJuridica || "",
+            origemAtendimento: nextWorkspace.atendimento?.origemAtendimento || nextWorkspace.conversation.cliente.origem?.nome || "",
+            proximaAcao: nextWorkspace.atendimento?.proximaAcao || "",
+            proximaAcaoAt: nextWorkspace.atendimento?.proximaAcaoAt
+                ? new Date(nextWorkspace.atendimento.proximaAcaoAt).toISOString().slice(0, 16)
+                : "",
+            situacaoDocumental: nextWorkspace.atendimento?.situacaoDocumental || "SEM_DOCUMENTOS",
+            chanceFechamento: String(nextWorkspace.atendimento?.chanceFechamento ?? 0),
+            motivoPerda: nextWorkspace.atendimento?.motivoPerda || "",
+            dataReuniao: nextWorkspace.atendimento?.dataReuniao
+                ? new Date(nextWorkspace.atendimento.dataReuniao).toISOString().slice(0, 16)
+                : "",
+            statusReuniao: nextWorkspace.atendimento?.statusReuniao || "NAO_AGENDADA",
+            observacoesReuniao: nextWorkspace.atendimento?.observacoesReuniao || "",
+            assunto: nextWorkspace.atendimento?.assunto || "",
+            resumo: nextWorkspace.atendimento?.resumo || "",
+        });
     }, []);
 
     const syncWhatsAppHistory = useCallback(async () => {
@@ -817,8 +903,12 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     }, [fetchAvatarForPhone, filteredConversations, getConversationPhone, selectedConversation]);
 
     useEffect(() => {
-        const eventSource = new EventSource("/api/comunicacao/stream");
-        eventSource.onmessage = (event) => {
+        let es: EventSource | null = null;
+        let retryTimeout: ReturnType<typeof setTimeout> | null = null;
+        let attempt = 0;
+        let destroyed = false;
+
+        function handleMessage(event: MessageEvent) {
             try {
                 const payload = JSON.parse(event.data) as {
                     type: string;
@@ -835,6 +925,9 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                     pausadoAte?: string | null;
                     motivoPausa?: string | null;
                 };
+                // Reset backoff counter on successful message
+                attempt = 0;
+
                 if (payload.type === "connection") {
                     setWhatsAppState({
                         connected: Boolean(payload.whatsappConnected),
@@ -879,9 +972,29 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
             } catch {
                 return;
             }
-        };
+        }
+
+        function connect() {
+            if (destroyed) return;
+            es = new EventSource("/api/comunicacao/stream");
+            es.onmessage = handleMessage;
+            es.onerror = () => {
+                es?.close();
+                es = null;
+                if (destroyed) return;
+                // Exponential backoff: 1s, 2s, 4s, 8s, max 30s
+                const delay = Math.min(1000 * Math.pow(2, attempt), 30_000);
+                attempt++;
+                retryTimeout = setTimeout(connect, delay);
+            };
+        }
+
+        connect();
+
         return () => {
-            eventSource.close();
+            destroyed = true;
+            if (retryTimeout) clearTimeout(retryTimeout);
+            es?.close();
         };
     }, [applyAutomationControlState, consumeConversationUnread, loadMessages, loadWorkspace, refreshConversations]);
 
@@ -1064,39 +1177,40 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         if (!selectedConversation || !workspace?.atendimento) return;
         setWorkspaceSaving(true);
         setFeedback(null);
+        const { clientForm: cf, opsForm: of } = useWorkspaceStore.getState();
         try {
             const clientResult = await updateClientChatProfile({
                 id: workspace.conversation.cliente.id,
-                nome: clientForm.nome,
-                email: clientForm.email,
-                celular: clientForm.celular,
-                whatsapp: clientForm.whatsapp,
-                status: clientForm.status,
-                observacoes: clientForm.observacoes,
-                inadimplente: clientForm.inadimplente,
+                nome: cf.nome,
+                email: cf.email,
+                celular: cf.celular,
+                whatsapp: cf.whatsapp,
+                status: cf.status,
+                observacoes: cf.observacoes,
+                inadimplente: cf.inadimplente,
             });
             if ("error" in clientResult && clientResult.error) throw new Error(clientResult.error);
 
             const workspaceResult = await saveConversationWorkspace({
                 conversationId: selectedConversation.id,
                 atendimentoId: workspace.atendimento.id,
-                assignedToId: opsForm.assignedToId || null,
-                advogadoId: opsForm.advogadoId || null,
-                processoId: opsForm.processoId || null,
-                tipoRegistro: opsForm.tipoRegistro as never,
-                cicloVida: opsForm.cicloVida as never,
-                statusOperacional: opsForm.statusOperacional as never,
-                prioridade: opsForm.prioridade as never,
-                areaJuridica: opsForm.areaJuridica,
-                subareaJuridica: opsForm.subareaJuridica,
-                origemAtendimento: opsForm.origemAtendimento,
-                proximaAcao: opsForm.proximaAcao,
-                proximaAcaoAt: opsForm.proximaAcaoAt || null,
-                situacaoDocumental: opsForm.situacaoDocumental as "SEM_DOCUMENTOS" | "PARCIAL" | "COMPLETA" | "CONFERIDA",
-                chanceFechamento: Number(opsForm.chanceFechamento || 0),
-                motivoPerda: opsForm.motivoPerda,
-                dataReuniao: opsForm.dataReuniao || null,
-                statusReuniao: opsForm.statusReuniao as
+                assignedToId: of.assignedToId || null,
+                advogadoId: of.advogadoId || null,
+                processoId: of.processoId || null,
+                tipoRegistro: of.tipoRegistro as never,
+                cicloVida: of.cicloVida as never,
+                statusOperacional: of.statusOperacional as never,
+                prioridade: of.prioridade as never,
+                areaJuridica: of.areaJuridica,
+                subareaJuridica: of.subareaJuridica,
+                origemAtendimento: of.origemAtendimento,
+                proximaAcao: of.proximaAcao,
+                proximaAcaoAt: of.proximaAcaoAt || null,
+                situacaoDocumental: of.situacaoDocumental as "SEM_DOCUMENTOS" | "PARCIAL" | "COMPLETA" | "CONFERIDA",
+                chanceFechamento: Number(of.chanceFechamento || 0),
+                motivoPerda: of.motivoPerda,
+                dataReuniao: of.dataReuniao || null,
+                statusReuniao: of.statusReuniao as
                     | "NAO_AGENDADA"
                     | "AGENDADA"
                     | "CONFIRMADA"
@@ -1104,9 +1218,9 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                     | "CANCELADA"
                     | "REALIZADA"
                     | "NAO_COMPARECEU",
-                observacoesReuniao: opsForm.observacoesReuniao,
-                assunto: opsForm.assunto,
-                resumo: opsForm.resumo,
+                observacoesReuniao: of.observacoesReuniao,
+                assunto: of.assunto,
+                resumo: of.resumo,
             });
             if ("error" in workspaceResult && workspaceResult.error) throw new Error(workspaceResult.error);
 
@@ -1312,187 +1426,17 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
             )}
 
             <div className="grid gap-3 lg:items-start lg:grid-cols-[minmax(272px,292px)_minmax(0,1fr)] xl:grid-cols-[minmax(284px,300px)_minmax(0,1fr)_minmax(260px,286px)] 2xl:grid-cols-[300px_minmax(0,1fr)_300px]">
-                <aside className="glass-card flex h-[640px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] sm:h-[720px] lg:sticky lg:top-5 lg:h-[calc(100vh-6rem)] lg:max-h-[900px] xl:h-[810px] xl:max-h-[810px]">
-                    <div className="p-3">
-                        <div className="flex flex-col gap-3">
-                            <div className="flex items-center justify-between gap-3">
-                                <div className="min-w-0 flex-1 pr-2">
-                                    <h3 className="whitespace-nowrap text-[15px] font-semibold leading-none tracking-[-0.03em] text-text-primary sm:text-[17px]">
-                                        Conversas ativas
-                                    </h3>
-                                </div>
-                                <div className="flex shrink-0 items-center gap-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="h-10 w-10 rounded-full border-[color:color-mix(in_srgb,var(--accent)_16%,var(--border)_84%)] bg-white p-0 text-[color:color-mix(in_srgb,var(--text-primary)_78%,var(--accent)_22%)] shadow-[0_8px_18px_rgba(0,0,0,0.06)] transition hover:border-[color:color-mix(in_srgb,var(--accent)_28%,var(--border)_72%)] hover:bg-[color:color-mix(in_srgb,var(--accent)_4%,white_96%)] hover:text-[color:color-mix(in_srgb,var(--text-primary)_70%,var(--accent)_30%)]"
-                                        onClick={() => void refreshConversations()}
-                                        aria-label="Atualizar conversas"
-                                    >
-                                        <RefreshCw size={18} strokeWidth={2.3} className="shrink-0" />
-                                    </Button>
-                                    <Button variant="gradient" size="sm" className="h-9 rounded-full px-3.5 text-[13px]" onClick={() => setShowNewConversation(true)}>
-                                        <Plus size={13} />
-                                        Nova
-                                    </Button>
-                                </div>
-                            </div>
-                            <p className="text-sm leading-5 text-text-muted">
-                                Caixa unificada de WhatsApp, Facebook, Instagram e e-mail.
-                            </p>
-                        </div>
-
-                        <div className="mt-4 space-y-3">
-                            <div className="relative">
-                                <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
-                                <input
-                                    value={searchTerm}
-                                    onChange={(event) => setSearchTerm(event.target.value)}
-                                    placeholder="Buscar cliente ou assunto..."
-                                    className="w-full rounded-[20px] border border-border bg-[var(--glass-input-bg)] px-11 py-3 text-sm text-text-primary outline-none transition placeholder:text-text-muted focus:border-accent"
-                                />
-                            </div>
-                            <div className="flex overflow-hidden rounded-[22px] border border-border bg-[var(--surface-soft)]">
-                                {[
-                                    { key: "all", label: "Todos", icon: null },
-                                    { key: "WHATSAPP", label: "WhatsApp", icon: <MessageCircle size={12} className="text-emerald-500" /> },
-                                    { key: "EMAIL", label: "E-mail", icon: null },
-                                    { key: "FACEBOOK_MESSENGER", label: "Facebook", icon: <Facebook size={12} className="text-[#1877F2]" /> },
-                                    { key: "INSTAGRAM_DM", label: "Instagram", icon: <Instagram size={12} className="text-[#E1306C]" /> },
-                                ].map((tab, idx) => (
-                                    <button
-                                        key={tab.key}
-                                        type="button"
-                                        onClick={() => setFilter(tab.key as "all" | "WHATSAPP" | "EMAIL" | "FACEBOOK_MESSENGER" | "INSTAGRAM_DM")}
-                                        className={`flex flex-1 items-center justify-center gap-1 px-2 py-3.5 text-[11px] font-semibold transition ${
-                                            filter === tab.key
-                                                ? "bg-[color:color-mix(in_srgb,var(--accent)_8%,white_92%)] text-accent"
-                                                : "bg-transparent text-text-secondary hover:bg-white/55 hover:text-text-primary"
-                                        } ${idx !== 0 ? "border-l border-border" : ""}`}
-                                    >
-                                        {tab.icon}{tab.label}
-                                    </button>
-                                ))}
-                            </div>
-                            <div className="flex items-center justify-between rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-2.5">
-                                <div className="min-w-0">
-                                    <p className="text-[11px] font-semibold text-text-primary">Mensagens não lidas</p>
-                                    <p className="text-[10px] text-text-muted">
-                                        {unreadConversationCount} conversa{unreadConversationCount === 1 ? "" : "s"} aguardando leitura
-                                    </p>
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => setFocusFilter((current) => (current === "unread" ? "all" : "unread"))}
-                                    className={`inline-flex items-center rounded-full border px-3 py-1.5 text-[11px] font-semibold transition ${
-                                        focusFilter === "unread"
-                                            ? "border-accent/30 bg-accent-subtle text-accent"
-                                            : "border-border bg-white/75 text-text-secondary hover:border-border-hover hover:bg-white hover:text-text-primary"
-                                    }`}
-                                >
-                                    {focusFilter === "unread" ? "Mostrando" : "Filtrar"}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="min-h-0 flex-1 space-y-1.5 overflow-y-auto px-3 pb-3 pt-3">
-                        {filteredConversations.length === 0 ? (
-                            <div className="rounded-[24px] border border-dashed border-border px-4 py-10 text-center text-sm text-text-muted">
-                                Nenhuma conversa encontrada com os filtros atuais.
-                            </div>
-                        ) : (
-                            filteredConversations.map((conversation) => {
-                                const active = selectedId === conversation.id;
-                                const conversationPhone = getConversationPhone(conversation);
-                                const conversationAvatar = conversationPhone ? avatarByPhone[normalizePhoneKey(conversationPhone)] : null;
-                                const automationBadge = getConversationAutomationBadge(conversation);
-                                return (
-                                    <button
-                                        key={conversation.id}
-                                        type="button"
-                                        onClick={() => setSelectedId(conversation.id)}
-                                        className={`group w-full rounded-[20px] border px-3 py-2.5 text-left transition duration-200 ${active
-                                            ? "border-accent/25 bg-[linear-gradient(135deg,rgba(198,123,44,0.16),rgba(255,255,255,0.06))] shadow-[0_14px_28px_color-mix(in_srgb,var(--accent)_14%,transparent)]"
-                                            : "border-border/80 bg-[color:color-mix(in_srgb,var(--surface-soft)_88%,white_12%)] hover:-translate-y-[1px] hover:border-border-hover hover:bg-[color:color-mix(in_srgb,var(--surface-soft)_82%,white_18%)] hover:shadow-[0_10px_24px_rgba(0,0,0,0.05)]"
-                                            }`}
-                                    >
-                                        <div className="flex items-start gap-2.5">
-                                            <div className="relative shrink-0">
-                                                {conversationAvatar ? (
-                                                    // eslint-disable-next-line @next/next/no-img-element
-                                                    <img
-                                                        src={conversationAvatar}
-                                                        alt={conversation.cliente.nome}
-                                                        className="h-10 w-10 rounded-full border border-border object-cover shadow-[0_10px_22px_rgba(0,0,0,0.10)]"
-                                                        loading="lazy"
-                                                        referrerPolicy="no-referrer"
-                                                        onError={() => {
-                                                            if (!conversationPhone) return;
-                                                            const key = normalizePhoneKey(conversationPhone);
-                                                            setAvatarByPhone((current) => ({ ...current, [key]: null }));
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <div className="flex h-10.5 w-10.5 items-center justify-center rounded-full bg-[var(--surface-soft-strong)] text-sm font-semibold text-text-primary shadow-[0_10px_22px_rgba(0,0,0,0.08)]">
-                                                        {getInitials(conversation.cliente.nome)}
-                                                    </div>
-                                                )}
-                                                <span className={`absolute -bottom-0.5 -right-0.5 inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-[color:var(--bg-primary)] ${
-                                                    conversation.canal === "WHATSAPP" ? "bg-emerald-500"
-                                                    : conversation.canal === "FACEBOOK_MESSENGER" ? "bg-[#1877F2]"
-                                                    : conversation.canal === "INSTAGRAM_DM" ? "bg-[#E1306C]"
-                                                    : "bg-info"}`}>
-                                                    {conversation.canal === "FACEBOOK_MESSENGER" && <Facebook size={7} className="text-white" />}
-                                                    {conversation.canal === "INSTAGRAM_DM" && <Instagram size={7} className="text-white" />}
-                                                </span>
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <div className="flex items-start justify-between gap-2">
-                                                    <div className="min-w-0 flex-1">
-                                                        <p className="truncate text-[14px] font-semibold leading-5 tracking-[-0.015em] text-text-primary">
-                                                            {conversation.cliente.nome}
-                                                        </p>
-                                                        <p className={`mt-0.5 truncate text-[12px] leading-4.5 ${conversation.unreadCount > 0 ? "font-medium text-[color:color-mix(in_srgb,var(--text-primary)_92%,black_8%)]" : "text-text-secondary"}`}>
-                                                            {getMessagePreview(conversation)}
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex shrink-0 flex-col items-end gap-1.5">
-                                                        <span className={`text-[10px] ${conversation.unreadCount > 0 ? "font-semibold text-accent" : "text-text-muted"}`}>
-                                                            {formatConversationTime(conversation.lastMessageAt)}
-                                                        </span>
-                                                        {conversation.unreadCount > 0 && (
-                                                            <span className="inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-[color:color-mix(in_srgb,var(--accent)_18%,white_82%)] px-1.5 text-[10px] font-bold text-accent shadow-[0_6px_14px_color-mix(in_srgb,var(--accent)_16%,transparent)]">
-                                                                {conversation.unreadCount}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                                                    <Badge variant={conversation.canal === "WHATSAPP" ? "success" : conversation.canal === "FACEBOOK_MESSENGER" ? "info" : conversation.canal === "INSTAGRAM_DM" ? "muted" : "default"} size="sm" dot className="px-2 py-0.5 text-[10px] shadow-none">
-                                                        {conversation.canal === "WHATSAPP" ? "WhatsApp" : conversation.canal === "FACEBOOK_MESSENGER" ? "Messenger" : conversation.canal === "INSTAGRAM_DM" ? "Instagram" : conversation.canal}
-                                                    </Badge>
-                                                    <Badge variant={automationBadge.variant} size="sm" dot={automationBadge.variant !== "warning"} className="px-2 py-0.5 text-[10px] shadow-none">
-                                                        {automationBadge.label}
-                                                    </Badge>
-                                                    {conversation.processo?.numeroCnj ? (
-                                                        <span className="inline-flex max-w-full items-center rounded-full border border-border/80 bg-[var(--surface-soft)] px-2.5 py-0.5 text-[10px] font-medium text-text-muted">
-                                                            {conversation.processo.numeroCnj}
-                                                        </span>
-                                                    ) : null}
-                                                </div>
-                                                <div className="mt-2 flex items-center justify-between gap-2 text-[9px] uppercase tracking-[0.14em] text-text-muted">
-                                                    <span className="truncate">{conversation.assignedTo?.name || "Responsável principal"}</span>
-                                                    {conversation.unreadCount > 0 && <span className="font-semibold text-[color:color-mix(in_srgb,var(--accent)_88%,#7a3a12_12%)]">Nova atividade</span>}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </button>
-                                );
-                            })
-                        )}
-                    </div>
-                </aside>
+                <ConversationListPanel
+                    mode={mode}
+                    onNewConversation={() => setShowNewConversation(true)}
+                    onRefresh={() => void refreshConversations()}
+                    avatarByPhone={avatarByPhone}
+                    normalizePhoneKey={normalizePhoneKey}
+                    onAvatarError={(phone) => {
+                        const key = normalizePhoneKey(phone);
+                        setAvatarByPhone((current) => ({ ...current, [key]: null }));
+                    }}
+                />
 
                 <section className="glass-card flex h-[640px] flex-col overflow-hidden rounded-[28px] border border-[var(--glass-card-border)] sm:h-[720px] lg:h-[calc(100vh-6rem)] lg:max-h-[900px] xl:sticky xl:top-5 xl:h-[810px] xl:max-h-[810px]">
                     {!selectedConversation ? (
@@ -1940,186 +1884,18 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                             O painel lateral ativa quando uma conversa e selecionada.
                         </div>
                     ) : workspaceLoading || !workspace ? (
-                        <div className="flex min-h-[220px] items-center justify-center xl:h-[850px]">
-                            <Loader2 size={20} className="animate-spin text-accent" />
-                        </div>
+                        <WorkspaceCockpitSkeleton />
                     ) : (
-                        <div className="flex h-full flex-col p-0.5">
-                            <div className="mb-3 flex shrink-0 flex-wrap gap-1.5 px-1">
-                                {[
-                                    { id: "overview", label: "Atendimento" },
-                                    { id: "customer", label: "Cliente" },
-                                    { id: "tags", label: "Tags" },
-                                ].map((tab) => (
-                                    <button
-                                        key={tab.id}
-                                        type="button"
-                                        onClick={() => setActiveCockpitTab(tab.id as "overview" | "customer" | "tags")}
-                                        className={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition ${activeCockpitTab === tab.id
-                                            ? "border-accent/30 bg-accent-subtle text-accent"
-                                            : "border-border bg-[var(--surface-soft)] text-text-secondary"
-                                            }`}
-                                    >
-                                        {tab.label}
-                                    </button>
-                                ))}
-                            </div>
-                            <div className="relative flex min-h-0 flex-1 flex-col px-1">
-                                <div className="h-full overflow-y-auto pb-[60px] scrollbar-none">
-                                    <div className="space-y-3">
-                                        {activeCockpitTab === "overview" && (
-                                            <>
-                                                <CockpitSection
-                                                    eyebrow="Acoes rapidas"
-                                                    title="Atalhos do atendimento"
-                                                    tone="amber"
-                                                    headerExtra={quickLoading ? <Loader2 size={16} className="animate-spin text-accent" /> : null}
-                                                >
-                                                    <div className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-1">
-                                                        <QuickActionButton icon={CalendarDays} label="Criar reuniao" tone="teal" onClick={() => setActiveModal("meeting")} />
-                                                        <QuickActionButton icon={Plus} label="Criar tarefa" tone="slate" onClick={() => setActiveModal("task")} />
-                                                        <QuickActionButton icon={FilePlus2} label="Solicitar documentos" tone="slate" onClick={handleRequestDocuments} />
-                                                        <QuickActionButton icon={UserCheck} label="Converter em cliente" tone="teal" onClick={handleConvertLead} />
-                                                    </div>
-                                                </CockpitSection>
-
-                                                <CockpitSection eyebrow="Classificacao" title="Controle principal" tone="amber">
-                                                    <div className="grid gap-2">
-                                                        <Select label="Tipo do registro" value={opsForm.tipoRegistro} onChange={(event) => setOpsForm((current) => ({ ...current, tipoRegistro: event.target.value }))} options={workspace.metadata.tipoRegistro} />
-                                                        <Select label="Ciclo de vida" value={opsForm.cicloVida} onChange={(event) => setOpsForm((current) => ({ ...current, cicloVida: event.target.value }))} options={workspace.metadata.cicloVida} />
-                                                        <Select label="Status operacional" value={opsForm.statusOperacional} onChange={(event) => setOpsForm((current) => ({ ...current, statusOperacional: event.target.value }))} options={workspace.metadata.statusOperacional} />
-                                                        <Select label="Prioridade" value={opsForm.prioridade} onChange={(event) => setOpsForm((current) => ({ ...current, prioridade: event.target.value }))} options={workspace.metadata.prioridade} />
-                                                    </div>
-                                                </CockpitSection>
-                                                <CockpitSection eyebrow="Atendimento" title="Contexto e proximo passo" tone="slate">
-                                                    <div className="grid gap-2">
-                                                        <Select label="Responsavel principal" value={opsForm.advogadoId} onChange={(event) => setOpsForm((current) => ({ ...current, advogadoId: event.target.value }))} options={workspace.advogados.map((item) => ({ value: item.id, label: item.name }))} />
-                                                        <Select label="Operador" value={opsForm.assignedToId} onChange={(event) => setOpsForm((current) => ({ ...current, assignedToId: event.target.value }))} options={workspace.users.map((item) => ({ value: item.id, label: `${item.name} (${item.role.toLowerCase()})` }))} placeholder="Mesmo responsável principal" />
-                                                        <Select label="Área jurídica" value={opsForm.areaJuridica} onChange={(event) => setOpsForm((current) => ({ ...current, areaJuridica: event.target.value }))} options={workspace.metadata.areasJuridicas.map((item) => ({ value: item, label: item }))} placeholder="Selecionar área" />
-                                                        <Input label="Origem" value={opsForm.origemAtendimento} onChange={(event) => setOpsForm((current) => ({ ...current, origemAtendimento: event.target.value }))} />
-                                                        <Select label="Processo vinculado" value={opsForm.processoId} onChange={(event) => setOpsForm((current) => ({ ...current, processoId: event.target.value }))} options={workspace.processos.map((item) => ({ value: item.id, label: item.numeroCnj || item.objeto || item.id }))} placeholder="Não vinculado" />
-                                                        <Select label="Situação documental" value={opsForm.situacaoDocumental} onChange={(event) => setOpsForm((current) => ({ ...current, situacaoDocumental: event.target.value }))} options={workspace.metadata.situacaoDocumental} />
-                                                        <div className="rounded-[26px] border border-border bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface-soft)_84%,white),color-mix(in_srgb,var(--surface-soft)_94%,transparent))] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.25)]">
-                                                            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
-                                                                Registro
-                                                            </p>
-                                                            <div className="grid gap-2.5">
-                                                                <Input
-                                                                    label="Assunto"
-                                                                    value={opsForm.assunto}
-                                                                    placeholder="Ex: pedido de aposentadoria, revisão de benefício, urgência criminal"
-                                                                    onChange={(event) => setOpsForm((current) => ({ ...current, assunto: event.target.value }))}
-                                                                />
-                                                                <Textarea
-                                                                    label="Resumo interno"
-                                                                    rows={4}
-                                                                    className="min-h-[148px]"
-                                                                    placeholder="Descreva com suas palavras o que o cliente precisa, contexto, urgência e próximos passos."
-                                                                    value={opsForm.resumo}
-                                                                    onChange={(event) => setOpsForm((current) => ({ ...current, resumo: event.target.value }))}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <Textarea label="Proxima acao" rows={2} value={opsForm.proximaAcao} onChange={(event) => setOpsForm((current) => ({ ...current, proximaAcao: event.target.value }))} />
-                                                        <Input label="Data da reuniao" type="datetime-local" value={opsForm.dataReuniao} onChange={(event) => setOpsForm((current) => ({ ...current, dataReuniao: event.target.value }))} />
-                                                        <Select label="Status da reuniao" value={opsForm.statusReuniao} onChange={(event) => setOpsForm((current) => ({ ...current, statusReuniao: event.target.value }))} options={workspace.metadata.statusReuniao} />
-                                                    </div>
-                                                </CockpitSection>
-                                            </>
-                                        )}
-                                        {activeCockpitTab === "tags" && (
-                                            <CockpitSection eyebrow="Categorias e tags" title="Marcacoes visuais" tone="teal">
-                                                <div className="flex flex-wrap gap-1.5">
-                                                    {(workspace.clientProfile?.tags || []).length === 0 && <p className="text-xs text-text-muted">Nenhuma tag aplicada ao cliente ainda.</p>}
-                                                    {(workspace.clientProfile?.tags || []).map((tag) => (
-                                                        <button
-                                                            key={tag.id}
-                                                            type="button"
-                                                            onClick={() => void handleToggleTag(tag.id, true)}
-                                                            className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold"
-                                                            style={{
-                                                                borderColor: colorMix(tag.color, 24),
-                                                                backgroundColor: colorMix(tag.color, 14),
-                                                                color: tag.color,
-                                                            }}
-                                                        >
-                                                            {tag.category.name}: {tag.name}
-                                                            <X size={10} />
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                                <div className="mt-2.5 space-y-2">
-                                                    {workspace.tagCategories.map((category) => {
-                                                        const assignedIds = new Set((workspace.clientProfile?.tags || []).map((tag) => tag.id));
-                                                        return (
-                                                            <div
-                                                                key={category.id}
-                                                                className="rounded-[18px] border p-2.5"
-                                                                style={{
-                                                                    borderColor: colorMix(category.color, 18),
-                                                                    backgroundColor: colorMix(category.color, 8),
-                                                                }}
-                                                            >
-                                                                <div className="mb-2 flex items-center gap-2">
-                                                                    <Tag size={12} style={{ color: category.color }} />
-                                                                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ color: category.color }}>{category.name}</p>
-                                                                </div>
-                                                                <div className="flex flex-wrap gap-1.5">
-                                                                    {category.tags.map((tag) => {
-                                                                        const assigned = assignedIds.has(tag.id);
-                                                                        return (
-                                                                            <button
-                                                                                key={tag.id}
-                                                                                type="button"
-                                                                                onClick={() => void handleToggleTag(tag.id, assigned)}
-                                                                                className="rounded-full border px-2 py-0.5 text-[10px] font-semibold transition"
-                                                                                style={assigned
-                                                                                    ? {
-                                                                                        borderColor: colorMix(tag.color, 24),
-                                                                                        backgroundColor: colorMix(tag.color, 16),
-                                                                                        color: tag.color,
-                                                                                    }
-                                                                                    : undefined}
-                                                                            >
-                                                                                {tag.name}
-                                                                            </button>
-                                                                        );
-                                                                    })}
-                                                                </div>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </CockpitSection>
-                                        )}
-                                        {activeCockpitTab === "customer" && (
-                                            <CockpitSection eyebrow="Cadastro do cliente" title="Dados cadastrais e observacoes" tone="slate">
-                                                <div className="grid gap-2">
-                                                    <Input label="Nome" value={clientForm.nome} onChange={(event) => setClientForm((current) => ({ ...current, nome: event.target.value }))} />
-                                                    <Input label="E-mail" value={clientForm.email} onChange={(event) => setClientForm((current) => ({ ...current, email: event.target.value }))} />
-                                                    <Select label="Status do cliente" value={clientForm.status} onChange={(event) => setClientForm((current) => ({ ...current, status: event.target.value as StatusCliente }))} options={STATUS_CLIENTE_OPTIONS} />
-                                                    <Input label="Celular" value={clientForm.celular} onChange={(event) => setClientForm((current) => ({ ...current, celular: event.target.value }))} />
-                                                    <Input label="WhatsApp" value={clientForm.whatsapp} onChange={(event) => setClientForm((current) => ({ ...current, whatsapp: event.target.value }))} />
-                                                    <label className="flex items-center gap-2 rounded-[16px] border border-border px-3 py-2.5 text-[13px] text-text-secondary">
-                                                        <input type="checkbox" checked={clientForm.inadimplente} onChange={(event) => setClientForm((current) => ({ ...current, inadimplente: event.target.checked }))} className="rounded border-border" />
-                                                        Marcar cliente como inadimplente
-                                                    </label>
-                                                    <Textarea label="Observacoes" rows={3} value={clientForm.observacoes} onChange={(event) => setClientForm((current) => ({ ...current, observacoes: event.target.value }))} />
-                                                </div>
-                                            </CockpitSection>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="absolute bottom-0 left-0 w-full bg-[var(--bg-primary)] px-1 pb-0.5 pt-2.5">
-                                    <div className="rounded-[18px] border border-border bg-[var(--surface-soft-strong)] p-1.5 shadow-[0_-8px_24px_rgba(0,0,0,0.05)]">
-                                        <Button variant="primary" size="sm" className="h-9 w-full justify-center rounded-[14px] text-[11px]" onClick={() => void handleSaveWorkspace()} disabled={workspaceSaving || !clientForm.nome.trim()}>
-                                            {workspaceSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                                            Salvar atendimento
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <WorkspaceCockpit
+                            workspace={workspace as unknown as WorkspaceData}
+                            quickLoading={quickLoading}
+                            workspaceSaving={workspaceSaving}
+                            onSaveWorkspace={() => void handleSaveWorkspace()}
+                            onToggleTag={(tagId, assigned) => void handleToggleTag(tagId, assigned)}
+                            onRequestDocuments={() => void handleRequestDocuments()}
+                            onConvertLead={() => void handleConvertLead()}
+                            onSetActiveModal={(modal) => setActiveModal(modal)}
+                        />
                     )}
                 </aside>
             </div>

@@ -1,57 +1,24 @@
+/**
+ * Camada de eventos em tempo real para o módulo de comunicação.
+ *
+ * Antes: EventEmitter in-process (single-worker — eventos perdidos entre workers)
+ * Agora: Redis Pub/Sub cross-worker com fallback para EventEmitter local
+ *
+ * API pública mantida idêntica — nenhum caller precisa mudar.
+ */
+
 import "server-only";
 
-import { EventEmitter } from "node:events";
 import type { CanalComunicacao, MessageDirection, MessageStatus } from "@/generated/prisma";
+import { publishRealtimeEvent, subscribeRealtimeEvents, type RealtimePayload } from "./redis-pubsub";
 
-type CommunicationRealtimePayload =
-    | {
-          type: "automation_control_updated";
-          conversationId: string;
-          iaDesabilitada: boolean;
-          iaDesabilitadaEm: string | null;
-          iaDesabilitadaPor: string | null;
-          autoAtendimentoPausado: boolean;
-          pausadoAte: string | null;
-          motivoPausa: string | null;
-          updatedByName: string | null;
-      }
-    | {
-          type: "message_created";
-          conversationId: string;
-          messageId: string;
-          direction: MessageDirection;
-          canal: CanalComunicacao;
-          status: MessageStatus;
-      }
-    | {
-          type: "message_status_updated";
-          conversationId: string;
-          messageId: string;
-          status: MessageStatus;
-      }
-    | {
-          type: "whatsapp_connection_status_updated";
-          connectionId: string;
-          status: string;
-          qrCode: string | null;
-          qrCodeRaw: string | null;
-          connectedPhone: string | null;
-          connectedName: string | null;
-      };
+// Re-exporta o tipo para compatibilidade com importações existentes
+export type CommunicationRealtimePayload = RealtimePayload;
 
-const globalForCommunicationRealtime = globalThis as typeof globalThis & {
-    __communicationRealtimeEmitter?: EventEmitter;
-};
+// ─── Emissores (server-side) ──────────────────────────────────────────────────
 
-function getEmitter() {
-    if (!globalForCommunicationRealtime.__communicationRealtimeEmitter) {
-        globalForCommunicationRealtime.__communicationRealtimeEmitter = new EventEmitter();
-    }
-    return globalForCommunicationRealtime.__communicationRealtimeEmitter;
-}
-
-export function emitCommunicationRealtimeEvent(payload: CommunicationRealtimePayload) {
-    getEmitter().emit("event", payload);
+export function emitCommunicationRealtimeEvent(payload: RealtimePayload): void {
+    void publishRealtimeEvent(payload);
 }
 
 export function emitCommunicationMessageCreated(payload: {
@@ -60,9 +27,11 @@ export function emitCommunicationMessageCreated(payload: {
     direction: MessageDirection;
     canal: CanalComunicacao;
     status: MessageStatus;
+    escritorioId?: string | null;
 }) {
-    emitCommunicationRealtimeEvent({
+    void publishRealtimeEvent({
         type: "message_created",
+        escritorioId: payload.escritorioId ?? null,
         ...payload,
     });
 }
@@ -71,19 +40,13 @@ export function emitCommunicationMessageStatusUpdated(payload: {
     conversationId: string;
     messageId: string;
     status: MessageStatus;
+    escritorioId?: string | null;
 }) {
-    emitCommunicationRealtimeEvent({
+    void publishRealtimeEvent({
         type: "message_status_updated",
+        escritorioId: payload.escritorioId ?? null,
         ...payload,
     });
-}
-
-export function subscribeCommunicationRealtimeEvents(
-    listener: (payload: CommunicationRealtimePayload) => void
-) {
-    const emitter = getEmitter();
-    emitter.on("event", listener);
-    return () => emitter.off("event", listener);
 }
 
 export function emitWhatsappConnectionStatusUpdated(payload: {
@@ -93,9 +56,19 @@ export function emitWhatsappConnectionStatusUpdated(payload: {
     qrCodeRaw: string | null;
     connectedPhone: string | null;
     connectedName: string | null;
+    escritorioId?: string | null;
 }) {
-    emitCommunicationRealtimeEvent({
+    void publishRealtimeEvent({
         type: "whatsapp_connection_status_updated",
+        escritorioId: payload.escritorioId ?? null,
         ...payload,
     });
+}
+
+// ─── Subscriber (usado pelo SSE stream) ───────────────────────────────────────
+
+export function subscribeCommunicationRealtimeEvents(
+    listener: (payload: RealtimePayload) => void
+): () => void {
+    return subscribeRealtimeEvents(listener);
 }

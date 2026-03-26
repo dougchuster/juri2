@@ -239,6 +239,7 @@ model Escritorio {
   processosEscritorio             Processo[]
   tarefasEscritorio               Tarefa[]
   usersEscritorio                 User[]
+  metaPixelConfig                 MetaPixelConfig?
 
   @@map("escritorios")
 }
@@ -1865,6 +1866,7 @@ model Conversation {
   @@index([lastMessageAt])
   @@index([whatsappConnectionId])
   @@index([metaSocialConnectionId])
+  @@index([escritorioId, status, lastMessageAt])
   @@map("conversations")
 }
 
@@ -1898,6 +1900,7 @@ model Message {
   @@index([providerMsgId])
   @@index([status])
   @@index([createdAt])
+  @@index([conversationId, createdAt])
   @@map("messages")
 }
 
@@ -3451,6 +3454,23 @@ model ComunicadoPlataforma {
   @@index([tipo])
   @@index([publicadoEm])
   @@map("comunicados_plataforma")
+}
+
+model MetaPixelConfig {
+  id            String    @id @default(cuid())
+  escritorioId  String    @unique
+  pixelId       String
+  accessToken   String
+  testEventCode String?
+  isActive      Boolean   @default(true)
+  lastEventAt   DateTime?
+  eventsCount   Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  escritorio Escritorio @relation(fields: [escritorioId], references: [id], onDelete: Cascade)
+
+  @@map("meta_pixel_configs")
 }
 
 enum Role {

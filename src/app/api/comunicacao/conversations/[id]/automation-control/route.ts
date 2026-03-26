@@ -73,6 +73,7 @@ export async function PATCH(
             pausadoAte: updatedConversation.pausadoAte?.toISOString() || null,
             motivoPausa: updatedConversation.motivoPausa,
             updatedByName: session.name || null,
+            escritorioId: updatedConversation.escritorioId ?? null,
         };
 
         emitCommunicationRealtimeEvent(payload);

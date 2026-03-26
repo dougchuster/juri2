@@ -208,6 +208,12 @@ async function processIncomingMessage(msg: {
   const msgDate = new Date(msg.timestamp * 1000);
 
   if (!conversation) {
+    // Fetch escritorioId from the active WhatsApp connection so the conversation
+    // is visible in the per-escritório inbox filter.
+    const connection = await db.whatsappConnection.findFirst({
+      select: { escritorioId: true },
+      orderBy: { updatedAt: "desc" },
+    });
     conversation = await db.conversation.create({
       data: {
         clienteId,
@@ -215,6 +221,7 @@ async function processIncomingMessage(msg: {
         status: "OPEN",
         unreadCount: isHistorical ? 0 : 1,
         lastMessageAt: msgDate,
+        escritorioId: connection?.escritorioId ?? null,
       },
     });
   } else {
@@ -266,6 +273,7 @@ async function processIncomingMessage(msg: {
     direction: "INBOUND",
     canal: "WHATSAPP",
     status: "RECEIVED",
+    escritorioId: conversation.escritorioId ?? null,
   });
 
   if (msg.media && msg.rawMessage) {

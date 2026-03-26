@@ -380,7 +380,10 @@ async function safeGetSession() {
 async function ensureConversationAttendance(conversationId: string) {
     const session = await safeGetSession();
     const escritorioId = session?.escritorioId ?? null;
-    const tenantWhere = escritorioId ? { id: conversationId, escritorioId } : { id: conversationId };
+    // Include conversations with escritorioId: null for backward compatibility
+    const tenantWhere = escritorioId
+        ? { id: conversationId, OR: [{ escritorioId }, { escritorioId: null }] }
+        : { id: conversationId };
     const conversation = await db.conversation.findFirst({
         where: tenantWhere,
         include: {
@@ -1181,7 +1184,7 @@ export async function fetchConversationWorkspace(conversationId: string) {
         const filter = await tenantFilter();
         const attendance = await ensureConversationAttendance(conversationId);
         const conversation = await db.conversation.findFirst({
-            where: { id: conversationId, ...filter },
+            where: { id: conversationId, OR: [{ escritorioId: filter.escritorioId }, { escritorioId: null }] },
             select: {
                 id: true,
                 clienteId: true,
