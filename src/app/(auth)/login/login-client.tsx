@@ -41,16 +41,32 @@ export default function LoginPageClient() {
                 setIsLoading(false);
                 return;
             }
-            // Hard reload garante que o cookie de sessão seja lido
-            // corretamente pelo servidor antes de navegar
+            if (result?.success) {
+                // Sessão criada com sucesso — hard reload garante que o
+                // cookie seja lido corretamente pelo servidor antes de navegar
+                window.location.href = "/dashboard";
+                return;
+            }
+            // Fallback: redirect() legado ou resposta inesperada
             window.location.href = "/dashboard";
         } catch (err) {
-            // redirect() do Server Action lança NEXT_REDIRECT —
-            // fazemos hard reload para garantir commit do cookie
+            // Detecta bundles JS desatualizados após um novo deploy:
+            // o browser envia o ID da Server Action antiga que o servidor
+            // não reconhece mais. Recarregar a página busca os assets novos.
             if (isRedirectError(err)) {
                 window.location.href = "/dashboard";
                 return;
             }
+            const msg = err instanceof Error ? err.message : String(err);
+            if (
+                msg.includes("Failed to find Server Action") ||
+                msg.includes("server action") ||
+                msg.includes("NEXT_NOT_FOUND")
+            ) {
+                window.location.reload();
+                return;
+            }
+            setError("Não foi possível entrar. Verifique sua conexão e tente novamente.");
             setIsLoading(false);
         }
     }

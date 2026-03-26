@@ -21,7 +21,7 @@ import {
     verifyMfaLoginChallenge,
 } from "@/lib/services/mfa-service";
 
-const SESSION_INACTIVITY_MS = 8 * 60 * 60 * 1000; // 8 horas de inatividade
+const SESSION_INACTIVITY_MS = 30 * 24 * 60 * 60 * 1000; // 30 dias (alinhado com o cookie)
 const SESSION_COOKIE_MAX_AGE_SEC = 30 * 24 * 60 * 60; // 30 dias (cookie no browser)
 const SESSION_REFRESH_THRESHOLD_MS = 30 * 60 * 1000; // renovar DB quando restar < 30 min
 const MFA_COOKIE_NAME = "mfa_challenge_token";
@@ -227,7 +227,7 @@ export async function login(formData: FormData) {
                         deviceLabel: trustedDevice.deviceLabel,
                     },
                 });
-                redirect("/dashboard");
+                return { success: true };
             }
 
             await clearTrustedDeviceCookie();
@@ -245,7 +245,7 @@ export async function login(formData: FormData) {
     await createAuthenticatedSession(user.id);
     await clearMfaChallengeCookie();
     await clearMfaSetupRequiredCookie();
-    redirect("/dashboard");
+    return { success: true };
 }
 
 export async function verifyMfaLogin(formData: FormData) {
@@ -325,7 +325,7 @@ export async function verifyMfaLogin(formData: FormData) {
             });
         }
 
-        redirect("/dashboard");
+        return { success: true };
     } catch (error) {
         if (error instanceof MfaError) {
             const challenge = await db.mfaLoginChallenge.findUnique({
