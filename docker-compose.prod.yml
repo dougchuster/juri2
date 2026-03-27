@@ -139,6 +139,7 @@ services:
       - app
       - evolution-api
     networks:
+      - backend
       - frontend
     healthcheck:
       test: ["CMD", "wget", "--no-check-certificate", "-qO-", "https://localhost/"]
