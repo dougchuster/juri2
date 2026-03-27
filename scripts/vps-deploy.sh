@@ -87,7 +87,7 @@ docker compose --env-file .env.production -f "$COMPOSE_FILE" run --rm \
 log "Build e migrations concluidos"
 
 info "[6/6] Subindo stack de producao..."
-docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d app worker evolution-api nginx
+docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d --force-recreate app worker evolution-api nginx
 docker compose --env-file .env.production -f "$COMPOSE_FILE" ps
 
 echo ""

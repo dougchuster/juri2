@@ -36,7 +36,7 @@ docker compose --env-file .env.production -f "$COMPOSE_FILE" run --rm \
 log "Prisma OK"
 
 info "Subindo servicos..."
-docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d --no-deps app worker evolution-api nginx
+docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d --force-recreate --no-deps app worker evolution-api nginx
 log "Containers atualizados"
 
 echo ""

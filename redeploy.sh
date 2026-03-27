@@ -41,7 +41,7 @@ docker compose --env-file .env.production -f "${COMPOSE_FILE}" run --rm \
   sh -lc 'npx prisma migrate deploy'
 
 echo "[vps] Subindo servicos..."
-docker compose --env-file .env.production -f "${COMPOSE_FILE}" up -d --no-deps app worker evolution-api nginx
+docker compose --env-file .env.production -f "${COMPOSE_FILE}" up -d --force-recreate --no-deps app worker evolution-api nginx
 
 echo "[vps] Status final"
 docker compose --env-file .env.production -f "${COMPOSE_FILE}" ps
