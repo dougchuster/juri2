@@ -3,6 +3,7 @@ import "server-only";
 import path from "node:path";
 import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
+import { LEGAL_ATTACHMENT_OCR_REMOVED_MESSAGE } from "@/lib/runtime-features";
 
 export type LegalAttachmentExtractionStatus = "ok" | "partial" | "unsupported" | "error";
 
@@ -126,18 +127,6 @@ async function extractSpreadsheetText(buffer: Buffer) {
     return sections.join("\n\n");
 }
 
-async function extractImageText(buffer: Buffer) {
-    const { createWorker, setLogging } = await import("tesseract.js");
-    setLogging(false);
-    const worker = await createWorker("por+eng");
-    try {
-        const result = await worker.recognize(buffer);
-        return result?.data?.text || "";
-    } finally {
-        await worker.terminate();
-    }
-}
-
 function withDefaultResult(
     data: Partial<LegalAttachmentExtractionResult>
 ): LegalAttachmentExtractionResult {
@@ -208,13 +197,10 @@ export async function extractLegalAttachmentText(input: {
         }
 
         if (isImage(mimeType, ext)) {
-            const text = normalizeExtractedText(await extractImageText(input.buffer), maxChars);
             return withDefaultResult({
-                extractedText: text,
-                extractedChars: text.length,
-                extractionStatus: text ? "ok" : "partial",
-                extractionMethod: "ocr_tesseract",
-                warning: text ? undefined : "Imagem sem texto detectavel por OCR.",
+                extractionStatus: "unsupported",
+                extractionMethod: "ocr_removed",
+                warning: LEGAL_ATTACHMENT_OCR_REMOVED_MESSAGE,
             });
         }
 

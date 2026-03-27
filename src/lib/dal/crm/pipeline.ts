@@ -1,5 +1,6 @@
 ﻿import { db } from "@/lib/db";
 import { Prisma, CRMConflictDecision, CRMOpportunityStatus } from "@/generated/prisma";
+import { trackLead, trackPurchase } from "@/lib/meta/conversions";
 
 export type CRMStageConfig = {
     id: string;
@@ -199,7 +200,7 @@ export type CreateCardInput = {
 export async function createCard(data: CreateCardInput) {
     const pipeline = await db.cRMPipeline.findUnique({
         where: { id: data.pipelineId },
-        select: { id: true, stages: true },
+        select: { id: true, stages: true, escritorioId: true },
     });
 
     if (!pipeline) {
@@ -213,7 +214,7 @@ export async function createCard(data: CreateCardInput) {
         throw new Error("Motivo de perda e obrigatorio para oportunidades perdidas.");
     }
 
-    return db.$transaction(async (tx) => {
+    const card = await db.$transaction(async (tx) => {
         const card = await tx.cRMCard.create({
             data: {
                 ...data,
@@ -239,6 +240,19 @@ export async function createCard(data: CreateCardInput) {
 
         return card;
     });
+
+    // Fire-and-forget: rastreia Lead no Meta sem bloquear a resposta
+    if (pipeline.escritorioId) {
+        trackLead(pipeline.escritorioId, {
+            clienteNome: card.cliente?.nome,
+            clienteEmail: card.cliente?.email ?? undefined,
+            clienteTelefone: card.cliente?.whatsapp ?? card.cliente?.celular ?? card.cliente?.telefone ?? undefined,
+            areaDireito: card.areaDireito ?? undefined,
+            cardId: card.id,
+        }).catch(() => {});
+    }
+
+    return card;
 }
 
 export type UpdateCardInput = Partial<Prisma.CRMCardUncheckedUpdateInput> & {
@@ -254,10 +268,10 @@ export type UpdateCardInput = Partial<Prisma.CRMCardUncheckedUpdateInput> & {
 };
 
 export async function updateCard(cardId: string, data: UpdateCardInput) {
-    return db.$transaction(async (tx) => {
+    const updated = await db.$transaction(async (tx) => {
         const current = await tx.cRMCard.findUnique({
             where: { id: cardId },
-            include: { pipeline: { select: { stages: true } } },
+            include: { pipeline: { select: { stages: true, escritorioId: true } } },
         });
 
         if (!current) {
@@ -348,8 +362,26 @@ export async function updateCard(cardId: string, data: UpdateCardInput) {
             });
         }
 
-        return updated;
+        return { updated, previousStatus: current.status, escritorioId: current.pipeline.escritorioId };
     });
+
+    // Fire-and-forget: rastreia Purchase quando oportunidade é GANHA pela primeira vez
+    const { updated: card, previousStatus, escritorioId } = updated;
+    if (
+        escritorioId &&
+        card.status === CRMOpportunityStatus.GANHA &&
+        previousStatus !== CRMOpportunityStatus.GANHA
+    ) {
+        trackPurchase(escritorioId, {
+            clienteEmail: card.cliente?.email ?? undefined,
+            clienteTelefone: card.cliente?.whatsapp ?? card.cliente?.celular ?? card.cliente?.telefone ?? undefined,
+            valor: card.value ?? undefined,
+            areaDireito: card.areaDireito ?? undefined,
+            cardId: card.id,
+        }).catch(() => {});
+    }
+
+    return card;
 }
 
 async function convertOpportunityToProcessTx(

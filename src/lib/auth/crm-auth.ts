@@ -114,11 +114,13 @@ export async function getCRMAuthUser(): Promise<CRMAuthUser | null> {
         mappings
     );
 
+    const fallbackEscritorioId = session.escritorioId ?? resolved?.id ?? escritorios[0]?.id ?? null;
+
     return {
         id: user.id,
         role: user.role,
         isActive: user.isActive,
-        escritorioId: resolved?.id || null,
+        escritorioId: fallbackEscritorioId,
         advogadoId: user.advogado?.id || null,
         teamIds: (user.advogado?.timeMembros || []).map((item) => item.time.id),
         teamNames: (user.advogado?.timeMembros || []).map((item) => item.time.nome),

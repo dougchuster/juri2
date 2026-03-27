@@ -1,10 +1,30 @@
-import { getPecasIA, getPecaStats } from "@/lib/dal/pecas";
 import { getSession } from "@/actions/auth";
-import { PecasWizard } from "@/components/pecas/pecas-wizard";
 import { Sparkles, FileText, CheckCheck, Edit3 } from "lucide-react";
-import { db } from "@/lib/db";
+import { LEGAL_AI_DISABLED_MESSAGE, isLegalAiEnabled } from "@/lib/runtime-features";
 
 export default async function PecasPage() {
+    if (!isLegalAiEnabled()) {
+        return (
+            <div className="p-6 space-y-6 animate-fade-in">
+                <div className="flex items-center gap-3">
+                    <div>
+                        <h1 className="font-display text-2xl font-bold text-text-primary">Criacao de Pecas</h1>
+                        <p className="text-sm text-text-muted mt-1">Modulo desligado nesta instalacao.</p>
+                    </div>
+                </div>
+
+                <div className="glass-card p-5 border border-warning/20 bg-warning/5">
+                    <p className="text-sm text-text-secondary">{LEGAL_AI_DISABLED_MESSAGE}</p>
+                </div>
+            </div>
+        );
+    }
+
+    const [{ getPecasIA, getPecaStats }, { PecasWizard }, { db }] = await Promise.all([
+        import("@/lib/dal/pecas"),
+        import("@/components/pecas/pecas-wizard"),
+        import("@/lib/db"),
+    ]);
     const session = await getSession();
     const userId = session?.id;
 

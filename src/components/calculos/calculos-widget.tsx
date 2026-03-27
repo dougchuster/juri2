@@ -39,6 +39,8 @@ interface Props {
     totalPages: number;
 }
 
+const LEGAL_AI_ENABLED = process.env.NEXT_PUBLIC_ENABLE_LEGAL_AI === "true";
+
 // ─────────────────────────────────────────────
 // Calculators
 // ─────────────────────────────────────────────
@@ -288,11 +290,15 @@ export function CalculosWidget({ calculos, processos, total }: Props) {
                     {activeTab === "PREVIDENCIARIO" && (
                         <div className="space-y-3">
                             <p className="text-sm text-text-muted bg-bg-tertiary/50 rounded-lg p-4">
-                                O cálculo previdenciário completo (DER, NIT, períodos, conversão de tempo especial) está disponível via <strong>Agentes Jurídicos</strong> com assistência de IA especializada.
+                                {LEGAL_AI_ENABLED
+                                    ? "O calculo previdenciario completo (DER, NIT, periodos, conversao de tempo especial) esta disponivel via Agentes Juridicos com assistencia de IA especializada."
+                                    : "O modulo de IA juridica foi desligado nesta instalacao para reduzir consumo do servidor."}
                             </p>
-                            <Button onClick={() => router.push("/agentes-juridicos")} variant="secondary" className="w-full">
-                                Abrir Agente Previdenciário
-                            </Button>
+                            {LEGAL_AI_ENABLED ? (
+                                <Button onClick={() => router.push("/agentes-juridicos")} variant="secondary" className="w-full">
+                                    Abrir Agente Previdenciario
+                                </Button>
+                            ) : null}
                         </div>
                     )}
 

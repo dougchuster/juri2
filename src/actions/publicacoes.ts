@@ -38,6 +38,7 @@ import {
     ensureClientePadraoPublicacoes,
 } from "@/lib/services/publicacoes-auto-processo";
 import { executarAssistentePublicacoesIa } from "@/lib/services/publicacoes-ai-assistant";
+import { LEGAL_AI_DISABLED_MESSAGE, isLegalAiEnabled } from "@/lib/runtime-features";
 import {
     calcularDataCortesia,
     calcularDataFatalPublicacao,
@@ -1321,6 +1322,10 @@ const assistentePublicacoesSchema = z.object({
 export async function executarAssistentePublicacoesIA(
     data: z.infer<typeof assistentePublicacoesSchema>
 ) {
+    if (!isLegalAiEnabled()) {
+        return { success: false, error: LEGAL_AI_DISABLED_MESSAGE };
+    }
+
     const parsed = assistentePublicacoesSchema.safeParse(data);
     if (!parsed.success) {
         return { success: false, error: parsed.error.flatten().fieldErrors };

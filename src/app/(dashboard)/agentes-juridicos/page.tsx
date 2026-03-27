@@ -1,8 +1,26 @@
 import { Bot, BrainCircuit, FileText, ShieldCheck } from "lucide-react";
-import { AgentesJuridicosChat } from "@/components/juridico-agents/agentes-juridicos-chat";
-import { listLegalAgentsCatalog } from "@/lib/services/juridico-agents";
+import { LEGAL_AI_DISABLED_MESSAGE, isLegalAiEnabled } from "@/lib/runtime-features";
 
 export default async function AgentesJuridicosPage() {
+    if (!isLegalAiEnabled()) {
+        return (
+            <div className="p-6 space-y-6 animate-fade-in">
+                <div>
+                    <h1 className="font-display text-2xl font-bold text-text-primary">Agentes Juridicos</h1>
+                    <p className="text-sm text-text-muted mt-1">Modulo desligado nesta instalacao.</p>
+                </div>
+
+                <div className="glass-card p-5 border border-warning/20 bg-warning/5">
+                    <p className="text-sm text-text-secondary">{LEGAL_AI_DISABLED_MESSAGE}</p>
+                </div>
+            </div>
+        );
+    }
+
+    const [{ AgentesJuridicosChat }, { listLegalAgentsCatalog }] = await Promise.all([
+        import("@/components/juridico-agents/agentes-juridicos-chat"),
+        import("@/lib/services/juridico-agents"),
+    ]);
     const agents = listLegalAgentsCatalog();
 
     const kpis = [

@@ -14,8 +14,6 @@ const PUBLIC_ROUTES = [
 ];
 
 const SESSION_COOKIE = "session_token";
-const MFA_CHALLENGE_COOKIE = "mfa_challenge_token";
-const MFA_SETUP_REQUIRED_COOKIE = "mfa_setup_required";
 
 function isPublicRoute(pathname: string) {
     return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
@@ -73,21 +71,7 @@ export default function proxy(request: NextRequest) {
     }
 
     const sessionToken = request.cookies.get(SESSION_COOKIE)?.value;
-    const mfaChallenge = request.cookies.get(MFA_CHALLENGE_COOKIE)?.value;
-    const mfaSetupRequired = request.cookies.get(MFA_SETUP_REQUIRED_COOKIE)?.value;
-
     if (isPublicRoute(pathname) || pathname === "/") {
-        if (
-            sessionToken &&
-            !mfaChallenge &&
-            !mfaSetupRequired &&
-            pathname !== "/" &&
-            !pathname.startsWith("/admin-login") &&
-            !pathname.startsWith("/root-admin")
-        ) {
-            return NextResponse.redirect(new URL("/dashboard", request.url));
-        }
-
         return nextResponse();
     }
 

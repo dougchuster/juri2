@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { storeWhatsAppMediaFile } from "@/lib/whatsapp/media-storage";
 import { extractLegalAttachmentText } from "@/lib/services/juridico-agents/attachments";
+import { LEGAL_AI_DISABLED_MESSAGE, isLegalAiEnabled } from "@/lib/runtime-features";
 
 export const dynamic = "force-dynamic";
 
 const MAX_UPLOAD_SIZE = 30 * 1024 * 1024; // 30MB
 
 export async function POST(request: Request) {
+    if (!isLegalAiEnabled()) {
+        return NextResponse.json({ error: LEGAL_AI_DISABLED_MESSAGE }, { status: 410 });
+    }
+
     try {
         const formData = await request.formData();
         const file = formData.get("file");

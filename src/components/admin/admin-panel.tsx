@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, FileText, KeyRound, Loader2, Settings, Users } from "lucide-react";
+import { Calendar, Eye, EyeOff, FileText, KeyRound, Loader2, Settings, Users } from "lucide-react";
 import { ActionFeedback } from "@/components/ui/action-feedback";
 import { AdminEscritorioSection } from "@/components/admin/admin-escritorio-section";
 import { AdminFeriadosSection } from "@/components/admin/admin-feriados-section";
@@ -64,6 +64,7 @@ export function AdminPanel({ activeTab, usuarios, logs, escritorio, feriados }: 
     const [deleteFeriadoTarget, setDeleteFeriadoTarget] = useState<FeriadoItem | null>(null);
     const [feriadoActionError, setFeriadoActionError] = useState<string | null>(null);
     const [newPassword, setNewPassword] = useState("");
+    const [showNewPassword, setShowNewPassword] = useState(false);
     const deleteTransferCandidates = useMemo(() => {
         if (!deleteTarget) return [];
 
@@ -444,16 +445,31 @@ export function AdminPanel({ activeTab, usuarios, logs, escritorio, feriados }: 
                 size="md"
             >
                 <form onSubmit={handleResetPassword} className="space-y-4">
-                    <Input
-                        id="user-new-password"
-                        name="newPassword"
-                        label="Nova senha"
-                        type="password"
-                        required
-                        minLength={8}
-                        value={newPassword}
-                        onChange={(event) => setNewPassword(event.target.value)}
-                    />
+                    <div className="space-y-1">
+                        <label htmlFor="user-new-password" className="text-xs font-semibold uppercase tracking-wide text-text-muted">
+                            Nova senha <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                            <input
+                                id="user-new-password"
+                                name="newPassword"
+                                type={showNewPassword ? "text" : "password"}
+                                required
+                                minLength={8}
+                                value={newPassword}
+                                onChange={(event) => setNewPassword(event.target.value)}
+                                className="adv-input w-full pr-10"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowNewPassword((v) => !v)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors"
+                                aria-label={showNewPassword ? "Ocultar senha" : "Mostrar senha"}
+                            >
+                                {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
+                    </div>
                     <div className="flex justify-end gap-3">
                         <Button
                             variant="secondary"

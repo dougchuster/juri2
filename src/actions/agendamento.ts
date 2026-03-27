@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { getSession } from "@/actions/auth";
+import { trackSchedule } from "@/lib/meta/conversions";
 import { hasAnyPermission } from "@/lib/rbac/check-permission";
 import { revalidatePath } from "next/cache";
 import type {
@@ -153,6 +154,26 @@ export async function createAgendamento(input: CreateAgendamentoInput) {
     }
 
     await logHistorico(agendamento.id, session.id, "CRIADO", `Agendamento criado: ${input.titulo}`);
+
+    // Fire-and-forget: rastreia Schedule no Meta quando há cliente vinculado
+    if (input.clienteId && session.escritorioId) {
+        db.cliente
+            .findUnique({
+                where: { id: input.clienteId },
+                select: { nome: true, email: true, whatsapp: true, celular: true, telefone: true },
+            })
+            .then((cliente) => {
+                if (cliente) {
+                    trackSchedule(session.escritorioId!, {
+                        clienteNome: cliente.nome,
+                        clienteEmail: cliente.email ?? undefined,
+                        clienteTelefone: cliente.whatsapp ?? cliente.celular ?? cliente.telefone ?? undefined,
+                        tipo: input.tipo,
+                    }).catch(() => {});
+                }
+            })
+            .catch(() => {});
+    }
 
     revalidatePath("/agenda");
     return { success: true, id: agendamento.id };

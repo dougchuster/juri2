@@ -492,25 +492,34 @@ export function LegalLandingPage() {
                 priority
               />
               <motion.div
-                className="stack-integrado-card absolute -bottom-5 left-6 hidden max-w-[240px] overflow-hidden rounded-[20px] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.15)] md:block"
+                className="stack-integrado-card absolute -bottom-10 left-6 hidden max-w-[276px] overflow-hidden rounded-[24px] p-5 md:block"
                 animate={{ y: [0, 8, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               >
-                {/* Glow effect */}
-                <div className="pointer-events-none absolute -right-10 -top-10 h-20 w-20 rounded-full bg-[color:var(--accent)]/10 blur-2xl" />
+                <div className="pointer-events-none absolute -right-12 -top-10 h-24 w-24 rounded-full bg-[color:var(--accent)]/16 blur-3xl" />
+                <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
                 
                 <div className="relative">
-                  <div className="flex items-center gap-2 stack-integrado-title">
-                    <span className="stack-integrado-dot" />
-                    Stack integrado
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <div className="flex items-center gap-2 stack-integrado-title">
+                        <span className="stack-integrado-dot" />
+                        Stack integrado
+                      </div>
+                      <p className="stack-integrado-subtitle mt-2">
+                        Operacao juridica conectada do primeiro contato ao financeiro.
+                      </p>
+                    </div>
+                    <span className="stack-integrado-badge">3 frentes</span>
                   </div>
-                  <div className="mt-3 space-y-2.5">
+                  <div className="stack-integrado-list mt-4">
                     {["CRM → Processos → Financeiro", "Comunicação → Portal do cliente", "IA → Automação → Governança"].map((item) => (
-                      <div key={item} className="group flex items-center gap-2.5 stack-integrado-item">
+                      <div key={item} className="group stack-integrado-item">
                         <div className="stack-integrado-icon-bg shrink-0">
                           <BadgeCheck className="stack-integrado-icon" />
                         </div>
-                        <span className="font-medium">{item}</span>
+                        <span className="stack-integrado-item-copy">{item}</span>
+                        <span className="stack-integrado-item-arrow" aria-hidden>&rarr;</span>
                       </div>
                     ))}
                   </div>

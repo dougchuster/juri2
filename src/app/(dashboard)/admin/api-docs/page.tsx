@@ -1,6 +1,7 @@
 import { getSession } from "@/actions/auth";
 import { redirect } from "next/navigation";
 import { Code, Lock, Zap, Globe } from "lucide-react";
+import { isLegalAiEnabled } from "@/lib/runtime-features";
 
 interface Endpoint {
     method: "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
@@ -306,7 +307,10 @@ export default async function ApiDocsPage() {
     const session = await getSession();
     if (!session) redirect("/login");
 
-    const totalEndpoints = API_GROUPS.reduce((acc, g) => acc + g.endpoints.length, 0);
+    const apiGroups = isLegalAiEnabled()
+        ? API_GROUPS
+        : API_GROUPS.filter((group) => group.base !== "/api/juridico-agents");
+    const totalEndpoints = apiGroups.reduce((acc, g) => acc + g.endpoints.length, 0);
 
     return (
         <div className="p-6 space-y-8 animate-fade-in max-w-4xl">
@@ -386,7 +390,7 @@ Content-Type: application/json
                 </div>
             </div>
 
-            {API_GROUPS.map((group) => (
+            {apiGroups.map((group) => (
                 <section key={group.name} className="space-y-4">
                     <div className="flex items-center gap-3 border-b border-border pb-3">
                         <div>

@@ -81,6 +81,8 @@ type SidebarProps = {
     onNavigate?: () => void;
 };
 
+const LEGAL_AI_ENABLED = process.env.NEXT_PUBLIC_ENABLE_LEGAL_AI === "true";
+
 const COLLAPSED_STORAGE_KEY = "adv-sidebar-collapsed";
 const COLLAPSED_WIDTH = SIDEBAR_COLLAPSED_WIDTH + 16;
 const EXPANDED_WIDTH = SIDEBAR_EXPANDED_WIDTH + 16;
@@ -517,6 +519,10 @@ export function Sidebar({
             ),
         }))
         .filter((item) => {
+            if (!LEGAL_AI_ENABLED && (item.href === "/pecas" || item.href === "/agentes-juridicos")) {
+                return false;
+            }
+
             const hasVisibleChildren = Boolean(item.subItems && item.subItems.length > 0);
             if (Array.isArray(item.subItems)) {
                 return hasVisibleChildren;

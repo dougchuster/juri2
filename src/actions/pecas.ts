@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getSession } from "@/actions/auth";
 import { registrarLogAuditoria } from "@/lib/services/audit-log";
 import { askGeminiSimple } from "@/lib/services/ai-gemini";
+import { LEGAL_AI_DISABLED_MESSAGE, isLegalAiEnabled } from "@/lib/runtime-features";
 
 export interface PecaFormData {
     tipoPeca: string;
@@ -29,6 +30,10 @@ Siga o formato padrão brasileiro para esta peça jurídica, com todas as seçõ
 }
 
 export async function gerarPecaIA(data: PecaFormData) {
+    if (!isLegalAiEnabled()) {
+        return { success: false, error: LEGAL_AI_DISABLED_MESSAGE };
+    }
+
     const session = await getSession();
     if (!session) return { success: false, error: "Sessao expirada." };
 

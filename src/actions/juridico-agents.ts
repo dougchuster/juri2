@@ -20,6 +20,7 @@ import {
     listLegalAgentsCatalog,
     type LegalAgentChatInput,
 } from "@/lib/services/juridico-agents";
+import { LEGAL_AI_DISABLED_MESSAGE, isLegalAiEnabled } from "@/lib/runtime-features";
 
 const attachmentSchema = z.object({
     fileName: z.string().min(1).max(300),
@@ -147,7 +148,15 @@ async function resolveConversationForUser(input: {
     });
 }
 
+function getLegalAiDisabledResult() {
+    return { success: false as const, error: LEGAL_AI_DISABLED_MESSAGE };
+}
+
 export async function listarAgentesJuridicosAction() {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
     const session = await getSession();
     if (!session) {
         return { success: false as const, error: "Nao autenticado." };
@@ -160,6 +169,10 @@ export async function listarAgentesJuridicosAction() {
 }
 
 export async function carregarConversaAgenteJuridicoAction(input: unknown) {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
     const session = await getSession();
     if (!session) {
         return { success: false as const, error: "Nao autenticado." };
@@ -226,6 +239,10 @@ export async function carregarConversaAgenteJuridicoAction(input: unknown) {
 }
 
 export async function reiniciarConversaAgenteJuridicoAction(input: unknown) {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
     const session = await getSession();
     if (!session) {
         return { success: false as const, error: "Nao autenticado." };
@@ -266,6 +283,10 @@ export async function reiniciarConversaAgenteJuridicoAction(input: unknown) {
 }
 
 export async function listarConversasAgenteJuridicoAction(input: unknown) {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
     const session = await getSession();
     if (!session) {
         return { success: false as const, error: "Nao autenticado." };
@@ -295,6 +316,10 @@ export async function listarConversasAgenteJuridicoAction(input: unknown) {
 }
 
 export async function criarNovaConversaAgenteJuridicoAction(input: unknown) {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
     const session = await getSession();
     if (!session) {
         return { success: false as const, error: "Nao autenticado." };
@@ -340,6 +365,10 @@ export async function criarNovaConversaAgenteJuridicoAction(input: unknown) {
 }
 
 export async function deletarConversaAgenteJuridicoAction(input: unknown) {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
     const session = await getSession();
     if (!session) {
         return { success: false as const, error: "Nao autenticado." };
@@ -410,6 +439,10 @@ export async function deletarConversaAgenteJuridicoAction(input: unknown) {
 }
 
 export async function conversarComAgenteJuridicoAction(input: unknown) {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
     const session = await getSession();
     if (!session) {
         return { success: false as const, error: "Nao autenticado." };
