@@ -48,7 +48,7 @@ export default async function ComunicacaoPage() {
 
     const kpis = [
         { label: "Conversas Abertas", value: stats.openConversations, icon: "message-circle", tone: "cat-amber" },
-        { label: "Nao Lidas", value: stats.unreadMessages, icon: "message-square", tone: "cat-warning" },
+        { label: "Não Lidas", value: stats.unreadMessages, icon: "message-square", tone: "cat-warning" },
         { label: "WhatsApp", value: stats.whatsappMessages, icon: "message-circle", tone: "cat-success" },
         { label: "E-mails", value: stats.emailMessages, icon: "mail", tone: "cat-neutral" },
     ] as const;
@@ -56,8 +56,8 @@ export default async function ComunicacaoPage() {
     return (
         <div className="space-y-5 p-4 sm:p-5 lg:p-6 animate-fade-in">
             <div>
-                <h1 className="font-display text-2xl font-bold text-text-primary">Comunicacao</h1>
-                <p className="mt-1 text-sm text-text-muted">Caixa de entrada, WhatsApp, e-mail e automacao de atendimento.</p>
+                <h1 className="font-display text-2xl font-bold text-text-primary">Comunicação</h1>
+                <p className="mt-1 text-sm text-text-muted">Caixa de entrada, WhatsApp, e-mail e automação de atendimento.</p>
             </div>
 
             <ComunicacaoPageShell

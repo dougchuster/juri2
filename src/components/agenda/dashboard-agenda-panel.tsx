@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -95,8 +95,8 @@ export function DashboardAgendaPanel({
             const error =
                 typeof result.error === "object" && result.error && "_form" in result.error
                     ? result.error._form?.[0]
-                    : "Nao foi possivel criar o compromisso.";
-            setFormError(error || "Nao foi possivel criar o compromisso.");
+                    : "NÃ£o foi possÃ­vel criar o compromisso.";
+            setFormError(error || "NÃ£o foi possÃ­vel criar o compromisso.");
             return;
         }
 
@@ -136,7 +136,7 @@ export function DashboardAgendaPanel({
                             <Badge variant="muted">{todayItemsCount} hoje</Badge>
                         </div>
                         <p className="mt-2 text-[12px] leading-5 text-[var(--text-muted)]">
-                            Compromissos e prazos em foco para hoje e para os proximos dias.
+                            Compromissos e prazos em foco para hoje e para os prÃ³ximos dias.
                         </p>
                     </div>
                 </div>
@@ -203,8 +203,8 @@ export function DashboardAgendaPanel({
                                                 <span>{item.responsavel}</span>
                                                 {item.status ? (
                                                     <>
-                                                        <span className="opacity-60">•</span>
-                                                        <span>{{ PENDENTE: "Pendente", VISUALIZADO: "Visualizado", CONCLUIDO: "Concluido", CONFERIDO: "Conferido", CANCELADO: "Cancelado", VENCIDO: "Vencido" }[item.status] ?? item.status}</span>
+                                                        <span className="opacity-60">â€¢</span>
+                                                        <span>{{ PENDENTE: "Pendente", VISUALIZADO: "Visualizado", CONCLUIDO: "Conclu?do", CONFERIDO: "Conferido", CANCELADO: "Cancelado", VENCIDO: "Vencido" }[item.status] ?? item.status}</span>
                                                     </>
                                                 ) : null}
                                             </div>
@@ -256,7 +256,7 @@ export function DashboardAgendaPanel({
                         <Select
                             id="dashboard-comp-advogadoId"
                             name="advogadoId"
-                            label="Responsavel *"
+                            label="ResponsÃ¡vel *"
                             defaultValue={initialAdvogadoId}
                             options={advogados.map((item) => ({
                                 value: item.id,
@@ -334,3 +334,4 @@ export function DashboardAgendaPanel({
         </>
     );
 }
+

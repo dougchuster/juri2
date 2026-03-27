@@ -81,13 +81,13 @@ export default async function AdminJobsPage({
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                     <div className="space-y-2">
                         <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--text-secondary)]">
-                            Administracao
+                            Administração
                         </p>
                         <h1 className="text-3xl font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
                             Central de Jobs
                         </h1>
                         <p className="max-w-3xl text-sm text-[var(--text-secondary)]">
-                            Visao unica de jobs, retries e recuperacao operacional para controladoria e suporte interno.
+                            Visão única de jobs, retries e recuperação operacional para controladoria e suporte interno.
                         </p>
                     </div>
 
@@ -96,7 +96,7 @@ export default async function AdminJobsPage({
                             href="/admin/publicacoes"
                             className="inline-flex h-11 items-center justify-center rounded-full border border-[var(--card-border)] px-5 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface-soft)]"
                         >
-                            Voltar para publicacoes
+                            Voltar para publicações
                         </Link>
                     </div>
                 </div>
@@ -106,8 +106,8 @@ export default async function AdminJobsPage({
                 {[
                     { label: "Total", value: summary.total },
                     { label: "Falharam", value: summary.failed },
-                    { label: "Em execucao", value: summary.running },
-                    { label: "Concluidos", value: summary.completed },
+                    { label: "Em execução", value: summary.running },
+                    { label: "Concluídos", value: summary.completed },
                     { label: "Na fila", value: summary.queued },
                 ].map((item) => (
                     <div
@@ -152,7 +152,7 @@ export default async function AdminJobsPage({
                         type="search"
                         name="q"
                         defaultValue={currentQuery}
-                        placeholder="Buscar por id, erro, responsavel ou titulo"
+                        placeholder="Buscar por id, erro, responsável ou título"
                         className="h-11 rounded-full border border-[var(--card-border)] bg-[var(--surface-soft)] px-4 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--accent)]"
                     />
                     <select
@@ -162,8 +162,8 @@ export default async function AdminJobsPage({
                     >
                         <option value="">Todos os status</option>
                         <option value="FAILED">Falharam</option>
-                        <option value="RUNNING">Em execucao</option>
-                        <option value="COMPLETED">Concluidos</option>
+                        <option value="RUNNING">Em execução</option>
+                        <option value="COMPLETED">Concluídos</option>
                         <option value="QUEUED">Na fila</option>
                         <option value="CANCELLED">Cancelados</option>
                     </select>
@@ -215,8 +215,8 @@ export default async function AdminJobsPage({
                                 <th className="px-4 py-3 font-semibold">Origem</th>
                                 <th className="px-4 py-3 font-semibold">Total</th>
                                 <th className="px-4 py-3 font-semibold">Falhas</th>
-                                <th className="px-4 py-3 font-semibold">Em execucao</th>
-                                <th className="px-4 py-3 font-semibold">Acionaveis</th>
+                                <th className="px-4 py-3 font-semibold">Em execução</th>
+                                <th className="px-4 py-3 font-semibold">Acionáveis</th>
                                 <th className="px-4 py-3 font-semibold">Retries</th>
                                 <th className="px-4 py-3 font-semibold">Recuperados</th>
                             </tr>

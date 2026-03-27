@@ -23,8 +23,8 @@ export default async function EquipeJuridicaPage({ searchParams }: Props) {
     return (
         <div className="p-6 space-y-6 animate-fade-in">
             <AdminPageHeader
-                title="Equipe Juridica"
-                description="Gerencie contas de advogados, equipes e liderancas para designacao de casos."
+                title="Equipe Jurídica"
+                description="Gerencie contas de advogados, equipes e lideranças para designação de casos."
             />
 
             <AdminEquipeJuridica

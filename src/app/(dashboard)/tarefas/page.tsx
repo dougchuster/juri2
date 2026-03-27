@@ -72,7 +72,7 @@ export default async function TarefasPage() {
     const kpis = [
         { label: "A Fazer", value: stats.aFazer, icon: CheckSquare, tone: "cat-neutral" },
         { label: "Em Andamento", value: stats.emAndamento, icon: Clock, tone: "cat-warning" },
-        { label: "Em Revisao", value: stats.revisao, icon: Zap, tone: "cat-amber" },
+        { label: "Em Revisão", value: stats.revisao, icon: Zap, tone: "cat-amber" },
         { label: "Taskscore", value: stats.taskscore, icon: Trophy, tone: "cat-success" },
     ];
 

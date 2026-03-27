@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { logout } from "@/actions/auth";
 import { markNotificationsAsRead } from "@/actions/notificacoes";
 import { useTheme } from "@/components/theme-provider";
-import { getInitials } from "@/lib/utils";
+import { PersonAvatar } from "@/components/ui/person-avatar";
 
 interface HeaderProps {
     user: {
@@ -40,7 +40,7 @@ type FloatingPosition = {
 
 const roleLabel: Record<string, string> = {
     ADMIN: "Administrador",
-    SOCIO: "Socio",
+    SOCIO: "Sócio",
     ADVOGADO: "Advogado",
     CONTROLADOR: "Controladoria",
     ASSISTENTE: "Assistente",
@@ -166,7 +166,7 @@ export function Header({
     const userMenuPanelRef = useRef<HTMLDivElement>(null);
     const notifMenuPanelRef = useRef<HTMLDivElement>(null);
 
-    const displayName = user.name?.trim() || "Usuario";
+    const displayName = user.name?.trim() || "Usuário";
     const displayRole = roleLabel[user.role] || "Conta";
 
     useEffect(() => {
@@ -266,10 +266,9 @@ export function Header({
 
         const unreadIds = optimisticNotifications.filter((notification) => !notification.lida).map((notification) => notification.id);
 
-        clearUnreadCount({ type: "clear" });
-        markNotificationsReadOptimistically({ type: "mark-all-read" });
-
         startMarkingNotifications(async () => {
+            clearUnreadCount({ type: "clear" });
+            markNotificationsReadOptimistically({ type: "mark-all-read" });
             await markNotificationsAsRead(unreadIds.length > 0 ? unreadIds : undefined);
             router.refresh();
         });
@@ -297,7 +296,7 @@ export function Header({
                             <p className="dashboard-section-kicker">Painel principal</p>
                             <div className="flex min-w-0 items-center gap-2">
                                 <p className="truncate font-display text-[clamp(1.125rem,1.8vw,1.5rem)] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
-                                    Operacao Juridica
+                                    Operação Jurídica
                                 </p>
                                 <span className="hidden rounded-full bg-[var(--accent-subtle)] px-2.5 py-1 text-[11px] font-semibold text-[var(--accent)] lg:inline-flex">
                                     {displayRole}
@@ -351,7 +350,7 @@ export function Header({
                                         handleNotificationToggle();
                                     }}
                                     className="surface-soft relative flex size-11 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]/30"
-                                    aria-label={optimisticUnreadCount > 0 ? `${optimisticUnreadCount} notificacoes nao lidas` : "Abrir notificacoes"}
+                                    aria-label={optimisticUnreadCount > 0 ? `${optimisticUnreadCount} notificações não lidas` : "Abrir notificações"}
                                     aria-expanded={showNotifications}
                                     aria-haspopup="dialog"
                                 >
@@ -389,12 +388,11 @@ export function Header({
                                     className="surface-soft flex min-h-11 items-center gap-2 rounded-full px-1.5 py-1.5 sm:px-2"
                                 >
                                     <div className="relative flex size-11 items-center justify-center overflow-hidden rounded-full border border-white/12 bg-[var(--accent)] text-white shadow-[0_12px_22px_color-mix(in_srgb,var(--accent)_22%,transparent)]">
-                                        {user.avatarUrl ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={user.avatarUrl} alt={displayName} className="h-full w-full object-cover" />
-                                        ) : (
-                                            <span className="text-[13px] font-bold">{getInitials(displayName)}</span>
-                                        )}
+                                        <PersonAvatar
+                                            name={displayName}
+                                            avatarUrl={user.avatarUrl}
+                                            className="h-full w-full"
+                                        />
                                     </div>
                                     <div className="hidden min-w-0 text-left xl:block">
                                         <p className="truncate text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--text-muted)]">
@@ -454,7 +452,7 @@ export function Header({
                                         </div>
                                         <div className="flex items-center justify-between gap-3">
                                             <p className="font-display text-[18px] font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
-                                                Central de notificacoes
+                                                Central de notificações
                                             </p>
                                             <span className="rounded-full bg-[var(--accent-subtle)] px-2.5 py-1 text-[11px] font-semibold text-[var(--accent)]">
                                                 {isMarkingNotifications ? "Lendo..." : optimisticUnreadCount > 0 ? `${optimisticUnreadCount} novas` : "Em dia"}
@@ -573,7 +571,7 @@ export function Header({
                                             }}
                                         >
                                             <Gear size={16} weight="regular" />
-                                            Configuracoes
+                                            Configurações
                                         </Link>
                                         <div className="mx-3 my-2 h-px bg-[var(--border-color)]" />
                                         <button

@@ -1,7 +1,5 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
-
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
@@ -34,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { ConfirmActionModal } from "@/components/ui/confirm-action-modal";
 import { Input, Select, Textarea } from "@/components/ui/form-fields";
 import { Modal } from "@/components/ui/modal";
+import { PersonAvatar } from "@/components/ui/person-avatar";
 import { UserDeleteTransferModal } from "@/components/admin/user-delete-transfer-modal";
 
 interface FuncionarioPerfil {
@@ -88,7 +87,7 @@ interface SectionCardProps {
 
 const roleOptions = [
     { value: "ADMIN", label: "Administrador" },
-    { value: "SOCIO", label: "Socio" },
+    { value: "SOCIO", label: "Sócio" },
     { value: "ADVOGADO", label: "Advogado" },
     { value: "CONTROLADOR", label: "Controlador" },
     { value: "ASSISTENTE", label: "Assistente" },
@@ -98,7 +97,7 @@ const roleOptions = [
 
 const roleLabel: Record<string, string> = {
     ADMIN: "Administrador",
-    SOCIO: "Socio",
+    SOCIO: "Sócio",
     ADVOGADO: "Advogado",
     CONTROLADOR: "Controlador",
     ASSISTENTE: "Assistente",
@@ -128,12 +127,6 @@ const SectionCard = ({ icon: Icon, title, description, children }: SectionCardPr
     </section>
 );
 
-function initials(name: string) {
-    const parts = name.trim().split(/\s+/).filter(Boolean).slice(0, 2);
-    if (parts.length === 0) return "FN";
-    return parts.map((part) => part[0]?.toUpperCase() || "").join("");
-}
-
 function roleToArea(role: FuncionarioItem["role"]) {
     if (role === "ADVOGADO") return "ADVOGADO";
     if (role === "FINANCEIRO") return "FINANCEIRO";
@@ -149,7 +142,7 @@ function inferCargo(item: FuncionarioItem, area?: string) {
     const normalizedArea = (area || inferArea(item)).toUpperCase();
     if (normalizedArea === "ADVOGADO") return "Advogado";
     if (normalizedArea === "FINANCEIRO") return "Financeiro";
-    if (item.role === "SOCIO") return "Socio";
+    if (item.role === "SOCIO") return "Sócio";
     if (item.role === "ADMIN") return "Administrador";
     if (item.role === "CONTROLADOR") return "Controlador";
     if (item.role === "ASSISTENTE") return "Assistente";
@@ -586,17 +579,11 @@ export function AdminFuncionariosPerfis({ funcionarios, initialSelectedUserId }:
                             <article key={funcionario.id} className="glass-card p-4">
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="flex items-start gap-3">
-                                        {funcionario.avatarUrl ? (
-                                            <img
-                                                src={funcionario.avatarUrl}
-                                                alt={funcionario.name}
-                                                className="h-12 w-12 rounded-xl border border-border object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-bg-tertiary/40 text-sm font-semibold text-text-secondary">
-                                                {initials(funcionario.name)}
-                                            </div>
-                                        )}
+                                        <PersonAvatar
+                                            name={funcionario.name}
+                                            avatarUrl={funcionario.avatarUrl}
+                                            className="h-12 w-12 rounded-xl border border-border"
+                                        />
                                         <div>
                                             <p className="text-sm font-semibold text-text-primary">{funcionario.name}</p>
                                             <p className="text-xs text-text-muted">{funcionario.email}</p>
@@ -676,17 +663,11 @@ export function AdminFuncionariosPerfis({ funcionarios, initialSelectedUserId }:
                         <aside className="space-y-4">
                             <section className="rounded-3xl border border-border bg-bg-tertiary/20 p-4">
                                 <div className="flex items-start gap-3">
-                                    {avatarDraft ? (
-                                        <img
-                                            src={avatarDraft}
-                                            alt={selected.name}
-                                            className="h-20 w-20 rounded-2xl border border-border object-cover"
-                                        />
-                                    ) : (
-                                        <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-border bg-bg-tertiary/40 text-lg font-semibold text-text-secondary">
-                                            {initials(selected.name)}
-                                        </div>
-                                    )}
+                                    <PersonAvatar
+                                        name={selected.name}
+                                        avatarUrl={avatarDraft}
+                                        className="h-20 w-20 rounded-2xl border border-border"
+                                    />
                                     <div className="min-w-0 flex-1">
                                         <p className="text-lg font-semibold text-text-primary">{selected.name}</p>
                                         <p className="mt-1 break-all text-sm text-text-muted">{selected.email}</p>
@@ -854,17 +835,11 @@ export function AdminFuncionariosPerfis({ funcionarios, initialSelectedUserId }:
                                         <div className="rounded-2xl border border-border bg-bg-tertiary/30 p-3">
                                             <p className="text-xs text-text-muted">Foto de perfil</p>
                                             <div className="mt-3 flex items-center gap-3">
-                                                {avatarDraft ? (
-                                                    <img
-                                                        src={avatarDraft}
-                                                        alt={selected.name}
-                                                        className="h-16 w-16 rounded-xl border border-border object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="flex h-16 w-16 items-center justify-center rounded-xl border border-border bg-bg-tertiary/40 text-sm font-semibold text-text-secondary">
-                                                        {initials(selected.name)}
-                                                    </div>
-                                                )}
+                                                <PersonAvatar
+                                                    name={selected.name}
+                                                    avatarUrl={avatarDraft}
+                                                    className="h-16 w-16 rounded-xl border border-border"
+                                                />
                                                 <div className="flex flex-col gap-1.5">
                                                     <label htmlFor="func-avatar-file" className="inline-flex">
                                                         <span className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-text-secondary transition-colors hover:bg-bg-tertiary/60">

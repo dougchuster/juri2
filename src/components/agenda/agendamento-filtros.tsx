@@ -210,11 +210,11 @@ export function AgendamentoFiltros({ initial, advogados, processos, baseTab, bas
                         </div>
                     </div>
 
-                    {/* Responsavel */}
+                    {/* Responsável */}
                     <div className="md:col-span-4">
                         <Select
                             id="filt-responsavel"
-                            label="Responsavel"
+                            label="Responsável"
                             value={values.responsavelId}
                             onChange={(e) => setValues((v) => ({ ...v, responsavelId: e.target.value }))}
                             options={advogados.map((a) => ({ value: a.id, label: a.user.name || "-" }))}

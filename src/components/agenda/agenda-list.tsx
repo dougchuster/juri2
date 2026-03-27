@@ -325,7 +325,7 @@ export function AgendaList({
 
                 <div className="flex items-center gap-2">
                     <Button size="sm" variant="secondary" onClick={() => setShowAddAudiencia(true)}>
-                        <Gavel size={14} /> Audiencia
+                        <Gavel size={14} /> Audiência
                     </Button>
                     <Button size="sm" variant="secondary" onClick={() => setShowAddCompromisso(true)}>
                         <Calendar size={14} /> Compromisso
@@ -408,7 +408,7 @@ export function AgendaList({
                                                         <button
                                                             type="button"
                                                             onClick={() => handleMarcarAudienciaRealizada(item.id)}
-                                                            title="Marcar audiencia realizada"
+                                                            title="Marcar audiência realizada"
                                                             className="rounded-lg p-1.5 text-text-muted hover:bg-success/10 hover:text-success transition-colors"
                                                         >
                                                             <Check size={16} />
@@ -418,7 +418,7 @@ export function AgendaList({
                                                         <button
                                                             type="button"
                                                             onClick={() => handleConcluirCompromisso(item.id)}
-                                                            title="Marcar compromisso concluido"
+                                                            title="Marcar compromisso concluído"
                                                             className="rounded-lg p-1.5 text-text-muted hover:bg-success/10 hover:text-success transition-colors"
                                                         >
                                                             <Check size={16} />
@@ -445,7 +445,7 @@ export function AgendaList({
                 </div>
             )}
 
-            <Modal isOpen={showAddAudiencia} onClose={() => setShowAddAudiencia(false)} title="Nova Audiencia" size="lg">
+            <Modal isOpen={showAddAudiencia} onClose={() => setShowAddAudiencia(false)} title="Nova Audiência" size="lg">
                 <form onSubmit={handleCreateAudiencia} className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                         <Select
@@ -472,8 +472,8 @@ export function AgendaList({
                             name="tipo"
                             label="Tipo *"
                             options={[
-                                { value: "CONCILIACAO", label: "Conciliacao" },
-                                { value: "INSTRUCAO", label: "Instrucao" },
+                                { value: "CONCILIACAO", label: "Conciliação" },
+                                { value: "INSTRUCAO", label: "Instrução" },
                                 { value: "JULGAMENTO", label: "Julgamento" },
                                 { value: "UNA", label: "Una" },
                                 { value: "OUTRA", label: "Outra" },
@@ -486,7 +486,7 @@ export function AgendaList({
 
                     <div className="grid grid-cols-2 gap-4">
                         <Input id="aud-sala" name="sala" label="Sala" />
-                        <Textarea id="aud-obs" name="observacoes" label="Observacoes" rows={2} />
+                        <Textarea id="aud-obs" name="observacoes" label="Observações" rows={2} />
                     </div>
 
                     <div className="flex justify-end gap-3">
@@ -494,7 +494,7 @@ export function AgendaList({
                             Cancelar
                         </Button>
                         <Button type="submit" disabled={loading}>
-                            {loading ? <><Loader2 size={16} className="animate-spin" /> Salvando...</> : "Criar Audiencia"}
+                            {loading ? <><Loader2 size={16} className="animate-spin" /> Salvando...</> : "Criar Audiência"}
                         </Button>
                     </div>
                 </form>

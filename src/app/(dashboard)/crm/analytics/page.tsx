@@ -15,8 +15,6 @@ import {
     Bar,
     LineChart,
     Line,
-    RadialBarChart,
-    RadialBar,
 } from "recharts";
 import { TrendingUp, Send, Clock3, Target, Download, RefreshCw, Star, Flame, Thermometer } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -73,8 +71,8 @@ export default function AnalyticsDashboard() {
 
         // ── Secao 1: metricas gerais ──────────────────────────────────────
         sections.push(
-            row(["=== METRICAS GERAIS ==="]),
-            row(["metrica", "valor"]),
+            row(["=== MÉTRICAS GERAIS ==="]),
+            row(["métrica", "valor"]),
             row(["periodo_dias", analytics.periodDays]),
             row(["total_funil", analytics.metrics.totalFunilValue]),
             row(["receita_ponderada", analytics.metrics.weightedRevenue]),
@@ -87,7 +85,7 @@ export default function AnalyticsDashboard() {
 
         // ── Secao 2: cadencia diaria ──────────────────────────────────────
         sections.push(
-            row(["=== CADENCIA DIARIA ==="]),
+            row(["=== CADÊNCIA DIÁRIA ==="]),
             row(["data", "oportunidades_criadas", "oportunidades_ganhas", "atividades", "campanhas_enviadas"]),
             ...analytics.cadence.map(item => row([
                 item.date,
@@ -106,11 +104,11 @@ export default function AnalyticsDashboard() {
                 row(["score_medio", scoring.avgScore]),
                 row(["total_contatos_com_score", scoring.totalWithScore]),
                 "",
-                row(["=== DISTRIBUICAO DE SCORE ==="]),
+                row(["=== DISTRIBUIÇÃO DE SCORE ==="]),
                 row(["faixa", "label", "contatos"]),
                 ...scoring.buckets.map(b => row([b.range, b.label, b.count])),
                 "",
-                row(["=== SCORE POR ESTAGIO ==="]),
+                row(["=== SCORE POR ESTÁGIO ==="]),
                 row(["estagio", "contatos", "score_medio"]),
                 ...scoring.byRelationship.map(r => row([r.relationship, r.count, r.avgScore])),
                 "",
@@ -142,7 +140,7 @@ export default function AnalyticsDashboard() {
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-text-primary tracking-tight">Analytics do CRM</h1>
-                        <p className="text-text-muted mt-1">Conversao, previsao de receita, origem e performance comercial.</p>
+                        <p className="text-text-muted mt-1">Conversão, previsão de receita, origem e performance comercial.</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1 bg-bg-secondary border border-border rounded-sm p-1">
@@ -174,7 +172,7 @@ export default function AnalyticsDashboard() {
                 )}
 
                 {!loading && !analytics && (
-                    <div className="glass-card p-8 text-center text-text-muted">Nao foi possivel carregar os dados do CRM.</div>
+                    <div className="glass-card p-8 text-center text-text-muted">Não foi possível carregar os dados do CRM.</div>
                 )}
 
                 {!loading && analytics && (
@@ -194,7 +192,7 @@ export default function AnalyticsDashboard() {
                             <div className="glass-card p-5">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <p className="text-sm font-medium text-text-muted">Conversao Oportunidade</p>
+                                        <p className="text-sm font-medium text-text-muted">Conversão Oportunidade</p>
                                         <h3 className="text-2xl font-bold text-text-primary mt-1">{formatPercent(analytics.metrics.conversaoOportunidadeContrato)}</h3>
                                     </div>
                                     <div className="p-2 bg-blue-500/10 rounded-sm text-blue-400"><Target size={20} /></div>
@@ -226,15 +224,15 @@ export default function AnalyticsDashboard() {
                                     <div className="p-2 bg-amber-500/10 rounded-sm text-amber-400"><Clock3 size={20} /></div>
                                 </div>
                                 <p className="text-xs text-text-muted mt-4">
-                                    Fechamento medio: {analytics.metrics.tempoMedioFechamentoDias.toFixed(1)} dias
+                                    Fechamento médio: {analytics.metrics.tempoMedioFechamentoDias.toFixed(1)} dias
                                 </p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                             <div className="glass-card p-6 xl:col-span-2">
-                                <h3 className="text-lg font-bold text-text-primary mb-2">Cadencia comercial</h3>
-                                <p className="text-sm text-text-muted mb-5">Evolucao diaria de oportunidades, ganhos, atividades e envios.</p>
+                                <h3 className="text-lg font-bold text-text-primary mb-2">Cadência comercial</h3>
+                                <p className="text-sm text-text-muted mb-5">Evolução diária de oportunidades, ganhos, atividades e envios.</p>
                                 <div className="w-full h-[320px]">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <LineChart data={analytics.cadence}>
@@ -254,7 +252,7 @@ export default function AnalyticsDashboard() {
 
                             <div className="glass-card p-6">
                                 <h3 className="text-lg font-bold text-text-primary mb-2">Funil por etapa</h3>
-                                <p className="text-sm text-text-muted mb-5">Distribuicao atual das oportunidades.</p>
+                                <p className="text-sm text-text-muted mb-5">Distribuição atual das oportunidades.</p>
                                 <div className="w-full h-[320px]">
                                     {analytics.pipelineData.length > 0 ? (
                                         <ResponsiveContainer width="100%" height="100%">
@@ -278,7 +276,7 @@ export default function AnalyticsDashboard() {
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                             <div className="glass-card p-6">
                                 <h3 className="text-lg font-bold text-text-primary mb-2">Performance por area</h3>
-                                <p className="text-sm text-text-muted mb-5">Conversao e receita ponderada por area do Direito.</p>
+                                <p className="text-sm text-text-muted mb-5">Conversão e receita ponderada por área do Direito.</p>
                                 <div className="w-full h-[320px]">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <BarChart data={analytics.byArea.slice(0, 8)}>
@@ -304,7 +302,7 @@ export default function AnalyticsDashboard() {
                                                 <th className="py-2">Origem</th>
                                                 <th className="py-2">Total</th>
                                                 <th className="py-2">Ganhos</th>
-                                                <th className="py-2">Conversao</th>
+                                                <th className="py-2">Conversão</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -319,7 +317,7 @@ export default function AnalyticsDashboard() {
                                             {analytics.byOrigem.length === 0 && (
                                                 <tr>
                                                     <td className="py-4 text-text-muted" colSpan={4}>
-                                                        Sem dados de origem no periodo.
+                                                        Sem dados de origem no período.
                                                     </td>
                                                 </tr>
                                             )}
@@ -330,16 +328,16 @@ export default function AnalyticsDashboard() {
                         </div>
 
                         <div className="glass-card p-6">
-                            <h3 className="text-lg font-bold text-text-primary mb-2">Responsaveis comerciais</h3>
+                            <h3 className="text-lg font-bold text-text-primary mb-2">Responsáveis comerciais</h3>
                             <p className="text-sm text-text-muted mb-5">Ranking por receita ponderada e taxa de ganho.</p>
                             <div className="overflow-auto">
                                 <table className="w-full text-sm">
                                     <thead className="text-left text-xs uppercase text-text-muted border-b border-border">
                                         <tr>
-                                            <th className="py-2">Responsavel</th>
+                                            <th className="py-2">Responsável</th>
                                             <th className="py-2">Oportunidades</th>
                                             <th className="py-2">Ganhos</th>
-                                            <th className="py-2">Conversao</th>
+                                            <th className="py-2">Conversão</th>
                                             <th className="py-2">Receita Ponderada</th>
                                         </tr>
                                     </thead>
@@ -356,7 +354,7 @@ export default function AnalyticsDashboard() {
                                         {analytics.byResponsavel.length === 0 && (
                                                 <tr>
                                                     <td className="py-4 text-text-muted" colSpan={5}>
-                                                        Sem responsaveis no periodo.
+                                                        Sem responsáveis no período.
                                                     </td>
                                                 </tr>
                                             )}

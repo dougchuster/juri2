@@ -6,8 +6,8 @@ export default async function AgentesJuridicosPage() {
         return (
             <div className="p-6 space-y-6 animate-fade-in">
                 <div>
-                    <h1 className="font-display text-2xl font-bold text-text-primary">Agentes Juridicos</h1>
-                    <p className="text-sm text-text-muted mt-1">Modulo desligado nesta instalacao.</p>
+                    <h1 className="font-display text-2xl font-bold text-text-primary">Agentes Jurídicos</h1>
+                    <p className="text-sm text-text-muted mt-1">Módulo desligado nesta instalação.</p>
                 </div>
 
                 <div className="glass-card p-5 border border-warning/20 bg-warning/5">
@@ -43,7 +43,7 @@ export default async function AgentesJuridicosPage() {
             tone: "cat-success",
         },
         {
-            label: "Revisao humana",
+            label: "Revisão humana",
             value: "Obrig.",
             icon: ShieldCheck,
             tone: "cat-warning",
@@ -53,9 +53,9 @@ export default async function AgentesJuridicosPage() {
     return (
         <div className="p-6 space-y-6 animate-fade-in">
             <div>
-                <h1 className="font-display text-2xl font-bold text-text-primary">Agentes Juridicos</h1>
+                <h1 className="font-display text-2xl font-bold text-text-primary">Agentes Jurídicos</h1>
                 <p className="text-sm text-text-muted mt-1">
-                    Chat juridico com selecao de agente e leitura de anexos.
+                    Chat jurídico com seleção de agente e leitura de anexos.
                 </p>
             </div>
 

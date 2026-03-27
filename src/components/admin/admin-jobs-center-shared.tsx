@@ -15,9 +15,9 @@ export function formatJobCenterStatusLabel(status: JobCenterStatus) {
         case "QUEUED":
             return "Na fila";
         case "RUNNING":
-            return "Em execucao";
+            return "Em execução";
         case "COMPLETED":
-            return "Concluido";
+            return "Concluído";
         case "FAILED":
             return "Falhou";
         case "CANCELLED":
@@ -26,7 +26,7 @@ export function formatJobCenterStatusLabel(status: JobCenterStatus) {
 }
 
 export function formatJobCenterSourceTypeLabel(sourceType: JobCenterSourceType) {
-    return sourceType === "AUTOMACAO_NACIONAL_JOB" ? "Automacao nacional" : "Flow execution";
+    return sourceType === "AUTOMACAO_NACIONAL_JOB" ? "Automação nacional" : "Flow execution";
 }
 
 export function getJobCenterStatusVariant(status: JobCenterStatus) {

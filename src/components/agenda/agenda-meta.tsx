@@ -23,7 +23,7 @@ export const AGENDA_TYPE_META: Record<
         color: "var(--danger)",
     },
     audiencia: {
-        label: "Audiencia",
+        label: "Audiência",
         icon: Gavel,
         textClass: "text-info",
         bgClass: "bg-info/10",

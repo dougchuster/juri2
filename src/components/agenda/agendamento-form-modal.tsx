@@ -62,9 +62,9 @@ export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, se
         e.preventDefault();
         setError("");
 
-        if (!titulo.trim()) { setError("Titulo e obrigatorio"); return; }
-        if (!dataInicio) { setError("Data e obrigatoria"); return; }
-        if (!responsavelId) { setError("Responsavel e obrigatorio"); return; }
+        if (!titulo.trim()) { setError("Título é obrigatório"); return; }
+        if (!dataInicio) { setError("Data é obrigatória"); return; }
+        if (!responsavelId) { setError("Responsável é obrigatório"); return; }
 
         setLoading(true);
         const result = await createAgendamento({
@@ -134,10 +134,10 @@ export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, se
                     </div>
                 </div>
 
-                {/* Titulo */}
+                {/* Título */}
                 <Input
                     id="ag-titulo"
-                    label="Titulo *"
+                    label="Título *"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
                     placeholder={`Nome do ${tipoMeta.label.toLowerCase()}...`}
@@ -166,7 +166,7 @@ export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, se
                     ) : (
                         <Input
                             id="ag-dataFim"
-                            label="Termino"
+                            label="Término"
                             type="datetime-local"
                             value={dataFim}
                             onChange={(e) => setDataFim(e.target.value)}
@@ -183,7 +183,7 @@ export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, se
                         onChange={(e) => setProcessoId(e.target.value)}
                         options={processos.slice(0, 150).map((p) => ({
                             value: p.id,
-                            label: `${p.numeroCnj || "Sem numero"} - ${p.cliente?.nome || "Sem cliente"}`,
+                            label: `${p.numeroCnj || "Sem número"} - ${p.cliente?.nome || "Sem cliente"}`,
                         }))}
                         placeholder="Selecionar processo"
                         required={tipo === "AUDIENCIA" || tipo === "PRAZO_FATAL"}
@@ -200,11 +200,11 @@ export function AgendamentoFormModal({ isOpen, onClose, advogados, processos, se
                     </div>
                 )}
 
-                {/* Responsavel + Prioridade */}
+                {/* Responsável + Prioridade */}
                 <div className="grid grid-cols-2 gap-4">
                     <Select
                         id="ag-responsavel"
-                        label="Responsavel *"
+                        label="Responsável *"
                         value={responsavelId}
                         onChange={(e) => setResponsavelId(e.target.value)}
                         options={advogados.map((a) => ({ value: a.id, label: a.user.name || "-" }))}

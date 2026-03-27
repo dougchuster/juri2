@@ -62,18 +62,18 @@ export default function AuthLayout({
                                 Management cockpit
                             </p>
                             <h1 className="login-hero-text font-display text-4xl font-medium leading-[0.98] tracking-[-0.04em] text-white/95 [text-shadow:0_2px_14px_rgba(20,14,10,0.30)] xl:text-[4.25rem]">
-                                Operacao juridica
+                                Operação jurídica
                                 <br />
                                 com clareza,
                                 <br />
-                                cadencia e controle.
+                                cadência e controle.
                             </h1>
                             <p className="mt-5 max-w-[520px] text-[15px] leading-7 text-white/80 [text-shadow:0_1px_8px_rgba(20,14,10,0.22)]">
-                                Prazos, processos, comunicacao, CRM e financeiro em um ambiente visual premium, pensado para escritorio de alta exigencia.
+                                Prazos, processos, comunicação, CRM e financeiro em um ambiente visual premium, pensado para escritório de alta exigência.
                             </p>
 
                             <div className="mt-10 flex flex-wrap gap-3">
-                                {["Agenda e prazos", "Pipeline comercial", "Financeiro", "Comunicacao", "Controladoria"].map((feat) => (
+                                {["Agenda e prazos", "Pipeline comercial", "Financeiro", "Comunicação", "Controladoria"].map((feat) => (
                                     <span
                                         key={feat}
                                         className="inline-flex items-center gap-2 rounded-full border border-white/45 bg-white/80 px-4 py-2 text-[11px] font-medium text-[#5a4a3d] shadow-[0_8px_18px_rgba(20,14,10,0.10)] backdrop-blur-sm"

@@ -11,8 +11,8 @@ export default async function OperacoesJuridicasPage() {
     return (
         <div className="p-6 space-y-6 animate-fade-in">
             <AdminPageHeader
-                title="Operacoes Juridicas"
-                description="Painel operacional com foco em distribuicao, SLA e produtividade."
+                title="Operações Jurídicas"
+                description="Painel operacional com foco em distribuição, SLA e produtividade."
             />
 
             <AdminOperacoesJuridicas

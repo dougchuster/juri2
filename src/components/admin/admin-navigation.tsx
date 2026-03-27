@@ -31,19 +31,19 @@ const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     },
     {
         href: "/admin/equipe-juridica",
-        label: "Equipe Juridica",
+        label: "Equipe Jurídica",
         icon: Users,
         match: (pathname) => pathname.startsWith("/admin/equipe-juridica"),
     },
     {
         href: "/admin/comunicacao",
-        label: "Comunicacao",
+        label: "Comunicação",
         icon: MessageCircle,
         match: (pathname) => pathname.startsWith("/admin/comunicacao"),
     },
     {
         href: "/admin/publicacoes",
-        label: "Publicacoes",
+        label: "Publicações",
         icon: Newspaper,
         match: (pathname) => pathname.startsWith("/admin/publicacoes"),
     },
@@ -73,19 +73,19 @@ const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     },
     {
         href: "/admin/integracoes",
-        label: "Integracoes",
+        label: "Integrações",
         icon: Calendar,
         match: (pathname) => pathname.startsWith("/admin/integracoes"),
     },
     {
         href: "/admin/permissoes",
-        label: "Permissoes",
+        label: "Permissões",
         icon: KeyRound,
         match: (pathname) => pathname.startsWith("/admin/permissoes"),
     },
     {
         href: "/admin/operacoes-juridicas",
-        label: "Operacoes",
+        label: "Operações",
         icon: BarChart3,
         match: (pathname) => pathname.startsWith("/admin/operacoes-juridicas"),
     },
@@ -96,19 +96,19 @@ export function AdminNavigation() {
 
     return (
         <nav
-            aria-label="Navegacao administrativa"
+            aria-label="Navegação administrativa"
             className="glass-card no-lift overflow-hidden border border-border/70"
         >
             <div className="border-b border-border/70 px-5 py-4">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-text-muted">
-                    Modulo administrativo
+                    Módulo administrativo
                 </p>
                 <div className="mt-1">
                     <h1 className="font-display text-xl font-semibold text-text-primary">
-                        Administracao
+                        Administração
                     </h1>
                     <p className="text-sm text-text-muted">
-                        Configuracoes, usuarios, auditoria e operacao interna do escritorio.
+                        Configurações, usuários, auditoria e operação interna do escritório.
                     </p>
                 </div>
             </div>

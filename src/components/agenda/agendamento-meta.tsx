@@ -50,8 +50,8 @@ export const TIPO_META: Record<TipoAgendamento, AgendamentoTipoMeta> = {
         badgeClass: "bg-orange-500/15 text-orange-400 border-orange-500/30",
     },
     AUDIENCIA: {
-        label: "Audiencia",
-        labelPlural: "Audiencias",
+        label: "Audiência",
+        labelPlural: "Audiências",
         icon: Gavel,
         color: "#3b82f6",
         bgClass: "bg-blue-500/15",
@@ -80,8 +80,8 @@ export const TIPO_META: Record<TipoAgendamento, AgendamentoTipoMeta> = {
         badgeClass: "bg-green-500/15 text-green-400 border-green-500/30",
     },
     REUNIAO: {
-        label: "Reuniao",
-        labelPlural: "Reunioes",
+        label: "Reunião",
+        labelPlural: "Reuniões",
         icon: Users,
         color: "#a855f7",
         bgClass: "bg-purple-500/15",
@@ -101,7 +101,7 @@ export const TIPO_META: Record<TipoAgendamento, AgendamentoTipoMeta> = {
     },
     VERIFICACAO: {
         label: "Verificar",
-        labelPlural: "Verificacoes",
+        labelPlural: "Verificações",
         icon: Eye,
         color: "#6b7280",
         bgClass: "bg-gray-500/15",
@@ -110,8 +110,8 @@ export const TIPO_META: Record<TipoAgendamento, AgendamentoTipoMeta> = {
         badgeClass: "bg-gray-500/15 text-gray-400 border-gray-500/30",
     },
     DILIGENCIA: {
-        label: "Diligencia",
-        labelPlural: "Diligencias",
+        label: "Diligência",
+        labelPlural: "Diligências",
         icon: MapPin,
         color: "#14b8a6",
         bgClass: "bg-teal-500/15",
@@ -153,7 +153,7 @@ export const STATUS_META: Record<StatusAgendamento, StatusMeta> = {
         dotClass: "bg-indigo-400",
     },
     CONCLUIDO: {
-        label: "Concluido",
+        label: "Concluído",
         badgeClass: "bg-green-500/15 text-green-400 border-green-500/30",
         dotClass: "bg-green-400",
     },

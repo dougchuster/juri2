@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/actions/auth";
-import { MfaSettingsCard } from "@/components/profile/mfa-settings-card";
+import { ProfileEditor } from "@/components/profile/profile-editor";
+import { db } from "@/lib/db";
 import { getUserMfaState } from "@/lib/dal/mfa";
+import { getFuncionariosPerfisConfig } from "@/lib/services/funcionarios-perfis-config";
 
 export default async function PerfilPage() {
     const session = await getSession();
@@ -9,35 +11,80 @@ export default async function PerfilPage() {
         redirect("/login");
     }
 
-    const state = await getUserMfaState(session.id, session.email, session.role);
+    const [dbUser, perfis, mfaState] = await Promise.all([
+        db.user.findUnique({
+            where: { id: session.id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                avatarUrl: true,
+                isActive: true,
+                lastLoginAt: true,
+                advogado: {
+                    select: {
+                        oab: true,
+                        seccional: true,
+                        especialidades: true,
+                    },
+                },
+            },
+        }),
+        getFuncionariosPerfisConfig(),
+        getUserMfaState(session.id, session.email, session.role),
+    ]);
+
+    if (!dbUser) {
+        redirect("/login");
+    }
+
+    const perfil = perfis.find((item) => item.userId === session.id) || null;
 
     return (
-        <div className="p-6 space-y-6 animate-fade-in">
+        <div className="space-y-6 p-6 animate-fade-in">
             <div>
-                <h1 className="font-display text-2xl font-bold text-text-primary">Meu perfil</h1>
-                <p className="mt-1 text-sm text-text-muted">Gerencie suas configuracoes de acesso e seguranca.</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-text-muted">
+                    Painel principal
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                    <h1 className="font-display text-3xl font-semibold tracking-[-0.04em] text-text-primary">
+                        Meu perfil
+                    </h1>
+                    <span className="rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+                        {dbUser.role}
+                    </span>
+                </div>
+                <p className="mt-2 max-w-3xl text-sm text-text-muted">
+                    Gerencie dados pessoais, informacoes profissionais e seguranca da conta no mesmo fluxo.
+                </p>
             </div>
 
-            <MfaSettingsCard
-                initialState={{
-                    config: state.config
+            <ProfileEditor
+                user={{
+                    ...dbUser,
+                    lastLoginAt: dbUser.lastLoginAt?.toISOString() || null,
+                    perfil,
+                }}
+                mfaInitialState={{
+                    config: mfaState.config
                         ? {
-                            isEnabled: state.config.isEnabled,
-                            enabledAt: state.config.enabledAt?.toISOString() || null,
-                            lastUsedAt: state.config.lastUsedAt?.toISOString() || null,
-                            enforcedByPolicy: state.config.enforcedByPolicy,
+                            isEnabled: mfaState.config.isEnabled,
+                            enabledAt: mfaState.config.enabledAt?.toISOString() || null,
+                            lastUsedAt: mfaState.config.lastUsedAt?.toISOString() || null,
+                            enforcedByPolicy: mfaState.config.enforcedByPolicy,
                         }
                         : null,
-                    pendingSetup: state.pendingSetup
+                    pendingSetup: mfaState.pendingSetup
                         ? {
-                            qrCodeDataUrl: state.pendingSetup.qrCodeDataUrl,
-                            manualKey: state.pendingSetup.manualKey,
-                            expiresAt: state.pendingSetup.expiresAt.toISOString(),
+                            qrCodeDataUrl: mfaState.pendingSetup.qrCodeDataUrl,
+                            manualKey: mfaState.pendingSetup.manualKey,
+                            expiresAt: mfaState.pendingSetup.expiresAt.toISOString(),
                         }
                         : null,
-                    recoveryCodesCount: state.recoveryCodesCount,
-                    enforcedByPolicy: state.config?.enforcedByPolicy ?? false,
-                    trustedDevices: state.trustedDevices.map((device: typeof state.trustedDevices[number]) => ({
+                    recoveryCodesCount: mfaState.recoveryCodesCount,
+                    enforcedByPolicy: mfaState.config?.enforcedByPolicy ?? false,
+                    trustedDevices: mfaState.trustedDevices.map((device) => ({
                         id: device.id,
                         deviceLabel: device.deviceLabel,
                         userAgent: device.userAgent,
@@ -45,7 +92,7 @@ export default async function PerfilPage() {
                         lastUsedAt: device.lastUsedAt.toISOString(),
                         expiresAt: device.expiresAt.toISOString(),
                     })),
-                    securityAlerts: state.securityAlerts.map((alert) => ({
+                    securityAlerts: mfaState.securityAlerts.map((alert) => ({
                         id: alert.id,
                         titulo: alert.titulo,
                         mensagem: alert.mensagem,

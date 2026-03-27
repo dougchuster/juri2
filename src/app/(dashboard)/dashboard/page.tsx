@@ -74,7 +74,7 @@ export default async function DashboardPage() {
     ]);
 
     const { conversations } = await getConversations({ pageSize: 5 });
-    const displayName = session?.name?.split(" ")[0] || "Usuario";
+    const displayName = session?.name?.split(" ")[0] || "Usuário";
     const now = new Date();
 
     const pendingDeadlines = agendaSemana.filter(item => item.tipo === "prazo" && item.status === "PENDENTE").slice(0, 6);
@@ -99,9 +99,9 @@ export default async function DashboardPage() {
 
     const executiveMetrics = [
         { label: "Processos ativos", value: processosAtivos.toString(), detail: "Carteira monitorada em tempo real", trend: "+14.8%", positive: true, icon: Scales },
-        { label: "Atendimentos em andamento", value: atendimentoStats.leads.toString(), detail: "Demandas aguardando proximo toque", trend: "+6.4%", positive: true, icon: Handshake },
+        { label: "Atendimentos em andamento", value: atendimentoStats.leads.toString(), detail: "Demandas aguardando próximo toque", trend: "+6.4%", positive: true, icon: Handshake },
         { label: "Receita a receber", value: `R$ ${finStats.totalReceber.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}`, detail: "Pipeline financeiro projetado", trend: "-2.1%", positive: false, icon: CurrencyDollar },
-        { label: "Contas a pagar", value: `R$ ${finStats.totalPagar.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}`, detail: "Obrigacoes financeiras pendentes", trend: "+2.4%", positive: false, icon: WarningCircle },
+        { label: "Contas a pagar", value: `R$ ${finStats.totalPagar.toLocaleString("pt-BR", { minimumFractionDigits: 0 })}`, detail: "Obrigações financeiras pendentes", trend: "+2.4%", positive: false, icon: WarningCircle },
     ];
 
     return (
@@ -112,20 +112,20 @@ export default async function DashboardPage() {
                     <div className="dashboard-command-card dashboard-metric-card flex flex-col justify-between overflow-hidden rounded-[24px] p-5 sm:p-6 xl:col-span-1 xl:row-span-2">
                         <div>
                             <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.22em] text-[rgba(255,220,190,0.8)]">Command center</p>
-                            <h1 className="font-display text-[22px] font-medium leading-tight tracking-[-0.03em] text-white sm:text-[24px] lg:text-[26px]">Ola, {displayName}</h1>
-                            <p className="mt-2 text-[13px] leading-[1.65] text-[rgba(255,220,190,0.76)]">Uma visao executiva do escritorio com foco em fluxo critico, timing e saude operacional.</p>
+                            <h1 className="font-display text-[22px] font-medium leading-tight tracking-[-0.03em] text-white sm:text-[24px] lg:text-[26px]">Olá, {displayName}</h1>
+                            <p className="mt-2 text-[13px] leading-[1.65] text-[rgba(255,220,190,0.76)]">Uma visão executiva do escritório com foco em fluxo crítico, timing e saúde operacional.</p>
 
                             <div className="mt-6 flex flex-col gap-[2px] overflow-hidden rounded-[18px]">
                                 <div className="dashboard-command-strip flex items-center gap-3 px-5 py-4">
-                                    <span className="text-[13px] font-medium text-[rgba(255,220,190,0.95)]">Publicacoes tratadas hoje</span>
+                                    <span className="text-[13px] font-medium text-[rgba(255,220,190,0.95)]">Publicações tratadas hoje</span>
                                     <span className="ml-auto font-display text-[18px] font-medium text-white">{iaStats.tratadasHoje}</span>
                                 </div>
                                 <div className="dashboard-command-strip flex items-center gap-3 px-5 py-4">
-                                    <span className="text-[13px] font-medium text-[rgba(255,220,190,0.95)]">Pendencias criticas</span>
+                                    <span className="text-[13px] font-medium text-[rgba(255,220,190,0.95)]">Pendências críticas</span>
                                     <span className="ml-auto font-display text-[18px] font-medium text-white">{pendingDeadlines.length}</span>
                                 </div>
                                 <div className="dashboard-command-strip flex items-center gap-3 px-5 py-4">
-                                    <span className="text-[13px] font-medium text-[rgba(255,220,190,0.95)]">Tarefas concluidas</span>
+                                    <span className="text-[13px] font-medium text-[rgba(255,220,190,0.95)]">Tarefas concluídas</span>
                                     <span className="ml-auto font-display text-[18px] font-medium text-white">{agendaSemana.filter(item => item.status === "CONCLUIDO").length}</span>
                                 </div>
                                 <div className="dashboard-command-strip flex items-center gap-3 px-5 py-4">
@@ -162,7 +162,7 @@ export default async function DashboardPage() {
                 <section className="glass-card p-5 sm:p-6">
                     <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
-                            <p className="dashboard-section-kicker mb-2">Fluxo critico da semana</p>
+                            <p className="dashboard-section-kicker mb-2">Fluxo crítico da semana</p>
                             <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[22px]">Prazos pendentes</h2>
                         </div>
                         <Link href="/prazos" className="surface-soft inline-flex h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]">
@@ -196,7 +196,7 @@ export default async function DashboardPage() {
                                     </div>
                                 </Link>
                             );
-                        }) : <div className="rounded-[22px] border border-dashed border-[var(--border-color)] px-5 py-12 text-center text-sm text-[var(--text-muted)]">Nenhum prazo critico pendente nesta janela.</div>}
+                        }) : <div className="rounded-[22px] border border-dashed border-[var(--border-color)] px-5 py-12 text-center text-sm text-[var(--text-muted)]">Nenhum prazo crítico pendente nesta janela.</div>}
                     </div>
 
                     {/* Desktop */}
@@ -226,7 +226,7 @@ export default async function DashboardPage() {
                                             </div>
                                         </Link>
                                     );
-                                }) : <div className="px-5 py-12 text-center text-sm text-[var(--text-muted)]">Nenhum prazo critico pendente nesta janela.</div>}
+                                }) : <div className="px-5 py-12 text-center text-sm text-[var(--text-muted)]">Nenhum prazo crítico pendente nesta janela.</div>}
                             </div>
                         </div>
                     </div>
@@ -238,7 +238,7 @@ export default async function DashboardPage() {
                     <div className="glass-card widget-card p-5 sm:p-6">
                         <div className="mb-5 flex items-center justify-between">
                             <div>
-                                <p className="dashboard-section-kicker mb-2">Comunicacao</p>
+                                <p className="dashboard-section-kicker mb-2">Comunicação</p>
                                 <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[21px]">Conversas recentes</h2>
                             </div>
                             <Link href="/comunicacao" className="text-sm font-semibold text-[var(--text-secondary)] transition-colors hover:text-[var(--accent)]">Abrir inbox</Link>
@@ -277,7 +277,7 @@ export default async function DashboardPage() {
                                         )}
                                     </Link>
                                 );
-                            }) : <div className="surface-soft rounded-[22px] border-dashed px-5 py-10 text-center text-sm text-[var(--text-muted)]">Nenhuma comunicacao recente disponivel.</div>}
+                            }) : <div className="surface-soft rounded-[22px] border-dashed px-5 py-10 text-center text-sm text-[var(--text-muted)]">Nenhuma comunicação recente disponível.</div>}
                         </div>
                     </div>
 
@@ -286,7 +286,7 @@ export default async function DashboardPage() {
                         <div className="glass-card widget-card p-5 sm:p-6">
                             <div className="mb-4 flex items-center justify-between">
                                 <div>
-                                    <p className="dashboard-section-kicker mb-2">Portfolio</p>
+                                    <p className="dashboard-section-kicker mb-2">Portfólio</p>
                                     <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[21px]">Mix da carteira</h2>
                                 </div>
                                 <Sparkle size={18} className="text-[var(--accent)]" />
@@ -314,7 +314,7 @@ export default async function DashboardPage() {
                             <div className="mb-4 flex items-center justify-between">
                                 <div>
                                     <p className="dashboard-section-kicker mb-2">Agenda</p>
-                                    <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[21px]">Proximas audiencias</h2>
+                                    <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[21px]">Próximas audiências</h2>
                                 </div>
                                 <Link href="/agenda" className="text-sm font-semibold text-[var(--text-secondary)] transition-colors hover:text-[var(--accent)]">Ver agenda</Link>
                             </div>
@@ -340,7 +340,7 @@ export default async function DashboardPage() {
                             ) : (
                                 <div className="flex flex-col items-center gap-2 py-6 text-center">
                                     <CalendarCheck size={28} className="text-[var(--text-muted)]" />
-                                    <p className="text-sm text-[var(--text-muted)]">Nenhuma audiencia nesta semana.</p>
+                                    <p className="text-sm text-[var(--text-muted)]">Nenhuma audiência nesta semana.</p>
                                 </div>
                             )}
                         </div>
@@ -359,7 +359,7 @@ export default async function DashboardPage() {
                 <section className="glass-card widget-card p-5 sm:p-6">
                     <div className="mb-5 flex items-center justify-between">
                         <div>
-                            <p className="dashboard-section-kicker mb-2">Execucao pessoal</p>
+                            <p className="dashboard-section-kicker mb-2">Execução pessoal</p>
                             <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[21px]">Minhas tarefas</h2>
                         </div>
                         <CheckSquare className="text-[var(--accent)]" size={18} weight="duotone" />
@@ -382,15 +382,15 @@ export default async function DashboardPage() {
                                     </div>
                                 </div>
                             );
-                        }) : <p className="text-sm text-[var(--text-muted)]">Nenhuma tarefa pendente para voce nesta semana.</p>}
+                        }) : <p className="text-sm text-[var(--text-muted)]">Nenhuma tarefa pendente para você nesta semana.</p>}
                     </div>
                 </section>
 
                 <section className="glass-card widget-card p-5 sm:p-6">
                     <div className="mb-5 flex items-center justify-between">
                         <div>
-                            <p className="dashboard-section-kicker mb-2">Delegacao</p>
-                            <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[21px]">Tarefas distribuidas</h2>
+                            <p className="dashboard-section-kicker mb-2">Delegação</p>
+                            <h2 className="font-display text-[20px] font-medium tracking-[-0.03em] text-[var(--text-primary)] sm:text-[21px]">Tarefas distribuídas</h2>
                         </div>
                         <Link href="/tarefas" className="surface-soft flex h-9 w-9 items-center justify-center rounded-full text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]">
                             <Plus size={16} />

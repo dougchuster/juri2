@@ -30,8 +30,8 @@ export default async function AdminPage({ searchParams }: Props) {
     return (
         <div className="animate-fade-in space-y-6 px-4 py-4 md:px-6 md:py-6">
             <AdminPageHeader
-                title="Administracao"
-                description="Usuarios, permissoes, configuracoes e logs do sistema."
+                title="Administração"
+                description="Usuários, permissões, configurações e logs do sistema."
             />
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

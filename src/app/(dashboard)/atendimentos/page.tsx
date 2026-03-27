@@ -90,17 +90,17 @@ export default async function AtendimentosPage() {
                         <div className="surface-soft rounded-[24px] border border-[var(--border-color)] p-4">
                             <p className="text-[11px] uppercase tracking-[0.18em] text-text-muted">Pipeline aberto</p>
                             <p className="mt-2 font-mono text-2xl font-bold text-text-primary">{stats.pipelineAbertos}</p>
-                            <p className="mt-1 text-xs text-text-muted">Casos em curso antes da contratacao ou encerramento.</p>
+                            <p className="mt-1 text-xs text-text-muted">Casos em curso antes da contratação ou encerramento.</p>
                         </div>
                         <div className="surface-soft rounded-[24px] border border-[var(--border-color)] p-4">
-                            <p className="text-[11px] uppercase tracking-[0.18em] text-text-muted">Area dominante</p>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-text-muted">Área dominante</p>
                             <p className="mt-2 text-base font-semibold text-text-primary">{topArea?.label || "Sem dados"}</p>
-                            <p className="mt-1 text-xs text-text-muted">{topArea ? `${topArea.value} atendimentos mapeados.` : "Classifique as areas juridicas para ver a distribuicao."}</p>
+                            <p className="mt-1 text-xs text-text-muted">{topArea ? `${topArea.value} atendimentos mapeados.` : "Classifique as áreas jurídicas para ver a distribuição."}</p>
                         </div>
                         <div className="surface-soft rounded-[24px] border border-[var(--border-color)] p-4">
                             <p className="text-[11px] uppercase tracking-[0.18em] text-text-muted">SLA de retorno</p>
-                            <p className="mt-2 text-base font-semibold text-text-primary">{stats.alertasPrazo} criticos</p>
-                            <p className="mt-1 text-xs text-text-muted">Prazos vencendo em ate 48h pedem acao imediata.</p>
+                            <p className="mt-2 text-base font-semibold text-text-primary">{stats.alertasPrazo} críticos</p>
+                            <p className="mt-1 text-xs text-text-muted">Prazos vencendo em até 48h pedem ação imediata.</p>
                         </div>
                     </div>
                 </div>
@@ -125,14 +125,14 @@ export default async function AtendimentosPage() {
                 <section className="glass-card rounded-[28px] p-5">
                     <div className="flex items-center justify-between gap-3">
                         <div>
-                            <p className="text-[11px] uppercase tracking-[0.18em] text-text-muted">Distribuicao por area</p>
-                            <h2 className="mt-1 text-lg font-semibold text-text-primary">Areas do direito mais recorrentes</h2>
+                            <p className="text-[11px] uppercase tracking-[0.18em] text-text-muted">Distribuição por área</p>
+                            <h2 className="mt-1 text-lg font-semibold text-text-primary">Áreas do direito mais recorrentes</h2>
                         </div>
                         <Badge variant="muted">{stats.areaDistribution.length} faixas</Badge>
                     </div>
                     <div className="mt-5 space-y-4">
                         {stats.areaDistribution.length === 0 ? (
-                            <p className="text-sm text-text-muted">Nenhuma area juridica classificada ainda.</p>
+                            <p className="text-sm text-text-muted">Nenhuma área jurídica classificada ainda.</p>
                         ) : (
                             stats.areaDistribution.map((item) => (
                                 <div key={item.label} className="space-y-2">
@@ -160,11 +160,11 @@ export default async function AtendimentosPage() {
                             <p className="text-[11px] uppercase tracking-[0.18em] text-text-muted">Equipe</p>
                             <h2 className="mt-1 text-lg font-semibold text-text-primary">Ranking de advogados</h2>
                         </div>
-                        <Badge variant="muted">Conversao</Badge>
+                        <Badge variant="muted">Conversão</Badge>
                     </div>
                     <div className="mt-5 space-y-3">
                         {stats.lawyerRanking.length === 0 ? (
-                            <p className="text-sm text-text-muted">Sem distribuicao por responsavel ainda.</p>
+                            <p className="text-sm text-text-muted">Sem distribuição por responsável ainda.</p>
                         ) : (
                             stats.lawyerRanking.map((item) => (
                                 <div key={item.label} className="surface-soft rounded-[20px] border border-[var(--border-color)] p-4">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -243,7 +243,7 @@ interface Props {
     conversations: ConversationItem[];
     clientes: ClienteOption[];
     templates: Template[];
-    /** "social" = WA+FB+IG, "email" = só e-mail, "all" = todos */
+    /** "social" = WA+FB+IG, "email" = sÃ³ e-mail, "all" = todos */
     mode?: InboxMode;
 }
 
@@ -267,7 +267,7 @@ const WORKSPACE_LOAD_ERROR_MESSAGES = new Set([
     "Falha ao montar workspace da conversa",
     "Falha ao carregar workspace da conversa",
     "Falha de rede ao carregar o cockpit operacional.",
-    "Nao foi possivel carregar o cockpit operacional da conversa.",
+    "NÃ£o foi possÃ­vel carregar o cockpit operacional da conversa.",
 ]);
 
 function getDefaultProcessoId(workspace: Workspace) {
@@ -405,12 +405,12 @@ function colorMix(color: string, percentage: number) {
 }
 
 const CHAT_ATTACHMENT_ACCEPT = "image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv";
-const QUICK_EMOJIS = ["🙂", "👍", "🙏", "✅", "📎", "🎧", "📄", "⚖️"];
+const QUICK_EMOJIS = ["ðŸ™‚", "ðŸ‘", "ðŸ™", "âœ…", "ðŸ“Ž", "ðŸŽ§", "ðŸ“„", "âš–ï¸"];
 
 export function ComunicacaoWorkspace({ conversations: initialConversations, clientes, templates, mode = "all" }: Props) {
-    // ── Inicializar stores Zustand com dados do servidor ──────────────────────
-    // Os stores são a fonte de verdade para Etapa 4 (decomposição).
-    // Por ora inicializam em paralelo com o useState local (migração incremental).
+    // â”€â”€ Inicializar stores Zustand com dados do servidor â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Os stores sÃ£o a fonte de verdade para Etapa 4 (decomposiÃ§Ã£o).
+    // Por ora inicializam em paralelo com o useState local (migraÃ§Ã£o incremental).
     const storeInit = useConversationStore((s) => s.init);
     const storeDebouncedRefresh = useConversationStore((s) => s.debouncedRefresh);
     const storeLoadWorkspace = useWorkspaceStore((s) => s.loadWorkspace);
@@ -421,7 +421,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     const [conversations, setConversations] = useState(initialConversations);
     const [selectedId, setSelectedId] = useState<string | null>(initialConversations[0]?.id || null);
@@ -597,7 +597,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         const payload = await res.json();
         const items: ConversationItem[] = Array.isArray(payload) ? payload : (payload.items || []);
         setConversations(items);
-        // Mantém o store Zustand sincronizado (base para Etapa 4)
+        // MantÃ©m o store Zustand sincronizado (base para Etapa 4)
         useConversationStore.getState().setConversations(items);
         if (!selectedId && items[0]?.id) setSelectedId(items[0].id);
     }, [filter, searchTerm, selectedId]);
@@ -733,7 +733,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         if (!result || !("success" in result) || !result.success) {
             setFeedback({
                 tone: "danger",
-                text: result?.error || "Nao foi possivel carregar o cockpit operacional da conversa.",
+                text: result?.error || "NÃ£o foi possÃ­vel carregar o cockpit operacional da conversa.",
             });
             setWorkspace(null);
             return;
@@ -791,7 +791,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
             dataFatal: "",
         });
         setMeetingForm({
-            titulo: `Reuniao - ${nextWorkspace.conversation.cliente.nome}`,
+            titulo: `ReuniÃ£o - ${nextWorkspace.conversation.cliente.nome}`,
             dataInicio: nextWorkspace.atendimento?.dataReuniao
                 ? new Date(nextWorkspace.atendimento.dataReuniao).toISOString().slice(0, 16)
                 : "",
@@ -843,8 +843,8 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         setWhatsAppState((current) => ({ ...current, syncInProgress: true }));
         try {
             const response = await fetch("/api/comunicacao/whatsapp/sync-history", { method: "POST" });
-            if (!response.ok) throw new Error("Nao foi possivel sincronizar o historico do WhatsApp.");
-            setFeedback({ tone: "success", text: "Historico do WhatsApp sincronizado. Atualizando a conversa..." });
+            if (!response.ok) throw new Error("NÃ£o foi possÃ­vel sincronizar o histÃ³rico do WhatsApp.");
+            setFeedback({ tone: "success", text: "HistÃ³rico do WhatsApp sincronizado. Atualizando a conversa..." });
             await refreshConversations();
             if (selectedIdRef.current) {
                 await loadMessages(selectedIdRef.current);
@@ -853,7 +853,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
         } catch (error) {
             setFeedback({
                 tone: "danger",
-                text: error instanceof Error ? error.message : "Falha ao sincronizar historico do WhatsApp.",
+                text: error instanceof Error ? error.message : "Falha ao sincronizar histÃ³rico do WhatsApp.",
             });
         } finally {
             setWhatsAppState((current) => ({ ...current, syncInProgress: false }));
@@ -1105,7 +1105,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
             recorder.start();
             setRecordingAudio(true);
         } catch {
-            setFeedback({ tone: "danger", text: "Nao foi possivel acessar o microfone." });
+            setFeedback({ tone: "danger", text: "NÃ£o foi possÃ­vel acessar o microfone." });
         }
     }
 
@@ -1536,7 +1536,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                     Assunto do atendimento
                                                 </span>
                                                 <p className="mt-1 flex-1 text-[12px] font-medium leading-5 text-text-secondary">
-                                                    {workspace?.atendimento?.assunto?.trim() || "—"}
+                                                    {workspace?.atendimento?.assunto?.trim() || "â€”"}
                                                 </p>
                                             </div>
                                             <div className="flex h-full min-w-0 flex-col rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
@@ -1546,15 +1546,15 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                 <p className="mt-1 flex-1 break-all text-[12px] font-medium text-text-secondary">
                                                     {selectedConversation.canal === "FACEBOOK_MESSENGER" || selectedConversation.canal === "INSTAGRAM_DM"
                                                         ? "Via " + (selectedConversation.canal === "FACEBOOK_MESSENGER" ? "Facebook Messenger" : "Instagram DM")
-                                                        : (selectedConversation.cliente.whatsapp || selectedConversation.cliente.email || "—")}
+                                                        : (selectedConversation.cliente.whatsapp || selectedConversation.cliente.email || "â€”")}
                                                 </p>
                                             </div>
                                             <div className="flex h-full min-w-0 flex-col rounded-[18px] border border-border bg-[var(--surface-soft)] px-3 py-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
                                                 <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-                                                    Responsavel
+                                                    ResponsÃ¡vel
                                                 </span>
                                                 <p className="mt-1 flex-1 text-[12px] font-medium text-text-secondary">
-                                                    {workspace?.atendimento?.advogado.user.name || "—"}
+                                                    {workspace?.atendimento?.advogado.user.name || "â€”"}
                                                 </p>
                                             </div>
                                         </div>
@@ -1651,7 +1651,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                                             <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-text-muted">E-mail</span>
                                                                             {emailMeta.hasSignature && (
                                                                                 <span className="rounded-full border border-border px-2 py-0.5 text-[9px] font-semibold text-text-muted">
-                                                                                    Assinatura automática
+                                                                                    Assinatura automÃ¡tica
                                                                                 </span>
                                                                             )}
                                                                             {message.status === "FAILED" && (
@@ -1729,7 +1729,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                                                                         <p className="truncate font-medium">{attachment.fileName}</p>
                                                                                         <p className="text-[11px] opacity-75">
                                                                                             {attachment.mimeType}
-                                                                                            {attachment.fileSize ? ` • ${formatFileSize(attachment.fileSize)}` : ""}
+                                                                                            {attachment.fileSize ? ` â€¢ ${formatFileSize(attachment.fileSize)}` : ""}
                                                                                         </p>
                                                                                     </div>
                                                                                     <Download size={14} className="shrink-0 opacity-70" />
@@ -1764,7 +1764,7 @@ export function ComunicacaoWorkspace({ conversations: initialConversations, clie
                                     <div className="mx-auto max-w-[910px]">
                                         {selectedConversation.canal === "WHATSAPP" && !whatsAppState.connected && (
                                             <div className="mb-3 rounded-[20px] border border-warning/20 bg-warning/8 px-4 py-3 text-sm text-warning">
-                                                WhatsApp desconectado. Conecte em Administracao &gt; Comunicacao para enviar mensagens.
+                                                WhatsApp desconectado. Conecte em AdministraÃ§Ã£o &gt; ComunicaÃ§Ã£o para enviar mensagens.
                                             </div>
                                         )}
                                         {showEmojiPanel && (
@@ -2137,7 +2137,7 @@ function NewConversationModal({
                 <div className="flex items-center gap-2 rounded-[18px] border border-success/30 bg-success/8 px-4 py-3 text-sm font-semibold text-success">
                     <MessageCircle size={16} /> WhatsApp
                 </div>
-                <p className="text-xs text-text-muted">Para iniciar uma conversa via Facebook Messenger ou Instagram DM, o contato deve enviar uma mensagem primeiro — você poderá responder diretamente pela caixa de entrada.</p>
+                <p className="text-xs text-text-muted">Para iniciar uma conversa via Facebook Messenger ou Instagram DM, o contato deve enviar uma mensagem primeiro â€” vocÃª poderÃ¡ responder diretamente pela caixa de entrada.</p>
                 {!whatsAppConnected && <div className="rounded-[18px] border border-warning/20 bg-warning/8 px-4 py-3 text-sm text-warning">WhatsApp nao conectado. Conecte em Administracao &gt; Comunicacao para enviar novas mensagens.</div>}
                 <Select label="Cliente" value={clienteId} onChange={(event) => setClienteId(event.target.value)} options={clientes.map((item) => ({ value: item.id, label: item.nome }))} placeholder="Selecione um cliente" />
                 <Select label="Template (opcional)" value={templateName} onChange={(event) => applyTemplate(event.target.value)} options={availableTemplates.map((item) => ({ value: item.name, label: `[${item.category}] ${item.name}` }))} placeholder="Sem template" />
@@ -2153,3 +2153,4 @@ function NewConversationModal({
         </Modal>
     );
 }
+

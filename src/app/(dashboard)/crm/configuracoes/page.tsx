@@ -385,7 +385,7 @@ export default function CRMConfiguracoesPage() {
         return (
             <div className="p-8">
                 <div className="glass-card p-6 text-sm text-danger">
-                    {settingsError || "Nao foi possivel carregar configuracoes do CRM."}
+                    {settingsError || "Não foi possível carregar configurações do CRM."}
                 </div>
             </div>
         );
@@ -397,10 +397,10 @@ export default function CRMConfiguracoesPage() {
                 <div>
                     <h1 className="text-2xl font-bold text-text-primary flex items-center gap-2">
                         <Settings size={22} className="text-accent" />
-                        Configuracoes do CRM
+                        Configurações do CRM
                     </h1>
                     <p className="text-sm text-text-muted mt-1">
-                        SLA, score de leads, atribuicao automatica, origens e funis.
+                        SLA, score de leads, atribuição automática, origens e funis.
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -410,7 +410,7 @@ export default function CRMConfiguracoesPage() {
                     </Button>
                     <Button variant="gradient" className="gap-2" onClick={saveConfig} disabled={saving}>
                         <Save size={16} />
-                        Salvar Configuracoes
+                        Salvar Configurações
                     </Button>
                 </div>
             </div>

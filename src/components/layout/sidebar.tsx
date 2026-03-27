@@ -38,6 +38,7 @@ import { createPortal } from "react-dom";
 
 import { logout } from "@/actions/auth";
 import { useTheme } from "@/components/theme-provider";
+import { PersonAvatar } from "@/components/ui/person-avatar";
 import {
     ADMIN_ITEMS,
     SIDEBAR_COLLAPSED_WIDTH,
@@ -55,7 +56,7 @@ import {
 } from "@/lib/chat/presence-ui";
 import { useChatPresenceStore } from "@/store/use-chat-presence-store";
 import { useInternalChatStore } from "@/store/use-internal-chat-store";
-import { cn, getInitials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 type SidebarUser = {
     id: string;
@@ -114,7 +115,21 @@ const iconMap = {
 } as const;
 
 function getRoleLabel(role?: string) {
-    if (!role) return "Equipe Juridica";
+    if (!role) return "Equipe Jurídica";
+
+    const roleLabels: Record<string, string> = {
+        ADMIN: "Administrador",
+        SOCIO: "Sócio",
+        ADVOGADO: "Advogado",
+        CONTROLADOR: "Controlador",
+        ASSISTENTE: "Assistente",
+        FINANCEIRO: "Financeiro",
+        SECRETARIA: "Secretária",
+    };
+
+    if (roleLabels[role]) {
+        return roleLabels[role];
+    }
 
     return role
         .toLowerCase()
@@ -137,7 +152,6 @@ function SidebarAvatar({
     onClick: () => void;
     buttonRef: React.RefObject<HTMLButtonElement | null>;
 }) {
-    const initials = getInitials(user?.name || "Usuario");
     const meta = CHAT_PRESENCE_STATUS_META[status];
 
     return (
@@ -160,23 +174,11 @@ function SidebarAvatar({
                     "rounded-full"
                 )}
             >
-                {user?.avatarUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                        src={user.avatarUrl}
-                        alt={user.name}
-                        className="h-full w-full object-cover"
-                    />
-                ) : (
-                    <span
-                        className={cn(
-                            "font-semibold tracking-[0.08em] text-[var(--sidebar-avatar-fg)]",
-                            collapsed ? "text-xs" : "text-lg",
-                        )}
-                    >
-                        {initials}
-                    </span>
-                )}
+                <PersonAvatar
+                    name={user?.name || "Usuário"}
+                    avatarUrl={user?.avatarUrl}
+                    className="h-full w-full"
+                />
 
                 <span className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_28%_20%,rgba(255,255,255,0.24),transparent_35%)] opacity-80" />
             </span>
@@ -213,7 +215,7 @@ function StatusMenu({
         {
             value: "ONLINE" as const,
             label: "Online",
-            description: "Disponivel para novas mensagens",
+            description: "Disponível para novas mensagens",
             dotClassName: "bg-emerald-500",
             activeClassName: "border-emerald-400/30 bg-emerald-500/10 text-emerald-50",
         },
@@ -747,7 +749,7 @@ export function Sidebar({
                                 </p>
                                 <div className="h-px w-14 bg-[linear-gradient(90deg,rgba(255,255,255,0.16),rgba(255,255,255,0.03))]" />
                                 <p className="truncate text-[15px] font-medium leading-tight tracking-[-0.01em] text-[var(--sidebar-text)]">
-                                    {user?.name || "Usuario"}
+                                    {user?.name || "Usuário"}
                                 </p>
                             </div>
                             <div className="flex items-center gap-2">
