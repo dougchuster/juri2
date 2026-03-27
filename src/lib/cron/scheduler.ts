@@ -19,8 +19,8 @@
  */
 
 import cron from "node-cron";
+import { buildInternalAppUrl } from "@/lib/runtime/app-url";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 const JOBS_SECRET = process.env.JOBS_SECRET_KEY || "";
 const BOOTSTRAP_GRACE_MS = Number(process.env.SCHEDULER_BOOTSTRAP_GRACE_MS || 30000);
 
@@ -49,7 +49,7 @@ export function initializeScheduler() {
     cron.schedule("*/2 * * * *", async () => {
         if (!canRunScheduledTask("Queue")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/process`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/process"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export function initializeScheduler() {
         if (!canRunScheduledTask("Daily")) return;
         try {
             console.log("[Scheduler] Running daily reminder check...");
-            const res = await fetch(`${APP_URL}/api/jobs/scheduler`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/scheduler"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export function initializeScheduler() {
     cron.schedule("0 13 * * *", async () => {
         if (!canRunScheduledTask("Afternoon")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/scheduler`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/scheduler"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -107,7 +107,7 @@ export function initializeScheduler() {
     cron.schedule("5 * * * *", async () => {
         if (!canRunScheduledTask("Operacoes")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/operacoes`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/operacoes"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -130,7 +130,7 @@ export function initializeScheduler() {
     cron.schedule("20 * * * *", async () => {
         if (!canRunScheduledTask("Publicacoes")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/publicacoes`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/publicacoes"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -153,7 +153,7 @@ export function initializeScheduler() {
     cron.schedule("*/5 * * * *", async () => {
         if (!canRunScheduledTask("Demandas")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/demandas`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/demandas"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -174,7 +174,7 @@ export function initializeScheduler() {
     cron.schedule("*/15 * * * *", async () => {
         if (!canRunScheduledTask("Automacao nacional")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/automacao-nacional`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/automacao-nacional"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -198,7 +198,7 @@ export function initializeScheduler() {
     cron.schedule("40 */6 * * *", async () => {
         if (!canRunScheduledTask("DataJud monitor")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/datajud-monitor`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/datajud-monitor"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -222,7 +222,7 @@ export function initializeScheduler() {
     cron.schedule("10 3 * * *", async () => {
         if (!canRunScheduledTask("DataJud aliases")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/datajud-aliases`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/datajud-aliases"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -246,7 +246,7 @@ export function initializeScheduler() {
     cron.schedule("40 2 * * *", async () => {
         if (!canRunScheduledTask("LGPD retention")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/lgpd-retention`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/lgpd-retention"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -267,7 +267,7 @@ export function initializeScheduler() {
     cron.schedule("15 2 * * *", async () => {
         if (!canRunScheduledTask("BI refresh")) return;
         try {
-            const res = await fetch(`${APP_URL}/api/jobs/bi-refresh`, {
+            const res = await fetch(buildInternalAppUrl("/api/jobs/bi-refresh"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

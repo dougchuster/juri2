@@ -95,7 +95,7 @@ services:
     container_name: juridico-evolution
     restart: unless-stopped
     environment:
-      SERVER_URL: "https://adv.chuster.com.br/evolution"
+      SERVER_URL: ${EVOLUTION_API_URL}
       AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
       DATABASE_ENABLED: "true"
       DATABASE_PROVIDER: "postgresql"
@@ -137,6 +137,7 @@ services:
       - certbot_www:/var/www/certbot:ro
     depends_on:
       - app
+      - evolution-api
     networks:
       - frontend
     healthcheck:

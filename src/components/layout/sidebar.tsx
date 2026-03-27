@@ -687,8 +687,15 @@ export function Sidebar({
 
     return (
         <motion.aside
+            initial={false}
             animate={{ width: currentWidth }}
             transition={{ type: "spring", stiffness: 280, damping: 28 }}
+            style={{
+                width: currentWidth,
+                minWidth: currentWidth,
+                maxWidth: currentWidth,
+                flexShrink: 0,
+            }}
             className={cn(
                 "adv-sidebar relative flex min-h-0 w-full flex-col overflow-visible rounded-[30px] p-2.5 md:p-3",
                 isCollapsed ? "items-center" : "items-stretch",

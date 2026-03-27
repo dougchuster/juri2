@@ -8,6 +8,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { CommandPalette } from "@/components/layout/command-palette";
 import type { ChatPresenceStatus } from "@/lib/chat/presence-ui";
 import { PermissionProvider } from "@/lib/rbac/permission-context";
+import { SIDEBAR_EXPANDED_WIDTH } from "@/lib/constants";
 
 type SidebarUser = {
     id: string;
@@ -56,6 +57,8 @@ export function DashboardShell({
 }: DashboardShellProps) {
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [isCommandOpen, setIsCommandOpen] = useState(false);
+    const [isMobileViewport, setIsMobileViewport] = useState(false);
+    const expandedSidebarWidth = SIDEBAR_EXPANDED_WIDTH + 16;
 
     useEffect(() => {
         function onKeyDown(e: KeyboardEvent) {
@@ -66,6 +69,16 @@ export function DashboardShell({
         }
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
+    }, []);
+
+    useEffect(() => {
+        function syncViewportMode() {
+            setIsMobileViewport(window.matchMedia("(max-width: 767px)").matches);
+        }
+
+        syncViewportMode();
+        window.addEventListener("resize", syncViewportMode);
+        return () => window.removeEventListener("resize", syncViewportMode);
     }, []);
 
     return (
@@ -80,25 +93,24 @@ export function DashboardShell({
                 />
 
                 <div className="adv-dashboard-body relative z-10 mx-auto flex min-h-[calc(100dvh-1.5rem)] w-full items-start gap-3 md:gap-4 xl:gap-6">
-                    <div className="sticky top-4 hidden shrink-0 self-start md:block lg:hidden">
-                        <Sidebar
-                            user={sidebarUser}
-                            navigationPermissions={navigationPermissions}
-                            forceCollapsed
-                            hideCollapseToggle
-                            className="h-[calc(100dvh-2rem)]"
-                        />
-                    </div>
-
-                    <div className="sticky top-5 hidden shrink-0 self-start lg:block">
-                        <Sidebar
-                            user={sidebarUser}
-                            navigationPermissions={navigationPermissions}
-                            forceExpanded
-                            hideCollapseToggle
-                            className="h-[calc(100dvh-2.5rem)]"
-                        />
-                    </div>
+                    {!isMobileViewport ? (
+                        <div
+                            className="sticky top-4 shrink-0 self-start"
+                            style={{
+                                width: expandedSidebarWidth,
+                                minWidth: expandedSidebarWidth,
+                                maxWidth: expandedSidebarWidth,
+                            }}
+                        >
+                            <Sidebar
+                                user={sidebarUser}
+                                navigationPermissions={navigationPermissions}
+                                forceExpanded
+                                hideCollapseToggle
+                                className="h-[calc(100dvh-2rem)] xl:h-[calc(100dvh-2.5rem)]"
+                            />
+                        </div>
+                    ) : null}
 
                     <div className="adv-dashboard-main-frame dashboard-content-frame flex min-w-0 flex-1 flex-col overflow-hidden px-4 py-3 md:px-5 md:py-4 xl:px-8 xl:py-6">
                         <div className="adv-dashboard-main-inner flex min-h-0 w-full flex-1 flex-col">

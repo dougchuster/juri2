@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { buildInternalAppUrl } from "@/lib/runtime/app-url";
 
 export const metadata: Metadata = {
   title: "Detalhes da Organização - Root Admin",
@@ -14,7 +15,7 @@ async function getOrgData(id: string) {
     const sessionToken = cookieStore.get("super_admin_session_token")?.value;
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/root-admin/api/organizacoes/${id}`,
+      buildInternalAppUrl(`/root-admin/api/organizacoes/${id}`),
       {
         cache: "no-store",
         headers: sessionToken ? { Cookie: `super_admin_session_token=${sessionToken}` } : {},
@@ -35,7 +36,7 @@ async function getOrgStats(id: string) {
     const sessionToken = cookieStore.get("super_admin_session_token")?.value;
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/root-admin/api/organizacoes/${id}/stats`,
+      buildInternalAppUrl(`/root-admin/api/organizacoes/${id}/stats`),
       {
         cache: "no-store",
         headers: sessionToken ? { Cookie: `super_admin_session_token=${sessionToken}` } : {},

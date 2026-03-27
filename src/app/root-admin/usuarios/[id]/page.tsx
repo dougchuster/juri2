@@ -2,6 +2,26 @@ import { Metadata } from "next";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { buildInternalAppUrl } from "@/lib/runtime/app-url";
+
+type RootAdminUserDetail = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+  lastLoginAt: string | null;
+  organization?: {
+    id: string;
+    nome: string;
+  } | null;
+  sessions?: Array<{
+    id: string;
+    createdAt: string;
+    ipAddress: string | null;
+  }>;
+};
 
 export const metadata: Metadata = {
   title: "Detalhes do Usuário - Root Admin",
@@ -14,7 +34,7 @@ async function getUserData(id: string) {
     const sessionToken = cookieStore.get("super_admin_session_token")?.value;
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/root-admin/api/usuarios/${id}`,
+      buildInternalAppUrl(`/root-admin/api/usuarios/${id}`),
       {
         cache: "no-store",
         headers: sessionToken ? { Cookie: `super_admin_session_token=${sessionToken}` } : {},
@@ -22,7 +42,7 @@ async function getUserData(id: string) {
     );
 
     if (!res.ok) return null;
-    return res.json();
+    return (await res.json()) as RootAdminUserDetail;
   } catch (error) {
     console.error("[getUserData] Error:", error);
     return null;
@@ -129,7 +149,7 @@ export default async function UserDetailPage({
           <div>
             <h3 className="text-[#e2e8f0] font-semibold mb-4">Sessões Ativas</h3>
             <div className="space-y-2">
-              {user.sessions.map((session: any) => (
+              {user.sessions.map((session) => (
                 <div key={session.id} className="bg-[#252530] rounded-lg p-3 text-sm">
                   <p className="text-[#c7d2e0]">
                     {new Date(session.createdAt).toLocaleString("pt-BR")} —{" "}
