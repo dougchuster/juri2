@@ -226,8 +226,9 @@ export default function UserTable({
         body: JSON.stringify(createForm),
       });
 
+      const body = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
         showToast("error", body?.error || "Falha ao criar usuario.");
         return;
       }
@@ -240,7 +241,12 @@ export default function UserTable({
         organizationId: "",
         sendResetRequest: true,
       });
-      showToast("success", "Usuario criado com sucesso.");
+      showToast(
+        body?.warning ? "error" : "success",
+        body?.warning
+          ? `Usuario criado, mas o e-mail de redefinicao nao foi enviado. ${body.warning}`
+          : "Usuario criado com sucesso."
+      );
       router.refresh();
     } catch (error) {
       console.error("Error creating user:", error);

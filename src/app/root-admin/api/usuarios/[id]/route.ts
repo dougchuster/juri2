@@ -18,7 +18,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { session, error } = await requireSuperAdminApi(request);
+  const { error } = await requireSuperAdminApi(request);
   if (error) return error;
 
   try {
@@ -113,7 +113,14 @@ export async function PATCH(
     };
 
     if (action === "sendResetRequest") {
-      await requestPasswordReset(existing.email);
+      const resetResult = await requestPasswordReset(existing.email);
+      if (resetResult.error) {
+        return NextResponse.json(
+          { error: resetResult.error },
+          { status: 503 }
+        );
+      }
+
       acao = "SOLICITAR_REDEFINICAO_SENHA_USUARIO";
       detalhes = { ...detalhes, sentTo: existing.email };
 

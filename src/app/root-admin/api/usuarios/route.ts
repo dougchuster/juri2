@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireSuperAdminApi } from "@/lib/root-admin/api-auth";
-import { Role } from "@/generated/prisma";
+import { Prisma, Role } from "@/generated/prisma";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { requestPasswordReset } from "@/actions/password-reset";
@@ -15,7 +15,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  const { session, error } = await requireSuperAdminApi(request);
+  const { error } = await requireSuperAdminApi(request);
   if (error) return error;
 
   try {
@@ -27,14 +27,7 @@ export async function GET(request: NextRequest) {
     const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") || 20)));
     const page = Math.max(1, Number(searchParams.get("page") || 1));
 
-    // Build where clause
-    interface UserWhere {
-      AND?: Array<any>;
-      OR?: Array<any>;
-      role?: Role;
-      isActive?: boolean;
-    }
-    const where: UserWhere = {};
+    const where: Prisma.UserWhereInput = {};
 
     if (search) {
       where.OR = [
@@ -138,6 +131,7 @@ export async function POST(request: NextRequest) {
     const role = String(body?.role || "ASSISTENTE").trim();
     const organizationId = body?.organizationId ? String(body.organizationId) : null;
     const sendResetRequest = Boolean(body?.sendResetRequest);
+    let resetRequestError: string | null = null;
 
     if (!name || !email) {
       return NextResponse.json(
@@ -204,7 +198,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (sendResetRequest) {
-      await requestPasswordReset(created.email);
+      const resetResult = await requestPasswordReset(created.email);
+      if (resetResult.error) {
+        resetRequestError = resetResult.error;
+      }
     }
 
     await db.superAdminLog.create({
@@ -216,12 +213,22 @@ export async function POST(request: NextRequest) {
           role: created.role,
           organizationId,
           sendResetRequest,
+          resetRequestError,
         },
         ipAddress: "unknown",
       },
     });
 
-    return NextResponse.json(JSON.parse(JSON.stringify(created)), { status: 201 });
+    return NextResponse.json(
+      JSON.parse(
+        JSON.stringify({
+          ...created,
+          resetRequestSent: sendResetRequest && !resetRequestError,
+          warning: resetRequestError,
+        })
+      ),
+      { status: 201 }
+    );
   } catch (postError) {
     console.error("[POST /usuarios] Error:", postError);
     return NextResponse.json(

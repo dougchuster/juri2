@@ -63,6 +63,39 @@ export interface EmailSenderProfile {
     signatureText: string | null;
 }
 
+function formatEmailError(error: unknown): string {
+    if (!error) return "Unknown error";
+
+    const message = error instanceof Error ? error.message : String(error);
+    if (typeof error !== "object") return message;
+
+    const details: string[] = [];
+    const maybeError = error as {
+        code?: unknown;
+        command?: unknown;
+        response?: unknown;
+        responseCode?: unknown;
+    };
+
+    if (typeof maybeError.code === "string" && maybeError.code.trim()) {
+        details.push(`code=${maybeError.code.trim()}`);
+    }
+
+    if (typeof maybeError.command === "string" && maybeError.command.trim()) {
+        details.push(`command=${maybeError.command.trim()}`);
+    }
+
+    if (typeof maybeError.responseCode === "number") {
+        details.push(`responseCode=${maybeError.responseCode}`);
+    }
+
+    if (typeof maybeError.response === "string" && maybeError.response.trim()) {
+        details.push(maybeError.response.trim());
+    }
+
+    return details.length > 0 ? `${message} (${details.join(" | ")})` : message;
+}
+
 function getDefaultSenderProfile(): EmailSenderProfile {
     return {
         id: "default",
@@ -164,7 +197,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<SendEmailRes
         console.log(`[Email] Sent to ${options.to}: ${info.messageId}`);
         return { ok: true, messageId: info.messageId };
     } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error";
+        const message = formatEmailError(err);
         console.error(`[Email] Send error:`, message);
         return { ok: false, error: message };
     }
@@ -238,7 +271,7 @@ export async function testSmtpConnection(): Promise<{ ok: boolean; error?: strin
         await transporter.verify();
         return { ok: true };
     } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error";
+        const message = formatEmailError(err);
         return { ok: false, error: message };
     }
 }
