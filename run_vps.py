@@ -7,7 +7,7 @@ import io
 if hasattr(sys.stdout, 'buffer'):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-HOST = "82.25.79.50"
+HOST = "187.77.255.211"
 USER = "root"
 PASS = "#147258369@Beserk"
 

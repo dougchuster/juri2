@@ -3,7 +3,7 @@ import tarfile
 import os
 import io
 
-HOST = "82.25.79.50"
+HOST = "187.77.255.211"
 USER = "root"
 PASS = "#147258369@Beserk"
 PROJECT_DIR = r"C:\Users\dougc\Documents\Sistema Juridico ADV"

@@ -1,43 +1,45 @@
 #!/bin/bash
 # =============================================================================
-# VPS-UPDATE.SH — Atualização rápida de código (sem recriar banco/Docker)
-# Execute na VPS: bash /var/www/sistema-juridico/scripts/vps-update.sh
+# VPS-UPDATE.SH - Atualizacao rapida no servidor de producao
+# Execute na VPS: bash /var/www/adv/scripts/vps-update.sh
 # =============================================================================
 
-set -e
+set -euo pipefail
 
-APP_DIR="/var/www/sistema-juridico"
-GREEN='\033[0;32m'; CYAN='\033[0;36m'; NC='\033[0m'
+APP_DIR="/var/www/adv"
+COMPOSE_FILE="docker-compose.prod.yml"
+
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
 log()  { echo -e "${GREEN}[OK]${NC} $1"; }
 info() { echo -e "${CYAN}[--]${NC} $1"; }
 
-echo -e "${CYAN}=== SISTEMA JURIDICO — UPDATE ===${NC}"
+echo -e "${CYAN}=== SISTEMA JURIDICO - UPDATE ===${NC}"
 
 cd "$APP_DIR"
 
-info "Puxando código novo..."
-git fetch --all
+info "Puxando codigo novo..."
+git fetch origin main
 git reset --hard origin/main
-log "Código atualizado"
+log "Codigo atualizado"
 
-info "Instalando dependências..."
-npm ci --prefer-offline 2>/dev/null || npm install
-log "npm install OK"
-
-info "Gerando Prisma + migrations..."
-npx prisma generate
-npx prisma migrate deploy
-log "Prisma OK"
-
-info "Buildando..."
-npm run build
+info "Buildando app e worker..."
+docker compose --env-file .env.production -f "$COMPOSE_FILE" build --parallel app worker
 log "Build OK"
 
-info "Reiniciando PM2..."
-pm2 restart all
-log "PM2 reiniciado"
+info "Aplicando migrations..."
+docker compose --env-file .env.production -f "$COMPOSE_FILE" run --rm \
+  --entrypoint "" app \
+  sh -lc "npx prisma migrate deploy"
+log "Prisma OK"
+
+info "Subindo servicos..."
+docker compose --env-file .env.production -f "$COMPOSE_FILE" up -d --no-deps app worker evolution-api nginx
+log "Containers atualizados"
 
 echo ""
-pm2 status
+docker compose --env-file .env.production -f "$COMPOSE_FILE" ps
 echo ""
-echo -e "${GREEN}Update concluído!${NC}"
+echo -e "${GREEN}Update concluido!${NC}"

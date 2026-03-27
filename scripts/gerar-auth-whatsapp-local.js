@@ -64,9 +64,9 @@ async function connect() {
       console.log('PRÓXIMO PASSO: Envie os arquivos para o VPS:');
       console.log('─────────────────────────────────────────────');
       console.log('\n  1. Copie a pasta whatsapp-auth-local/ para o VPS:');
-      console.log('     scp -r whatsapp-auth-local/ root@82.25.79.50:/tmp/wa-auth/\n');
+      console.log('     scp -r whatsapp-auth-local/ root@187.77.255.211:/tmp/wa-auth/\n');
       console.log('  2. No VPS, mova para o volume do Evolution API:');
-      console.log('     ssh root@82.25.79.50');
+      console.log('     ssh root@187.77.255.211');
       console.log('     docker exec juridico-evolution mkdir -p /evolution/instances/juridico-adv');
       console.log('     docker cp /tmp/wa-auth/. juridico-evolution:/evolution/instances/juridico-adv/\n');
       console.log('  3. Reinicie o Evolution API:');

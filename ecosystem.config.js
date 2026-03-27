@@ -1,4 +1,4 @@
-// PM2 Ecosystem — Sistema Juridico ADV
+// PM2 Ecosystem - Sistema Juridico ADV
 // Uso: pm2 start ecosystem.config.js
 module.exports = {
   apps: [
@@ -6,7 +6,7 @@ module.exports = {
       name: 'sistema-juridico',
       script: 'npm',
       args: 'start',
-      cwd: '/var/www/sistema-juridico',
+      cwd: '/var/www/adv',
       instances: 1,
       autorestart: true,
       watch: false,
@@ -23,7 +23,7 @@ module.exports = {
       name: 'sistema-juridico-worker',
       script: 'npm',
       args: 'run worker:start',
-      cwd: '/var/www/sistema-juridico',
+      cwd: '/var/www/adv',
       instances: 1,
       autorestart: true,
       watch: false,

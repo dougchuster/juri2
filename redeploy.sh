@@ -1,53 +1,50 @@
 #!/usr/bin/env bash
 # =================================================================
-# redeploy.sh — Update rápido após o primeiro deploy
+# redeploy.sh - Update rapido no servidor de producao
 # Uso: bash redeploy.sh
-# Sincroniza código, rebuild e restart sem reconfigurar SSL/domínio
+# Atualiza o codigo no servidor, executa migrations e reinicia
+# os servicos dockerizados da aplicacao.
 # =================================================================
 
 set -euo pipefail
 
-VPS_IP="82.25.79.50"
+VPS_IP="187.77.255.211"
 VPS_USER="root"
-VPS_DIR="/opt/juridico"
+VPS_DIR="/var/www/adv"
 SSH_TARGET="${VPS_USER}@${VPS_IP}"
 COMPOSE_FILE="docker-compose.prod.yml"
 
-GREEN='\033[0;32m'; BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m'
+
 log() { echo -e "${BLUE}[redeploy]${NC} $*"; }
-ok()  { echo -e "${GREEN}[✔]${NC} $*"; }
+ok() { echo -e "${GREEN}[ok]${NC} $*"; }
 
-echo -e "${BOLD}[redeploy] Sistema Jurídico ADV — Update rápido${NC}"
+echo -e "${BOLD}[redeploy] Sistema Juridico ADV - update rapido${NC}"
 
-# 1. Sync
-log "Sincronizando código..."
-rsync -az --delete \
-  --exclude='.git' --exclude='node_modules' --exclude='.next' \
-  --exclude='.env*' --exclude='public/uploads' --exclude='.agent' \
-  --info=progress2 \
-  ./ "${SSH_TARGET}:${VPS_DIR}/"
-ok "Código sincronizado"
-
-# 2. Build + restart
-log "Rebuild e restart dos containers..."
-ssh "${SSH_TARGET}" bash << 'EOF'
+ssh "${SSH_TARGET}" bash << EOF
 set -euo pipefail
-cd /opt/juridico
-docker compose --env-file .env.production -f docker-compose.prod.yml build --parallel app worker
-docker compose --env-file .env.production -f docker-compose.prod.yml up -d --no-deps app worker
-echo "[vps] Containers atualizados"
-docker compose --env-file .env.production -f docker-compose.prod.yml ps
-EOF
+cd "${VPS_DIR}"
 
-# 3. Migrations (se houver novas)
-log "Verificando migrations..."
-sleep 5
-ssh "${SSH_TARGET}" bash << 'EOF'
-set -euo pipefail
-cd /opt/juridico
-docker compose --env-file .env.production -f docker-compose.prod.yml run --rm \
+echo "[vps] Atualizando repositorio..."
+git fetch origin main
+git reset --hard origin/main
+
+echo "[vps] Buildando app e worker..."
+docker compose --env-file .env.production -f "${COMPOSE_FILE}" build --parallel app worker
+
+echo "[vps] Aplicando migrations..."
+docker compose --env-file .env.production -f "${COMPOSE_FILE}" run --rm \
   --entrypoint "" app \
-  sh -c "npx prisma migrate deploy && echo 'Migrations OK'"
+  sh -lc 'npx prisma migrate deploy'
+
+echo "[vps] Subindo servicos..."
+docker compose --env-file .env.production -f "${COMPOSE_FILE}" up -d --no-deps app worker evolution-api nginx
+
+echo "[vps] Status final"
+docker compose --env-file .env.production -f "${COMPOSE_FILE}" ps
 EOF
 
-ok "Redeploy concluído"
+ok "Redeploy concluido"
