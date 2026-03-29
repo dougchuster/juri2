@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { X } from "@phosphor-icons/react";
 
+import { SidebarErrorBoundary } from "@/components/layout/sidebar-error-boundary";
+import { SidebarFallback } from "@/components/layout/sidebar-fallback";
 import { Sidebar } from "@/components/layout/sidebar";
 
 type MobileSidebarProps = {
@@ -68,14 +70,26 @@ export function MobileSidebar({ open, onOpenChange, navigationPermissions, user 
                                 <X size={18} weight="bold" />
                             </button>
 
-                            <Sidebar
-                                user={user}
-                                navigationPermissions={navigationPermissions}
-                                forceExpanded
-                                hideCollapseToggle
-                                className="h-full w-full"
-                                onNavigate={() => onOpenChange(false)}
-                            />
+                            <SidebarErrorBoundary
+                                resetKey={`${user.id}:${navigationPermissions.join("|")}`}
+                                fallback={(
+                                    <SidebarFallback
+                                        user={user}
+                                        navigationPermissions={navigationPermissions}
+                                        className="h-full w-full"
+                                        onNavigate={() => onOpenChange(false)}
+                                    />
+                                )}
+                            >
+                                <Sidebar
+                                    user={user}
+                                    navigationPermissions={navigationPermissions}
+                                    forceExpanded
+                                    hideCollapseToggle
+                                    className="h-full w-full"
+                                    onNavigate={() => onOpenChange(false)}
+                                />
+                            </SidebarErrorBoundary>
                         </motion.div>
                     </>
                 ) : null}
