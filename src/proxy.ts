@@ -61,7 +61,8 @@ export default function proxy(request: NextRequest) {
         pathname.startsWith("/favicon") ||
         pathname.startsWith("/icons") ||
         pathname.startsWith("/images") ||
-        pathname.startsWith("/uploads")
+        pathname.startsWith("/uploads") ||
+        pathname === "/manifest.webmanifest"
     ) {
         return nextResponse();
     }

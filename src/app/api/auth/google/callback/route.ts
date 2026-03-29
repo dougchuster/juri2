@@ -1,4 +1,3 @@
-import { google } from "googleapis";
 import { NextRequest, NextResponse } from "next/server";
 import {
     buildLoginErrorUrl,
@@ -6,6 +5,7 @@ import {
     resolveOAuthLogin,
     validateOAuthState,
 } from "@/lib/auth/oauth-login";
+import { exchangeGoogleCodeForEmail, isGoogleOAuthConfigured } from "@/lib/auth/google-oauth";
 
 export const runtime = "nodejs";
 
@@ -23,24 +23,12 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(buildLoginErrorUrl("Falha ao validar o login com Google."));
     }
 
-    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    if (!isGoogleOAuthConfigured()) {
         return NextResponse.redirect(buildLoginErrorUrl("Google login nao configurado."));
     }
 
     try {
-        const redirectUri = `${getAppBaseUrl()}/api/auth/google/callback`;
-        const oauth2Client = new google.auth.OAuth2(
-            process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
-            redirectUri,
-        );
-
-        const { tokens } = await oauth2Client.getToken(code);
-        oauth2Client.setCredentials(tokens);
-
-        const oauth2 = google.oauth2({ version: "v2", auth: oauth2Client });
-        const profile = await oauth2.userinfo.get();
-        const email = profile.data.email?.trim();
+        const email = await exchangeGoogleCodeForEmail(code);
 
         if (!email) {
             return NextResponse.redirect(buildLoginErrorUrl("Nao foi possivel obter o e-mail da conta Google."));
