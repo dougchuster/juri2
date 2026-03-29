@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
   },
   serverExternalPackages: [
     "node-cron",
+    "bullmq",
     "@whiskeysockets/baileys",
     "qrcode",
     "pino",

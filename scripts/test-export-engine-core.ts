@@ -1,5 +1,5 @@
 import { strict as assert } from "node:assert";
-import XLSX from "xlsx";
+import * as XLSX from "xlsx";
 
 import {
     buildCsvExport,
