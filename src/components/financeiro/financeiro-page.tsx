@@ -42,6 +42,9 @@ export async function FinanceiroPageContent({
             userId: session?.id,
             role: session?.role,
             advogadoId: session?.advogado?.id,
+        },
+        {
+            includeReguaCobranca: section === "configuracoes",
         }
     );
 

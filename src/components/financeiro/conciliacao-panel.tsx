@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
     CheckCircle, XCircle, Upload, Loader2, AlertCircle,
-    ChevronDown, ChevronUp, Trash2, RotateCcw, TrendingUp,
+    ChevronDown, ChevronUp, Trash2, TrendingUp,
     TrendingDown, Link2, Unlink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { importarExtrato, conciliarItem, desconciliarItem, excluirExtrato } from "@/actions/conciliacao";
+import { parseExtratoFileContent, type ExtratoImportItem } from "@/lib/services/ofx-parser";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -62,7 +63,7 @@ interface Stats {
 }
 
 interface Props {
-    extratos: (ExtratoView & { _count: { itens: number }; itens: { id: string }[] })[];
+    extratos: (ExtratoView & { _count: { itens: number } })[];
     lancamentosNaoConciliados: Lancamento[];
     stats: Stats;
 }
@@ -80,30 +81,42 @@ function fmtDate(d: string | null): string {
 
 // ─── CSV Parser ───────────────────────────────────────────────────────────────
 
-function parseCSV(text: string) {
-    const lines = text.trim().split(/\r?\n/).filter(Boolean);
-    const itens: Array<{ data: string; descricao: string; valor: number }> = [];
+function normalizeText(value: string) {
+    return value
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+}
 
-    for (const line of lines) {
-        const cols = line.split(/[;,]/).map((c) => c.trim().replace(/^"|"$/g, ""));
-        if (cols.length < 3) continue;
-        const rawDate = cols[0];
-        const descricao = cols[1];
-        const rawValor = cols[2].replace(".", "").replace(",", ".");
-        const valor = parseFloat(rawValor);
+function similarityScore(item: ExtratoItemView, lancamento: Lancamento) {
+    const itemValue = Number(item.valor);
+    const launchValue = Number(lancamento.valorReal ?? lancamento.valorPrevisto ?? 0);
+    const diffValue = Math.abs(itemValue - launchValue);
+    const itemDate = new Date(item.data).getTime();
+    const launchDate = new Date(lancamento.dataPagamento || lancamento.dataCompetencia).getTime();
+    const diffDays = Math.abs(itemDate - launchDate) / (1000 * 60 * 60 * 24);
+    const itemText = normalizeText(item.descricao);
+    const launchText = normalizeText(`${lancamento.descricao} ${lancamento.fornecedorBeneficiario || ""}`);
 
-        // Try to parse common Brazilian date formats: DD/MM/YYYY or YYYY-MM-DD
-        let iso = rawDate;
-        if (/^\d{2}\/\d{2}\/\d{4}$/.test(rawDate)) {
-            const [d, m, y] = rawDate.split("/");
-            iso = `${y}-${m}-${d}`;
-        }
+    let score = 0;
+    if (diffValue <= 0.01) score += 60;
+    else if (diffValue <= 5) score += 35;
+    else if (diffValue <= 20) score += 15;
 
-        if (iso && descricao && !isNaN(valor)) {
-            itens.push({ data: iso, descricao, valor });
-        }
+    if (diffDays <= 1) score += 25;
+    else if (diffDays <= 3) score += 15;
+    else if (diffDays <= 7) score += 8;
+
+    if (
+        itemText &&
+        launchText &&
+        (launchText.includes(itemText.slice(0, Math.min(itemText.length, 12))) ||
+            itemText.includes(launchText.slice(0, Math.min(launchText.length, 12))))
+    ) {
+        score += 15;
     }
-    return itens;
+
+    return score;
 }
 
 // ─── Import Modal ─────────────────────────────────────────────────────────────
@@ -118,7 +131,7 @@ function ModalImportar({ onClose }: { onClose: () => void }) {
     const [dataInicio, setDataInicio] = useState("");
     const [dataFim, setDataFim] = useState("");
     const [saldoInicial, setSaldoInicial] = useState("0");
-    const [preview, setPreview] = useState<ReturnType<typeof parseCSV>>([]);
+    const [preview, setPreview] = useState<ExtratoImportItem[]>([]);
     const [error, setError] = useState("");
 
     function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -127,9 +140,9 @@ function ModalImportar({ onClose }: { onClose: () => void }) {
         const reader = new FileReader();
         reader.onload = (ev) => {
             const text = ev.target?.result as string;
-            const itens = parseCSV(text);
+            const itens = parseExtratoFileContent(file.name, text);
             setPreview(itens);
-            if (itens.length === 0) setError("Nenhuma linha válida encontrada. Formato esperado: data;descricao;valor");
+            if (itens.length === 0) setError("Nenhuma transação válida encontrada. Envie CSV ou OFX com data, descrição e valor.");
             else setError("");
         };
         reader.readAsText(file, "utf-8");
@@ -156,7 +169,7 @@ function ModalImportar({ onClose }: { onClose: () => void }) {
                 <h3 className="font-display text-lg font-bold text-text-primary">Importar Extrato Bancário</h3>
 
                 <div className="rounded-lg border border-accent/20 bg-accent/5 px-4 py-2.5 text-xs text-accent">
-                    Formato CSV: <code>data;descricao;valor</code> — data em DD/MM/AAAA, valor negativo para débito.
+                    Formatos aceitos: <code>CSV</code> ou <code>OFX</code>. No CSV use <code>data;descricao;valor</code>; no OFX a leitura é automática.
                 </div>
 
                 {error && <div className="rounded-lg border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">{error}</div>}
@@ -200,7 +213,7 @@ function ModalImportar({ onClose }: { onClose: () => void }) {
 
                     {/* File upload */}
                     <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1.5">Arquivo CSV *</label>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-text-secondary mb-1.5">Arquivo do extrato *</label>
                         <button type="button" onClick={() => fileRef.current?.click()}
                             className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-bg-secondary py-4 text-sm text-text-muted hover:border-accent hover:text-accent transition-colors">
                             <Upload size={16} />
@@ -245,6 +258,16 @@ export function ConciliacaoPanel({ extratos, lancamentosNaoConciliados, stats }:
     const [showImport, setShowImport] = useState(false);
     const [expandedExtrato, setExpandedExtrato] = useState<string | null>(null);
     const [matchingItem, setMatchingItem] = useState<string | null>(null); // extratoItemId being matched
+    const selectedExtratoItem = useMemo(
+        () => extratos.flatMap((extrato) => extrato.itens).find((item) => item.id === matchingItem) ?? null,
+        [extratos, matchingItem]
+    );
+    const lancamentosOrdenados = useMemo(() => {
+        if (!selectedExtratoItem) return lancamentosNaoConciliados;
+        return [...lancamentosNaoConciliados].sort(
+            (a, b) => similarityScore(selectedExtratoItem, b) - similarityScore(selectedExtratoItem, a)
+        );
+    }, [lancamentosNaoConciliados, selectedExtratoItem]);
 
     async function handleConciliar(extratoItemId: string, lancamentoId: string) {
         startTransition(async () => {
@@ -300,7 +323,7 @@ export function ConciliacaoPanel({ extratos, lancamentosNaoConciliados, stats }:
                 <div className="glass-card p-12 text-center space-y-3">
                     <AlertCircle size={32} className="mx-auto text-text-muted opacity-40" />
                     <p className="text-sm text-text-muted">Nenhum extrato importado.</p>
-                    <p className="text-xs text-text-muted">Importe um arquivo CSV para iniciar a conciliação bancária.</p>
+                    <p className="text-xs text-text-muted">Importe um arquivo CSV ou OFX para iniciar a conciliação bancária.</p>
                 </div>
             ) : (
                 <div className="space-y-3">
@@ -426,14 +449,14 @@ export function ConciliacaoPanel({ extratos, lancamentosNaoConciliados, stats }:
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-border">
-                                {lancamentosNaoConciliados.length === 0 ? (
+                                {lancamentosOrdenados.length === 0 ? (
                                     <tr>
                                         <td colSpan={6} className="px-4 py-8 text-center text-sm text-text-muted">
                                             <CheckCircle size={20} className="mx-auto mb-2 text-success" />
                                             Todos os lançamentos estão conciliados!
                                         </td>
                                     </tr>
-                                ) : lancamentosNaoConciliados.map((lanc) => (
+                                ) : lancamentosOrdenados.map((lanc, index) => (
                                     <tr key={lanc.id} className="hover:bg-bg-tertiary/20 transition-colors group">
                                         <td className="px-4 py-3 text-xs font-mono text-text-muted">{fmtDate(lanc.dataPagamento || lanc.dataCompetencia)}</td>
                                         <td className="px-4 py-3 text-xs text-text-secondary max-w-[180px] truncate">{lanc.descricao}</td>
@@ -456,10 +479,21 @@ export function ConciliacaoPanel({ extratos, lancamentosNaoConciliados, stats }:
                                                 </button>
                                             )}
                                             {matchingItem && !lanc.conciliado && (
-                                                <button onClick={() => handleConciliar(matchingItem, lanc.id)} disabled={isPending}
-                                                    className="flex items-center gap-1 rounded-lg border border-success/40 bg-success/10 px-2.5 py-1 text-[11px] text-success hover:bg-success/20 transition-colors animate-pulse">
-                                                    <Link2 size={11} /> Vincular aqui
-                                                </button>
+                                                <div className="flex items-center justify-end gap-2">
+                                                    {selectedExtratoItem && similarityScore(selectedExtratoItem, lanc) >= 70 ? (
+                                                        <span className="rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
+                                                            Sugestão forte
+                                                        </span>
+                                                    ) : null}
+                                                    <button onClick={() => handleConciliar(matchingItem, lanc.id)} disabled={isPending}
+                                                        className={`flex items-center gap-1 rounded-lg border px-2.5 py-1 text-[11px] transition-colors ${
+                                                            index === 0
+                                                                ? "border-success/40 bg-success/10 text-success hover:bg-success/20"
+                                                                : "border-accent/40 bg-accent/10 text-accent hover:bg-accent/20"
+                                                        }`}>
+                                                        <Link2 size={11} /> {index === 0 ? "Melhor sugestão" : "Vincular aqui"}
+                                                    </button>
+                                                </div>
                                             )}
                                         </td>
                                     </tr>
@@ -473,7 +507,11 @@ export function ConciliacaoPanel({ extratos, lancamentosNaoConciliados, stats }:
             {matchingItem && (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 rounded-2xl border border-accent/30 bg-bg-primary px-5 py-3 shadow-2xl">
                     <Link2 size={15} className="text-accent" />
-                    <span className="text-sm text-text-primary">Selecione um lançamento para vincular ao item do extrato</span>
+                    <span className="text-sm text-text-primary">
+                        {selectedExtratoItem
+                            ? `Selecione um lançamento para ${selectedExtratoItem.descricao} (${currency(selectedExtratoItem.valor)})`
+                            : "Selecione um lançamento para vincular ao item do extrato"}
+                    </span>
                     <button onClick={() => setMatchingItem(null)} className="text-text-muted hover:text-text-primary">
                         <XCircle size={16} />
                     </button>

@@ -11,7 +11,9 @@ import { getFinanceiroStats } from "@/lib/dal/financeiro";
 import { getAtendimentoStats } from "@/lib/dal/atendimentos";
 import { getPublicacaoStats } from "@/lib/dal/publicacoes";
 import { getConversations } from "@/lib/dal/comunicacao";
+import { DashboardLayoutControls } from "@/components/dashboard/dashboard-layout-controls";
 import { Badge } from "@/components/ui/badge";
+import { getDashboardLayout } from "@/lib/services/dashboard-layout";
 import { getInitials } from "@/lib/utils";
 
 function avatarColor(name: string) {
@@ -76,6 +78,7 @@ export default async function DashboardPage() {
     const { conversations } = await getConversations({ pageSize: 5 });
     const displayName = session?.name?.split(" ")[0] || "Usuário";
     const now = new Date();
+    const dashboardLayout = await getDashboardLayout(session?.id);
 
     const pendingDeadlines = agendaSemana.filter(item => item.tipo === "prazo" && item.status === "PENDENTE").slice(0, 6);
     const upcomingAudiencias = agendaSemana.filter(item => item.tipo === "audiencia").slice(0, 5);
@@ -105,10 +108,22 @@ export default async function DashboardPage() {
     ];
 
     return (
-        <div className="grid w-full min-w-0 grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-[minmax(0,1.34fr)_320px] xl:grid-cols-[minmax(0,1.38fr)_340px]">
+        <>
+            <DashboardLayoutControls
+                initialLayout={dashboardLayout}
+                widgets={[
+                    { id: "overview", title: "Resumo executivo", column: "main" },
+                    { id: "critical-deadlines", title: "Prazos pendentes", column: "main" },
+                    { id: "communication-portfolio", title: "Comunicacao, portfolio e audiencias", column: "main" },
+                    { id: "agenda", title: "Agenda lateral", column: "side" },
+                    { id: "my-tasks", title: "Minhas tarefas", column: "side" },
+                    { id: "delegated-tasks", title: "Tarefas distribuidas", column: "side" },
+                ]}
+            />
+            <div className="grid w-full min-w-0 grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-[minmax(0,1.34fr)_320px] xl:grid-cols-[minmax(0,1.38fr)_340px]">
             <div className="flex min-w-0 flex-col gap-4 lg:gap-6">
                 {/* ── Metrics row ── */}
-                <section className="grid grid-cols-1 gap-4 xl:grid-cols-3 xl:grid-rows-2">
+                <section data-dashboard-widget="overview" className="grid grid-cols-1 gap-4 xl:grid-cols-3 xl:grid-rows-2">
                     <div className="dashboard-command-card dashboard-metric-card flex flex-col justify-between overflow-hidden rounded-[24px] p-5 sm:p-6 xl:col-span-1 xl:row-span-2">
                         <div>
                             <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.22em] text-[rgba(255,220,190,0.8)]">Command center</p>
@@ -159,7 +174,7 @@ export default async function DashboardPage() {
                 </section>
 
                 {/* ── Prazos críticos ── */}
-                <section className="glass-card p-5 sm:p-6">
+                <section data-dashboard-widget="critical-deadlines" className="glass-card p-5 sm:p-6">
                     <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                             <p className="dashboard-section-kicker mb-2">Fluxo crítico da semana</p>
@@ -233,7 +248,7 @@ export default async function DashboardPage() {
                 </section>
 
                 {/* ── Conversas + Portfolio / Audiências ── */}
-                <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                <section data-dashboard-widget="communication-portfolio" className="grid grid-cols-1 gap-4 xl:grid-cols-[1.1fr_0.9fr]">
                     {/* Conversas */}
                     <div className="glass-card widget-card p-5 sm:p-6">
                         <div className="mb-5 flex items-center justify-between">
@@ -350,13 +365,15 @@ export default async function DashboardPage() {
 
             {/* ── Right sidebar ── */}
             <div className="flex flex-col gap-5">
-                <DashboardAgendaPanel
-                    items={JSON.parse(JSON.stringify(calendarItems))}
-                    advogados={JSON.parse(JSON.stringify(advogados))}
-                    defaultAdvogadoId={scopedAdvogadoId || undefined}
-                />
+                <div data-dashboard-widget="agenda">
+                    <DashboardAgendaPanel
+                        items={JSON.parse(JSON.stringify(calendarItems))}
+                        advogados={JSON.parse(JSON.stringify(advogados))}
+                        defaultAdvogadoId={scopedAdvogadoId || undefined}
+                    />
+                </div>
 
-                <section className="glass-card widget-card p-5 sm:p-6">
+                <section data-dashboard-widget="my-tasks" className="glass-card widget-card p-5 sm:p-6">
                     <div className="mb-5 flex items-center justify-between">
                         <div>
                             <p className="dashboard-section-kicker mb-2">Execução pessoal</p>
@@ -386,7 +403,7 @@ export default async function DashboardPage() {
                     </div>
                 </section>
 
-                <section className="glass-card widget-card p-5 sm:p-6">
+                <section data-dashboard-widget="delegated-tasks" className="glass-card widget-card p-5 sm:p-6">
                     <div className="mb-5 flex items-center justify-between">
                         <div>
                             <p className="dashboard-section-kicker mb-2">Delegação</p>
@@ -413,6 +430,7 @@ export default async function DashboardPage() {
                     </div>
                 </section>
             </div>
-        </div>
+            </div>
+        </>
     );
 }

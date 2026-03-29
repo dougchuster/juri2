@@ -11,6 +11,7 @@ import { storeWhatsAppMediaFile } from "@/lib/whatsapp/media-storage";
 import type { WhatsAppMediaDescriptor } from "@/lib/whatsapp/media-utils";
 import { processMeetingReplyFromConversation } from "@/lib/services/meeting-automation-service";
 import { scheduleAttendanceAutomationForInboundMessage } from "@/lib/services/attendance-automation";
+import { runJuribotForInboundMessage } from "@/lib/whatsapp/chatbot/juribot-engine";
 import {
   emitCommunicationMessageCreated,
   emitCommunicationMessageStatusUpdated,
@@ -280,22 +281,45 @@ async function processIncomingMessage(msg: {
     await ensureMessageAttachment(createdMessage.id, msg.media, msg.rawMessage);
   }
 
+  let juribotHandled = false;
   if (!isHistorical && msg.content?.trim()) {
+    let meetingReplyApplied = false;
     try {
-      await processMeetingReplyFromConversation(conversation.id, msg.content);
+      const meetingReplyResult = await processMeetingReplyFromConversation(conversation.id, msg.content);
+      meetingReplyApplied = meetingReplyResult.applied;
     } catch (meetingReplyError) {
       console.error("[WhatsApp Handler] Error processing meeting reply:", meetingReplyError);
     }
 
-    try {
+    if (!meetingReplyApplied) {
+      try {
+        const juribotResult = await runJuribotForInboundMessage({
+          conversationId: conversation.id,
+          clienteId,
+          incomingText: msg.content,
+          dispatchReply: true,
+        });
+        juribotHandled = juribotResult.handled;
+      } catch (juribotError) {
+        console.error("[WhatsApp Handler] Error running JuriBot:", juribotError);
+      }
+    }
+
+    if (!meetingReplyApplied && !juribotHandled) {
+      try {
         await scheduleAttendanceAutomationForInboundMessage({
           conversationId: conversation.id,
           messageId: createdMessage.id,
           incomingText: msg.content,
           source: "baileys",
         });
-    } catch (automationError) {
-      console.error("[WhatsApp Handler] Error running attendance automation:", automationError);
+      } catch (automationError) {
+        console.error("[WhatsApp Handler] Error running attendance automation:", automationError);
+      }
+    }
+
+    if (juribotHandled) {
+      console.log(`[WhatsApp Handler] JuriBot handled inbound for conversation ${conversation.id}`);
     }
   }
 
@@ -342,7 +366,7 @@ async function processIncomingMessage(msg: {
             where: { name: "auto_ack_whatsapp", isActive: true },
           });
 
-      if (autoAckTemplate && !automationPaused) {
+      if (autoAckTemplate && !automationPaused && !juribotHandled) {
         const lastAutoAck = await db.message.findFirst({
           where: {
             conversationId: conversation.id,

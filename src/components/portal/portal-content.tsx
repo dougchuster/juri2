@@ -1,90 +1,53 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-    Scale,
-    FileText,
-    DollarSign,
-    Calendar,
-    Clock,
-    CheckCircle,
-    XCircle,
     AlertCircle,
-    Loader2,
-    QrCode,
-    ExternalLink,
+    Calendar,
+    CheckCircle,
+    Clock,
     Copy,
+    CreditCard,
+    DollarSign,
+    ExternalLink,
+    FileText,
+    Loader2,
+    MessageSquare,
+    QrCode,
+    Scale,
+    Sparkles,
+    XCircle,
 } from "lucide-react";
 
-// ─── Tipos ─────────────────────────────────────────────────────────────────
+import { PortalAgenda } from "@/components/portal/portal-agenda";
+import { PortalComunicacao } from "@/components/portal/portal-comunicacao";
+import { PortalDocumentos } from "@/components/portal/portal-documentos";
+import { PortalNotificacoes } from "@/components/portal/portal-notificacoes";
+import type { PortalExpandedData, PortalFaturaItem, PortalProcessoItem } from "@/lib/services/portal-service";
 
-interface Agendamento {
-    id: string;
-    tipo: string;
-    titulo: string;
-    dataInicio: string;
-    local: string | null;
-}
+type AbaPortal =
+    | "processos"
+    | "agenda"
+    | "documentos"
+    | "comunicacao"
+    | "faturas"
+    | "notificacoes";
 
-interface Processo {
-    id: string;
-    numeroCnj: string | null;
-    status: string;
-    resultado: string;
-    valorCausa: number | null;
-    dataDistribuicao: string | null;
-    dataEncerramento: string | null;
-    objeto: string | null;
-    vara: string | null;
-    comarca: string | null;
-    tribunal: string | null;
-    advogado: { oab: string; user: { name: string } };
-    tipoAcao: { nome: string } | null;
-    agendamentos: Agendamento[];
-}
+const fmtMoeda = (value: number) =>
+    value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-interface Fatura {
-    id: string;
-    numero: string;
-    status: "PENDENTE" | "PAGA" | "ATRASADA" | "CANCELADA";
-    valorTotal: number;
-    dataEmissao: string;
-    dataVencimento: string;
-    dataPagamento: string | null;
-    descricao: string | null;
-    boletoUrl: string | null;
-    pixCode: string | null;
-    gatewayId: string | null;
-}
-
-interface PortalData {
-    cliente: { id: string; nome: string; email: string | null };
-    resumo: {
-        totalProcessos: number;
-        processosAtivos: number;
-        processosEncerrados: number;
-        totalPago: number;
-        totalPendente: number;
-        faturasPendentes: number;
-    };
-    processos: Processo[];
-    faturas: Fatura[];
-}
-
-// ─── Helpers ───────────────────────────────────────────────────────────────
-
-const fmtMoeda = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-const fmtData = (d: string) => new Date(d).toLocaleDateString("pt-BR");
+const fmtData = (value: string) =>
+    new Date(value).toLocaleDateString("pt-BR");
 
 const STATUS_PROCESSO: Record<string, { label: string; color: string }> = {
-    EM_ANDAMENTO: { label: "Em Andamento", color: "bg-blue-100 text-blue-700" },
+    EM_ANDAMENTO: { label: "Em andamento", color: "bg-blue-100 text-blue-700" },
     ENCERRADO: { label: "Encerrado", color: "bg-gray-100 text-gray-600" },
     ARQUIVADO: { label: "Arquivado", color: "bg-gray-100 text-gray-500" },
     AJUIZADO: { label: "Ajuizado", color: "bg-purple-100 text-purple-700" },
-    AUDIENCIA_MARCADA: { label: "Audiência Marcada", color: "bg-orange-100 text-orange-700" },
-    SENTENCA: { label: "Sentença", color: "bg-indigo-100 text-indigo-700" },
+    AUDIENCIA_MARCADA: { label: "Audiencia marcada", color: "bg-orange-100 text-orange-700" },
+    SENTENCA: { label: "Sentenca", color: "bg-indigo-100 text-indigo-700" },
     RECURSO: { label: "Recurso", color: "bg-yellow-100 text-yellow-700" },
-    EXECUCAO: { label: "Execução", color: "bg-red-100 text-red-700" },
+    EXECUCAO: { label: "Execucao", color: "bg-red-100 text-red-700" },
 };
 
 const STATUS_FATURA: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
@@ -94,40 +57,59 @@ const STATUS_FATURA: Record<string, { label: string; icon: React.ReactNode; colo
     CANCELADA: { label: "Cancelada", icon: <XCircle className="h-3.5 w-3.5" />, color: "bg-gray-100 text-gray-500" },
 };
 
-// ─── Componente principal ───────────────────────────────────────────────────
-
 export function PortalContent({ token }: { token: string }) {
-    const [data, setData] = useState<PortalData | null>(null);
+    const [data, setData] = useState<PortalExpandedData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [abaAtiva, setAbaAtiva] = useState<"processos" | "faturas">("processos");
+    const [abaAtiva, setAbaAtiva] = useState<AbaPortal>("processos");
     const [copiado, setCopiado] = useState<string | null>(null);
+    const [mostrarTextoOriginal, setMostrarTextoOriginal] = useState(false);
 
     const carregar = useCallback(async () => {
         setLoading(true);
+        setError(null);
+
         try {
             const res = await fetch(`/api/portal/dados?token=${encodeURIComponent(token)}`);
             if (!res.ok) {
-                const err = (await res.json()) as { error: string };
+                const err = (await res.json()) as { error?: string };
                 setError(err.error || "Erro ao carregar dados");
                 return;
             }
-            const json = (await res.json()) as PortalData;
+
+            const json = (await res.json()) as PortalExpandedData;
             setData(json);
         } catch {
-            setError("Erro de conexão");
+            setError("Erro de conexao");
         } finally {
             setLoading(false);
         }
     }, [token]);
 
-    useEffect(() => { carregar(); }, [carregar]);
+    useEffect(() => {
+        carregar();
+    }, [carregar]);
 
     async function copiarPix(pixCode: string, faturaId: string) {
         await navigator.clipboard.writeText(pixCode);
         setCopiado(faturaId);
         setTimeout(() => setCopiado(null), 3000);
     }
+
+    const tabs = useMemo(
+        () =>
+            data
+                ? [
+                    { id: "processos" as const, label: "Processos", icon: <Scale className="h-4 w-4" />, count: data.processos.length },
+                    { id: "agenda" as const, label: "Agenda", icon: <Calendar className="h-4 w-4" />, count: data.agenda.filter((item) => !item.isPast).length },
+                    { id: "documentos" as const, label: "Documentos", icon: <FileText className="h-4 w-4" />, count: data.documentos.length },
+                    { id: "comunicacao" as const, label: "Comunicacao", icon: <MessageSquare className="h-4 w-4" />, count: data.comunicacao.totalConversas },
+                    { id: "faturas" as const, label: "Faturas", icon: <CreditCard className="h-4 w-4" />, count: data.faturas.length },
+                    { id: "notificacoes" as const, label: "Notificacoes", icon: <Sparkles className="h-4 w-4" />, count: data.notificacoes.length },
+                ]
+                : [],
+        [data]
+    );
 
     if (loading) {
         return (
@@ -154,126 +136,142 @@ export function PortalContent({ token }: { token: string }) {
         );
     }
 
-    const { cliente, resumo, processos, faturas } = data;
-    const processosAtivos = processos.filter((p) => !["ENCERRADO", "ARQUIVADO"].includes(p.status));
-    const processosEncerrados = processos.filter((p) => ["ENCERRADO", "ARQUIVADO"].includes(p.status));
+    const processosAtivos = data.processos.filter((processo) => !["ENCERRADO", "ARQUIVADO"].includes(processo.status));
+    const processosEncerrados = data.processos.filter((processo) => ["ENCERRADO", "ARQUIVADO"].includes(processo.status));
+    const proximosCompromissos = data.agenda.filter((item) => !item.isPast).slice(0, 5);
+    const existemTraducoes = data.processos.some((processo) => {
+        const resumo = processo.ultimaMovimentacao;
+        return resumo && resumo.resumoOriginal !== resumo.resumoSimplificado;
+    }) || data.notificacoes.some((item) => item.descricaoOriginal && item.descricaoOriginal !== item.descricao);
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-            {/* Header */}
             <header className="bg-[#1e3a5f] shadow-md">
-                <div className="mx-auto max-w-5xl px-4 py-5 sm:px-6">
+                <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
                     <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
                             <Scale className="h-6 w-6 text-white" />
                         </div>
                         <div>
                             <h1 className="text-lg font-bold text-white">Portal do Cliente</h1>
-                            <p className="text-sm text-blue-200">Olá, {cliente.nome}</p>
+                            <p className="text-sm text-blue-200">Ola, {data.cliente.nome}</p>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-                {/* Cards de resumo */}
-                <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+                <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-6">
                     <SummaryCard
                         icon={<Scale className="h-5 w-5 text-blue-600" />}
-                        label="Processos Ativos"
-                        value={resumo.processosAtivos}
+                        label="Processos ativos"
+                        value={data.resumo.processosAtivos}
                         color="bg-blue-50 dark:bg-blue-900/20"
                     />
                     <SummaryCard
-                        icon={<CheckCircle className="h-5 w-5 text-green-600" />}
-                        label="Encerrados"
-                        value={resumo.processosEncerrados}
-                        color="bg-green-50 dark:bg-green-900/20"
+                        icon={<Calendar className="h-5 w-5 text-orange-600" />}
+                        label="Compromissos"
+                        value={data.resumo.proximosCompromissos}
+                        color="bg-orange-50 dark:bg-orange-900/20"
                     />
                     <SummaryCard
-                        icon={<DollarSign className="h-5 w-5 text-emerald-600" />}
-                        label="Total Pago"
-                        value={fmtMoeda(resumo.totalPago)}
+                        icon={<FileText className="h-5 w-5 text-indigo-600" />}
+                        label="Documentos"
+                        value={data.resumo.documentosCompartilhados}
+                        color="bg-indigo-50 dark:bg-indigo-900/20"
+                    />
+                    <SummaryCard
+                        icon={<MessageSquare className="h-5 w-5 text-emerald-600" />}
+                        label="Conversas novas"
+                        value={data.resumo.conversasNaoLidas}
                         color="bg-emerald-50 dark:bg-emerald-900/20"
+                    />
+                    <SummaryCard
+                        icon={<CheckCircle className="h-5 w-5 text-green-600" />}
+                        label="Total pago"
+                        value={fmtMoeda(data.resumo.totalPago)}
+                        color="bg-green-50 dark:bg-green-900/20"
                         small
                     />
                     <SummaryCard
-                        icon={<AlertCircle className="h-5 w-5 text-orange-600" />}
-                        label="A Receber"
-                        value={fmtMoeda(resumo.totalPendente)}
-                        color="bg-orange-50 dark:bg-orange-900/20"
+                        icon={<DollarSign className="h-5 w-5 text-amber-600" />}
+                        label="A receber"
+                        value={fmtMoeda(data.resumo.totalPendente)}
+                        color="bg-amber-50 dark:bg-amber-900/20"
                         small
                     />
                 </div>
 
-                {/* Próximos compromissos */}
-                {processosAtivos.some((p) => p.agendamentos.length > 0) && (
+                {proximosCompromissos.length > 0 && (
                     <div className="mb-6 rounded-xl bg-white p-5 shadow-sm dark:bg-gray-900">
                         <h2 className="mb-4 flex items-center gap-2 font-semibold text-gray-900 dark:text-gray-100">
                             <Calendar className="h-5 w-5 text-blue-600" />
-                            Próximos Compromissos
+                            Proximos compromissos
                         </h2>
                         <div className="space-y-2">
-                            {processosAtivos
-                                .flatMap((p) =>
-                                    p.agendamentos.map((a) => ({
-                                        ...a,
-                                        processo: p.numeroCnj || p.id.slice(0, 8),
-                                    }))
-                                )
-                                .slice(0, 5)
-                                .map((ag) => (
-                                    <div
-                                        key={ag.id}
-                                        className="flex items-start gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20"
-                                    >
-                                        <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
-                                        <div className="flex-1 min-w-0">
-                                            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm">
-                                                {ag.titulo}
+                            {proximosCompromissos.map((agendamento) => (
+                                <div
+                                    key={agendamento.id}
+                                    className="flex items-start gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20"
+                                >
+                                    <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            {agendamento.titulo}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            {fmtData(agendamento.dataInicio)}
+                                            {agendamento.local ? ` • ${agendamento.local}` : ""}
+                                        </p>
+                                        {agendamento.processoLabel && (
+                                            <p className="text-xs text-blue-600">
+                                                Proc. {agendamento.processoLabel}
                                             </p>
-                                            <p className="text-xs text-gray-500">
-                                                {fmtData(ag.dataInicio)}
-                                                {ag.local ? ` — ${ag.local}` : ""}
-                                            </p>
-                                            <p className="text-xs text-blue-600">Proc. {ag.processo}</p>
-                                        </div>
+                                        )}
                                     </div>
-                                ))}
+                                </div>
+                            ))}
                         </div>
                     </div>
                 )}
 
-                {/* Abas */}
                 <div className="rounded-xl bg-white shadow-sm dark:bg-gray-900">
-                    <div className="border-b border-gray-200 dark:border-gray-700">
-                        <div className="flex">
-                            {(["processos", "faturas"] as const).map((aba) => (
+                    <div className="flex flex-col gap-3 border-b border-gray-200 p-4 dark:border-gray-700 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex flex-wrap gap-2">
+                            {tabs.map((tab) => (
                                 <button
-                                    key={aba}
-                                    onClick={() => setAbaAtiva(aba)}
-                                    className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-colors ${
-                                        abaAtiva === aba
-                                            ? "border-blue-600 text-blue-600"
-                                            : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                                    key={tab.id}
+                                    onClick={() => setAbaAtiva(tab.id)}
+                                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                                        abaAtiva === tab.id
+                                            ? "border-blue-600 bg-blue-50 text-blue-700"
+                                            : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:border-gray-700 dark:hover:text-gray-200"
                                     }`}
                                 >
-                                    {aba === "processos" ? (
-                                        <><Scale className="h-4 w-4" /> Processos ({processos.length})</>
-                                    ) : (
-                                        <><FileText className="h-4 w-4" /> Faturas ({faturas.length})</>
-                                    )}
+                                    {tab.icon}
+                                    {tab.label} ({tab.count})
                                 </button>
                             ))}
                         </div>
+
+                        {existemTraducoes && (abaAtiva === "processos" || abaAtiva === "notificacoes") && (
+                            <button
+                                onClick={() => setMostrarTextoOriginal((current) => !current)}
+                                className="inline-flex items-center gap-2 rounded-md bg-gray-100 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200"
+                            >
+                                <Sparkles className="h-3.5 w-3.5" />
+                                {mostrarTextoOriginal ? "Mostrar versao simplificada" : "Mostrar texto original"}
+                            </button>
+                        )}
                     </div>
 
                     <div className="p-5">
-                        {/* ABA PROCESSOS */}
                         {abaAtiva === "processos" && (
                             <div className="space-y-4">
-                                {processos.length === 0 ? (
-                                    <p className="text-center text-gray-500 py-8">Nenhum processo encontrado.</p>
+                                {data.processos.length === 0 ? (
+                                    <p className="py-8 text-center text-gray-500">
+                                        Nenhum processo encontrado.
+                                    </p>
                                 ) : (
                                     <>
                                         {processosAtivos.length > 0 && (
@@ -282,20 +280,29 @@ export function PortalContent({ token }: { token: string }) {
                                                     Ativos ({processosAtivos.length})
                                                 </h3>
                                                 <div className="space-y-3">
-                                                    {processosAtivos.map((p) => (
-                                                        <ProcessoCard key={p.id} processo={p} />
+                                                    {processosAtivos.map((processo) => (
+                                                        <ProcessoCard
+                                                            key={processo.id}
+                                                            processo={processo}
+                                                            mostrarTextoOriginal={mostrarTextoOriginal}
+                                                        />
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
+
                                         {processosEncerrados.length > 0 && (
                                             <div>
                                                 <h3 className="mb-3 mt-4 text-xs font-semibold uppercase tracking-wide text-gray-400">
                                                     Encerrados ({processosEncerrados.length})
                                                 </h3>
                                                 <div className="space-y-3">
-                                                    {processosEncerrados.map((p) => (
-                                                        <ProcessoCard key={p.id} processo={p} />
+                                                    {processosEncerrados.map((processo) => (
+                                                        <ProcessoCard
+                                                            key={processo.id}
+                                                            processo={processo}
+                                                            mostrarTextoOriginal={mostrarTextoOriginal}
+                                                        />
                                                     ))}
                                                 </div>
                                             </div>
@@ -305,95 +312,32 @@ export function PortalContent({ token }: { token: string }) {
                             </div>
                         )}
 
-                        {/* ABA FATURAS */}
-                        {abaAtiva === "faturas" && (
-                            <div className="space-y-3">
-                                {faturas.length === 0 ? (
-                                    <p className="text-center text-gray-500 py-8">Nenhuma fatura encontrada.</p>
-                                ) : (
-                                    faturas.map((f) => (
-                                        <div
-                                            key={f.id}
-                                            className="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
-                                        >
-                                            <div className="flex items-start justify-between gap-3">
-                                                <div>
-                                                    <p className="font-medium text-gray-900 dark:text-gray-100">
-                                                        {f.descricao || `Fatura ${f.numero}`}
-                                                    </p>
-                                                    <p className="mt-0.5 text-xs text-gray-500">
-                                                        Vencimento: {fmtData(f.dataVencimento)}
-                                                        {f.dataPagamento
-                                                            ? ` · Pago em ${fmtData(f.dataPagamento)}`
-                                                            : ""}
-                                                    </p>
-                                                </div>
-                                                <div className="text-right shrink-0">
-                                                    <p className="font-bold text-gray-900 dark:text-gray-100">
-                                                        {fmtMoeda(f.valorTotal)}
-                                                    </p>
-                                                    <span
-                                                        className={`inline-flex items-center gap-1 mt-1 rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_FATURA[f.status]?.color ?? "bg-gray-100 text-gray-600"}`}
-                                                    >
-                                                        {STATUS_FATURA[f.status]?.icon}
-                                                        {STATUS_FATURA[f.status]?.label ?? f.status}
-                                                    </span>
-                                                </div>
-                                            </div>
+                        {abaAtiva === "agenda" && <PortalAgenda agenda={data.agenda} />}
 
-                                            {/* Ações de pagamento */}
-                                            {f.status !== "PAGA" && f.status !== "CANCELADA" && (
-                                                <div className="mt-3 flex flex-wrap gap-2">
-                                                    {f.boletoUrl && (
-                                                        <a
-                                                            href={f.boletoUrl}
-                                                            target="_blank"
-                                                            rel="noreferrer"
-                                                            className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
-                                                        >
-                                                            <ExternalLink className="h-3.5 w-3.5" />
-                                                            Ver Boleto
-                                                        </a>
-                                                    )}
-                                                    {f.pixCode && (
-                                                        <button
-                                                            onClick={() => copiarPix(f.pixCode!, f.id)}
-                                                            className="inline-flex items-center gap-1.5 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700"
-                                                        >
-                                                            {copiado === f.id ? (
-                                                                <CheckCircle className="h-3.5 w-3.5" />
-                                                            ) : (
-                                                                <Copy className="h-3.5 w-3.5" />
-                                                            )}
-                                                            {copiado === f.id ? "Copiado!" : "Copiar PIX"}
-                                                        </button>
-                                                    )}
-                                                    {!f.gatewayId && (
-                                                        <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-3 py-1.5 text-xs text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-                                                            <QrCode className="h-3.5 w-3.5" />
-                                                            Solicite ao advogado para gerar a cobrança
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-                                    ))
-                                )}
-                            </div>
+                        {abaAtiva === "documentos" && <PortalDocumentos documentos={data.documentos} />}
+
+                        {abaAtiva === "comunicacao" && (
+                            <PortalComunicacao comunicacao={data.comunicacao} />
                         )}
+
+                        {abaAtiva === "notificacoes" && (
+                            <PortalNotificacoes
+                                notificacoes={data.notificacoes}
+                                mostrarOriginal={mostrarTextoOriginal}
+                            />
+                        )}
+
+                        {abaAtiva === "faturas" && <PortalFaturas faturas={data.faturas} copiado={copiado} onCopyPix={copiarPix} />}
                     </div>
                 </div>
             </main>
 
-            {/* Footer */}
             <footer className="mt-12 py-6 text-center text-xs text-gray-400">
-                Portal seguro — Acesso exclusivo e intransferível
+                Portal seguro • Acesso exclusivo e intransferivel
             </footer>
         </div>
     );
 }
-
-// ─── Subcomponentes ─────────────────────────────────────────────────────────
 
 function SummaryCard({
     icon,
@@ -419,41 +363,170 @@ function SummaryCard({
     );
 }
 
-function ProcessoCard({ processo: p }: { processo: Processo }) {
-    const statusInfo = STATUS_PROCESSO[p.status] ?? { label: p.status, color: "bg-gray-100 text-gray-600" };
+function ProcessoCard({
+    processo,
+    mostrarTextoOriginal,
+}: {
+    processo: PortalProcessoItem;
+    mostrarTextoOriginal: boolean;
+}) {
+    const statusInfo = STATUS_PROCESSO[processo.status] ?? {
+        label: processo.status,
+        color: "bg-gray-100 text-gray-600",
+    };
+    const tomClass =
+        processo.ultimaMovimentacao?.tom === "positivo"
+            ? "bg-emerald-100 text-emerald-700"
+            : processo.ultimaMovimentacao?.tom === "negativo"
+                ? "bg-red-100 text-red-700"
+                : "bg-slate-100 text-slate-600";
 
     return (
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
             <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
-                        {p.numeroCnj || p.objeto || `Processo ${p.id.slice(0, 8)}`}
+                <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium text-gray-900 dark:text-gray-100">
+                        {processo.numeroCnj || processo.objeto || `Processo ${processo.id.slice(0, 8)}`}
                     </p>
-                    {p.tipoAcao && (
-                        <p className="text-xs text-gray-500">{p.tipoAcao.nome}</p>
+                    {processo.tipoAcao && (
+                        <p className="text-xs text-gray-500">{processo.tipoAcao.nome}</p>
                     )}
-                    {(p.vara || p.comarca) && (
+                    {(processo.vara || processo.comarca) && (
                         <p className="mt-0.5 text-xs text-gray-400">
-                            {[p.vara, p.comarca, p.tribunal].filter(Boolean).join(" · ")}
+                            {[processo.vara, processo.comarca, processo.tribunal].filter(Boolean).join(" • ")}
                         </p>
                     )}
                     <p className="mt-1 text-xs text-gray-500">
-                        Advogado: {p.advogado.user.name} (OAB {p.advogado.oab})
+                        Advogado: {processo.advogado.user.name} (OAB {processo.advogado.oab})
                     </p>
+
+                    {processo.ultimaMovimentacao && (
+                        <div className="mt-3 rounded-lg bg-gray-50 px-3 py-2 dark:bg-gray-800/60">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+                                    Ultimo andamento
+                                </span>
+                                <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tomClass}`}>
+                                    {processo.ultimaMovimentacao.tom}
+                                </span>
+                            </div>
+                            <p className="mt-1 text-sm text-gray-700 dark:text-gray-200">
+                                {mostrarTextoOriginal
+                                    ? processo.ultimaMovimentacao.resumoOriginal
+                                    : processo.ultimaMovimentacao.resumoSimplificado}
+                            </p>
+                            {mostrarTextoOriginal &&
+                                processo.ultimaMovimentacao.resumoOriginal !== processo.ultimaMovimentacao.resumoSimplificado && (
+                                    <p className="mt-2 text-[11px] text-gray-400">
+                                        Versao simplificada: {processo.ultimaMovimentacao.resumoSimplificado}
+                                    </p>
+                                )}
+                            <p className="mt-1 text-[11px] text-gray-400">
+                                {fmtData(processo.ultimaMovimentacao.data)}
+                            </p>
+                        </div>
+                    )}
                 </div>
+
                 <div className="shrink-0 text-right">
-                    <span
-                        className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${statusInfo.color}`}
-                    >
+                    <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${statusInfo.color}`}>
                         {statusInfo.label}
                     </span>
-                    {p.valorCausa && (
+                    {processo.valorCausa && (
                         <p className="mt-1 text-xs text-gray-500">
-                            {fmtMoeda(p.valorCausa)}
+                            {fmtMoeda(processo.valorCausa)}
                         </p>
                     )}
                 </div>
             </div>
+        </div>
+    );
+}
+
+function PortalFaturas({
+    faturas,
+    copiado,
+    onCopyPix,
+}: {
+    faturas: PortalFaturaItem[];
+    copiado: string | null;
+    onCopyPix: (pixCode: string, faturaId: string) => Promise<void>;
+}) {
+    if (faturas.length === 0) {
+        return (
+            <p className="py-8 text-center text-gray-500">
+                Nenhuma fatura encontrada.
+            </p>
+        );
+    }
+
+    return (
+        <div className="space-y-3">
+            {faturas.map((fatura) => (
+                <div
+                    key={fatura.id}
+                    className="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+                >
+                    <div className="flex items-start justify-between gap-3">
+                        <div>
+                            <p className="font-medium text-gray-900 dark:text-gray-100">
+                                {fatura.descricao || `Fatura ${fatura.numero}`}
+                            </p>
+                            <p className="mt-0.5 text-xs text-gray-500">
+                                Vencimento: {fmtData(fatura.dataVencimento)}
+                                {fatura.dataPagamento ? ` • Pago em ${fmtData(fatura.dataPagamento)}` : ""}
+                            </p>
+                        </div>
+
+                        <div className="shrink-0 text-right">
+                            <p className="font-bold text-gray-900 dark:text-gray-100">
+                                {fmtMoeda(fatura.valorTotal)}
+                            </p>
+                            <span
+                                className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_FATURA[fatura.status]?.color ?? "bg-gray-100 text-gray-600"}`}
+                            >
+                                {STATUS_FATURA[fatura.status]?.icon}
+                                {STATUS_FATURA[fatura.status]?.label ?? fatura.status}
+                            </span>
+                        </div>
+                    </div>
+
+                    {fatura.status !== "PAGA" && fatura.status !== "CANCELADA" && (
+                        <div className="mt-3 flex flex-wrap gap-2">
+                            {fatura.boletoUrl && (
+                                <a
+                                    href={fatura.boletoUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center gap-1.5 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+                                >
+                                    <ExternalLink className="h-3.5 w-3.5" />
+                                    Ver boleto
+                                </a>
+                            )}
+                            {fatura.pixCode && (
+                                <button
+                                    onClick={() => onCopyPix(fatura.pixCode!, fatura.id)}
+                                    className="inline-flex items-center gap-1.5 rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700"
+                                >
+                                    {copiado === fatura.id ? (
+                                        <CheckCircle className="h-3.5 w-3.5" />
+                                    ) : (
+                                        <Copy className="h-3.5 w-3.5" />
+                                    )}
+                                    {copiado === fatura.id ? "Copiado!" : "Copiar PIX"}
+                                </button>
+                            )}
+                            {!fatura.gatewayId && (
+                                <span className="inline-flex items-center gap-1 rounded-md bg-gray-100 px-3 py-1.5 text-xs text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+                                    <QrCode className="h-3.5 w-3.5" />
+                                    Solicite ao escritorio a geracao da cobranca
+                                </span>
+                            )}
+                        </div>
+                    )}
+                </div>
+            ))}
         </div>
     );
 }

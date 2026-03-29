@@ -39,14 +39,15 @@ export async function getCalculos(filters: CalculoFilters = {}, userId?: string)
 export async function getCalculoStats(userId?: string) {
     const where = userId ? { criadoPorId: userId } : {};
 
-    const [total, monetarios, previdenciarios, trabalhistas] = await Promise.all([
+    const [total, monetarios, previdenciarios, trabalhistas, prazosProcessuais] = await Promise.all([
         db.calculo.count({ where }),
         db.calculo.count({ where: { ...where, tipo: "MONETARIO" } }),
         db.calculo.count({ where: { ...where, tipo: "PREVIDENCIARIO" } }),
         db.calculo.count({ where: { ...where, tipo: "TRABALHISTA" } }),
+        db.calculo.count({ where: { ...where, tipo: "PRAZO_PROCESSUAL" } }),
     ]);
 
-    return { total, monetarios, previdenciarios, trabalhistas };
+    return { total, monetarios, previdenciarios, trabalhistas, prazosProcessuais };
 }
 
 export async function getCalculoById(id: string) {

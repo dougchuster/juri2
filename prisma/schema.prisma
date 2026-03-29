@@ -1002,6 +1002,7 @@ model Fatura {
   centroCusto    CentroCusto?    @relation(fields: [centroCustoId], references: [id])
   cliente        Cliente         @relation(fields: [clienteId], references: [id])
   honorario      Honorario?      @relation(fields: [honorarioId], references: [id])
+  notaFiscalServico NotaFiscalServico?
 
   @@index([clienteId])
   @@index([honorarioId])
@@ -1009,6 +1010,32 @@ model Fatura {
   @@index([dataVencimento])
   @@index([status, dataVencimento])
   @@map("faturas")
+}
+
+model NotaFiscalServico {
+  id                String                   @id @default(cuid())
+  faturaId          String                   @unique
+  numero            String                   @unique
+  serie             String                   @default("A1")
+  status            StatusNotaFiscalServico  @default(RASCUNHO)
+  valorServicos     Decimal                  @db.Decimal(15, 2)
+  aliquotaIss       Decimal                  @default(0) @db.Decimal(5, 2)
+  valorIss          Decimal                  @default(0) @db.Decimal(15, 2)
+  codigoServico     String?
+  descricaoServico  String?
+  tomadorNome       String
+  tomadorDocumento  String?
+  observacoes       String?
+  payload           Json?
+  emitidaEm         DateTime?
+  canceladaEm       DateTime?
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  fatura            Fatura                   @relation(fields: [faturaId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([emitidaEm])
+  @@map("notas_fiscais_servico")
 }
 
 model FaturaParcela {
@@ -3793,6 +3820,12 @@ enum StatusFatura {
   PENDENTE
   PAGA
   ATRASADA
+  CANCELADA
+}
+
+enum StatusNotaFiscalServico {
+  RASCUNHO
+  EMITIDA
   CANCELADA
 }
 

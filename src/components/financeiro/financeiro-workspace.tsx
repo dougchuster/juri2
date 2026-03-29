@@ -31,13 +31,20 @@ import {
     saveFuncionarioLancamentoAction,
     updateFinanceiroEscritorioStatus,
 } from "@/actions/financeiro-module";
+import { emitirNotaFiscalServico } from "@/actions/financeiro";
+import {
+    runReguaCobrancaAction,
+    saveReguaCobrancaConfigAction,
+} from "@/actions/regua-cobranca";
 import { type FinanceiroModuleData } from "@/lib/dal/financeiro-module";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ExportButton } from "@/components/ui/export-button";
 import { Input, Select, Textarea } from "@/components/ui/form-fields";
 import { Modal } from "@/components/ui/modal";
 import { FinanceiroCharts } from "@/components/financeiro/financeiro-charts";
+import { ReguaCobrancaPanel } from "@/components/financeiro/regua-cobranca-panel";
 
 type FinanceiroSection =
     | "dashboard"
@@ -359,7 +366,26 @@ function ReportsSection({ data }: { data: FinanceiroModuleData }) {
     const dre = data.relatorios.dreEscritorio;
     return (
         <div className="space-y-5">
-            <SectionHeader title="Demonstrativos gerenciais" description="Rentabilidade por cliente, produtividade do advogado e DRE operacional do escritorio." />
+            <SectionHeader
+                title="Demonstrativos gerenciais"
+                description="Rentabilidade por cliente, produtividade do advogado e DRE operacional do escritorio."
+                action={
+                    <ExportButton
+                        basePath="/api/financeiro/export"
+                        query={{
+                            section: "relatorios",
+                            search: data.filters.search,
+                            from: data.filters.from,
+                            to: data.filters.to,
+                            clienteId: data.filters.clienteId,
+                            processoId: data.filters.processoId,
+                            advogadoId: data.filters.advogadoId,
+                            status: data.filters.status,
+                            centroCustoId: data.filters.centroCustoId,
+                        }}
+                    />
+                }
+            />
             <div className="grid gap-5 xl:grid-cols-3">
                 <div className="glass-card p-5 xl:col-span-2">
                     <h3 className="text-sm font-semibold text-text-primary">Rentabilidade por cliente</h3>
@@ -435,13 +461,24 @@ const STATUS_RECEBER_LABELS: Record<string, string> = {
     ENCERRADO: "Encerrado",
 };
 
-function ReceivableAccountsTable({ rows }: { rows: FinanceiroModuleData["contasReceber"] }) {
+function ReceivableAccountsTable({
+    rows,
+    onEmitirNotaFiscal,
+}: {
+    rows: FinanceiroModuleData["contasReceber"];
+    onEmitirNotaFiscal: (faturaId: string) => void;
+}) {
     return (
         <div className="space-y-4">
             <SectionHeader title="Contas a receber" description="Receitas previstas, faturas e honorarios em aberto por cliente e processo." />
             <TableShell
-                columns={["Cliente", "Processo", "Descricao", "Data", "Valor", "Status"]}
-                rows={rows.map((row) => (
+                columns={["Cliente", "Processo", "Descricao", "Data", "Valor", "Status", "Fiscal"]}
+                rows={rows.map((row) => {
+                    const notaFiscal = "notaFiscalServico" in row ? row.notaFiscalServico : null;
+                    const podeEmitirNotaFiscal = "podeEmitirNotaFiscal" in row ? row.podeEmitirNotaFiscal : false;
+                    const faturaId = "faturaId" in row ? row.faturaId : null;
+
+                    return (
                     <tr key={`${row.origem}-${row.id}`} className="border-b border-border last:border-0">
                         <td className="px-4 py-3 text-sm text-text-primary">{row.clienteNome}</td>
                         <td className="px-4 py-3 text-sm text-text-secondary">
@@ -457,8 +494,22 @@ function ReceivableAccountsTable({ rows }: { rows: FinanceiroModuleData["contasR
                                 {STATUS_RECEBER_LABELS[row.status] ?? row.status}
                             </Badge>
                         </td>
+                        <td className="px-4 py-3">
+                            <div className="flex flex-wrap items-center justify-end gap-2">
+                                {notaFiscal ? (
+                                    <Badge variant={notaFiscal.status === "EMITIDA" ? "success" : "warning"}>
+                                        NFS-e {notaFiscal.numero}
+                                    </Badge>
+                                ) : null}
+                                {podeEmitirNotaFiscal && faturaId && !notaFiscal ? (
+                                    <Button size="xs" variant="secondary" onClick={() => onEmitirNotaFiscal(faturaId)}>
+                                        Emitir NFS-e
+                                    </Button>
+                                ) : null}
+                            </div>
+                        </td>
                     </tr>
-                ))}
+                )})}
             />
         </div>
     );
@@ -699,7 +750,17 @@ export function FinanceiroWorkspace({ data, section }: Props) {
                 </div>
             ) : null}
             {section === "contas-pagar" ? <FinancialAccountsTable title="Contas a pagar" rows={data.contasPagar} /> : null}
-            {section === "contas-receber" ? <ReceivableAccountsTable rows={data.contasReceber} /> : null}
+            {section === "contas-receber" ? (
+                <ReceivableAccountsTable
+                    rows={data.contasReceber}
+                    onEmitirNotaFiscal={(faturaId) =>
+                        runAsync(async () => {
+                            const result = await emitirNotaFiscalServico(faturaId);
+                            afterAction(result);
+                        })
+                    }
+                />
+            ) : null}
             {section === "repasses" ? (
                 <div className="space-y-4">
                     <SectionHeader
@@ -781,6 +842,25 @@ export function FinanceiroWorkspace({ data, section }: Props) {
                         <MetricChip label="Aprovacao de repasses" value={data.config.aprovacaoRepasses ? "Obrigatoria" : "Direta"} />
                         <MetricChip label="Perfis com exclusao" value={data.config.permissaoExclusao.join(", ")} />
                     </div>
+                    {data.reguaCobranca ? (
+                        <ReguaCobrancaPanel
+                            config={data.reguaCobranca.config}
+                            dashboard={data.reguaCobranca.dashboard}
+                            pending={pending}
+                            onRun={() =>
+                                runAsync(async () => {
+                                    const result = await runReguaCobrancaAction();
+                                    afterAction(result);
+                                })
+                            }
+                            onSave={(payload) =>
+                                runAsync(async () => {
+                                    const result = await saveReguaCobrancaConfigAction(payload);
+                                    afterAction(result);
+                                })
+                            }
+                        />
+                    ) : null}
                 </div>
             ) : null}
             <OfficeLaunchModal open={officeOpen} onClose={() => setOfficeOpen(false)} data={data} pending={pending} onSubmit={(payload) => runAsync(async () => {

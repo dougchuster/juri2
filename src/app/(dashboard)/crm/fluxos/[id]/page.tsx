@@ -121,7 +121,12 @@ export default function FlowEditorPage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [testing, setTesting] = useState(false);
-    const [testResult, setTestResult] = useState<{ ok: boolean; executionId?: string | null; reason?: string } | null>(null);
+    const [testResult, setTestResult] = useState<{
+        ok: boolean;
+        executionId?: string | null;
+        queued?: boolean;
+        reason?: string;
+    } | null>(null);
 
     // Seleção de Nós (Sidebar Properties)
     const [selectedNode, setSelectedNode] = useState<FlowNode | null>(null);
@@ -270,12 +275,17 @@ export default function FlowEditorPage() {
         setTesting(true);
         setTestResult(null);
         try {
-            const res = await fetch(`/api/crm/fluxos/${params.id}/test`, {
+            const res = await fetch(`/api/crm/fluxos/${params.id}/execute`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({}),
             });
-            const data = await res.json() as { ok: boolean; executionId?: string | null; reason?: string };
+            const data = await res.json() as {
+                ok: boolean;
+                executionId?: string | null;
+                queued?: boolean;
+                reason?: string;
+            };
             setTestResult(data);
         } catch {
             setTestResult({ ok: false, reason: "Erro de rede ao testar fluxo." });
@@ -327,7 +337,7 @@ export default function FlowEditorPage() {
                 <div className={`flex items-center gap-3 px-6 py-3 text-sm animate-fade-in ${testResult.ok ? "bg-success/10 border-b border-success/30 text-success" : "bg-danger/10 border-b border-danger/30 text-danger"}`}>
                     {testResult.ok ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
                     {testResult.ok
-                        ? `Fluxo executado com sucesso! Execução ID: ${testResult.executionId ?? "—"}`
+                        ? `Fluxo disparado com sucesso! Execucao ID: ${testResult.executionId ?? "-"}${testResult.queued ? " (enfileirado)" : ""}`
                         : `Falha no teste: ${testResult.reason ?? "Erro desconhecido."}`
                     }
                     <button className="ml-auto opacity-70 hover:opacity-100" onClick={() => setTestResult(null)}>

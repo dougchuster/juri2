@@ -8,6 +8,7 @@ import { formatDate, formatCurrency } from "@/lib/utils";
 import { ProcessoDetailTabs } from "@/components/processos/processo-detail-tabs";
 import { ProcessoDetailHeader } from "@/components/processos/processo-detail-header";
 import { ProcessoEditModal } from "@/components/processos/processo-edit-modal";
+import { hydrateMovimentacaoTranslations } from "@/lib/services/andamento-tradutor";
 import {
     Scale, Clock, FileText, Gavel,
     Users, MapPin, DollarSign, AlertTriangle,
@@ -55,6 +56,10 @@ export default async function ProcessoDetailPage({ params }: Props) {
         getTimelineProcesso(id, { porPagina: 999 }),
         getTimelineStats(id),
     ]);
+    const timelineEventosTraduzidos = await hydrateMovimentacaoTranslations(timelineResult.eventos, {
+        aiLimit: 12,
+        persistLimit: 12,
+    });
 
     const prazosPendentes = processo.prazos.filter((p) => p.status === "PENDENTE").length;
     const proximaAudiencia = processo.audiencias.find((a) => !a.realizada);
@@ -70,7 +75,7 @@ export default async function ProcessoDetailPage({ params }: Props) {
     const serializedFases = JSON.parse(JSON.stringify(fases));
     const serializedClientes = JSON.parse(JSON.stringify(clientes));
     const serializedDocumentosParaMovimentacao = JSON.parse(JSON.stringify(documentosParaMovimentacao));
-    const serializedTimelineEventos = JSON.parse(JSON.stringify(timelineResult.eventos));
+    const serializedTimelineEventos = JSON.parse(JSON.stringify(timelineEventosTraduzidos));
     const serializedTimelineStats = JSON.parse(JSON.stringify(timelineStats));
 
     return (

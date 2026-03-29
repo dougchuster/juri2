@@ -13,6 +13,7 @@ import {
     updateWhatsappConnection,
 } from "@/lib/whatsapp/application/connection-service";
 import { sendWhatsappTextMessage } from "@/lib/whatsapp/application/message-service";
+import { runJuribotForInboundMessage } from "@/lib/whatsapp/chatbot/juribot-engine";
 import type { NormalizedWebhookEvent } from "@/lib/whatsapp/providers/types";
 import { normalizeProviderPhone } from "@/lib/utils/phone";
 import { scheduleAttendanceAutomationForInboundMessage } from "@/lib/services/attendance-automation";
@@ -108,6 +109,23 @@ async function processInboundMessageEvent(event: Extract<NormalizedWebhookEvent,
             },
         }),
     ]);
+
+    let juribotHandled = false;
+    if (event.text?.trim()) {
+        try {
+            const juribotResult = await runJuribotForInboundMessage({
+                conversationId: conversation.id,
+                clienteId,
+                incomingText: event.text,
+                connectionId: event.connectionId,
+            });
+            juribotHandled = juribotResult.handled;
+        } catch (error) {
+            console.error("[WhatsApp Webhook] JuriBot failed:", error);
+        }
+    }
+
+    if (juribotHandled) return;
 
     try {
         const automationState = await db.conversation.findUnique({

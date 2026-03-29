@@ -481,6 +481,79 @@ const bulkStatusSchema = bulkIdsSchema.extend({
     status: z.string().min(1),
 });
 
+const moverProcessoKanbanSchema = z.object({
+    processoId: z.string().min(1),
+    status: z.enum([
+        "PROSPECCAO",
+        "CONSULTORIA",
+        "AJUIZADO",
+        "EM_ANDAMENTO",
+        "AUDIENCIA_MARCADA",
+        "SENTENCA",
+        "RECURSO",
+        "TRANSITO_JULGADO",
+        "EXECUCAO",
+        "ENCERRADO",
+        "ARQUIVADO",
+    ]),
+});
+
+export async function moverProcessoKanban(data: z.infer<typeof moverProcessoKanbanSchema>) {
+    const parsed = moverProcessoKanbanSchema.safeParse(data);
+    if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };
+
+    try {
+        const actorUserId = await getAuditActorId();
+        const session = await getSession();
+        const filter = await tenantFilter();
+        const scopedAdvogadoId = session?.role === "ADVOGADO" ? session.advogado?.id ?? null : null;
+
+        const processo = await db.processo.findFirst({
+            where: {
+                id: parsed.data.processoId,
+                ...filter,
+                ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}),
+            },
+            select: {
+                id: true,
+                status: true,
+                dataEncerramento: true,
+            },
+        });
+
+        if (!processo) {
+            return { success: false, error: "Processo nao encontrado ou sem permissao para movimenta-lo." };
+        }
+
+        const statusNovo = parsed.data.status;
+        const isTerminal = statusNovo === "ENCERRADO" || statusNovo === "ARQUIVADO";
+
+        await db.processo.update({
+            where: { id: processo.id },
+            data: {
+                status: statusNovo,
+                dataEncerramento: isTerminal ? processo.dataEncerramento ?? new Date() : null,
+            },
+        });
+
+        safeRevalidate("/processos");
+        safeRevalidate(`/processos/${processo.id}`);
+        await registrarLogAuditoria({
+            actorUserId,
+            acao: "PROCESSO_KANBAN_MOVIDO",
+            entidade: "Processo",
+            entidadeId: processo.id,
+            dadosAntes: { status: processo.status },
+            dadosDepois: { status: statusNovo },
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error moving processo in kanban:", error);
+        return { success: false, error: "Erro ao mover processo no kanban." };
+    }
+}
+
 export async function atualizarStatusProcessosEmLote(data: z.infer<typeof bulkStatusSchema>) {
     const parsed = bulkStatusSchema.safeParse(data);
     if (!parsed.success) return { success: false, error: parsed.error.flatten().fieldErrors };

@@ -194,6 +194,101 @@ export async function marcarFaturaPaga(id: string) {
     }
 }
 
+export async function emitirNotaFiscalServico(faturaId: string) {
+    try {
+        const session = await getSession();
+        if (!session) return { success: false, error: "Sessao expirada. Faca login novamente." };
+
+        const scopedAdvogadoId = isScopedAdvogado(session) ? session.advogado?.id ?? null : null;
+        if (isScopedAdvogado(session) && !scopedAdvogadoId) {
+            return { success: false, error: "Sem permissao para emitir nota fiscal." };
+        }
+
+        const fatura = await db.fatura.findFirst({
+            where: {
+                id: faturaId,
+                ...(scopedAdvogadoId
+                    ? { honorario: { is: { processo: { advogadoId: scopedAdvogadoId } } } }
+                    : {}),
+            },
+            include: {
+                cliente: { select: { nome: true, cpf: true, cnpj: true } },
+                honorario: {
+                    include: {
+                        processo: { select: { numeroCnj: true } },
+                    },
+                },
+                notaFiscalServico: true,
+            },
+        });
+
+        if (!fatura) return { success: false, error: "Fatura nao encontrada." };
+        if (fatura.status !== "PAGA") {
+            return { success: false, error: "A NFS-e so pode ser emitida para faturas pagas." };
+        }
+        if (fatura.notaFiscalServico?.status === "EMITIDA") {
+            return { success: false, error: "Esta fatura ja possui NFS-e emitida." };
+        }
+
+        const sequence = (await db.notaFiscalServico.count()) + 1;
+        const numero = `${new Date().getFullYear()}-${String(sequence).padStart(6, "0")}`;
+        const valorServicos = Number(fatura.valorTotal);
+        const aliquotaIss = 5;
+        const valorIss = Number(((valorServicos * aliquotaIss) / 100).toFixed(2));
+        const descricaoServico =
+            fatura.descricao ||
+            (fatura.honorario?.processo?.numeroCnj
+                ? `Honorarios juridicos vinculados ao processo ${fatura.honorario.processo.numeroCnj}`
+                : "Honorarios juridicos");
+
+        const nota = fatura.notaFiscalServico
+            ? await db.notaFiscalServico.update({
+                  where: { id: fatura.notaFiscalServico.id },
+                  data: {
+                      numero,
+                      status: "EMITIDA",
+                      valorServicos,
+                      aliquotaIss,
+                      valorIss,
+                      descricaoServico,
+                      tomadorNome: fatura.cliente.nome,
+                      tomadorDocumento: fatura.cliente.cnpj || fatura.cliente.cpf || null,
+                      emitidaEm: new Date(),
+                      payload: {
+                          origem: "LOCAL",
+                          faturaNumero: fatura.numero,
+                          processoNumero: fatura.honorario?.processo?.numeroCnj ?? null,
+                      },
+                  },
+              })
+            : await db.notaFiscalServico.create({
+                  data: {
+                      faturaId: fatura.id,
+                      numero,
+                      status: "EMITIDA",
+                      valorServicos,
+                      aliquotaIss,
+                      valorIss,
+                      descricaoServico,
+                      tomadorNome: fatura.cliente.nome,
+                      tomadorDocumento: fatura.cliente.cnpj || fatura.cliente.cpf || null,
+                      emitidaEm: new Date(),
+                      payload: {
+                          origem: "LOCAL",
+                          faturaNumero: fatura.numero,
+                          processoNumero: fatura.honorario?.processo?.numeroCnj ?? null,
+                      },
+                  },
+              });
+
+        revalidatePath("/financeiro");
+        return { success: true, data: { id: nota.id, numero: nota.numero, status: nota.status } };
+    } catch (error) {
+        console.error("Error issuing nota fiscal:", error);
+        return { success: false, error: "Erro ao emitir NFS-e." };
+    }
+}
+
 export async function deleteFatura(id: string) {
     try {
         const session = await getSession();

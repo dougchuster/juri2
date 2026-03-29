@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans, Source_Serif_4 } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { RegisterSW } from "@/components/pwa/register-sw";
 import "./globals.css";
 
 const fontSans = Plus_Jakarta_Sans({
@@ -90,6 +91,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: [{ url: "/images/logoadv.png?v=3", type: "image/png", sizes: "32x32" }],
     shortcut: [{ url: "/images/logoadv.png?v=3", type: "image/png" }],
@@ -115,7 +117,10 @@ export default function RootLayout({
         />
       </head>
       <body className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable} antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <RegisterSW />
+        </ThemeProvider>
       </body>
     </html>
   );

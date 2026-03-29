@@ -8,6 +8,7 @@ import {
     criarNovaConversaAgenteJuridicoAction,
     deletarConversaAgenteJuridicoAction,
     listarConversasAgenteJuridicoAction,
+    registrarFeedbackAgenteJuridicoAction,
 } from "@/actions/juridico-agents";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -51,6 +52,21 @@ interface ChatMessageItem {
     model: string | null;
     createdAt: string;
     attachments: AttachmentItem[];
+    confidenceScore: number | null;
+    ragEnabled: boolean;
+    citations: Array<{
+        id: string;
+        displayLabel: string;
+        tribunal: string | null;
+        area: string | null;
+        dataReferencia: string | null;
+        excerpt: string;
+    }>;
+    feedback: {
+        value: -1 | 1;
+        note: string | null;
+        createdAt: string;
+    } | null;
 }
 
 interface UploadResponse {
@@ -97,6 +113,7 @@ export function AgentesJuridicosChat({ agents }: AgentesJuridicosChatProps) {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [conversationSearch, setConversationSearch] = useState("");
+    const [feedbackingMessageId, setFeedbackingMessageId] = useState<string | null>(null);
 
     const scrollerRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -267,6 +284,10 @@ export function AgentesJuridicosChat({ agents }: AgentesJuridicosChatProps) {
             model: null,
             createdAt: new Date().toISOString(),
             attachments,
+            confidenceScore: null,
+            ragEnabled: false,
+            citations: [],
+            feedback: null,
         };
 
         setMessages((prev) => [...prev, optimisticMessage]);
@@ -304,6 +325,31 @@ export function AgentesJuridicosChat({ agents }: AgentesJuridicosChatProps) {
             await refreshConversationList(selectedAgentId);
         } finally {
             setSending(false);
+        }
+    }
+
+    async function handleFeedback(messageId: string, value: -1 | 1) {
+        setFeedbackingMessageId(messageId);
+        setError(null);
+        try {
+            const result = await registrarFeedbackAgenteJuridicoAction({ messageId, value });
+            if (!result.success) {
+                setError(result.error);
+                return;
+            }
+
+            setMessages((prev) =>
+                prev.map((message) =>
+                    message.id === messageId
+                        ? {
+                              ...message,
+                              feedback: result.data.feedback,
+                          }
+                        : message
+                )
+            );
+        } finally {
+            setFeedbackingMessageId(null);
         }
     }
 
@@ -429,6 +475,56 @@ export function AgentesJuridicosChat({ agents }: AgentesJuridicosChatProps) {
                             }`}
                         >
                             <p className="whitespace-pre-wrap text-sm text-text-primary">{message.content}</p>
+                            {message.role === "assistant" && (
+                                <div className="mt-2 space-y-2">
+                                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-text-muted">
+                                        {typeof message.confidenceScore === "number" && (
+                                            <Badge variant="default">
+                                                Confianca {(message.confidenceScore * 100).toFixed(0)}%
+                                            </Badge>
+                                        )}
+                                        {message.ragEnabled && <Badge variant="success">RAG</Badge>}
+                                    </div>
+                                    {message.citations?.length > 0 && (
+                                        <div className="rounded-lg border border-border bg-bg-tertiary/30 p-2">
+                                            <p className="text-[11px] font-semibold text-text-primary mb-1">
+                                                Referencias recuperadas
+                                            </p>
+                                            <div className="space-y-1">
+                                                {message.citations.map((citation) => (
+                                                    <div key={citation.id} className="text-[11px] text-text-muted">
+                                                        <span className="text-text-primary">{citation.displayLabel}</span>
+                                                        {citation.tribunal ? ` | ${citation.tribunal}` : ""}
+                                                        {citation.dataReferencia
+                                                            ? ` | ${formatDateTime(citation.dataReferencia)}`
+                                                            : ""}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    <div className="flex items-center gap-2">
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant={message.feedback?.value === 1 ? "success" : "secondary"}
+                                            disabled={feedbackingMessageId === message.id}
+                                            onClick={() => handleFeedback(message.id, 1)}
+                                        >
+                                            Bom
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant={message.feedback?.value === -1 ? "destructive" : "secondary"}
+                                            disabled={feedbackingMessageId === message.id}
+                                            onClick={() => handleFeedback(message.id, -1)}
+                                        >
+                                            Ruim
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                             {message.attachments?.length > 0 && (
                                 <div className="mt-2 space-y-1">
                                     {message.attachments.map((att, idx) => (

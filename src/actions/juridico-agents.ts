@@ -7,12 +7,16 @@ import {
     buildConversationContextForAgentCall,
     createNewLegalAgentConversationForUser,
     createLegalAgentMessage,
+    getLegalAgentAssistantMessageForUser,
     deleteLegalAgentConversationForUser,
     getLegalAgentConversationByIdForUser,
     getOrCreateActiveLegalAgentConversation,
     listLegalAgentConversationsForUser,
     loadLegalAgentConversationMessages,
+    saveLegalAgentResponseLog,
+    setLegalAgentMessageFeedback,
     type LegalAgentAttachmentPersistInput,
+    type LegalAgentMessageView,
 } from "@/lib/dal/juridico-agents";
 import {
     conversarComAgenteJuridico,
@@ -71,6 +75,12 @@ const excluirConversaSchema = z.object({
     conversationId: z.string().min(1).max(120),
 });
 
+const feedbackSchema = z.object({
+    messageId: z.string().min(1).max(120),
+    value: z.union([z.literal(1), z.literal(-1)]),
+    note: z.string().max(1000).optional().nullable(),
+});
+
 function normalizeStoredMessageContent(pergunta: string, contexto: string) {
     const cleanQuestion = pergunta.trim();
     const cleanContext = (contexto || "").trim();
@@ -95,7 +105,10 @@ function toPersistableAttachments(
 }
 
 function mapMessageForClient(
-    message: Awaited<ReturnType<typeof loadLegalAgentConversationMessages>>[number]
+    message: LegalAgentMessageView | (Awaited<ReturnType<typeof createLegalAgentMessage>> & {
+        responseLog?: LegalAgentMessageView["responseLog"];
+        feedback?: LegalAgentMessageView["feedback"];
+    })
 ) {
     return {
         id: message.id,
@@ -120,6 +133,10 @@ function mapMessageForClient(
             extractionMethod: item.extractionMethod,
             warning: item.warning,
         })),
+        confidenceScore: message.responseLog?.confidenceScore || null,
+        ragEnabled: message.responseLog?.ragEnabled || false,
+        citations: message.responseLog?.citations || [],
+        feedback: message.feedback || null,
     };
 }
 
@@ -496,6 +513,7 @@ export async function conversarComAgenteJuridicoAction(input: unknown) {
             pergunta: parsed.data.pergunta,
             contexto: parsed.data.contexto || "",
             historico: historyForModel,
+            escritorioId: session.escritorioId || undefined,
             model: parsed.data.model,
             maxTokens: parsed.data.maxTokens,
             thinking: parsed.data.thinking,
@@ -512,6 +530,24 @@ export async function conversarComAgenteJuridicoAction(input: unknown) {
             promptChars: result.ai.resposta.length,
         });
 
+        await saveLegalAgentResponseLog({
+            messageId: assistantMessage.id,
+            userId: session.id,
+            agentId: parsed.data.agentId,
+            model: result.ai.model,
+            promptSource: result.prompt.source,
+            ragEnabled: result.ai.ragContextUsed,
+            confidenceScore: result.ai.confidenceScore,
+            citations: result.ai.citations,
+            usageMeta: {
+                provider: result.ai.provider,
+                messagesUsed: result.messagesUsed,
+                ragEnabled: result.ai.ragEnabled,
+                ragContextUsed: result.ai.ragContextUsed,
+                ragObservation: result.ai.ragObservation,
+            },
+        });
+
         return {
             success: true as const,
             data: {
@@ -523,11 +559,67 @@ export async function conversarComAgenteJuridicoAction(input: unknown) {
                 message: mapMessageForClient({
                     ...assistantMessage,
                     attachments: assistantMessage.attachments,
+                    responseLog: {
+                        ragEnabled: result.ai.ragContextUsed,
+                        confidenceScore: result.ai.confidenceScore,
+                        citations: result.ai.citations,
+                        usageMeta: {
+                            provider: result.ai.provider,
+                            messagesUsed: result.messagesUsed,
+                            ragObservation: result.ai.ragObservation,
+                        },
+                    },
+                    feedback: null,
                 }),
             },
         };
     } catch (error) {
         const message = error instanceof Error ? error.message : "Erro ao processar conversa juridica.";
+        return { success: false as const, error: message };
+    }
+}
+
+export async function registrarFeedbackAgenteJuridicoAction(input: unknown) {
+    if (!isLegalAiEnabled()) {
+        return getLegalAiDisabledResult();
+    }
+
+    const session = await getSession();
+    if (!session) {
+        return { success: false as const, error: "Nao autenticado." };
+    }
+
+    const parsed = feedbackSchema.safeParse(input);
+    if (!parsed.success) {
+        return { success: false as const, error: "Entrada invalida para feedback do agente." };
+    }
+
+    try {
+        const message = await getLegalAgentAssistantMessageForUser({
+            userId: session.id,
+            messageId: parsed.data.messageId,
+        });
+
+        if (!message) {
+            return { success: false as const, error: "Mensagem do agente nao encontrada." };
+        }
+
+        const feedback = await setLegalAgentMessageFeedback({
+            userId: session.id,
+            messageId: parsed.data.messageId,
+            value: parsed.data.value,
+            note: parsed.data.note || null,
+        });
+
+        return {
+            success: true as const,
+            data: {
+                messageId: message.id,
+                feedback,
+            },
+        };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : "Erro ao registrar feedback do agente.";
         return { success: false as const, error: message };
     }
 }

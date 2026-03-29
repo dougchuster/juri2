@@ -3,6 +3,7 @@ import "server-only";
 import type { Role } from "@/generated/prisma";
 import { db } from "@/lib/db";
 import { getFinanceiroConfig } from "@/lib/services/financeiro-config";
+import { getReguaCobrancaDashboardData } from "@/lib/services/regua-cobranca";
 
 export interface FinanceiroModuleScope {
     userId?: string | null;
@@ -59,7 +60,8 @@ function canViewOfficeData(role?: Role | null) {
 
 export async function getFinanceiroModuleData(
     filters: FinanceiroModuleFilters = {},
-    scope?: FinanceiroModuleScope
+    scope?: FinanceiroModuleScope,
+    options?: { includeReguaCobranca?: boolean }
 ) {
     const search = (filters.search ?? "").trim();
     const from = toDateValue(filters.from);
@@ -86,6 +88,7 @@ export async function getFinanceiroModuleData(
         processos,
         advogados,
         funcionarios,
+        reguaCobranca,
     ] = await Promise.all([
         db.financeiroEscritorioLancamento.findMany({
             where: officeWhere,
@@ -131,6 +134,14 @@ export async function getFinanceiroModuleData(
             include: {
                 cliente: { select: { id: true, nome: true } },
                 honorario: { include: { processo: { select: { id: true, numeroCnj: true, advogadoId: true } } } },
+                notaFiscalServico: {
+                    select: {
+                        id: true,
+                        numero: true,
+                        status: true,
+                        emitidaEm: true,
+                    },
+                },
             },
             orderBy: { dataVencimento: "asc" },
         }),
@@ -162,6 +173,7 @@ export async function getFinanceiroModuleData(
                   orderBy: { name: "asc" },
               })
             : Promise.resolve([]),
+        options?.includeReguaCobranca ? getReguaCobrancaDashboardData() : Promise.resolve(null),
     ]);
 
     const officeRows = officeLaunches
@@ -316,12 +328,22 @@ export async function getFinanceiroModuleData(
         ...legacyFaturas.map((item) => ({
             id: item.id,
             origem: "fatura_legacy",
+            faturaId: item.id,
             clienteNome: item.cliente.nome,
             processoNumero: item.honorario?.processo?.numeroCnj ?? null,
             descricao: item.descricao ?? item.numero,
             valor: decimalToNumber(item.valorTotal),
             status: item.status,
             data: item.dataVencimento,
+            notaFiscalServico: item.notaFiscalServico
+                ? {
+                      id: item.notaFiscalServico.id,
+                      numero: item.notaFiscalServico.numero,
+                      status: item.notaFiscalServico.status,
+                      emitidaEm: item.notaFiscalServico.emitidaEm,
+                  }
+                : null,
+            podeEmitirNotaFiscal: item.status === "PAGA",
         })),
     ];
 
@@ -477,6 +499,7 @@ export async function getFinanceiroModuleData(
             advogados: advogados.map((item) => ({ id: item.id, nome: item.user.name })),
             funcionarios: funcionarios.map((item) => ({ id: item.id, nome: item.name, role: item.role })),
         },
+        reguaCobranca,
     };
 }
 

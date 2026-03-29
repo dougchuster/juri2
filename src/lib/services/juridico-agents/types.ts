@@ -28,11 +28,27 @@ export interface LegalAgentConversationMessage {
     content: string;
 }
 
+export interface LegalAgentRagReference {
+    id: string;
+    title: string;
+    displayLabel: string;
+    tribunal: string | null;
+    area: string | null;
+    dataReferencia: string | null;
+    excerpt: string;
+    sourceId: string | null;
+    originType: string | null;
+    originId: string | null;
+    score: number;
+    matchReasons: string[];
+}
+
 export interface LegalAgentChatInput {
     agentId: LegalAgentId;
     pergunta: string;
     contexto?: string;
     historico?: LegalAgentConversationMessage[];
+    escritorioId?: string;
     model?: string;
     temperature?: number;
     maxTokens?: number;
@@ -58,6 +74,14 @@ export interface LegalAgentChatResult {
         enabled: boolean;
         model: string | null;
         resposta: string;
+        confidenceScore: number | null;
+        ragEnabled: boolean;
+        citations: LegalAgentRagReference[];
+        ragContextUsed: boolean;
+        ragObservation?: {
+            selectedCount: number;
+            latencyMs: number;
+        } | null;
     };
     prompt: {
         source: string;

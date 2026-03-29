@@ -7,15 +7,23 @@
 import { getAdvogados } from "@/lib/dal/processos";
 import { getSession } from "@/actions/auth";
 import { PublicacoesManager } from "@/components/publicacoes/publicacoes-manager";
+import { PublicacoesOperationalPanel } from "@/components/publicacoes/publicacoes-operational-panel";
 import { Newspaper, Clock, Send, LinkIcon } from "lucide-react";
 import { db } from "@/lib/db";
 import type { StatusPublicacao } from "@/generated/prisma";
+import { getPublicacoesConfig, getPublicacoesJobState } from "@/lib/services/publicacoes-config";
+import { getDataJudMonitorState } from "@/lib/services/datajud-monitor";
+import { getDataJudAliasesState } from "@/lib/services/datajud-aliases";
+import { ensureCatalogoTribunaisNacional, getAutomacaoNacionalResumoCatalogo } from "@/lib/services/automacao-tribunais";
+import { listarAutomacaoJobsRecentes } from "@/lib/services/automacao-nacional";
 
 interface Props {
     searchParams: Promise<Record<string, string | string[]>>;
 }
 
 export default async function PublicacoesPage({ searchParams }: Props) {
+    await ensureCatalogoTribunaisNacional(false);
+
     const params = await searchParams;
     const session = await getSession();
     const escritorioFilter = session?.escritorioId ? { escritorioId: session.escritorioId } : {};
@@ -30,7 +38,7 @@ export default async function PublicacoesPage({ searchParams }: Props) {
     const dataTo = typeof params.dataTo === "string" ? params.dataTo : undefined;
     const page = typeof params.page === "string" ? parseInt(params.page, 10) : 1;
 
-    const [result, stats, tribunais, advogados, processos, clientes, analise] = await Promise.all([
+    const [result, stats, tribunais, advogados, processos, clientes, analise, config, jobState, monitor, aliases, catalogo, jobsAutomacao] = await Promise.all([
         getPublicacoes({ search, status, grupoStatus, tribunal, dataFrom, dataTo, page }),
         getPublicacaoStats(),
         getTribunais(),
@@ -51,6 +59,12 @@ export default async function PublicacoesPage({ searchParams }: Props) {
             take: 200,
         }),
         getAnaliseDistribuicaoPublicacoes(),
+        getPublicacoesConfig(),
+        getPublicacoesJobState(),
+        getDataJudMonitorState(),
+        getDataJudAliasesState(),
+        getAutomacaoNacionalResumoCatalogo(),
+        listarAutomacaoJobsRecentes(6),
     ]);
 
     const kpis = [
@@ -81,6 +95,15 @@ export default async function PublicacoesPage({ searchParams }: Props) {
                     </div>
                 ))}
             </div>
+
+            <PublicacoesOperationalPanel
+                config={JSON.parse(JSON.stringify(config))}
+                jobState={JSON.parse(JSON.stringify(jobState))}
+                monitor={JSON.parse(JSON.stringify(monitor))}
+                aliases={JSON.parse(JSON.stringify(aliases))}
+                catalogo={JSON.parse(JSON.stringify(catalogo))}
+                jobsAutomacao={JSON.parse(JSON.stringify(jobsAutomacao))}
+            />
 
             <PublicacoesManager
                 publicacoes={JSON.parse(JSON.stringify(result.publicacoes))}

@@ -1,5 +1,9 @@
 import "server-only";
 import { db } from "@/lib/db";
+import {
+    type AndamentoTraduzido,
+    readAndamentoTraducaoFromMetadata,
+} from "@/lib/services/andamento-tradutor";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -43,6 +47,7 @@ export interface EventoTimeline {
     documentoNome?: string;
     privado?: boolean;
     metadata?: Record<string, unknown>;
+    traducao?: AndamentoTraduzido;
     urgente?: boolean; // prazos vencendo em até 3 dias
 }
 
@@ -187,6 +192,7 @@ export async function getTimelineProcesso(
             entidadeTabela: "movimentacao",
             privado: mov.privado,
             metadata: (mov.metadata as Record<string, unknown>) ?? undefined,
+            traducao: readAndamentoTraducaoFromMetadata(mov.metadata, mov.descricao) ?? undefined,
         });
     }
 

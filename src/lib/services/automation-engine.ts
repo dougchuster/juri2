@@ -1,7 +1,14 @@
-import "server-only";
+if (typeof window !== "undefined") {
+    throw new Error("automation-engine is server-only");
+}
+
 import { db } from "@/lib/db";
 import type { Prisma } from "@/generated/prisma";
 import { FlowExecutionStatus, FlowNodeType, TriggerType } from "@/generated/prisma";
+import {
+    enqueueFlowExecutionJob,
+    isFlowExecutionQueueAvailable,
+} from "@/lib/queue/flow-execution-queue";
 import { upsertAttemptLifecycleForSource } from "@/lib/services/job-attempts";
 
 export interface AutomationPayload {
@@ -102,6 +109,19 @@ function parseLog(raw: unknown): ExecutionLogEntry[] {
         .filter((item): item is ExecutionLogEntry => Boolean(item));
 }
 
+function extractPayloadFromLog(log: ExecutionLogEntry[]): AutomationPayload {
+    const startEntry = log.find((entry) => entry.action === "EXECUTION_STARTED" && entry.payload);
+    const payload = startEntry?.payload;
+
+    if (payload && typeof payload.escritorioId === "string" && payload.escritorioId) {
+        return payload as AutomationPayload;
+    }
+
+    return {
+        escritorioId: "",
+    };
+}
+
 function addLog(log: ExecutionLogEntry[], partial: Omit<ExecutionLogEntry, "at">) {
     log.push({
         at: new Date().toISOString(),
@@ -168,11 +188,95 @@ function renderTemplate(template: string, values: Record<string, string>) {
     });
 }
 
+function stringifyVariableValue(value: unknown) {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number" || typeof value === "boolean") return String(value);
+    return JSON.stringify(value);
+}
+
+function buildTemplateVariables(
+    payload: AutomationPayload,
+    context: Awaited<ReturnType<typeof resolveFlowContext>>
+) {
+    const payloadVariables = Object.fromEntries(
+        Object.entries(payload).map(([key, value]) => [key, stringifyVariableValue(value)])
+    );
+
+    return {
+        ...payloadVariables,
+        nome: context.cliente?.nome || "",
+        nome_cliente: context.cliente?.nome || "",
+        cliente_id: context.cliente?.id || payload.clienteId || "",
+        processo: context.processo?.numeroCnj || "",
+        processo_id: context.processo?.id || payload.processoId || "",
+        fase: context.processo?.status || "",
+        processo_tipo: context.processo?.tipo || "",
+    };
+}
+
+function renderTemplatedValue(value: unknown, variables: Record<string, string>): unknown {
+    if (typeof value === "string") {
+        return renderTemplate(value, variables);
+    }
+
+    if (Array.isArray(value)) {
+        return value.map((item) => renderTemplatedValue(item, variables));
+    }
+
+    if (value && typeof value === "object") {
+        return Object.fromEntries(
+            Object.entries(value as Record<string, unknown>).map(([key, item]) => [
+                key,
+                renderTemplatedValue(item, variables),
+            ])
+        );
+    }
+
+    return value;
+}
+
+function parseWebhookHeaders(raw: unknown, variables: Record<string, string>) {
+    if (!raw) return {} as Record<string, string>;
+
+    let parsed: unknown = raw;
+    if (typeof raw === "string") {
+        try {
+            parsed = JSON.parse(raw) as unknown;
+        } catch {
+            return {} as Record<string, string>;
+        }
+    }
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return {} as Record<string, string>;
+    }
+
+    return Object.fromEntries(
+        Object.entries(parsed as Record<string, unknown>).map(([key, value]) => [
+            key,
+            String(renderTemplatedValue(value, variables) ?? ""),
+        ])
+    );
+}
+
+async function scheduleExecution(executionId: string, delayMs = 0) {
+    if (!isFlowExecutionQueueAvailable()) {
+        return {
+            queued: false,
+            reason: "Fila de execucao de workflows indisponivel.",
+        };
+    }
+
+    return enqueueFlowExecutionJob(executionId, delayMs);
+}
+
 function parseWaitMs(node: FlowNode): number {
     const amountRaw = Number(node.data?.delayAmount || node.data?.amount || 1);
     const amount = Number.isFinite(amountRaw) && amountRaw > 0 ? amountRaw : 1;
     const unitRaw = String(node.data?.delayUnit || node.data?.unit || "days").toLowerCase();
 
+    if (unitRaw === "seconds") return amount * 1000;
     if (unitRaw === "minutes") return amount * 60 * 1000;
     if (unitRaw === "hours") return amount * 60 * 60 * 1000;
     if (unitRaw === "weeks") return amount * 7 * 24 * 60 * 60 * 1000;
@@ -241,10 +345,12 @@ async function executeNode(
     node: FlowNode,
     flowId: string,
     escritorioId: string,
+    payload: AutomationPayload,
     context: Awaited<ReturnType<typeof resolveFlowContext>>,
     log: ExecutionLogEntry[],
 ) {
     const kind = normalizeNodeType(node);
+    const variables = buildTemplateVariables(payload, context);
 
     if (kind === FlowNodeType.TRIGGER) {
         addLog(log, { action: "TRIGGER_PASSED", nodeId: node.id });
@@ -261,12 +367,6 @@ async function executeNode(
         const canal = String(node.data?.channel || "whatsapp").toUpperCase() === "EMAIL" ? "EMAIL" : "WHATSAPP";
         const template = String(node.data?.messageBody || node.data?.content || "Atualizacao automatica do escritorio.");
         const subject = String(node.data?.subject || "Atualizacao juridica");
-        const variables = {
-            nome: cliente.nome,
-            nome_cliente: cliente.nome,
-            fase: context.processo?.status || "",
-            processo: context.processo?.numeroCnj || "",
-        };
         const rendered = renderTemplate(template, variables);
 
         const recipientPhone = cliente.whatsapp || cliente.celular || cliente.telefone;
@@ -420,12 +520,12 @@ async function executeNode(
                 waitUntil: waitUntil.toISOString(),
                 details: `Aguardando ate ${waitUntil.toISOString()}.`,
             });
-            return { type: "WAITING" as const };
+            return { type: "WAITING" as const, waitUntil };
         }
 
         const waitUntil = existingWait.waitUntil ? new Date(existingWait.waitUntil) : null;
         if (waitUntil && waitUntil.getTime() > now.getTime()) {
-            return { type: "WAITING" as const };
+            return { type: "WAITING" as const, waitUntil };
         }
 
         addLog(log, { action: "WAIT_COMPLETED", nodeId: node.id, details: "Tempo de espera concluido." });
@@ -459,6 +559,68 @@ async function executeNode(
             details: `Resultado: ${conditionResult ? "TRUE" : "FALSE"}`,
         });
         return { type: "CONDITION" as const, result: conditionResult };
+    }
+
+    if (kind === FlowNodeType.WEBHOOK) {
+        const url = String(node.data?.webhookUrl || node.data?.url || "").trim();
+        if (!url) {
+            addLog(log, { action: "WEBHOOK_SKIPPED", nodeId: node.id, details: "URL nao configurada." });
+            return { type: "CONTINUE" as const };
+        }
+
+        const method = String(node.data?.method || "POST").trim().toUpperCase() || "POST";
+        const timeoutMsRaw = Number(node.data?.timeoutMs || 10_000);
+        const timeoutMs = Number.isFinite(timeoutMsRaw) ? Math.max(1_000, timeoutMsRaw) : 10_000;
+        const headers = parseWebhookHeaders(node.data?.headers, variables);
+        const rawBody =
+            node.data?.body ??
+            node.data?.payload ?? {
+                flowId,
+                executionPayload: payload,
+                context: {
+                    clienteId: context.cliente?.id || null,
+                    processoId: context.processo?.id || null,
+                },
+            };
+        const renderedBody = renderTemplatedValue(rawBody, variables);
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+        try {
+            const finalHeaders = { ...headers };
+            let body: string | undefined;
+
+            if (method !== "GET" && method !== "HEAD") {
+                if (typeof renderedBody === "string") {
+                    body = renderedBody;
+                } else {
+                    body = JSON.stringify(renderedBody);
+                    if (!Object.keys(finalHeaders).some((key) => key.toLowerCase() === "content-type")) {
+                        finalHeaders["Content-Type"] = "application/json";
+                    }
+                }
+            }
+
+            const response = await fetch(url, {
+                method,
+                headers: finalHeaders,
+                body,
+                signal: controller.signal,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Webhook respondeu ${response.status}.`);
+            }
+
+            addLog(log, {
+                action: "WEBHOOK_SENT",
+                nodeId: node.id,
+                details: `${method} ${url} -> ${response.status}`,
+            });
+            return { type: "CONTINUE" as const };
+        } finally {
+            clearTimeout(timer);
+        }
     }
 
     addLog(log, { action: "NODE_SKIPPED", nodeId: node.id, details: "Tipo de no nao suportado." });
@@ -495,6 +657,12 @@ async function continueExecution(executionId: string, maxSteps = MAX_STEPS_PER_T
 
     const nodeMap = new Map(nodes.map((node) => [node.id, node]));
     const log = parseLog(execution.log);
+    const payload = {
+        ...extractPayloadFromLog(log),
+        escritorioId: execution.flow.escritorioId,
+        clienteId: execution.clienteId || undefined,
+        processoId: execution.processoId || undefined,
+    } satisfies AutomationPayload;
     let currentNodeId = execution.currentNodeId || findRootNode(nodes)?.id || null;
     const context = await resolveFlowContext({ clienteId: execution.clienteId, processoId: execution.processoId });
     let steps = 0;
@@ -528,7 +696,14 @@ async function continueExecution(executionId: string, maxSteps = MAX_STEPS_PER_T
             return { advanced: true, status: FlowExecutionStatus.FAILED };
         }
 
-        const result = await executeNode(node, execution.flowId, execution.flow.escritorioId, context, log);
+        const result = await executeNode(
+            node,
+            execution.flowId,
+            execution.flow.escritorioId,
+            payload,
+            context,
+            log
+        );
 
         if (result.type === "WAITING") {
             await db.flowExecution.update({
@@ -539,6 +714,24 @@ async function continueExecution(executionId: string, maxSteps = MAX_STEPS_PER_T
                     log: toInputJsonValue(log),
                 },
             });
+            if (result.waitUntil) {
+                const delayMs = Math.max(0, result.waitUntil.getTime() - Date.now());
+                const queueResult = await scheduleExecution(execution.id, delayMs);
+                addLog(log, {
+                    action: queueResult.queued ? "WAIT_SCHEDULED" : "WAIT_SCHEDULE_FAILED",
+                    nodeId: node.id,
+                    waitUntil: result.waitUntil.toISOString(),
+                    details: queueResult.queued
+                        ? `Reexecucao agendada para ${result.waitUntil.toISOString()}.`
+                        : queueResult.reason || "Falha ao agendar reexecucao do WAIT.",
+                });
+                await db.flowExecution.update({
+                    where: { id: execution.id },
+                    data: {
+                        log: toInputJsonValue(log),
+                    },
+                });
+            }
             return { advanced: true, status: FlowExecutionStatus.RUNNING, waiting: true };
         }
 
@@ -624,6 +817,24 @@ export const AutomationEngine = {
         const root = findRootNode(nodes);
         if (!root) return { started: false, reason: "Fluxo sem no inicial." };
 
+        const queueAvailable = isFlowExecutionQueueAvailable();
+        const initialLog: ExecutionLogEntry[] = [
+            {
+                at: new Date().toISOString(),
+                action: "EXECUTION_STARTED",
+                nodeId: root.id,
+                payload,
+            },
+        ];
+        if (queueAvailable) {
+            initialLog.push({
+                at: new Date().toISOString(),
+                action: "EXECUTION_QUEUED",
+                nodeId: root.id,
+                details: "Execucao enviada para a fila dedicada de workflows.",
+            });
+        }
+
         const execution = await db.flowExecution.create({
             data: {
                 flowId: flow.id,
@@ -631,22 +842,15 @@ export const AutomationEngine = {
                 processoId: payload.processoId || null,
                 status: FlowExecutionStatus.RUNNING,
                 currentNodeId: root.id,
-                log: toJsonValue([
-                    {
-                        at: new Date().toISOString(),
-                        action: "EXECUTION_STARTED",
-                        nodeId: root.id,
-                        payload,
-                    },
-                ]),
+                log: toJsonValue(initialLog),
             },
             select: { id: true },
         });
         await upsertAttemptLifecycleForSource({
             sourceType: "FLOW_EXECUTION",
             sourceId: execution.id,
-            status: "RUNNING",
-            startedAt: new Date(),
+            status: queueAvailable ? "QUEUED" : "RUNNING",
+            startedAt: queueAvailable ? undefined : new Date(),
             payloadSnapshot: payload,
         });
 
@@ -655,8 +859,119 @@ export const AutomationEngine = {
             data: { executionCount: { increment: 1 } },
         });
 
+        if (queueAvailable) {
+            const queueResult = await scheduleExecution(execution.id);
+            if (queueResult.queued) {
+                return { started: true, executionId: execution.id, queued: true };
+            }
+
+            const currentLog = parseLog(
+                (
+                    await db.flowExecution.findUnique({
+                        where: { id: execution.id },
+                        select: { log: true },
+                    })
+                )?.log
+            );
+            addLog(currentLog, {
+                action: "EXECUTION_QUEUE_FALLBACK",
+                nodeId: root.id,
+                details: queueResult.reason || "Fila indisponivel, executando inline.",
+            });
+            await db.flowExecution.update({
+                where: { id: execution.id },
+                data: {
+                    log: toInputJsonValue(currentLog),
+                },
+            });
+        }
+
+        await upsertAttemptLifecycleForSource({
+            sourceType: "FLOW_EXECUTION",
+            sourceId: execution.id,
+            status: "RUNNING",
+            startedAt: new Date(),
+            payloadSnapshot: payload,
+        });
+
         await continueExecution(execution.id);
-        return { started: true, executionId: execution.id };
+        return { started: true, executionId: execution.id, queued: false };
+    },
+
+    async processExecutionJob(
+        executionId: string,
+        retryContext?: {
+            attemptNumber?: number;
+            maxAttempts?: number;
+        }
+    ) {
+        await upsertAttemptLifecycleForSource({
+            sourceType: "FLOW_EXECUTION",
+            sourceId: executionId,
+            status: "RUNNING",
+            startedAt: new Date(),
+        });
+
+        try {
+            return await continueExecution(executionId);
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Erro desconhecido no runtime do workflow.";
+            const current = await db.flowExecution.findUnique({
+                where: { id: executionId },
+                select: {
+                    id: true,
+                    status: true,
+                    log: true,
+                },
+            });
+
+            if (!current) {
+                throw error;
+            }
+
+            const attemptNumber = retryContext?.attemptNumber || 1;
+            const maxAttempts = retryContext?.maxAttempts || 1;
+            const shouldRetry = attemptNumber < maxAttempts;
+            const log = parseLog(current.log);
+            addLog(log, {
+                action: shouldRetry ? "EXECUTION_RETRY_SCHEDULED" : "EXECUTION_FAILED",
+                details: shouldRetry
+                    ? `Tentativa ${attemptNumber}/${maxAttempts} falhou: ${message}`
+                    : message,
+                payload: {
+                    attemptNumber,
+                    maxAttempts,
+                },
+            });
+
+            await db.flowExecution.update({
+                where: { id: executionId },
+                data: {
+                    status: shouldRetry ? FlowExecutionStatus.RUNNING : FlowExecutionStatus.FAILED,
+                    errorMessage: message,
+                    log: toInputJsonValue(log),
+                    ...(shouldRetry ? {} : { completedAt: new Date() }),
+                },
+            });
+
+            await upsertAttemptLifecycleForSource({
+                sourceType: "FLOW_EXECUTION",
+                sourceId: executionId,
+                status: shouldRetry ? "RUNNING" : "FAILED",
+                errorMessage: message,
+                ...(shouldRetry ? {} : { finishedAt: new Date() }),
+            });
+
+            if (shouldRetry) {
+                throw error;
+            }
+
+            return {
+                advanced: true,
+                failed: true,
+                status: FlowExecutionStatus.FAILED,
+            };
+        }
     },
 
     async handleCustomEvent(eventName: string, payload: AutomationPayload) {
@@ -705,6 +1020,17 @@ export const AutomationEngine = {
             take: limit,
             select: { id: true },
         });
+
+        if (isFlowExecutionQueueAvailable()) {
+            let processed = 0;
+
+            for (const exec of running) {
+                const queueResult = await scheduleExecution(exec.id);
+                if (queueResult.queued) processed += 1;
+            }
+
+            return { processed, completed: 0, waiting: 0, failed: 0 };
+        }
 
         let processed = 0;
         let completed = 0;

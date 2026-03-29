@@ -95,6 +95,7 @@ interface Props {
 
 export function TimelineEventCard({ evento, isLast, onDelete }: Props) {
     const [expandido, setExpandido] = useState(false);
+    const [mostrarOriginal, setMostrarOriginal] = useState(false);
 
     const dataFormatada = new Date(evento.data).toLocaleDateString("pt-BR", {
         day: "2-digit",
@@ -102,15 +103,31 @@ export function TimelineEventCard({ evento, isLast, onDelete }: Props) {
         year: "numeric",
     });
 
-    const descricaoLonga = evento.descricao.length > DESCRICAO_LIMITE;
-    const descricaoExibida =
+    const descricaoPrincipal =
+        evento.traducao && !mostrarOriginal
+            ? evento.traducao.resumoSimplificado
+            : evento.descricao;
+    const descricaoLonga = descricaoPrincipal.length > DESCRICAO_LIMITE;
+    const descricaoExibidaOriginal =
         descricaoLonga && !expandido
             ? evento.descricao.slice(0, DESCRICAO_LIMITE) + "…"
             : evento.descricao;
 
+    const descricaoExibida = evento.traducao
+        ? descricaoLonga && !expandido
+            ? descricaoPrincipal.slice(0, DESCRICAO_LIMITE) + "..."
+            : descricaoPrincipal
+        : descricaoExibidaOriginal;
+
     const borderClass = getEventoBorderClass(evento.tipo);
     const tipoLabel   = TIPO_LABELS[evento.tipo] ?? evento.tipo;
     const actionVerb  = ACTION_VERBS[evento.tipo] ?? "registrou evento";
+    const tomClass =
+        evento.traducao?.tom === "positivo"
+            ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
+            : evento.traducao?.tom === "negativo"
+                ? "border-red-500/20 bg-red-500/10 text-red-700"
+                : "border-slate-500/20 bg-slate-500/10 text-slate-600";
 
     const isAutomated = evento.fonte === "DATAJUD" || evento.fonte === "DIARIO_OFICIAL";
     const fonteLabel  = evento.fonte === "DATAJUD" ? "CNJ · DataJud"
@@ -187,6 +204,26 @@ export function TimelineEventCard({ evento, isLast, onDelete }: Props) {
                 {/* ── Row 3: description ── */}
                 {evento.descricao && evento.descricao !== evento.titulo && (
                     <div className="mt-1">
+                        {evento.traducao && (
+                            <div className="mb-2 flex flex-wrap items-center gap-2">
+                                <span className="inline-flex items-center gap-1 rounded-full border border-accent/20 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">
+                                    <BookOpen size={10} />
+                                    {mostrarOriginal ? "Texto original" : "Leitura simplificada"}
+                                </span>
+                                <span className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold ${tomClass}`}>
+                                    {evento.traducao.tom}
+                                </span>
+                                <button
+                                    onClick={() => {
+                                        setMostrarOriginal((value) => !value);
+                                        setExpandido(false);
+                                    }}
+                                    className="text-[11px] font-medium text-accent hover:underline"
+                                >
+                                    {mostrarOriginal ? "Ver resumo" : "Ver original"}
+                                </button>
+                            </div>
+                        )}
                         <p className="text-sm text-text-secondary leading-relaxed">
                             {descricaoExibida}
                         </p>

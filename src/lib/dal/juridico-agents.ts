@@ -1,6 +1,8 @@
 import "server-only";
+import { randomUUID } from "node:crypto";
 
 import { db } from "@/lib/db";
+import type { LegalAgentRagReference } from "@/lib/services/juridico-agents/types";
 
 type ModelRole = "user" | "assistant";
 
@@ -49,6 +51,44 @@ export interface BuildConversationContextResult {
     conversationId: string;
     history: Array<{ role: ModelRole; content: string }>;
     memorySummary: string;
+}
+
+export interface LegalAgentMessageResponseLogView {
+    ragEnabled: boolean;
+    confidenceScore: number | null;
+    citations: LegalAgentRagReference[];
+    usageMeta: Record<string, unknown> | null;
+}
+
+export interface LegalAgentMessageFeedbackView {
+    value: -1 | 1;
+    note: string | null;
+    createdAt: string;
+}
+
+export interface LegalAgentMessageView {
+    id: string;
+    conversationId: string;
+    role: "USER" | "ASSISTANT" | "SYSTEM";
+    content: string;
+    model: string | null;
+    promptChars: number | null;
+    createdAt: Date;
+    attachments: Array<{
+        id: string;
+        fileName: string;
+        mimeType: string;
+        fileSize: number | null;
+        fileUrl: string;
+        extractedText: string | null;
+        extractedChars: number;
+        extractionStatus: string;
+        extractionMethod: string;
+        warning: string | null;
+        createdAt: Date;
+    }>;
+    responseLog: LegalAgentMessageResponseLogView | null;
+    feedback: LegalAgentMessageFeedbackView | null;
 }
 
 const RECENT_MESSAGES_FOR_MODEL = 16;
@@ -182,6 +222,108 @@ function buildRetrievalSnippet(message: QueryMessage) {
     const when = message.createdAt.toISOString().slice(0, 10);
     if (!att) return `- [${when}] ${role}: ${base}`;
     return `- [${when}] ${role}: ${base}\n  Anexo: ${att}`;
+}
+
+function parseRagReferences(value: unknown): LegalAgentRagReference[] {
+    if (!Array.isArray(value)) return [];
+
+    return value
+        .filter((item): item is LegalAgentRagReference => typeof item === "object" && item !== null)
+        .map((item) => ({
+            id: String(item.id || ""),
+            title: String(item.title || ""),
+            displayLabel: String(item.displayLabel || item.title || ""),
+            tribunal: typeof item.tribunal === "string" ? item.tribunal : null,
+            area: typeof item.area === "string" ? item.area : null,
+            dataReferencia: typeof item.dataReferencia === "string" ? item.dataReferencia : null,
+            excerpt: typeof item.excerpt === "string" ? item.excerpt : "",
+            sourceId: typeof item.sourceId === "string" ? item.sourceId : null,
+            originType: typeof item.originType === "string" ? item.originType : null,
+            originId: typeof item.originId === "string" ? item.originId : null,
+            score: Number(item.score || 0),
+            matchReasons: Array.isArray(item.matchReasons)
+                ? item.matchReasons.map((reason) => String(reason))
+                : [],
+        }))
+        .filter((item) => item.id && item.displayLabel);
+}
+
+async function loadMessageResponseLogs(messageIds: string[]) {
+    if (!messageIds.length) return new Map<string, LegalAgentMessageResponseLogView>();
+
+    const rows = await db.$queryRawUnsafe<
+        Array<{
+            messageId: string;
+            ragEnabled: boolean;
+            confidenceScore: number | null;
+            citations: unknown;
+            usageMeta: Record<string, unknown> | null;
+        }>
+    >(
+        `
+            select
+                message_id as "messageId",
+                rag_enabled as "ragEnabled",
+                confidence_score as "confidenceScore",
+                citations,
+                usage_meta as "usageMeta"
+            from legal_agent_response_logs
+            where message_id = any($1::text[])
+        `,
+        messageIds
+    );
+
+    return new Map(
+        rows.map((row) => [
+            row.messageId,
+            {
+                ragEnabled: Boolean(row.ragEnabled),
+                confidenceScore:
+                    typeof row.confidenceScore === "number" && Number.isFinite(row.confidenceScore)
+                        ? Number(row.confidenceScore)
+                        : null,
+                citations: parseRagReferences(row.citations),
+                usageMeta: row.usageMeta ?? null,
+            },
+        ])
+    );
+}
+
+async function loadMessageFeedbackMap(messageIds: string[], userId: string) {
+    if (!messageIds.length) return new Map<string, LegalAgentMessageFeedbackView>();
+
+    const rows = await db.$queryRawUnsafe<
+        Array<{
+            messageId: string;
+            value: number;
+            note: string | null;
+            createdAt: Date;
+        }>
+    >(
+        `
+            select
+                message_id as "messageId",
+                value,
+                note,
+                created_at as "createdAt"
+            from legal_agent_message_feedback
+            where user_id = $1
+              and message_id = any($2::text[])
+        `,
+        userId,
+        messageIds
+    );
+
+    return new Map(
+        rows.map((row) => [
+            row.messageId,
+            {
+                value: (row.value >= 0 ? 1 : -1) as 1 | -1,
+                note: row.note,
+                createdAt: row.createdAt.toISOString(),
+            },
+        ])
+    );
 }
 
 function pickRelevantOlderMessages(
@@ -359,7 +501,19 @@ export async function loadLegalAgentConversationMessages(input: {
         take: Math.max(1, Math.min(2000, input.take || 500)),
     });
 
-    return messages;
+    const messageIds = messages.map((message) => message.id);
+    const [responseLogs, feedbackMap] = await Promise.all([
+        loadMessageResponseLogs(messageIds),
+        loadMessageFeedbackMap(messageIds, input.userId),
+    ]);
+
+    return messages.map(
+        (message): LegalAgentMessageView => ({
+            ...message,
+            responseLog: responseLogs.get(message.id) || null,
+            feedback: feedbackMap.get(message.id) || null,
+        })
+    );
 }
 
 export async function deleteLegalAgentConversationForUser(input: {
@@ -456,6 +610,122 @@ export async function createLegalAgentMessage(input: {
     });
 
     return created;
+}
+
+export async function saveLegalAgentResponseLog(input: {
+    messageId: string;
+    userId: string;
+    agentId: string;
+    model: string | null;
+    promptSource: string;
+    ragEnabled: boolean;
+    confidenceScore: number | null;
+    citations: LegalAgentRagReference[];
+    usageMeta?: Record<string, unknown> | null;
+}) {
+    await db.$executeRaw`
+        insert into legal_agent_response_logs (
+            message_id,
+            user_id,
+            agent_id,
+            model,
+            prompt_source,
+            rag_enabled,
+            confidence_score,
+            citations,
+            usage_meta,
+            created_at,
+            updated_at
+        )
+        values (
+            ${input.messageId},
+            ${input.userId},
+            ${input.agentId},
+            ${input.model},
+            ${input.promptSource},
+            ${input.ragEnabled},
+            ${input.confidenceScore},
+            ${JSON.stringify(input.citations)}::jsonb,
+            ${JSON.stringify(input.usageMeta ?? {})}::jsonb,
+            now(),
+            now()
+        )
+        on conflict (message_id) do update set
+            user_id = excluded.user_id,
+            agent_id = excluded.agent_id,
+            model = excluded.model,
+            prompt_source = excluded.prompt_source,
+            rag_enabled = excluded.rag_enabled,
+            confidence_score = excluded.confidence_score,
+            citations = excluded.citations,
+            usage_meta = excluded.usage_meta,
+            updated_at = now()
+    `;
+}
+
+export async function setLegalAgentMessageFeedback(input: {
+    userId: string;
+    messageId: string;
+    value: -1 | 1;
+    note?: string | null;
+}) {
+    await db.$executeRaw`
+        insert into legal_agent_message_feedback (
+            id,
+            message_id,
+            user_id,
+            value,
+            note,
+            created_at,
+            updated_at
+        )
+        values (
+            ${randomUUID()},
+            ${input.messageId},
+            ${input.userId},
+            ${input.value},
+            ${input.note?.trim() || null},
+            now(),
+            now()
+        )
+        on conflict (message_id, user_id) do update set
+            value = excluded.value,
+            note = excluded.note,
+            updated_at = now()
+    `;
+
+    const rows = await db.$queryRaw<Array<{ createdAt: Date }>>`
+        select created_at as "createdAt"
+        from legal_agent_message_feedback
+        where message_id = ${input.messageId}
+          and user_id = ${input.userId}
+        limit 1
+    `;
+
+    return {
+        value: input.value,
+        note: input.note?.trim() || null,
+        createdAt: rows[0]?.createdAt.toISOString() || new Date().toISOString(),
+    } satisfies LegalAgentMessageFeedbackView;
+}
+
+export async function getLegalAgentAssistantMessageForUser(input: {
+    userId: string;
+    messageId: string;
+}) {
+    return db.legalAgentMessage.findFirst({
+        where: {
+            id: input.messageId,
+            role: "ASSISTANT",
+            conversation: {
+                userId: input.userId,
+            },
+        },
+        select: {
+            id: true,
+            conversationId: true,
+        },
+    });
 }
 
 export async function buildConversationContextForAgentCall(

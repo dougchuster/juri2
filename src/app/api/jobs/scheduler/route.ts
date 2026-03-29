@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { scheduleReminders, processJobQueue } from "@/lib/services/communication-engine";
 import { scheduleMeetingAutomationBatch, syncMeetingReminderStatuses } from "@/lib/services/meeting-automation-service";
+import { scheduleReguaCobrancaRun } from "@/lib/services/regua-cobranca";
 import { isJobRequestAuthorized } from "@/lib/auth/job-auth";
 import {
     executarPlanejamentoAgendadoDemandas,
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
         // Step 1: Schedule reminders (creates jobs)
         const reminderResult = await scheduleReminders();
         const meetingReminderResult = await scheduleMeetingAutomationBatch();
+        const reguaCobrancaResult = await scheduleReguaCobrancaRun();
 
         // Step 2: Process the job queue
         const queueResult = await processJobQueue(50);
@@ -49,6 +51,7 @@ export async function POST(req: NextRequest) {
             ok: true,
             reminders: reminderResult,
             meetingReminders: meetingReminderResult,
+            reguaCobranca: reguaCobrancaResult,
             queue: queueResult,
             meetingReminderStatus: meetingStatusResult,
             regrasDemandas: regrasResult.success ? regrasResult.result : { error: regrasResult.error },
@@ -76,6 +79,7 @@ export async function GET(req: NextRequest) {
 
     const reminderResult = await scheduleReminders();
     const meetingReminderResult = await scheduleMeetingAutomationBatch();
+    const reguaCobrancaResult = await scheduleReguaCobrancaRun();
     const queueResult = await processJobQueue(50);
     const meetingStatusResult = await syncMeetingReminderStatuses();
     const regrasResult = await executarRegrasGeracaoRotinasDemandas({
@@ -93,6 +97,7 @@ export async function GET(req: NextRequest) {
         ok: true,
         reminders: reminderResult,
         meetingReminders: meetingReminderResult,
+        reguaCobranca: reguaCobrancaResult,
         queue: queueResult,
         meetingReminderStatus: meetingStatusResult,
         regrasDemandas: regrasResult.success ? regrasResult.result : { error: regrasResult.error },

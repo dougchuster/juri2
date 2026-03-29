@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
     Search, Plus, Eye, Pencil, Trash2, Loader2,
-    Scale, Clock, FileText,
+    Scale, Clock, FileText, LayoutGrid, List,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,8 +13,10 @@ import { Modal } from "@/components/ui/modal";
 import { ActionFeedback } from "@/components/ui/action-feedback";
 import { ConfirmActionModal } from "@/components/ui/confirm-action-modal";
 import { EmptyState } from "@/components/ui/empty-state";
+import { ExportButton } from "@/components/ui/export-button";
 import { TablePagination } from "@/components/ui/table-pagination";
 import { ProcessoForm } from "@/components/processos/processo-form";
+import { ProcessosKanbanBoard } from "@/components/processos/processos-kanban-board";
 import {
     deleteProcesso,
     getProcessoEditData,
@@ -70,6 +72,7 @@ interface ProcessoTableProps {
     page: number;
     totalPages: number;
     searchParams: Record<string, string>;
+    view?: "list" | "kanban";
 }
 
 export function ProcessoTable({
@@ -82,6 +85,7 @@ export function ProcessoTable({
     page,
     totalPages,
     searchParams,
+    view = "list",
 }: ProcessoTableProps) {
     const router = useRouter();
     const [showCreate, setShowCreate] = useState(false);
@@ -251,12 +255,32 @@ export function ProcessoTable({
                         <option value="com_cliente">Com cliente</option>
                         <option value="sem_cliente">Sem cliente (triagem)</option>
                     </select>
+                    <div className="flex items-center rounded-lg border border-border bg-bg-tertiary p-1">
+                        <Button
+                            size="sm"
+                            variant={view === "list" ? "secondary" : "ghost"}
+                            onClick={() => router.push(buildUrl({ view: "list", page: "1" }))}
+                        >
+                            <List size={14} />
+                            Lista
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant={view === "kanban" ? "secondary" : "ghost"}
+                            onClick={() => router.push(buildUrl({ view: "kanban", page: "1" }))}
+                        >
+                            <LayoutGrid size={14} />
+                            Kanban
+                        </Button>
+                    </div>
+                    <ExportButton basePath="/api/processos/export" query={searchParams} />
                     <Button size="sm" className="w-full sm:w-auto" onClick={() => setShowCreate(true)}>
                         <Plus size={16} /> Novo Processo
                     </Button>
                 </div>
             </div>
 
+            {view === "list" ? (
             <div className="mb-4 rounded-lg border border-border bg-bg-tertiary/30 p-3">
                 <div className="flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center">
                     <label className="inline-flex items-center gap-2 text-xs text-text-secondary">
@@ -360,8 +384,11 @@ export function ProcessoTable({
                     </div>
                 )}
             </div>
+            ) : null}
 
-            <div className="space-y-3 md:hidden">
+            {view === "kanban" ? <ProcessosKanbanBoard processos={processos} /> : null}
+
+            {view === "list" ? <div className="space-y-3 md:hidden">
                 {processos.length === 0 ? (
                     <div className="glass-card overflow-hidden">
                         <EmptyState
@@ -438,9 +465,9 @@ export function ProcessoTable({
                         </div>
                     </div>
                 ))}
-            </div>
+            </div> : null}
 
-            <div className="glass-card hidden overflow-hidden md:block">
+            {view === "list" ? <div className="glass-card hidden overflow-hidden md:block">
                 <div className="overflow-x-auto">
                 <table className="w-full min-w-[920px]">
                     <thead>
@@ -552,7 +579,7 @@ export function ProcessoTable({
                         onNext={() => router.push(buildUrl({ page: String(page + 1) }))}
                     />
                 )}
-            </div>
+            </div> : null}
 
             <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="Novo processo" size="xl">
                 <ProcessoForm

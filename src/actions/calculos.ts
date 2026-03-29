@@ -5,12 +5,17 @@ import { Prisma } from "@/generated/prisma";
 import { revalidatePath } from "next/cache";
 import { getSession } from "@/actions/auth";
 import { registrarLogAuditoria } from "@/lib/services/audit-log";
+import {
+    normalizeCalculoResultado,
+    type CalculoResultado,
+    type CalculoTipo,
+} from "@/lib/services/calculos";
 
 export interface CalculoFormData {
-    tipo: "MONETARIO" | "PREVIDENCIARIO" | "TRABALHISTA";
+    tipo: CalculoTipo;
     nome: string;
     parametros: Record<string, unknown>;
-    resultado?: Record<string, unknown>;
+    resultado?: Record<string, unknown> | CalculoResultado;
     processoId?: string;
     clienteId?: string;
 }
@@ -20,12 +25,18 @@ export async function saveCalculo(data: CalculoFormData) {
     if (!session) return { success: false, error: "Sessao expirada." };
 
     try {
+        const resultadoNormalizado = data.resultado
+            ? normalizeCalculoResultado(data.tipo, data.resultado)
+            : undefined;
+
         const calculo = await db.calculo.create({
             data: {
                 tipo: data.tipo,
                 nome: data.nome,
                 parametros: data.parametros as Prisma.InputJsonValue,
-                resultado: data.resultado ? (data.resultado as Prisma.InputJsonValue) : Prisma.DbNull,
+                resultado: resultadoNormalizado
+                    ? (resultadoNormalizado as unknown as Prisma.InputJsonValue)
+                    : Prisma.DbNull,
                 processoId: data.processoId || null,
                 clienteId: data.clienteId || null,
                 criadoPorId: session.id,
@@ -48,12 +59,20 @@ export async function saveCalculo(data: CalculoFormData) {
     }
 }
 
-export async function updateCalculoResultado(id: string, resultado: Record<string, unknown>) {
+export async function updateCalculoResultado(
+    id: string,
+    tipo: CalculoTipo,
+    resultado: Record<string, unknown> | CalculoResultado
+) {
     const session = await getSession();
     if (!session) return { success: false, error: "Sessao expirada." };
 
     try {
-        await db.calculo.update({ where: { id }, data: { resultado: resultado as Prisma.InputJsonValue } });
+        const resultadoNormalizado = normalizeCalculoResultado(tipo, resultado);
+        await db.calculo.update({
+            where: { id },
+            data: { resultado: resultadoNormalizado as unknown as Prisma.InputJsonValue },
+        });
         revalidatePath("/calculos");
         return { success: true };
     } catch (error) {

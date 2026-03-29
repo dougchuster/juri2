@@ -24,10 +24,11 @@ export default async function ProcessosPage({ searchParams }: Props) {
         typeof params.triagem === "string" && ["sem_cliente", "com_cliente"].includes(params.triagem)
             ? (params.triagem as "sem_cliente" | "com_cliente")
             : undefined;
+    const view = typeof params.view === "string" && params.view === "kanban" ? "kanban" : "list";
     const page = typeof params.page === "string" ? parseInt(params.page, 10) : 1;
 
     const [result, stats, advogados, tiposAcao, fases, clientes] = await Promise.all([
-        getProcessos({ search, status, tipo, triagem, page }, visibilityScope),
+        getProcessos({ search, status, tipo, triagem, page, pageSize: view === "kanban" ? 200 : 10 }, visibilityScope),
         getProcessoStats(visibilityScope),
         getAdvogados(),
         getTiposAcao(),
@@ -73,6 +74,7 @@ export default async function ProcessosPage({ searchParams }: Props) {
                 page={result.page}
                 totalPages={result.totalPages}
                 searchParams={params as Record<string, string>}
+                view={view}
             />
         </div>
     );

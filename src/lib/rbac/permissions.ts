@@ -72,6 +72,7 @@ const PERMISSION_RESOURCES: PermissionResourceDefinition[] = [
     { module: "financeiro", moduleLabel: "Financeiro", resource: "contas-receber", resourceLabel: "Contas a Receber", actions: ["ver", "criar", "editar", "excluir", "exportar", "gerenciar"] },
     { module: "financeiro", moduleLabel: "Financeiro", resource: "repasses", resourceLabel: "Rateios e Repasses", actions: ["ver", "criar", "editar", "excluir", "gerenciar"] },
     { module: "financeiro", moduleLabel: "Financeiro", resource: "fluxo-caixa", resourceLabel: "Fluxo de Caixa", actions: ["ver", "exportar", "gerenciar"] },
+    { module: "financeiro", moduleLabel: "Financeiro", resource: "timesheet", resourceLabel: "Timesheet e Cronometro", actions: ["ver", "criar", "editar", "excluir", "exportar", "gerenciar"] },
     { module: "financeiro", moduleLabel: "Financeiro", resource: "rentabilidade", resourceLabel: "Rentabilidade", actions: ["ver", "exportar", "gerenciar"] },
     { module: "financeiro", moduleLabel: "Financeiro", resource: "relatorios", resourceLabel: "Relatórios Financeiros", actions: ["ver", "exportar", "gerenciar"] },
     { module: "financeiro", moduleLabel: "Financeiro", resource: "conciliacao", resourceLabel: "Conciliação Bancária", actions: ["ver", "editar", "gerenciar"] },
@@ -164,6 +165,7 @@ const ROUTE_PERMISSION_RULES: RoutePermissionRule[] = [
     { path: "/financeiro/contas-receber", permission: "financeiro:contas-receber:ver", match: "prefix" },
     { path: "/financeiro/repasses", permission: "financeiro:repasses:ver", match: "prefix" },
     { path: "/financeiro/fluxo-caixa", permission: "financeiro:fluxo-caixa:ver", match: "prefix" },
+    { path: "/financeiro/timesheet", permission: "financeiro:timesheet:ver", match: "prefix" },
     { path: "/financeiro/rentabilidade", permission: "financeiro:rentabilidade:ver", match: "prefix" },
     { path: "/financeiro/relatorios", permission: "financeiro:relatorios:ver", match: "prefix" },
     { path: "/financeiro/conciliacao", permission: "financeiro:conciliacao:ver", match: "prefix" },
@@ -313,6 +315,7 @@ function buildDefaultRoleTemplates(): Record<Role, string[]> {
     addResourcePermissions(templates.ADVOGADO, "demandas", "lista", ["ver", "criar"]);
     addResourcePermissions(templates.ADVOGADO, "financeiro", "dashboard", ["ver"]);
     addResourcePermissions(templates.ADVOGADO, "financeiro", "casos", ["ver"]);
+    addResourcePermissions(templates.ADVOGADO, "financeiro", "timesheet", ["ver", "criar", "editar", "excluir"]);
     addModulePermissions(templates.ADVOGADO, "documentos", ["gerenciar"]);
     addModulePermissions(templates.ADVOGADO, "protocolos", ["gerenciar"]);
     addModulePermissions(templates.ADVOGADO, "calculos", ["gerenciar"]);
@@ -325,6 +328,7 @@ function buildDefaultRoleTemplates(): Record<Role, string[]> {
     addResourcePermissions(templates.CONTROLADOR, "dashboard", "painel", ["ver"]);
     addModulePermissions(templates.CONTROLADOR, "controladoria", ["gerenciar"]);
     addModulePermissions(templates.CONTROLADOR, "financeiro", ["ver", "exportar"]);
+    addResourcePermissions(templates.CONTROLADOR, "financeiro", "timesheet", ["ver", "exportar"]);
     addResourcePermissions(templates.CONTROLADOR, "financeiro", "relatorios", ["gerenciar"]);
     addResourcePermissions(templates.CONTROLADOR, "produtividade", "painel", ["gerenciar"]);
     addResourcePermissions(templates.CONTROLADOR, "relatorios", "painel", ["gerenciar"]);
@@ -363,6 +367,7 @@ function buildDefaultRoleTemplates(): Record<Role, string[]> {
     addResourcePermissions(templates.ASSISTENTE, "documentos", "detalhe", ["ver", "editar"]);
     addResourcePermissions(templates.ASSISTENTE, "protocolos", "lista", ["ver", "criar"]);
     addResourcePermissions(templates.ASSISTENTE, "calculos", "painel", ["ver"]);
+    addResourcePermissions(templates.ASSISTENTE, "financeiro", "timesheet", ["ver", "criar"]);
 
     addResourcePermissions(templates.SECRETARIA, "dashboard", "painel", ["ver"]);
     addModulePermissions(templates.SECRETARIA, "atendimentos", ["gerenciar"]);

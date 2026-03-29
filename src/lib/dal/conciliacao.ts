@@ -9,7 +9,19 @@ export async function getExtratos() {
             _count: { select: { itens: true } },
             itens: {
                 where: { conciliado: false },
-                select: { id: true },
+                orderBy: { data: "desc" },
+                include: {
+                    lancamentos: {
+                        select: {
+                            id: true,
+                            descricao: true,
+                            valorReal: true,
+                            valorPrevisto: true,
+                            dataPagamento: true,
+                            status: true,
+                        },
+                    },
+                },
             },
         },
         take: 50,

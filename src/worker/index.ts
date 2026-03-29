@@ -7,7 +7,9 @@ import {
 } from "../lib/queue";
 import { ATTENDANCE_AUTOMATION_QUEUE_NAME } from "../lib/queue/attendance-automation-queue";
 import { CRM_CAMPAIGN_QUEUE_NAME } from "../lib/queue/campaign-queue";
+import { FLOW_EXECUTION_QUEUE_NAME } from "../lib/queue/flow-execution-queue";
 import { executarAutomacaoNacionalJob } from "../lib/services/automacao-nacional";
+import { AutomationEngine } from "../lib/services/automation-engine";
 import { runAttendanceAutomationForInboundMessage } from "../lib/services/attendance-automation";
 import { processCampaignJob } from "../lib/services/campaign-engine";
 
@@ -28,6 +30,10 @@ const campaignConcurrency = Math.max(
 const attendanceConcurrency = Math.max(
   1,
   Math.min(20, Number(process.env.ATTENDANCE_AUTOMATION_WORKER_CONCURRENCY || 4))
+);
+const flowExecutionConcurrency = Math.max(
+  1,
+  Math.min(20, Number(process.env.FLOW_EXECUTION_WORKER_CONCURRENCY || 4))
 );
 
 const workers = [
@@ -66,12 +72,25 @@ const workers = [
     },
     { connection, concurrency: attendanceConcurrency }
   ),
+  new Worker(
+    FLOW_EXECUTION_QUEUE_NAME,
+    async (job) => {
+      const executionId = String(job.data?.executionId || "");
+      if (!executionId) throw new Error("Payload invalido: executionId obrigatorio.");
+      return AutomationEngine.processExecutionJob(executionId, {
+        attemptNumber: job.attemptsMade + 1,
+        maxAttempts: typeof job.opts.attempts === "number" ? job.opts.attempts : 1,
+      });
+    },
+    { connection, concurrency: flowExecutionConcurrency }
+  ),
 ];
 
 const workerLabels = [
   `${AUTOMACAO_NATIONAL_QUEUE_NAME} (concurrency=${nationalConcurrency})`,
   `${CRM_CAMPAIGN_QUEUE_NAME} (concurrency=${campaignConcurrency})`,
   `${ATTENDANCE_AUTOMATION_QUEUE_NAME} (concurrency=${attendanceConcurrency})`,
+  `${FLOW_EXECUTION_QUEUE_NAME} (concurrency=${flowExecutionConcurrency})`,
 ];
 
 workers.forEach((worker, index) => {

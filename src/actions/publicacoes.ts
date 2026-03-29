@@ -1,6 +1,7 @@
 ﻿"use server";
 
 import { db } from "@/lib/db";
+import { ensureMovimentacaoTraducao } from "@/lib/services/andamento-tradutor";
 import { z } from "zod";
 import { Prisma } from "@/generated/prisma";
 import type { StatusPublicacao, TipoHistoricoPublicacao } from "@/generated/prisma";
@@ -16,7 +17,7 @@ import type {
     CapturaOabFormData,
 } from "@/lib/validators/publicacao";
 import { revalidatePath } from "next/cache";
-import { getEscritorioId, tenantFilter } from "@/lib/tenant";
+import { tenantFilter } from "@/lib/tenant";
 import {
     extractOabsFromText,
     findAdvogadoByOab,
@@ -1862,10 +1863,11 @@ export async function gravarPublicacaoComoMovimentacao(
         });
 
         let statusAtualizado = false;
+        let movimentacaoId = existente?.id ?? null;
 
         await db.$transaction(async (tx) => {
             if (!existente) {
-                await tx.movimentacao.create({
+                const movimentacao = await tx.movimentacao.create({
                     data: {
                         processoId: pub.processoId!,
                         data: normalizeDateOnly(pub.dataPublicacao),
@@ -1874,6 +1876,7 @@ export async function gravarPublicacaoComoMovimentacao(
                         fonte: "PUBLICACAO",
                     },
                 });
+                movimentacaoId = movimentacao.id;
             }
 
             await tx.processo.update({
@@ -1907,6 +1910,13 @@ export async function gravarPublicacaoComoMovimentacao(
         revalidatePath("/agenda");
         revalidatePath("/processos");
         revalidatePath(`/processos/${pub.processoId}`);
+        if (movimentacaoId) {
+            try {
+                await ensureMovimentacaoTraducao(movimentacaoId);
+            } catch (error) {
+                console.warn("[Publicacoes] Falha ao traduzir movimentacao:", error);
+            }
+        }
 
         return {
             success: true,
