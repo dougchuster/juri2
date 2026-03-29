@@ -1,272 +1,467 @@
-# Sistema Jurídico ADV
+# Sistema Juridico ADV
 
-Plataforma SaaS completa de gestão para escritórios de advocacia brasileiros. Desenvolvida para competir com soluções como Astrea, Integra e Advbox, oferecendo gestão de processos, clientes, financeiro, comunicação via WhatsApp, CRM, documentos com IA e muito mais.
+Plataforma SaaS de operacao juridica para escritorios de advocacia brasileiros. O projeto concentra gestao processual, CRM, financeiro, publicacoes, comunicacao omnichannel, automacoes operacionais e recursos assistidos por IA em uma unica base.
 
----
+O sistema foi estruturado para rodar com Next.js no App Router, PostgreSQL via Prisma, Redis + BullMQ para processamento assincrono e deploy principal em VPS com Docker Compose. O repositorio tambem contem suporte operacional para cron em Vercel e workers dedicados quando necessario.
 
-## Stack Tecnológica
+## Visao Geral
 
-| Camada | Tecnologia |
-|--------|-----------|
-| Framework | Next.js 16 (App Router) + TypeScript |
-| Estilo | TailwindCSS 4 |
-| Banco de Dados | PostgreSQL via Prisma 7 |
-| Cache / Filas | Redis + BullMQ |
-| Tempo Real | Socket.io |
-| Autenticação | Better Auth |
-| IA | Google Gemini / Kimi (Moonshot) |
-| WhatsApp | Evolution API + Baileys |
-| Infraestrutura | Docker + Nginx + Certbot (SSL) |
-| Deploy | VPS Hostinger |
+O produto cobre o ciclo completo de operacao de um escritorio:
 
----
+- captacao e qualificacao comercial
+- cadastro de clientes, processos, prazos e audiencias
+- monitoramento de publicacoes e automacoes juridicas
+- controle financeiro, cobranca, conciliacao e repasses
+- comunicacao interna e integracoes com WhatsApp
+- administracao multi-tenant com RBAC, MFA e rotinas LGPD
 
-## Módulos Implementados
+## Principais Modulos
 
-### Core Jurídico
-- **Dashboard** — KPIs, tarefas, agenda e prazos do escritório
-- **Processos** — Gestão completa de processos judiciais
-- **Prazos** — Controle de prazos processuais com alertas
-- **Publicações** — Monitoramento automático do DJE/DataJud
-- **Atendimentos** — Controle de atendimentos e consultas
-- **Tarefas** — Gestão de tarefas com sistema de pontuação (Taskscore)
-- **Agenda** — Calendário integrado com audiências e compromissos
-- **Documentos** — Repositório com versionamento de documentos
-- **Peças** — Assistente de IA para criação de peças jurídicas
-- **Cálculos** — Calculadoras jurídicas (monetária, trabalhista, previdenciária)
-- **Protocolos** — Rastreamento de documentos protocolados com histórico
+### Operacao juridica
 
-### Gestão e Operações
-- **Clientes** — CRM de clientes com histórico completo
-- **CRM** — Pipeline de negócios, campanhas, contatos e automações
-- **Distribuição** — Distribuição automática de processos entre advogados
-- **Demandas** — Gestão de demandas internas
-- **Controladoria** — Controle administrativo do escritório
-- **Agentes Jurídicos** — Automações com agentes de IA
+- `Dashboard`: KPIs operacionais, agenda, tarefas e visao executiva do escritorio
+- `Processos`: pipeline completo com lista, detalhe, timeline e kanban por status
+- `Prazos`: controle processual com alertas, urgencia e acompanhamento
+- `Publicacoes`: captura via DataJud e automacoes nacionais com painel operacional
+- `Andamentos`: apoio a leitura e traducao operacional de movimentacoes
+- `Jurimetria`: indicadores basicos de carteira, tribunais, tipos e status
+- `Protocolos`: rastreio de entregas e historico de protocolacao
+- `Documentos` e `Pecas`: repositorio, versionamento e apoio de IA
+
+### Comercial e relacionamento
+
+- `Clientes`: base central de contatos e historico
+- `CRM`: pipeline, listas, segmentos, campanhas e fluxos automatizados
+- `Atendimentos`: triagem, qualificacao e acompanhamento comercial
+- `Portal do cliente`: acesso compartilhado via token para acompanhamento e documentos
 
 ### Financeiro
-- **Honorários** — Controle de honorários por processo
-- **Faturas** — Emissão e controle de faturas
-- **Contas a Pagar/Receber** — Fluxo de caixa completo
-- **Centro de Custo** — Rateio de despesas
-- **Comissões** — Cálculo automático de comissões
-- **Repasses** — Controle de repasses entre advogados
-- **Relatórios Financeiros** — Dashboard e exportações
 
-### Comunicação
-- **Chat Interno** — Mensagens em tempo real entre equipe
-- **WhatsApp** — Integração com Evolution API para atendimento
-- **Automação de Atendimento** — Regras automáticas de respostas
+- `Contas a pagar e receber`
+- `Casos financeiros e honorarios`
+- `Repasses e rentabilidade`
+- `Regua de cobranca`
+- `Conciliacao bancaria com importacao CSV/OFX`
+- `NFS-e local vinculada a faturas pagas`
+- `Timesheet juridico`
 
-### Administração
-- **RBAC** — Controle de acesso por papéis (admin, advogado, estagiário, secretário, financeiro, cliente)
-- **Multi-tenant** — Isolamento completo por organização
-- **LGPD** — Exportação e retenção de dados conforme lei
-- **MFA** — Autenticação multifator
-- **Painel Root Admin** — Gestão de todas as organizações
+### Comunicacao e automacao
 
----
+- `Chat interno` em tempo real
+- `WhatsApp` via Evolution API ou runtime stateful
+- `Workflows` e jobs recorrentes
+- `BullMQ worker` para processamento assincrono
 
-## Arquitetura
+### Administracao e seguranca
 
+- `Multi-tenant` por escritorio
+- `RBAC` por perfil e overrides granulares
+- `MFA`
+- `LGPD`: exportacao, retencao e trilhas operacionais
+- `Root Admin`: gestao multi-organizacao
+
+## Stack Tecnologica
+
+| Camada | Tecnologia |
+| --- | --- |
+| Frontend | Next.js 16, React 19, TypeScript |
+| UI | Tailwind CSS 4, Lucide, Motion, Recharts |
+| Backend web | Next.js App Router + custom server em `server.ts` |
+| Banco de dados | PostgreSQL |
+| ORM | Prisma 7 |
+| Filas e jobs | Redis + BullMQ |
+| Tempo real | Socket.io |
+| Autenticacao | Better Auth |
+| Validacao | Zod |
+| IA e integracoes | Gemini, DataJud, Evolution API, Meta, Google, Microsoft, Asaas, ClickSign |
+| Deploy principal | Docker Compose em VPS |
+| Suporte complementar | Vercel cron / workers dedicados |
+
+## Arquitetura do Repositorio
+
+```text
+.
+|-- docs/                       # Documentacao funcional, tecnica e planejamento
+|-- nginx/                      # Configuracoes do proxy reverso
+|-- prisma/
+|   |-- migrations/             # Historico de migrations
+|   |-- schema.prisma           # Modelo principal de dados
+|   |-- seed.ts                 # Seed principal
+|   \-- seed-*.ts               # Seeds auxiliares
+|-- public/                     # Arquivos estaticos
+|-- scripts/                    # Smokes, seeds e utilitarios operacionais
+|-- src/
+|   |-- actions/                # Server Actions e mutacoes
+|   |-- app/                    # Rotas App Router e API routes
+|   |-- components/             # UI e componentes de dominio
+|   |-- generated/              # Client Prisma gerado
+|   |-- lib/
+|   |   |-- dal/                # Data Access Layer
+|   |   |-- queue/              # Configuracao de filas
+|   |   |-- services/           # Regras de negocio e servicos de dominio
+|   |   |-- validators/         # Schemas de entrada e validacao
+|   |   \-- ...                 # Integracoes, auth, utilitarios, runtime
+|   \-- worker/                 # Worker BullMQ
+|-- tests/                      # Suites E2E
+|-- Dockerfile                  # Imagem da aplicacao web
+|-- Dockerfile.worker           # Imagem do worker
+|-- docker-compose.prod.yml     # Topologia de producao
+|-- redeploy.sh                 # Script de redeploy remoto
+|-- server.ts                   # Bootstrap do custom server + Socket.io
+\-- vercel.json                 # Crons para ambiente Vercel
 ```
-src/
-├── app/                    # Rotas Next.js (App Router)
-│   ├── (dashboard)/        # Rotas autenticadas
-│   ├── api/                # API Routes
-│   ├── admin/              # Painel administrativo
-│   └── root-admin/         # Painel super-admin
-├── actions/                # Server Actions (mutations)
-├── components/             # Componentes React
-│   ├── layout/             # Sidebar, Header, Layout
-│   └── ui/                 # Componentes base
-├── lib/
-│   ├── dal/                # Data Access Layer
-│   ├── validators/         # Schemas Zod
-│   ├── services/           # Serviços de negócio
-│   └── queue/              # Filas BullMQ
-├── worker/                 # Worker de processamento assíncrono
-└── generated/              # Prisma Client gerado
-prisma/
-├── schema.prisma           # Schema principal
-├── migrations/             # Histórico de migrations
-└── seed.ts                 # Seed inicial
-```
 
-**Padrão de desenvolvimento:**
-1. Página server component → busca dados via DAL (`src/lib/dal/*.ts`)
-2. Mutations via server actions (`src/actions/*.ts`) com `revalidatePath`
-3. Componentes cliente com `"use client"`, recebem dados serializados via `JSON.parse(JSON.stringify(data))`
+## Arquitetura de Execucao
 
----
+O projeto opera com dois processos principais:
 
-## Pré-requisitos
+- `app`: servidor Next.js com custom bootstrap em `server.ts`
+- `worker`: processo BullMQ em `src/worker/index.ts`
+
+No ambiente principal de producao, o `docker-compose.prod.yml` sobe:
+
+- `postgres`
+- `redis`
+- `app`
+- `worker`
+- `evolution-api`
+- `nginx`
+- `certbot`
+
+## Pre-requisitos
+
+Para desenvolvimento local:
 
 - Node.js 20+
-- PostgreSQL 15+
+- npm 10+
+- PostgreSQL 15+ ou 16+
 - Redis 7+
-- Docker e Docker Compose (para produção)
 
----
+Para deploy em VPS:
 
-## Configuração Local
+- Docker
+- Docker Compose
+- acesso SSH ao servidor
+- dominio configurado para o Nginx/SSL
 
-### 1. Clonar e instalar
+## Getting Started
+
+### 1. Clonar o repositorio
 
 ```bash
 git clone https://github.com/dougchuster/juri2.git
 cd juri2
+```
+
+### 2. Instalar dependencias
+
+```bash
 npm install
 ```
 
-### 2. Variáveis de ambiente
+### 3. Configurar variaveis de ambiente
+
+Crie um `.env` a partir do exemplo:
 
 ```bash
 cp .env.example .env
 ```
 
-Editar `.env` com suas credenciais:
+Variaveis minimas para subir localmente:
 
-```env
-DATABASE_URL="postgresql://usuario:senha@localhost:5432/sistema_juridico"
-REDIS_URL="redis://localhost:6379"
-BETTER_AUTH_SECRET="sua-chave-secreta"
-BETTER_AUTH_URL="http://localhost:3000"
+| Variavel | Obrigatoria | Descricao |
+| --- | --- | --- |
+| `DATABASE_URL` | Sim | conexao com PostgreSQL local |
+| `REDIS_URL` | Sim | conexao com Redis |
+| `NEXT_PUBLIC_APP_URL` | Sim | URL publica local, ex. `http://localhost:3000` |
+| `INTERNAL_APP_URL` | Recomendado | URL interna usada por jobs locais |
+| `BETTER_AUTH_SECRET` | Sim | segredo da autenticacao |
+| `BETTER_AUTH_URL` | Sim | URL base da autenticacao |
 
-# Email
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=seu@email.com
-SMTP_PASS=sua-senha-app
+Integracoes opcionais podem ser ativadas por ambiente:
 
-# IA
-GEMINI_API_KEY=sua-chave
-KIMI_API_KEY=sua-chave
+- `GEMINI_API_KEY`
+- `DATAJUD_API_KEY`
+- `EVOLUTION_API_*`
+- `META_*`
+- `GOOGLE_*`
+- `MICROSOFT_*`
+- `ASAAS_*`
+- `CLICKSIGN_*`
 
-# Evolution API (WhatsApp)
-EVOLUTION_API_URL=http://localhost:8080
-EVOLUTION_API_KEY=sua-chave
-```
-
-### 3. Banco de dados
+### 4. Gerar Prisma Client
 
 ```bash
-# Aplicar migrations
-npm run db:migrate
-
-# Gerar client Prisma
 npm run db:generate
+```
 
-# Popular com dados iniciais
+### 5. Aplicar migrations
+
+```bash
+npx prisma migrate deploy
+```
+
+Para desenvolvimento puro, se voce estiver criando novas migrations:
+
+```bash
+npm run db:migrate
+```
+
+### 6. Popular base inicial
+
+```bash
 npm run db:seed
 ```
 
-### 4. Rodar em desenvolvimento
+### 7. Subir a aplicacao
+
+Em um terminal:
 
 ```bash
-# App (terminal 1)
 npm run dev
+```
 
-# Worker (terminal 2)
+Em outro terminal:
+
+```bash
 npm run worker:start
 ```
 
-Acesse: [http://localhost:3000](http://localhost:3000)
+Aplicacao local:
 
----
+- App: `http://localhost:3000`
+- Worker: executa em processo separado, sem porta HTTP publica
 
-## Produção (Docker)
+## Fluxo de Desenvolvimento
 
-### Deploy
+Padroes principais do projeto:
+
+- leitura de dados via `src/lib/dal`
+- mutacoes via `src/actions`
+- validacao com Zod em `src/lib/validators`
+- regras de negocio em `src/lib/services`
+- filas e jobs em `src/lib/queue` e `src/worker`
+- pages server-side com client components apenas onde ha interacao
+
+Fluxo recomendado:
+
+1. ajustar schema ou regra de negocio
+2. executar `npx prisma generate` quando houver alteracao de Prisma
+3. validar com `npx tsc --noEmit`
+4. rodar smokes relevantes em `scripts/`
+5. validar `npm run build` antes de entregar
+
+## Scripts Importantes
+
+### Core
 
 ```bash
-# Configurar variáveis de produção
-cp .env.production.example .env.production
-# Editar .env.production com os valores reais
+npm run dev
+npm run build
+npm run start
+npm run worker:start
+npm run lint
+```
 
-# Executar deploy
+### Banco
+
+```bash
+npm run db:generate
+npm run db:migrate
+npm run db:push
+npm run db:seed
+npm run db:studio
+```
+
+### Suites e smokes relevantes
+
+```bash
+npm run test:tenant-isolation
+npm run test:crm:funcional
+npm run test:crm:hardening
+npm run test:mfa-core
+npm run test:lgpd-core
+npm run test:automacao:nacional
+npm run test:publicacoes:ingrid
+npm run test:e2e:crud
+```
+
+O diretorio `scripts/` tambem contem testes focados em modulos especificos, como:
+
+- export engine
+- workflow runtime
+- timesheet
+- RAG juridico
+- portal do cliente
+- calculos
+- andamento tradutor
+
+## Ambiente e Arquivos de Configuracao
+
+O projeto usa varios arquivos de exemplo para separar responsabilidades:
+
+- `.env.example`: desenvolvimento local principal
+- `.env.production.example`: producao em Docker/VPS
+- `.env.worker.example`: worker dedicado ou ambiente de jobs
+- `.env.vercel.example`: ambiente Vercel com cron e runtime stateless
+
+Arquivos importantes:
+
+- `prisma.config.ts`: configuracao do Prisma 7
+- `next.config.ts`: configuracao do Next.js e externalizacao de pacotes server-only
+- `vercel.json`: definicao de jobs recorrentes em Vercel
+- `ecosystem.config.js`: apoio para gerenciamento de processo
+
+## Banco de Dados e Migrations
+
+O schema principal esta em `prisma/schema.prisma`.
+
+Boas praticas operacionais deste repositorio:
+
+- em producao, use `npx prisma migrate deploy`
+- em desenvolvimento, use `npm run db:migrate` para criar/aplicar novas migrations
+- sempre execute `npx prisma generate` depois de alterar schema
+- nao use reset de banco em ambiente produtivo
+
+## Deploy em VPS
+
+O caminho principal de deploy e Docker Compose em VPS.
+
+### Build e subida manual
+
+```bash
+docker compose --env-file .env.production -f docker-compose.prod.yml build --parallel app worker
+docker compose --env-file .env.production -f docker-compose.prod.yml run --rm --entrypoint "" app sh -lc 'npx prisma migrate deploy'
+docker compose --env-file .env.production -f docker-compose.prod.yml up -d --force-recreate --no-deps app worker evolution-api nginx
+```
+
+### Redeploy automatizado
+
+O script `redeploy.sh` conecta por SSH, atualiza o repositorio remoto, rebuilda `app` e `worker`, aplica migrations e sobe os servicos principais.
+
+Execucao:
+
+```bash
 bash redeploy.sh
 ```
 
-### Serviços Docker em produção
+Hoje o script aponta para:
 
-| Container | Função |
-|-----------|--------|
-| `juridico-app` | Next.js (porta 3000 interna) |
-| `juridico-worker` | BullMQ worker assíncrono |
-| `juridico-db` | PostgreSQL |
-| `juridico-redis` | Redis |
-| `juridico-nginx` | Proxy reverso (80/443) |
-| `juridico-certbot` | SSL automático Let's Encrypt |
-| `juridico-evolution` | Evolution API (WhatsApp) |
+- usuario SSH: `root`
+- diretorio remoto: `/var/www/adv`
+- compose de producao: `docker-compose.prod.yml`
 
-### Comandos úteis na VPS
+### Servicos esperados em producao
+
+| Servico | Papel |
+| --- | --- |
+| `juridico-db` | PostgreSQL principal |
+| `juridico-redis` | cache, filas e eventos |
+| `juridico-app` | aplicacao Next.js |
+| `juridico-worker` | jobs BullMQ |
+| `juridico-evolution` | backend de WhatsApp |
+| `juridico-nginx` | proxy reverso |
+| `juridico-certbot` | renovacao SSL |
+
+## Operacao em Vercel
+
+O repositorio tambem contem `vercel.json` com crons para:
+
+- processamento de jobs
+- scheduler operacional
+- automacao nacional
+- monitor do DataJud
+- atualizacao de aliases
+
+Para esse modo:
+
+- use `.env.vercel.example`
+- mantenha `ENABLE_WHATSAPP_RUNTIME=false`
+- mantenha `CRON_ENABLED=false`
+- forneca um worker/stateful runtime separado quando necessario
+
+## Seguranca
+
+Capacidades ja presentes no projeto:
+
+- autenticacao com Better Auth
+- MFA
+- RBAC por perfil e overrides
+- multi-tenancy por escritorio
+- trilhas e rotinas LGPD
+- isolamento de dados por escritorio
+- suporte a segredos distintos por ambiente
+
+Recomendacoes operacionais:
+
+- nunca commitar `.env`, `.env.production` ou chaves reais
+- prefira rotacao periodica de segredos sensiveis
+- mantenha `BETTER_AUTH_SECRET`, `PORTAL_TOKEN_SECRET` e `PERM_CACHE_SECRET` fortes e exclusivos por ambiente
+- aplique `npx prisma migrate deploy` antes de restartar a aplicacao em producao
+
+## Troubleshooting
+
+### App sobe, mas jobs nao processam
+
+Verifique:
+
+- `REDIS_URL`
+- container/processo `worker`
+- logs do BullMQ
+
+### Build passa local, mas producao falha
+
+Verifique:
+
+- `npm run build`
+- `npx prisma generate`
+- variaveis de ambiente obrigatorias em `.env.production`
+- se `app` e `worker` foram rebuildados
+
+### Migration pendente
+
+Antes de redeploy:
 
 ```bash
-# Status dos containers
-docker compose -f docker-compose.prod.yml ps
-
-# Logs em tempo real
-docker compose -f docker-compose.prod.yml logs -f app
-
-# Reiniciar app
-docker compose -f docker-compose.prod.yml restart app
-
-# Acessar banco de dados
-docker exec -it juridico-db psql -U juridico -d sistema_juridico
-
-# Liberar espaço Docker (imagens antigas)
-docker system prune -af
+npx prisma migrate status
 ```
 
----
-
-## Scripts Disponíveis
+No servidor:
 
 ```bash
-# Desenvolvimento
-npm run dev                    # App + custom server
-npm run worker:start           # Worker BullMQ
-
-# Build
-npm run build                  # Build produção
-
-# Banco de dados
-npm run db:migrate             # Criar/aplicar migrations
-npm run db:generate            # Gerar Prisma Client
-npm run db:seed                # Seed inicial
-npm run db:studio              # Prisma Studio (GUI)
-npm run db:stats               # Estatísticas do banco
-
-# Testes
-npm run test:crm:funcional     # Testes CRM
-npm run test:mfa-core          # Testes MFA
-npm run test:lgpd-core         # Testes LGPD
-npm run test:tenant-isolation  # Isolamento multi-tenant
-npm run test:meeting-automation # Automação de reuniões
-npm run test:bi-core           # Business Intelligence
+npx prisma migrate deploy
 ```
 
----
+### WhatsApp nao conecta
 
-## Segurança
+Verifique:
 
-- Autenticação via Better Auth com suporte a MFA
-- RBAC com 6 papéis distintos por organização
-- Multi-tenant com isolamento completo por `organizacaoId`
-- Fail2ban ativo na VPS (bloqueio de força bruta SSH)
-- SSL automático via Certbot / Let's Encrypt
-- Acesso SSH via chave pública (senha desabilitada)
-- Conformidade LGPD: exportação e exclusão de dados sob demanda
+- `WHATSAPP_BACKEND`
+- `ENABLE_WHATSAPP_RUNTIME`
+- `EVOLUTION_API_URL`
+- `EVOLUTION_API_KEY`
+- runtime stateful ou service `evolution-api`
 
----
+## Documentacao Complementar
 
-## Variáveis de Ambiente
+Materiais adicionais vivem em `docs/`, com destaque para:
 
-Consulte [.env.example](.env.example) para a lista completa com descrições.
+- planejamento de fases
+- isolamento multi-tenant
+- mapeamento do sistema atual
+- relatorios tecnicos e de produto
 
----
+## Status do Projeto
 
-## URL de Produção
+O repositorio esta em operacao ativa, com entregas recentes cobrindo:
 
-**https://adv.chuster.com.br**
+- dashboard personalizavel
+- kanban de processos
+- painel operacional de publicacoes
+- NFS-e local e conciliacao OFX
+- jurimetria basica
+- PWA
+
+## Licenca
+
+Este repositorio nao expoe uma licenca publica no momento. Se houver distribuicao externa ou onboarding de terceiros, vale formalizar uma politica de uso.
