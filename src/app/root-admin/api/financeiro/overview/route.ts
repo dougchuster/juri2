@@ -27,13 +27,13 @@ export async function GET(request: NextRequest) {
       }),
       db.assinatura.count({
         where: {
-          status: { in: ["ATIVO", "TRIAL"] },
+          status: { in: ["ATIVA", "TRIAL"] },
           dataRenovacao: { lte: in7Days, gte: now },
         },
       }),
       db.assinatura.count({
         where: {
-          status: { in: ["ATIVO", "TRIAL"] },
+          status: { in: ["ATIVA", "TRIAL"] },
           dataRenovacao: { lte: in30Days, gte: now },
         },
       }),
