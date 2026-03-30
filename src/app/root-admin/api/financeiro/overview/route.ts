@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 
     // Estimated monthly revenue from active (non-trial) subscriptions
     const receitaMensal = allAssinaturas
-      .filter((a) => a.status === "ATIVO")
+      .filter((a) => a.status === "ATIVA")
       .reduce((sum, a) => sum + Number(a.plano?.precoMensal || 0), 0);
 
     return NextResponse.json({
