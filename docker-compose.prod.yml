@@ -91,12 +91,14 @@ services:
 
   # ── Evolution API (WhatsApp) ────────────────────────────────────
   evolution-api:
-    image: atendai/evolution-api:latest
+    image: atendai/evolution-api:v2.2.3
     container_name: juridico-evolution
     restart: unless-stopped
     environment:
       SERVER_URL: ${EVOLUTION_API_URL}
       AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY}
+      AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES: "true"
+      CONFIG_SESSION_PHONE_VERSION: "2.3000.1035194821"
       DATABASE_ENABLED: "true"
       DATABASE_PROVIDER: "postgresql"
       DATABASE_CONNECTION_URI: "${EVOLUTION_DB_URI}"
