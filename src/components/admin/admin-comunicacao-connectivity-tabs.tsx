@@ -232,6 +232,8 @@ export function WhatsAppTab() {
                 </div>
                 {feedback ? <div className="mt-4 rounded-xl border border-border bg-bg-tertiary/30 px-4 py-3 text-sm text-text-secondary">{feedback}</div> : null}
             </div>
+
+            <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
                 <div className="space-y-4">
                     <div className="glass-card p-5">
                         <h3 className="text-base font-semibold text-text-primary">Nova conexao</h3>
@@ -298,7 +300,7 @@ export function WhatsAppTab() {
                                                 <Button size="xs" variant="outline" onClick={() => runAction(connection.id, "set-primary")} disabled={isPending || connection.isPrimary}>Primaria</Button>
                                                 <Button size="xs" variant="gradient" onClick={() => runAction(connection.id, "connect")} disabled={isPending}>{isPending ? <Loader2 size={13} className="animate-spin" /> : <Wifi size={13} />}Conectar</Button>
                                                 <Button size="xs" variant="outline" onClick={() => runAction(connection.id, "disconnect")} disabled={isPending}><Unplug size={13} />Desconectar</Button>
-                                                <Button size="xs" variant="danger" onClick={() => deleteConnection(connection.id, connection.displayName)} disabled={isPending}><Trash2 size={13} />Deletar</Button>
+                                                <Button size="xs" variant="destructive" onClick={() => deleteConnection(connection.id, connection.displayName)} disabled={isPending}><Trash2 size={13} />Deletar</Button>
                                             </div>
                                         </div>
                                     </div>
