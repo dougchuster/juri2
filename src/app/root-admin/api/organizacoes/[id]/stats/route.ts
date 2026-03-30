@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireSuperAdminApi } from "@/lib/root-admin/api-auth";
-import {
-  attachOrganizationToUsers,
-  getUserOrganizationMappings,
-  type RootAdminOrgLite,
-} from "@/lib/root-admin/user-organization";
 
 export const dynamic = "force-dynamic";
 
@@ -29,25 +24,10 @@ export async function GET(
     }
 
     // Get stats in parallel
-    const [totalDocumentos, users, mappings] = await Promise.all([
+    const [totalDocumentos, totalUsuarios] = await Promise.all([
       db.documento.count({ where: { escritorioId: id } }),
-      db.user.findMany({
-        where: { isActive: true },
-        select: {
-          id: true,
-          email: true,
-        },
-      }),
-      getUserOrganizationMappings(),
+      db.user.count({ where: { escritorioId: id } }),
     ]);
-
-    const usersWithOrganization = attachOrganizationToUsers(
-      users,
-      [org as RootAdminOrgLite],
-      mappings
-    );
-
-    const totalUsuarios = usersWithOrganization.filter((user) => user.organizationId === id).length;
 
     return NextResponse.json({
       processos: {

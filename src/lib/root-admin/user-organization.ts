@@ -13,6 +13,7 @@ export interface RootAdminOrgLite {
 export interface RootAdminUserLite {
   id: string;
   email: string;
+  escritorioId?: string | null;
 }
 
 export interface RootAdminUserWithOrganization<T> {
@@ -117,6 +118,14 @@ export function resolveUserOrganization(
     const mappedOrg = organizations.find((org) => org.id === explicitlyMappedOrgId) || null;
     if (mappedOrg) {
       return mappedOrg;
+    }
+  }
+
+  // Priorizar escritorioId direto do usuário
+  if (user.escritorioId) {
+    const orgByEscritorioId = organizations.find((org) => org.id === user.escritorioId) || null;
+    if (orgByEscritorioId) {
+      return orgByEscritorioId;
     }
   }
 

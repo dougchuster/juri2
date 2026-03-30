@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
       db.escritorio.count({ where }),
       db.user.findMany({
         where: { isActive: true },
-        select: { id: true, email: true },
+        select: { id: true, email: true, escritorioId: true },
       }),
       getUserOrganizationMappings(),
     ]);
