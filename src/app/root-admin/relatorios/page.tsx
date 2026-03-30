@@ -76,7 +76,7 @@ export default async function RelatoriosPage() {
   const orgsByMonth = groupByMonth(data.orgs, "createdAt");
   const usersByMonth = groupByMonth(data.users, "createdAt");
 
-  const orgStatusCounts = data.orgs.reduce<Record<string, number>>((acc, o: any) => {
+  const orgStatusCounts = (data.orgs as any[]).reduce<Record<string, number>>((acc, o) => {
     acc[o.statusEscritorio] = (acc[o.statusEscritorio] || 0) + 1;
     return acc;
   }, {});
