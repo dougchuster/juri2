@@ -62,7 +62,11 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { observacoesAdmin, limiteUsuarios, limiteArmazenamento, origemCadastro } = body;
+    const {
+      nome, email, cnpj, telefone, endereco, cidade, estado, cep,
+      observacoesAdmin, limiteUsuarios, limiteArmazenamento, origemCadastro,
+      statusEscritorio,
+    } = body;
 
     // Verify org exists
     const existing = await db.escritorio.findUnique({ where: { id } });
@@ -75,10 +79,19 @@ export async function PATCH(
 
     // Update allowed fields only
     const updateData: any = {};
+    if (nome !== undefined) updateData.nome = String(nome).trim();
+    if (email !== undefined) updateData.email = email ? String(email).trim() : null;
+    if (cnpj !== undefined) updateData.cnpj = cnpj ? String(cnpj).trim() : null;
+    if (telefone !== undefined) updateData.telefone = telefone ? String(telefone).trim() : null;
+    if (endereco !== undefined) updateData.endereco = endereco ? String(endereco).trim() : null;
+    if (cidade !== undefined) updateData.cidade = cidade ? String(cidade).trim() : null;
+    if (estado !== undefined) updateData.estado = estado ? String(estado).trim() : null;
+    if (cep !== undefined) updateData.cep = cep ? String(cep).trim() : null;
     if (observacoesAdmin !== undefined) updateData.observacoesAdmin = observacoesAdmin;
-    if (limiteUsuarios !== undefined) updateData.limiteUsuarios = limiteUsuarios;
-    if (limiteArmazenamento !== undefined) updateData.limiteArmazenamento = limiteArmazenamento;
+    if (limiteUsuarios !== undefined) updateData.limiteUsuarios = Number(limiteUsuarios);
+    if (limiteArmazenamento !== undefined) updateData.limiteArmazenamento = Number(limiteArmazenamento);
     if (origemCadastro !== undefined) updateData.origemCadastro = origemCadastro;
+    if (statusEscritorio !== undefined) updateData.statusEscritorio = statusEscritorio;
 
     const updated = await db.escritorio.update({
       where: { id },
