@@ -27,12 +27,13 @@ interface Props {
     processoId: string;
     advogados: Advogado[];
     onClose: () => void;
+    initialSubTipo?: SubTipo;
 }
 
-export function TimelineAddEvent({ processoId, advogados, onClose }: Props) {
+export function TimelineAddEvent({ processoId, advogados, onClose, initialSubTipo = "ANOTACAO" }: Props) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [subTipo, setSubTipo] = useState<SubTipo>("ANOTACAO");
+    const [subTipo, setSubTipo] = useState<SubTipo>(initialSubTipo);
     const [privado, setPrivado] = useState(false);
     const [erro, setErro] = useState<string | null>(null);
     const formRef = useRef<HTMLFormElement>(null);

@@ -38,6 +38,7 @@ import {
     autoCriarOuVincularProcessosParaPublicacoes,
     ensureClientePadraoPublicacoes,
 } from "@/lib/services/publicacoes-auto-processo";
+import { extractCnjFromPublicacao, normalizeCnjDigits } from "@/lib/publicacoes/utils";
 import { executarAssistentePublicacoesIa } from "@/lib/services/publicacoes-ai-assistant";
 import { LEGAL_AI_DISABLED_MESSAGE, isLegalAiEnabled } from "@/lib/runtime-features";
 import {
@@ -113,38 +114,6 @@ function normalizeDateOnly(dateLike: string | Date) {
     const d = new Date(dateLike);
     d.setHours(0, 0, 0, 0);
     return d;
-}
-
-function normalizeCnj(value?: string | null) {
-    return (value || "").replace(/\D/g, "");
-}
-
-const CNJ_FORMATTED_REGEX = /\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/g;
-const CNJ_DIGITS_REGEX = /\b\d{20}\b/g;
-
-function formatCnjFromDigits(digits: string) {
-    const clean = digits.replace(/\D/g, "");
-    if (clean.length !== 20) return null;
-    return `${clean.slice(0, 7)}-${clean.slice(7, 9)}.${clean.slice(9, 13)}.${clean.slice(13, 14)}.${clean.slice(14, 16)}.${clean.slice(16, 20)}`;
-}
-
-function extractCnjFromPublicacao(pub: { processoNumero?: string | null; conteudo?: string | null }) {
-    const fromField = pub.processoNumero?.trim();
-    if (fromField) {
-        const formattedMatch = fromField.match(/\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}/);
-        if (formattedMatch?.[0]) return formattedMatch[0];
-        const fromDigits = formatCnjFromDigits(fromField);
-        if (fromDigits) return fromDigits;
-    }
-
-    const text = pub.conteudo || "";
-    const formatted = text.match(CNJ_FORMATTED_REGEX);
-    if (formatted?.[0]) return formatted[0];
-
-    const digits = text.match(CNJ_DIGITS_REGEX);
-    if (digits?.[0]) return formatCnjFromDigits(digits[0]);
-
-    return null;
 }
 
 type HistoricoClient = Prisma.TransactionClient | typeof db;
@@ -389,7 +358,7 @@ async function gerarPrazosAPartirDePublicacoes(
         ]);
         processoByNumeroNormalizado = new Map(
             candidatos
-                .map((item) => ({ ...item, numeroNormalizado: normalizeCnj(item.numeroCnj) }))
+                .map((item) => ({ ...item, numeroNormalizado: normalizeCnjDigits(item.numeroCnj) }))
                 .filter((item) => item.numeroNormalizado.length > 0)
                 .map((item) => [item.numeroNormalizado, item])
         );
@@ -466,7 +435,7 @@ async function gerarPrazosAPartirDePublicacoes(
             });
 
             if (!processo && data.incluirSemProcessoVinculado && cnjDetectado) {
-                const numeroNorm = normalizeCnj(cnjDetectado);
+                const numeroNorm = normalizeCnjDigits(cnjDetectado);
                 if (numeroNorm.length > 0) {
                     const candidato = processoByNumeroNormalizado?.get(numeroNorm) || null;
                     processo = candidato
@@ -507,7 +476,7 @@ async function gerarPrazosAPartirDePublicacoes(
                             select: { id: true, advogadoId: true, numeroCnj: true },
                         });
                         processo = processoCriado;
-                        const numeroNorm = normalizeCnj(processoCriado.numeroCnj);
+                        const numeroNorm = normalizeCnjDigits(processoCriado.numeroCnj);
                         if (numeroNorm && processoByNumeroNormalizado) {
                             processoByNumeroNormalizado.set(numeroNorm, processoCriado);
                         }
@@ -525,7 +494,7 @@ async function gerarPrazosAPartirDePublicacoes(
                         });
                         if (existente) {
                             processo = existente;
-                            const numeroNorm = normalizeCnj(existente.numeroCnj);
+                            const numeroNorm = normalizeCnjDigits(existente.numeroCnj);
                             if (numeroNorm && processoByNumeroNormalizado) {
                                 processoByNumeroNormalizado.set(numeroNorm, existente);
                             }
@@ -1403,6 +1372,7 @@ export async function vincularPublicacao(id: string, processoId: string) {
             criarProcessoSemVinculo: false,
             somentePendentes: false,
         });
+        revalidatePath(`/publicacoes/${id}`);
         revalidatePath("/publicacoes");
         revalidatePath("/prazos");
         revalidatePath("/agenda");
@@ -1575,7 +1545,7 @@ export async function atualizarAliasesDataJudAgora() {
 
 const criarProcessoParaPublicacaoSchema = z.object({
     publicacaoId: z.string().min(1),
-    clienteId: z.string().min(1),
+    clienteId: z.string().min(1).optional().nullable(),
     advogadoId: z.string().optional().or(z.literal("")),
 });
 
@@ -1592,10 +1562,12 @@ export async function criarProcessoParaPublicacao(
     try {
         const filter = await tenantFilter();
         const [cliente, pub] = await Promise.all([
-            db.cliente.findFirst({
-                where: { id: payload.clienteId, ...filter },
-                select: { id: true },
-            }),
+            payload.clienteId
+                ? db.cliente.findFirst({
+                      where: { id: payload.clienteId, ...filter },
+                      select: { id: true },
+                  })
+                : Promise.resolve(null),
             db.publicacao.findUnique({
                 where: { id: payload.publicacaoId },
                 select: {
@@ -1610,7 +1582,7 @@ export async function criarProcessoParaPublicacao(
             }),
         ]);
 
-        if (!cliente) return { success: false, error: "Cliente nao encontrado." };
+        if (payload.clienteId && !cliente) return { success: false, error: "Cliente nao encontrado." };
         if (!pub) return { success: false, error: "Publicação não encontrada." };
         if (pub.processoId) {
             return { success: false, error: "Esta publicacao ja esta vinculada a um processo." };
@@ -1626,7 +1598,13 @@ export async function criarProcessoParaPublicacao(
             pub.advogadoId ||
             (
                 await db.advogado.findFirst({
-                    where: { ativo: true, user: { isActive: true } },
+                    where: {
+                        ativo: true,
+                        user: {
+                            isActive: true,
+                            ...(filter.escritorioId ? { escritorioId: filter.escritorioId } : {}),
+                        },
+                    },
                     select: { id: true },
                     orderBy: { user: { name: "asc" } },
                 })
@@ -1664,10 +1642,12 @@ export async function criarProcessoParaPublicacao(
                     status: "EM_ANDAMENTO",
                     resultado: "PENDENTE",
                     advogadoId: advogadoEscolhidoId,
-                    clienteId: payload.clienteId,
+                    clienteId: payload.clienteId || null,
                     tribunal: pub.tribunal,
                     escritorioId: filter.escritorioId,
-                    observacoes: `Processo criado manualmente a partir da publicacao ${pub.id}.`,
+                    observacoes: payload.clienteId
+                        ? `Processo criado manualmente a partir da publicacao ${pub.id}.`
+                        : `Processo criado manualmente a partir da publicacao ${pub.id}, em modo de triagem e sem cliente vinculado.`,
                 },
                 select: { id: true },
             });
@@ -1691,8 +1671,9 @@ export async function criarProcessoParaPublicacao(
                 origem: "MANUAL",
                 metadados: {
                     processoIdNovo: processoCriado.id,
-                    clienteId: payload.clienteId,
+                    clienteId: payload.clienteId || null,
                     advogadoId: advogadoEscolhidoId,
+                    modo: payload.clienteId ? "CRIACAO_COM_CLIENTE" : "CRIACAO_SEM_CLIENTE",
                 },
             });
         });
@@ -1705,6 +1686,7 @@ export async function criarProcessoParaPublicacao(
             somentePendentes: false,
         });
 
+        revalidatePath(`/publicacoes/${pub.id}`);
         revalidatePath("/publicacoes");
         revalidatePath("/prazos");
         revalidatePath("/agenda");
@@ -1736,6 +1718,7 @@ export async function ignorarPublicacao(id: string) {
                 origem: "MANUAL",
             });
         });
+        revalidatePath(`/publicacoes/${id}`);
         revalidatePath("/publicacoes");
         return { success: true };
     } catch (error) {

@@ -10,6 +10,11 @@ async function getDefaultEscritorioId() {
     return e?.id || null;
 }
 
+async function getSessionEscritorioId() {
+    const session = await getSession();
+    return session?.escritorioId || null;
+}
+
 export interface ProcessoFilters {
     search?: string;
     status?: StatusProcesso;
@@ -57,6 +62,7 @@ export async function getProcessos(filters: ProcessoFilters = {}, scope?: Proces
 
     const where: Record<string, unknown> = {};
     const scopedAdvogadoId = getScopedAdvogadoId(scope);
+    const escritorioId = await getSessionEscritorioId();
 
     if (scope?.role === "ADVOGADO" && !scopedAdvogadoId) {
         return {
@@ -67,6 +73,8 @@ export async function getProcessos(filters: ProcessoFilters = {}, scope?: Proces
             totalPages: 0,
         };
     }
+
+    if (escritorioId) where.escritorioId = escritorioId;
 
     if (search) {
         where.OR = [
@@ -153,11 +161,15 @@ export async function getProcessoById(id: string, scope?: ProcessoVisibilityScop
 
 export async function getProcessoStats(scope?: ProcessoVisibilityScope) {
     const scopedAdvogadoId = getScopedAdvogadoId(scope);
+    const escritorioId = await getSessionEscritorioId();
     if (scope?.role === "ADVOGADO" && !scopedAdvogadoId) {
         return { total: 0, emAndamento: 0, sentenca: 0, encerrados: 0, prazosPendentes: 0 };
     }
 
-    const processoScope = scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {};
+    const processoScope = {
+        ...(escritorioId ? { escritorioId } : {}),
+        ...(scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {}),
+    };
     const prazoScope = scopedAdvogadoId ? { advogadoId: scopedAdvogadoId } : {};
 
     const [total, emAndamento, sentenca, encerrados, prazosPendentes] = await Promise.all([
@@ -172,15 +184,22 @@ export async function getProcessoStats(scope?: ProcessoVisibilityScope) {
 }
 
 export async function getAdvogados() {
+    const escritorioId = await getSessionEscritorioId();
     return db.advogado.findMany({
-        where: { ativo: true },
+        where: {
+            ativo: true,
+            user: {
+                isActive: true,
+                ...(escritorioId ? { escritorioId } : {}),
+            },
+        },
         include: { user: { select: { id: true, name: true } } },
         orderBy: { user: { name: "asc" } },
     });
 }
 
 export async function getTiposAcao() {
-    const escritorioId = await getDefaultEscritorioId();
+    const escritorioId = (await getSessionEscritorioId()) || (await getDefaultEscritorioId());
     const cacheKey = CacheKeys.tiposAcao(escritorioId ?? "default");
 
     const tipos = await cache.getOrSet(
@@ -196,7 +215,7 @@ export async function getTiposAcao() {
 }
 
 export async function getFasesProcessuais() {
-    const escritorioId = await getDefaultEscritorioId();
+    const escritorioId = (await getSessionEscritorioId()) || (await getDefaultEscritorioId());
     const cacheKey = CacheKeys.fasesProcessuais(escritorioId ?? "default");
 
     const fases = await cache.getOrSet(
@@ -230,8 +249,12 @@ export async function getFeriadosIso(): Promise<string[]> {
 }
 
 export async function getClientesForSelect() {
+    const escritorioId = await getSessionEscritorioId();
     return db.cliente.findMany({
-        where: { status: { in: ["ATIVO", "PROSPECTO", "INATIVO"] } },
+        where: {
+            status: { in: ["ATIVO", "PROSPECTO", "INATIVO"] },
+            ...(escritorioId ? { escritorioId } : {}),
+        },
         select: { id: true, nome: true, cpf: true, cnpj: true },
         orderBy: { nome: "asc" },
     });

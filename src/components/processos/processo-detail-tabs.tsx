@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     ScrollText, Gavel, FileText, DollarSign, Users,
     Plus, Loader2, Trash2, CheckCircle, CalendarClock, Upload, ArrowUpRight,
@@ -34,6 +34,7 @@ interface AdvOption {
 
 interface ProcessoDetail {
     id: string;
+    numeroCnj: string | null;
     advogadoId: string;
     movimentacoes: Array<{ id: string; data: string; descricao: string; tipo: string | null; fonte: string | null }>;
     prazos: Array<{ id: string; descricao: string; dataFatal: string; dataCortesia: string | null; status: string; fatal: boolean; tipoContagem: string; advogado: { user: { name: string | null } } }>;
@@ -105,15 +106,25 @@ export function ProcessoDetailTabs({
     documentosDisponiveis,
     timelineEventos,
     timelineStats,
+    initialTab = "movimentacoes",
+    autoOpenTimelineComposer = false,
+    initialTimelineEventType = "ANOTACAO",
+    autoOpenAudiencia = false,
+    autoOpenPrazo = false,
 }: {
     processo: ProcessoDetail;
     advogados: AdvOption[];
     documentosDisponiveis: DocumentoMovimentacaoOption[];
     timelineEventos: EventoTimeline[];
     timelineStats: TimelineStats;
+    initialTab?: TabId;
+    autoOpenTimelineComposer?: boolean;
+    initialTimelineEventType?: "REUNIAO" | "CONTATO_TELEFONICO" | "EMAIL" | "ANOTACAO" | "JUDICIAL" | "MANUAL";
+    autoOpenAudiencia?: boolean;
+    autoOpenPrazo?: boolean;
 }) {
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState<TabId>("movimentacoes");
+    const [activeTab, setActiveTab] = useState<TabId>(initialTab);
 
     // Modal states
     const [showAddParte, setShowAddParte] = useState(false);
@@ -127,6 +138,26 @@ export function ProcessoDetailTabs({
     const [deletingId, setDeletingId] = useState<{ type: string; id: string } | null>(null);
     const [uploadFeedback, setUploadFeedback] = useState<{ tone: "success" | "error" | "warning"; message: string } | null>(null);
     const uploadInputRef = useRef<HTMLInputElement>(null);
+    const openedAudienciaRef = useRef(false);
+    const openedPrazoRef = useRef(false);
+
+    useEffect(() => {
+        setActiveTab(initialTab);
+    }, [initialTab]);
+
+    useEffect(() => {
+        if (!autoOpenAudiencia || openedAudienciaRef.current) return;
+        openedAudienciaRef.current = true;
+        setActiveTab("audiencias");
+        setShowAddAudiencia(true);
+    }, [autoOpenAudiencia]);
+
+    useEffect(() => {
+        if (!autoOpenPrazo || openedPrazoRef.current) return;
+        openedPrazoRef.current = true;
+        setActiveTab("prazos");
+        setShowAddPrazo(true);
+    }, [autoOpenPrazo]);
 
     const documentosPublicados = processo.documentos.filter((item) => item.statusFluxo === "PUBLICADA").length;
     const documentosMovimentacaoOptions = documentosDisponiveis.map((documento) => ({
@@ -319,7 +350,7 @@ export function ProcessoDetailTabs({
                 {activeTab === "movimentacoes" && (
                     <TimelineFeed
                         processoId={processo.id}
-                        processoNumeroCnj={null}
+                        processoNumeroCnj={processo.numeroCnj ?? null}
                         eventos={timelineEventos}
                         stats={timelineStats}
                         advogados={advogados}
@@ -327,6 +358,8 @@ export function ProcessoDetailTabs({
                         uploadingDocumento={uploadingDocumento}
                         uploadFeedback={uploadFeedback}
                         onUpload={handleProcessDocumentUpload}
+                        autoOpenComposer={autoOpenTimelineComposer}
+                        initialComposerType={initialTimelineEventType}
                     />
                 )}
 

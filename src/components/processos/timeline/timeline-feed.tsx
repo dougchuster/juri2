@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useTransition, useRef } from "react";
+import { useEffect, useState, useMemo, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
     Plus, Upload, RefreshCw, Loader2, ScrollText, ChevronLeft, ChevronRight,
@@ -42,6 +42,8 @@ interface Props {
     uploadingDocumento?: boolean;
     uploadFeedback?: { tone: "success" | "error" | "warning"; message: string } | null;
     onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    autoOpenComposer?: boolean;
+    initialComposerType?: "REUNIAO" | "CONTATO_TELEFONICO" | "EMAIL" | "ANOTACAO" | "JUDICIAL" | "MANUAL";
 }
 
 export function TimelineFeed({
@@ -54,6 +56,8 @@ export function TimelineFeed({
     uploadingDocumento,
     uploadFeedback,
     onUpload,
+    autoOpenComposer = false,
+    initialComposerType = "ANOTACAO",
 }: Props) {
     const router = useRouter();
     const [, startTransition] = useTransition();
@@ -62,6 +66,7 @@ export function TimelineFeed({
     const [showAddEvent, setShowAddEvent] = useState(false);
     const [confirmDeleteId, setConfirmDeleteId] = useState<{ id: string; tabela: string } | null>(null);
     const [deletingId, setDeletingId] = useState<string | null>(null);
+    const initialComposerOpenedRef = useRef(false);
 
     // DataJud sync
     const [syncingDataJud, setSyncingDataJud] = useState(false);
@@ -166,6 +171,12 @@ export function TimelineFeed({
         setFiltros(f);
         setPagina(1);
     }
+
+    useEffect(() => {
+        if (!autoOpenComposer || initialComposerOpenedRef.current) return;
+        initialComposerOpenedRef.current = true;
+        setShowAddEvent(true);
+    }, [autoOpenComposer]);
 
     const totalEventos = eventos.length;
 
@@ -315,6 +326,7 @@ export function TimelineFeed({
                 <TimelineAddEvent
                     processoId={processoId}
                     advogados={advogados}
+                    initialSubTipo={initialComposerType}
                     onClose={() => setShowAddEvent(false)}
                 />
             )}

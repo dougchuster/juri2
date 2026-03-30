@@ -1,4 +1,5 @@
 import { extractOabsFromText, findAdvogadoByOab, type AdvogadoOabRef } from "@/lib/services/publicacoes-oab";
+import { extractCnjFromText } from "@/lib/publicacoes/utils";
 
 export interface CapturaPublicacaoItem {
     tribunal: string;
@@ -405,7 +406,7 @@ export async function capturarPublicacoesNacionalPorOab(
                                 "processoNumero",
                                 "nrProcesso",
                                 "codigoProcesso",
-                            ]) || null;
+                            ]) || extractCnjFromText(conteudo);
                         const diario = pickString(raw, ["diario", "nomeDiario", "orgao"]);
                         const partesTexto = pickString(raw, ["partes", "nomePartes", "partesTexto"]);
 
@@ -536,7 +537,7 @@ export async function capturarPublicacoesNacionalPorOab(
                                         "processoNumero",
                                         "nrProcesso",
                                         "codigoProcesso",
-                                    ]) || null;
+                                    ]) || extractCnjFromText(conteudo);
                                 const diario = pickString(raw, ["diario", "nomeDiario", "orgao"]);
                                 const partesTexto = pickString(raw, ["partes", "nomePartes", "partesTexto"]);
 

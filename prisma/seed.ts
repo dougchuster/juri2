@@ -166,7 +166,7 @@ async function main() {
     const passwordHash = await bcrypt.hash("123456", 10);
     await prisma.user.upsert({
         where: { email: "dougcruvinel@gmail.com" },
-        update: { passwordHash, escritorioId: escritorio.id },
+        update: { passwordHash },
         create: {
             name: "Douglas Cruvinel",
             email: "dougcruvinel@gmail.com",
@@ -322,10 +322,11 @@ async function main() {
                     tipoPessoa: TipoPessoa.FISICA,
                     status: getRandomItem(Object.values(StatusCliente)),
                     temperatura: getRandomItem(Object.values(LeadTemperatura)),
-                    cidade: 'São Paulo',
-                    estado: 'SP'
-                }
-            });
+                cidade: 'São Paulo',
+                estado: 'SP',
+                escritorioId: escritorio.id,
+            }
+        });
             createdCount++;
         } catch (error) {
             console.error(`Erro ao criar cliente ${name}:`, error);

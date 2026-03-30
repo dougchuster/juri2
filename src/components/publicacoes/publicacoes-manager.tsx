@@ -1911,7 +1911,7 @@ export function PublicacoesManager({
                                 return (
                                     <div
                                         key={pub.id}
-                                        onClick={() => setShowDetalhe(isSelected ? null : pub.id)}
+                                        onClick={() => router.push(`/publicacoes/${pub.id}`)}
                                         className={`group relative cursor-pointer border-l-[3px] transition-all ${statusBorderColor} ${isSelected ? "bg-accent/8 border-l-accent" : "hover:bg-bg-tertiary/40"}`}
                                     >
                                         {/* Layout tabular */}
@@ -1990,7 +1990,7 @@ export function PublicacoesManager({
                                                     {pub.status === "PENDENTE" && (
                                                         <button
                                                             type="button"
-                                                            onClick={(e) => { e.stopPropagation(); setShowDetalhe(pub.id); }}
+                                                            onClick={(e) => { e.stopPropagation(); router.push(`/publicacoes/${pub.id}`); }}
                                                             className="flex items-center gap-1 rounded-lg border border-success/40 bg-success/10 px-2 py-1 text-[11px] font-semibold text-success hover:bg-success/20 transition-colors"
                                                         >
                                                             <CalendarClock size={11} />

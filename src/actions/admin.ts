@@ -1070,6 +1070,11 @@ export async function createAdvogadoConta(data: z.infer<typeof createAdvogadoSch
         return { success: false, error: parsed.error.flatten().fieldErrors };
     }
 
+    const session = await getSession();
+    if (!session?.id || !["ADMIN", "SOCIO"].includes(String(session.role))) {
+        return { success: false, error: "Nao autorizado." };
+    }
+
     try {
         const d = parsed.data;
         const email = d.email.trim().toLowerCase();
@@ -1091,6 +1096,7 @@ export async function createAdvogadoConta(data: z.infer<typeof createAdvogadoSch
                     passwordHash,
                     role: Role.ADVOGADO,
                     isActive: true,
+                    escritorioId: session.escritorioId ?? null,
                 },
             });
 
@@ -1149,6 +1155,7 @@ export async function createFuncionarioConta(data: z.infer<typeof createFunciona
                     passwordHash,
                     role: d.role,
                     isActive: true,
+                    escritorioId: session.escritorioId ?? null,
                 },
                 select: { id: true },
             });

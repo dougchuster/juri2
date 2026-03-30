@@ -34,10 +34,12 @@ const RESULTADO_COLORS: Record<string, string> = {
 
 interface Props {
     params: Promise<{ id: string }>;
+    searchParams: Promise<Record<string, string | string[]>>;
 }
 
-export default async function ProcessoDetailPage({ params }: Props) {
+export default async function ProcessoDetailPage({ params, searchParams }: Props) {
     const { id } = await params;
+    const query = await searchParams;
     const session = await getSession();
     const visibilityScope = session
         ? { role: session.role, advogadoId: session.advogado?.id || null }
@@ -60,6 +62,30 @@ export default async function ProcessoDetailPage({ params }: Props) {
         aiLimit: 12,
         persistLimit: 12,
     });
+
+    const tabParam = typeof query.tab === "string" ? query.tab : "";
+    const initialTab =
+        tabParam === "prazos" ||
+        tabParam === "audiencias" ||
+        tabParam === "documentos" ||
+        tabParam === "honorarios" ||
+        tabParam === "partes" ||
+        tabParam === "movimentacoes"
+            ? tabParam
+            : "movimentacoes";
+    const novoEventoParam = typeof query.novoEvento === "string" ? query.novoEvento : "";
+    const initialTimelineEventType =
+        novoEventoParam === "REUNIAO" ||
+        novoEventoParam === "CONTATO_TELEFONICO" ||
+        novoEventoParam === "EMAIL" ||
+        novoEventoParam === "ANOTACAO" ||
+        novoEventoParam === "JUDICIAL" ||
+        novoEventoParam === "MANUAL"
+            ? novoEventoParam
+            : "ANOTACAO";
+    const autoOpenTimelineComposer = Boolean(novoEventoParam);
+    const autoOpenAudiencia = typeof query.novaAudiencia === "string" && query.novaAudiencia === "1";
+    const autoOpenPrazo = typeof query.novoPrazo === "string" && query.novoPrazo === "1";
 
     const prazosPendentes = processo.prazos.filter((p) => p.status === "PENDENTE").length;
     const proximaAudiencia = processo.audiencias.find((a) => !a.realizada);
@@ -280,6 +306,11 @@ export default async function ProcessoDetailPage({ params }: Props) {
                 documentosDisponiveis={serializedDocumentosParaMovimentacao}
                 timelineEventos={serializedTimelineEventos}
                 timelineStats={serializedTimelineStats}
+                initialTab={initialTab}
+                autoOpenTimelineComposer={autoOpenTimelineComposer}
+                initialTimelineEventType={initialTimelineEventType}
+                autoOpenAudiencia={autoOpenAudiencia}
+                autoOpenPrazo={autoOpenPrazo}
             />
         </div>
     );
