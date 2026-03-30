@@ -261,7 +261,7 @@ export const evolutionWhatsmeowProvider: WhatsappProviderAdapter = {
         let activeConnection = connection;
         const config = getConfig(activeConnection);
 
-        // 1. Verifica se a instância já existe
+        // 1. Verifica se a instância já existe e deleta para recriar com webhook correto
         const existing = await fetchInstances(activeConnection);
         const hasInstance = existing.some((item) => {
             const name =
@@ -271,47 +271,56 @@ export const evolutionWhatsmeowProvider: WhatsappProviderAdapter = {
             return name === config.instanceName;
         });
 
-        // 2. Cria instância se não existir
-        if (!hasInstance) {
-            const webhook = buildWebhookPayload(activeConnection);
-            const created = await request<EvolutionCreateInstanceResponse>(
+        if (hasInstance) {
+            // Deleta a instância existente para garantir que o webhook receba
+            // o x-connection-id correto desta conexão e que um novo QR seja gerado.
+            await request(
                 activeConnection,
-                "/instance/create",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        instanceName: config.instanceName,
-                        integration: config.integration,
-                        token: String(process.env.EVOLUTION_INSTANCE_TOKEN || ""),
-                        qrcode: true,
-                        rejectCall: true,
-                        groupsIgnore: true,
-                        alwaysOnline: true,
-                        readMessages: false,
-                        readStatus: true,
-                        syncFullHistory: false,
-                        ...(webhook ? { webhook } : {}),
-                    }),
-                }
-            );
-
-            // Salva webhook secret se a Evolution retornou um hash
-            const createdHash = typeof created?.hash === "string" ? created.hash : null;
-            const currentSecret = getDecryptedConnectionSecret(activeConnection);
-            if (
-                createdHash
-                && currentSecret?.providerType === "EVOLUTION_WHATSMEOW"
-                && currentSecret.webhookSecret !== createdHash
-            ) {
-                const updated = await updateWhatsappConnection(activeConnection.id, {
-                    secretPayload: { ...currentSecret, webhookSecret: createdHash },
-                });
-                if (updated) activeConnection = updated;
-            }
+                `/instance/delete/${encodeURIComponent(config.instanceName)}`,
+                { method: "DELETE" },
+                [200, 201, 204]
+            ).catch(() => null);
         }
 
-        // 3. Configura webhook por instância (garante que chegue ao app correto)
+        // 2. Cria instância sempre do zero
+        const webhook = buildWebhookPayload(activeConnection);
+        const created = await request<EvolutionCreateInstanceResponse>(
+            activeConnection,
+            "/instance/create",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    instanceName: config.instanceName,
+                    integration: config.integration,
+                    token: String(process.env.EVOLUTION_INSTANCE_TOKEN || ""),
+                    qrcode: true,
+                    rejectCall: true,
+                    groupsIgnore: true,
+                    alwaysOnline: true,
+                    readMessages: false,
+                    readStatus: true,
+                    syncFullHistory: false,
+                    ...(webhook ? { webhook } : {}),
+                }),
+            }
+        );
+
+        // Salva webhook secret se a Evolution retornou um hash
+        const createdHash = typeof created?.hash === "string" ? created.hash : null;
+        const currentSecret = getDecryptedConnectionSecret(activeConnection);
+        if (
+            createdHash
+            && currentSecret?.providerType === "EVOLUTION_WHATSMEOW"
+            && currentSecret.webhookSecret !== createdHash
+        ) {
+            const updated = await updateWhatsappConnection(activeConnection.id, {
+                secretPayload: { ...currentSecret, webhookSecret: createdHash },
+            });
+            if (updated) activeConnection = updated;
+        }
+
+        // 3. Configura webhook (redundante mas garante headers corretos)
         await configureWebhook(activeConnection);
 
         // 4. Dispara geração de QR — com whatsmeow, o QR chega via webhook QRCODE_UPDATED
@@ -337,19 +346,20 @@ export const evolutionWhatsmeowProvider: WhatsappProviderAdapter = {
 
     async disconnect(connection) {
         const config = getConfig(connection);
+        // Tenta logout (encerra sessão mas mantém instância)
         await request(
             connection,
             `/instance/logout/${encodeURIComponent(config.instanceName)}`,
             { method: "DELETE" },
             [200, 201, 204]
-        ).catch(async () => {
-            await request(
-                connection,
-                `/instance/delete/${encodeURIComponent(config.instanceName)}`,
-                { method: "DELETE" },
-                [200, 201, 204]
-            ).catch(() => null);
-        });
+        ).catch(() => null);
+        // Depois deleta a instância por completo
+        await request(
+            connection,
+            `/instance/delete/${encodeURIComponent(config.instanceName)}`,
+            { method: "DELETE" },
+            [200, 201, 204]
+        ).catch(() => null);
     },
 
     async getStatus(connection) {
@@ -492,8 +502,12 @@ export const evolutionWhatsmeowProvider: WhatsappProviderAdapter = {
                 && timingSafeEqual(Buffer.from(received), Buffer.from(digest));
             const isDirectKey = received === config.webhookSecret || received === config.apiKey;
             const isScopedConnection = headerConnectionId === connection.id;
+            // Aceita se o apikey bater com a variável de ambiente EVOLUTION_WEBHOOK_SECRET,
+            // cobrindo o caso em que a conexão foi recriada e o x-connection-id ainda é antigo.
+            const isEnvSecret = Boolean(process.env.EVOLUTION_WEBHOOK_SECRET)
+                && received === process.env.EVOLUTION_WEBHOOK_SECRET;
 
-            if (!isValidHmac && !isDirectKey && !isScopedConnection) {
+            if (!isValidHmac && !isDirectKey && !isScopedConnection && !isEnvSecret) {
                 throw new Error("Assinatura do webhook Evolution invalida.");
             }
         }

@@ -7,6 +7,7 @@ import {
     updateWhatsappConnection,
 } from "@/lib/whatsapp/application/connection-service";
 import { requireWhatsAppAdminContext } from "@/app/api/admin/whatsapp/utils";
+import { getWhatsappProviderAdapter } from "@/lib/whatsapp/providers/provider-registry";
 
 const updateConnectionSchema = z.object({
     displayName: z.string().min(2).max(120).optional(),
@@ -102,6 +103,15 @@ export async function DELETE(_: NextRequest, context: { params: Promise<{ id: st
     const connection = await getWhatsappConnectionById(id);
     if (!connection || connection.escritorioId !== auth.escritorioId) {
         return NextResponse.json({ error: "Conexao nao encontrada" }, { status: 404 });
+    }
+
+    // Deleta a instância no provedor externo antes de remover do banco
+    try {
+        const adapter = getWhatsappProviderAdapter(connection.providerType);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await adapter.disconnect(connection as any);
+    } catch {
+        // Ignora erros do provedor — deleta do banco de qualquer forma
     }
 
     await deleteWhatsappConnection(id);
