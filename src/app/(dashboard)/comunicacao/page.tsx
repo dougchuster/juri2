@@ -44,7 +44,9 @@ export default async function ComunicacaoPage() {
     });
 
     const canManageAutomation = ["ADMIN", "SOCIO"].includes(String(session?.role || ""));
-    const automationDashboard = canManageAutomation ? await getAttendanceAutomationDashboard() : null;
+    const automationDashboard = canManageAutomation
+        ? await getAttendanceAutomationDashboard().catch(() => null)
+        : null;
 
     const kpis = [
         { label: "Conversas Abertas", value: stats.openConversations, icon: "message-circle", tone: "cat-amber" },

@@ -10,6 +10,7 @@ function getDerivedKey(): Buffer {
     const secret =
         process.env.APP_SECRET_KEY
         || process.env.NEXTAUTH_SECRET
+        || process.env.BETTER_AUTH_SECRET
         || process.env.DATABASE_URL
         || "sistema-juridico-adv-fallback-key";
 

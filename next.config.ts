@@ -32,6 +32,9 @@ const nextConfig: NextConfig = {
     "@prisma/adapter-pg",
     "pg",
     "@google/genai",
+    "googleapis",
+    "google-auth-library",
+    "@googleapis/calendar",
     "@hapi/boom",
   ],
 };

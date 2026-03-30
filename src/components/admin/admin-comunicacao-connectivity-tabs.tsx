@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { CheckCircle2, Loader2, Mail, MessageCircle, RefreshCw, Unplug, Wifi, WifiOff } from "lucide-react";
+import { CheckCircle2, Loader2, Mail, MessageCircle, RefreshCw, Trash2, Unplug, Wifi, WifiOff } from "lucide-react";
 import { getAdminSmtpStatus } from "@/actions/comunicacao";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -201,6 +201,21 @@ export function WhatsAppTab() {
         });
     }
 
+    function deleteConnection(connectionId: string, displayName: string) {
+        if (!window.confirm(`Deletar permanentemente a conexao "${displayName}"? Esta acao nao pode ser desfeita.`)) return;
+        setFeedback(null);
+        startTransition(async () => {
+            try {
+                await api(`/api/admin/whatsapp/connections/${connectionId}`, { method: "DELETE" });
+                setSelectedId(null);
+                await loadConnections();
+                setFeedback("Conexao deletada.");
+            } catch (error) {
+                setFeedback(error instanceof Error ? error.message : "Falha ao deletar conexao.");
+            }
+        });
+    }
+
     return (
         <div className="space-y-4">
             <div className="glass-card p-5">
@@ -218,7 +233,11 @@ export function WhatsAppTab() {
                 {feedback ? <div className="mt-4 rounded-xl border border-border bg-bg-tertiary/30 px-4 py-3 text-sm text-text-secondary">{feedback}</div> : null}
             </div>
 
-            <div className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+            {connections.length > 0 && (
+                <div className="rounded-xl border border-warning/30 bg-warning/5 px-4 py-3 text-sm text-text-secondary">
+                    <strong>Credenciais criptografadas por ambiente:</strong> se conectar ou desconectar falhar com erro de credenciais no VPS, recrie a conexao usando o formulario abaixo com os mesmos dados. O servidor ira re-criptografar as credenciais com a chave correta do ambiente atual.
+                </div>
+            )}
                 <div className="space-y-4">
                     <div className="glass-card p-5">
                         <h3 className="text-base font-semibold text-text-primary">Nova conexao</h3>
@@ -285,6 +304,7 @@ export function WhatsAppTab() {
                                                 <Button size="xs" variant="outline" onClick={() => runAction(connection.id, "set-primary")} disabled={isPending || connection.isPrimary}>Primaria</Button>
                                                 <Button size="xs" variant="gradient" onClick={() => runAction(connection.id, "connect")} disabled={isPending}>{isPending ? <Loader2 size={13} className="animate-spin" /> : <Wifi size={13} />}Conectar</Button>
                                                 <Button size="xs" variant="outline" onClick={() => runAction(connection.id, "disconnect")} disabled={isPending}><Unplug size={13} />Desconectar</Button>
+                                                <Button size="xs" variant="danger" onClick={() => deleteConnection(connection.id, connection.displayName)} disabled={isPending}><Trash2 size={13} />Deletar</Button>
                                             </div>
                                         </div>
                                     </div>
