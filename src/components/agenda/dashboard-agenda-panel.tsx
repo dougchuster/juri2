@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarPlus, Loader2, Plus } from "lucide-react";
 import { createCompromisso } from "@/actions/agenda";
-import { AGENDA_TYPE_META, formatAgendaDayTitle, formatAgendaTime, type AgendaTipo } from "@/components/agenda/agenda-meta";
+import { AGENDA_TYPE_META, type AgendaTipo } from "@/components/agenda/agenda-meta";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input, Select, Textarea } from "@/components/ui/form-fields";
@@ -20,10 +20,14 @@ interface AgendaAdvogadoOption {
 interface DashboardAgendaItem {
     id: string;
     tipo: AgendaTipo;
-    data: string;
     titulo: string;
     subtitulo: string;
     responsavel: string;
+    dayKey: string;
+    dayTitle: string;
+    timeLabel: string;
+    badgeLabel: string;
+    badgeVariant: "default" | "success" | "warning" | "danger" | "info" | "muted" | "glow";
     status?: string;
 }
 
@@ -31,49 +35,22 @@ interface DashboardAgendaPanelProps {
     items: DashboardAgendaItem[];
     advogados: AgendaAdvogadoOption[];
     defaultAdvogadoId?: string;
-}
-
-function getTimelineBadge(date: Date) {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
-    const target = new Date(date);
-    target.setHours(0, 0, 0, 0);
-
-    const diff = Math.floor((target.getTime() - now.getTime()) / 86400000);
-
-    if (diff < 0) return { label: `Atrasado ${Math.abs(diff)}d`, variant: "danger" as const };
-    if (diff === 0) return { label: "Hoje", variant: "warning" as const };
-    if (diff === 1) return { label: "Amanha", variant: "info" as const };
-    if (diff <= 7) return { label: `D-${diff}`, variant: "muted" as const };
-
-    return { label: `Em ${diff}d`, variant: "muted" as const };
+    todayItemsCount: number;
 }
 
 export function DashboardAgendaPanel({
     items,
     advogados,
     defaultAdvogadoId,
+    todayItemsCount,
 }: DashboardAgendaPanelProps) {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
 
-    const sortedItems = [...items].sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
-
     const initialAdvogadoId = defaultAdvogadoId || advogados[0]?.id || "";
-    const shouldScroll = sortedItems.length > 3;
-    const todayItemsCount = sortedItems.filter((item) => {
-        const date = new Date(item.data);
-        const today = new Date();
-
-        return (
-            date.getDate() === today.getDate() &&
-            date.getMonth() === today.getMonth() &&
-            date.getFullYear() === today.getFullYear()
-        );
-    }).length;
+    const shouldScroll = items.length > 3;
 
     async function handleCreateAgenda(formData: FormData) {
         setLoading(true);
@@ -141,24 +118,20 @@ export function DashboardAgendaPanel({
                     </div>
                 </div>
 
-                {sortedItems.length > 0 ? (
+                {items.length > 0 ? (
                     <div className={cn("space-y-3", shouldScroll && "max-h-[430px] overflow-y-auto pr-1.5")}>
-                        {sortedItems.map((item, index) => {
-                            const eventDate = new Date(item.data);
+                        {items.map((item, index) => {
                             const meta = AGENDA_TYPE_META[item.tipo];
                             const Icon = meta.icon;
-                            const previous = sortedItems[index - 1];
-                            const previousDayKey = previous ? new Date(previous.data).toDateString() : null;
-                            const currentDayKey = eventDate.toDateString();
-                            const showDayHeader = previousDayKey !== currentDayKey;
-                            const badge = getTimelineBadge(eventDate);
+                            const previous = items[index - 1];
+                            const showDayHeader = previous?.dayKey !== item.dayKey;
 
                             return (
                                 <div key={item.id} className="space-y-3">
                                     {showDayHeader && (
                                         <div className="sticky top-0 z-10 flex items-center gap-3 py-1">
                                             <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                                                {formatAgendaDayTitle(eventDate)}
+                                                {item.dayTitle}
                                             </span>
                                             <div className="h-px flex-1 bg-[var(--border-color)]" />
                                         </div>
@@ -178,7 +151,7 @@ export function DashboardAgendaPanel({
                                                     </div>
                                                     <div className="min-w-0">
                                                         <p className="text-[13px] font-semibold tracking-[0.08em] text-[var(--text-secondary)]">
-                                                            {formatAgendaTime(eventDate)}
+                                                            {item.timeLabel}
                                                         </p>
                                                         <p className="mt-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--text-muted)]">
                                                             {meta.label}
@@ -186,7 +159,7 @@ export function DashboardAgendaPanel({
                                                     </div>
                                                 </div>
 
-                                                <Badge variant={badge.variant}>{badge.label}</Badge>
+                                                <Badge variant={item.badgeVariant}>{item.badgeLabel}</Badge>
                                             </div>
 
                                             <p className="mt-3 text-[15px] font-semibold leading-6 text-[var(--text-primary)]">

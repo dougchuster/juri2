@@ -44,6 +44,93 @@ const TIPO_COLOR: Record<string, string> = {
     PROSPECCAO: "bg-[var(--danger)]",
 };
 
+const DASHBOARD_TIME_ZONE = "America/Sao_Paulo";
+
+type DashboardAgendaBadgeVariant = "default" | "success" | "warning" | "danger" | "info" | "muted" | "glow";
+
+type DashboardAgendaDisplayItem = {
+    id: string;
+    tipo: "prazo" | "audiencia" | "compromisso" | "tarefa" | "retorno";
+    titulo: string;
+    subtitulo: string;
+    responsavel: string;
+    dayKey: string;
+    dayTitle: string;
+    timeLabel: string;
+    badgeLabel: string;
+    badgeVariant: DashboardAgendaBadgeVariant;
+    status?: string;
+};
+
+function getDashboardDateParts(date: Date) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: DASHBOARD_TIME_ZONE,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+    }).formatToParts(date);
+
+    const values = Object.fromEntries(
+        parts
+            .filter((part) => part.type !== "literal")
+            .map((part) => [part.type, part.value]),
+    );
+
+    return {
+        year: values.year ?? "0000",
+        month: values.month ?? "01",
+        day: values.day ?? "01",
+        hour: values.hour ?? "00",
+        minute: values.minute ?? "00",
+    };
+}
+
+function getDashboardDayStamp(date: Date) {
+    const { year, month, day } = getDashboardDateParts(date);
+    return Date.UTC(Number(year), Number(month) - 1, Number(day));
+}
+
+function getDashboardDayKey(date: Date) {
+    const { year, month, day } = getDashboardDateParts(date);
+    return `${year}-${month}-${day}`;
+}
+
+function formatDashboardAgendaDay(date: Date, referenceDate: Date) {
+    const diff = Math.floor((getDashboardDayStamp(date) - getDashboardDayStamp(referenceDate)) / 86400000);
+
+    if (diff === 0) return "Hoje";
+    if (diff === 1) return "Amanha";
+
+    return new Intl.DateTimeFormat("pt-BR", {
+        timeZone: DASHBOARD_TIME_ZONE,
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+    }).format(date);
+}
+
+function formatDashboardAgendaTime(date: Date) {
+    const { hour, minute } = getDashboardDateParts(date);
+
+    if (hour === "00" && minute === "00") return "Dia todo";
+
+    return `${hour}:${minute}`;
+}
+
+function getDashboardTimelineBadge(date: Date, referenceDate: Date) {
+    const diff = Math.floor((getDashboardDayStamp(date) - getDashboardDayStamp(referenceDate)) / 86400000);
+
+    if (diff < 0) return { label: `Atrasado ${Math.abs(diff)}d`, variant: "danger" as const };
+    if (diff === 0) return { label: "Hoje", variant: "warning" as const };
+    if (diff === 1) return { label: "Amanha", variant: "info" as const };
+    if (diff <= 7) return { label: `D-${diff}`, variant: "muted" as const };
+
+    return { label: `Em ${diff}d`, variant: "muted" as const };
+}
+
 export default async function DashboardPage() {
     const session = await getSession();
     if (session && !session.onboardingCompleted && session.role === "ADMIN" && !session.escritorioId) redirect("/onboarding");
@@ -78,6 +165,7 @@ export default async function DashboardPage() {
     const { conversations } = await getConversations({ pageSize: 5 });
     const displayName = session?.name?.split(" ")[0] || "Usuário";
     const now = new Date();
+    const agendaReference = new Date();
     const dashboardLayout = await getDashboardLayout(session?.id);
 
     const pendingDeadlines = agendaSemana.filter(item => item.tipo === "prazo" && item.status === "PENDENTE").slice(0, 6);
@@ -87,6 +175,26 @@ export default async function DashboardPage() {
     const calendarItems = [...agendaSemana]
         .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())
         .slice(0, 10);
+    const agendaTodayKey = getDashboardDayKey(agendaReference);
+    const dashboardAgendaItems: DashboardAgendaDisplayItem[] = calendarItems.map((item) => {
+        const eventDate = new Date(item.data);
+        const badge = getDashboardTimelineBadge(eventDate, agendaReference);
+
+        return {
+            id: item.id,
+            tipo: item.tipo,
+            titulo: item.titulo,
+            subtitulo: item.subtitulo,
+            responsavel: item.responsavel,
+            dayKey: getDashboardDayKey(eventDate),
+            dayTitle: formatDashboardAgendaDay(eventDate, agendaReference),
+            timeLabel: formatDashboardAgendaTime(eventDate),
+            badgeLabel: badge.label,
+            badgeVariant: badge.variant,
+            status: item.status,
+        };
+    });
+    const agendaTodayItemsCount = dashboardAgendaItems.filter((item) => item.dayKey === agendaTodayKey).length;
 
     // Portfolio: real counts by tipo + publicações
     const totalProcessos = processosPorTipo.reduce((sum, g) => sum + g._count.id, 0) || 1;
@@ -145,10 +253,7 @@ export default async function DashboardPage() {
                                 </div>
                                 <div className="dashboard-command-strip flex items-center gap-3 px-5 py-4">
                                     <span className="text-[13px] font-medium text-[rgba(255,220,190,0.95)]">Agendas de hoje</span>
-                                    <span className="ml-auto font-display text-[18px] font-medium text-white">{calendarItems.filter(item => {
-                                        const d = new Date(item.data);
-                                        return d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-                                    }).length}</span>
+                                    <span className="ml-auto font-display text-[18px] font-medium text-white">{agendaTodayItemsCount}</span>
                                 </div>
                             </div>
                         </div>
@@ -367,9 +472,10 @@ export default async function DashboardPage() {
             <div className="flex flex-col gap-5">
                 <div data-dashboard-widget="agenda">
                     <DashboardAgendaPanel
-                        items={JSON.parse(JSON.stringify(calendarItems))}
+                        items={dashboardAgendaItems}
                         advogados={JSON.parse(JSON.stringify(advogados))}
                         defaultAdvogadoId={scopedAdvogadoId || undefined}
+                        todayItemsCount={agendaTodayItemsCount}
                     />
                 </div>
 
