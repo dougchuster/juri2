@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireSuperAdminApi, getClientIpFromRequest } from "@/lib/root-admin/api-auth";
+import { getUserOrganizationMappings } from "@/lib/root-admin/user-organization";
 
 export const dynamic = "force-dynamic";
 
