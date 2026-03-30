@@ -13,9 +13,10 @@ type SidebarErrorBoundaryState = {
 };
 
 export class SidebarErrorBoundary extends Component<SidebarErrorBoundaryProps, SidebarErrorBoundaryState> {
-    state: SidebarErrorBoundaryState = {
-        hasError: false,
-    };
+    constructor(props: SidebarErrorBoundaryProps) {
+        super(props);
+        this.state = { hasError: false };
+    }
 
     static getDerivedStateFromError() {
         return { hasError: true };

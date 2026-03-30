@@ -89,7 +89,7 @@ export function DashboardShell({
 
                 <div className="adv-dashboard-body relative z-10 mx-auto flex min-h-[calc(100dvh-1.5rem)] w-full items-start gap-3 md:gap-4 xl:gap-6">
                     <div
-                        className="sticky top-4 hidden shrink-0 self-start md:block"
+                        className="adv-sidebar-desktop-slot sticky top-4 shrink-0 self-start"
                         style={{
                             width: expandedSidebarWidth,
                             minWidth: expandedSidebarWidth,
