@@ -8,7 +8,6 @@ import { requestPasswordReset } from "@/actions/password-reset";
 import {
   attachOrganizationToUsers,
   getUserOrganizationMappings,
-  setUserOrganizationMapping,
   type RootAdminOrgLite,
 } from "@/lib/root-admin/user-organization";
 
@@ -183,6 +182,7 @@ export async function POST(request: NextRequest) {
         role: role as Role,
         passwordHash,
         isActive: true,
+        ...(organizationId ? { escritorioId: organizationId } : {}),
       },
       select: {
         id: true,
@@ -194,9 +194,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (organizationId) {
-      await setUserOrganizationMapping(created.id, organizationId);
-    }
+    // escritorioId já salvo no create acima
 
     if (sendResetRequest) {
       const resetResult = await requestPasswordReset(created.email);

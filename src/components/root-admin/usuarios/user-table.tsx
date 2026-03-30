@@ -287,6 +287,22 @@ export default function UserTable({
       setEditModalOpen(false);
       setSelectedUser(null);
       showToast("success", "Usuario atualizado com sucesso.");
+      // Atualiza state local imediatamente
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === selectedUser.id
+            ? {
+                ...u,
+                name: editForm.name,
+                role: editForm.role,
+                organizationId: editForm.organizationId || null,
+                organization: editForm.organizationId
+                  ? organizations.find((o) => o.id === editForm.organizationId) || null
+                  : null,
+              }
+            : u
+        )
+      );
       router.refresh();
     } catch (error) {
       console.error("Error editing user:", error);
@@ -624,13 +640,11 @@ export default function UserTable({
                   onChange={(e) => setCreateForm((prev) => ({ ...prev, role: e.target.value }))}
                   className="bg-[#111118] border border-[rgba(255,255,255,0.1)] rounded-lg px-3 py-2 text-sm text-[#e2e8f0]"
                 >
-                  {Object.entries(roleMap)
-                    .filter(([value]) => value !== "ADVOGADO")
-                    .map(([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
+                  {Object.entries(roleMap).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
                 </select>
 
                 <select
@@ -697,13 +711,11 @@ export default function UserTable({
                   onChange={(e) => setEditForm((prev) => ({ ...prev, role: e.target.value }))}
                   className="bg-[#111118] border border-[rgba(255,255,255,0.1)] rounded-lg px-3 py-2 text-sm text-[#e2e8f0]"
                 >
-                  {Object.entries(roleMap)
-                    .filter(([value]) => value !== "ADVOGADO")
-                    .map(([value, label]) => (
-                      <option key={value} value={value}>
-                        {label}
-                      </option>
-                    ))}
+                  {Object.entries(roleMap).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  ))}
                 </select>
 
                 <select

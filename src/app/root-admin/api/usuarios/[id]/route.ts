@@ -8,7 +8,6 @@ import {
   attachOrganizationToUsers,
   deleteUserOrganizationMapping,
   getUserOrganizationMappings,
-  setUserOrganizationMapping,
   type RootAdminOrgLite,
 } from "@/lib/root-admin/user-organization";
 
@@ -195,12 +194,6 @@ export async function PATCH(
           { status: 400 }
         );
       }
-      if (role === "ADVOGADO") {
-        return NextResponse.json(
-          { error: "Usuário com cargo ADVOGADO deve ser gerenciado no painel interno." },
-          { status: 400 }
-        );
-      }
       updateData.role = role as Role;
     }
 
@@ -235,7 +228,11 @@ export async function PATCH(
         }
       }
 
-      await setUserOrganizationMapping(id, nextOrganizationId);
+      // Salvar em escritorioId diretamente no usuário
+      await db.user.update({
+        where: { id },
+        data: { escritorioId: nextOrganizationId },
+      });
       detalhes.organizationId = nextOrganizationId;
     }
 
