@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Facebook, Instagram, MessageCircle, Plus, RefreshCw, Search } from "lucide-react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { Button } from "@/components/ui/button";
-import { useConversationStore } from "@/stores/conversation-store";
+import { applyConversationFilters, useConversationStore } from "@/stores/conversation-store";
 import { ConversationListItem } from "./conversation-list-item";
 import type { ChannelFilter, FocusFilter } from "@/stores/comunicacao-types";
 
@@ -41,16 +41,27 @@ export function ConversationListPanel({
     onAvatarError,
 }: Props) {
     // ── Store (re-renders isolados desta coluna apenas) ───────────────────────
-    const conversations = useConversationStore((s) => s.getFiltered());
+    // NOTA: não use s.getFiltered() nem s.getUnreadCount() como selector — ambos
+    // retornam novas referências a cada chamada, causando loop infinito no
+    // useSyncExternalStore do Zustand. Selecione estado primitivo + useMemo.
+    const allConversations = useConversationStore((s) => s.conversations);
     const selectedId = useConversationStore((s) => s.selectedId);
     const filter = useConversationStore((s) => s.filter);
     const focusFilter = useConversationStore((s) => s.focusFilter);
     const searchTerm = useConversationStore((s) => s.searchTerm);
-    const unreadCount = useConversationStore((s) => s.getUnreadCount());
     const setFilter = useConversationStore((s) => s.setFilter);
     const setFocusFilter = useConversationStore((s) => s.setFocusFilter);
     const setSearchTerm = useConversationStore((s) => s.setSearchTerm);
     const selectConversation = useConversationStore((s) => s.selectConversation);
+
+    const conversations = useMemo(
+        () => applyConversationFilters(allConversations, filter, focusFilter, searchTerm),
+        [allConversations, filter, focusFilter, searchTerm]
+    );
+    const unreadCount = useMemo(
+        () => allConversations.filter((c) => c.unreadCount > 0).length,
+        [allConversations]
+    );
 
     const tabs = mode === "social" ? CHANNEL_TABS_SOCIAL : CHANNEL_TABS_ALL;
 

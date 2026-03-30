@@ -59,6 +59,41 @@ let _refreshTimer: ReturnType<typeof setTimeout> | null = null;
 
 const SOCIAL_CANAIS = new Set<string>(["WHATSAPP", "FACEBOOK_MESSENGER", "INSTAGRAM_DM"]);
 
+/**
+ * Função pura para filtrar conversas — exportada para uso com useMemo nos componentes.
+ * Evita que selectors Zustand retornem novo array a cada render (loop infinito).
+ */
+export function applyConversationFilters(
+    conversations: ConversationItem[],
+    filter: ChannelFilter,
+    focusFilter: FocusFilter,
+    searchTerm: string
+): ConversationItem[] {
+    return conversations.filter((item) => {
+        if (filter !== "all" && item.canal !== filter) return false;
+        if (focusFilter === "unread" && item.unreadCount <= 0) return false;
+        if (focusFilter === "paused" && !item.iaDesabilitada && !item.autoAtendimentoPausado) return false;
+        if (focusFilter === "assigned" && !item.assignedTo) return false;
+        if (focusFilter === "unassigned" && item.assignedTo) return false;
+        if (!searchTerm) return true;
+
+        const q = searchTerm.toLowerCase().trim();
+        const haystack = [
+            item.cliente.nome,
+            item.cliente.email ?? "",
+            item.cliente.celular ?? "",
+            item.cliente.whatsapp ?? "",
+            item.subject ?? "",
+            item.processo?.numeroCnj ?? "",
+            item.assignedTo?.name ?? "",
+            item.messages[0]?.content ?? "",
+        ]
+            .join(" ")
+            .toLowerCase();
+        return haystack.includes(q);
+    });
+}
+
 export const useConversationStore = create<ConversationState>()(
     subscribeWithSelector((set, get) => ({
         conversations: [],
@@ -145,29 +180,7 @@ export const useConversationStore = create<ConversationState>()(
 
         getFiltered: () => {
             const { conversations, filter, focusFilter, searchTerm } = get();
-            return conversations.filter((item) => {
-                if (filter !== "all" && item.canal !== filter) return false;
-                if (focusFilter === "unread" && item.unreadCount <= 0) return false;
-                if (focusFilter === "paused" && !item.iaDesabilitada && !item.autoAtendimentoPausado) return false;
-                if (focusFilter === "assigned" && !item.assignedTo) return false;
-                if (focusFilter === "unassigned" && item.assignedTo) return false;
-                if (!searchTerm) return true;
-
-                const q = searchTerm.toLowerCase().trim();
-                const haystack = [
-                    item.cliente.nome,
-                    item.cliente.email ?? "",
-                    item.cliente.celular ?? "",
-                    item.cliente.whatsapp ?? "",
-                    item.subject ?? "",
-                    item.processo?.numeroCnj ?? "",
-                    item.assignedTo?.name ?? "",
-                    item.messages[0]?.content ?? "",
-                ]
-                    .join(" ")
-                    .toLowerCase();
-                return haystack.includes(q);
-            });
+            return applyConversationFilters(conversations, filter, focusFilter, searchTerm);
         },
 
         getUnreadCount: () =>
