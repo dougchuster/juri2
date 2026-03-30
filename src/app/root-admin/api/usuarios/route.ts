@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
           isActive: true,
           lastLoginAt: true,
           createdAt: true,
+          escritorioId: true,
           advogado: {
             select: { id: true },
           },

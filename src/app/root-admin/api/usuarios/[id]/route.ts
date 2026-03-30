@@ -36,6 +36,7 @@ export async function GET(
         lastLoginAt: true,
         createdAt: true,
         updatedAt: true,
+        escritorioId: true,
         advogado: {
           select: { id: true },
         },
