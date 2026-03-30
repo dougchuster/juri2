@@ -61,6 +61,11 @@ function getConfig(connection: WhatsappConnectionWithSecret) {
 }
 
 function getWebhookBaseUrl() {
+    // URL interna Docker (ex: "http://app:3000") tem prioridade — permite que o container
+    // da Evolution entregue webhooks ao app via rede interna sem depender de hairpin NAT.
+    const internal = String(process.env.EVOLUTION_APP_INTERNAL_URL || "").trim();
+    if (internal) return internal.replace(/\/+$/, "");
+
     const base =
         String(process.env.EVOLUTION_APP_URL || "").trim()
         || String(process.env.NEXT_PUBLIC_APP_URL || "").trim()
