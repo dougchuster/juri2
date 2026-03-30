@@ -30,11 +30,12 @@ export async function GET(
       );
     }
 
-    // Count related data
-    const [userCount, docCount] = await Promise.all([
-      db.advogado.count(),
+    // Count related data — users via mapping table, not advogado (which has no direct org link)
+    const [mappings, docCount] = await Promise.all([
+      getUserOrganizationMappings(),
       db.documento.count({ where: { escritorioId: id } }),
     ]);
+    const userCount = Object.values(mappings).filter((orgId) => orgId === id).length;
 
     return NextResponse.json(
       JSON.parse(JSON.stringify({
