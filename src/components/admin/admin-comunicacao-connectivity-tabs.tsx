@@ -232,12 +232,6 @@ export function WhatsAppTab() {
                 </div>
                 {feedback ? <div className="mt-4 rounded-xl border border-border bg-bg-tertiary/30 px-4 py-3 text-sm text-text-secondary">{feedback}</div> : null}
             </div>
-
-            {connections.length > 0 && (
-                <div className="rounded-xl border border-warning/30 bg-warning/5 px-4 py-3 text-sm text-text-secondary">
-                    <strong>Credenciais criptografadas por ambiente:</strong> se conectar ou desconectar falhar com erro de credenciais no VPS, recrie a conexao usando o formulario abaixo com os mesmos dados. O servidor ira re-criptografar as credenciais com a chave correta do ambiente atual.
-                </div>
-            )}
                 <div className="space-y-4">
                     <div className="glass-card p-5">
                         <h3 className="text-base font-semibold text-text-primary">Nova conexao</h3>
