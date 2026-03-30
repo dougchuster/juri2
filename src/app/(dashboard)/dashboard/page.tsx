@@ -228,7 +228,7 @@ export default async function DashboardPage() {
                     { id: "delegated-tasks", title: "Tarefas distribuidas", column: "side" },
                 ]}
             />
-            <div className="grid w-full min-w-0 grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-[minmax(0,1.34fr)_320px] xl:grid-cols-[minmax(0,1.38fr)_340px]">
+            <div className="mt-4 grid w-full min-w-0 grid-cols-1 gap-4 lg:mt-5 lg:gap-6 lg:grid-cols-[minmax(0,1.34fr)_320px] xl:grid-cols-[minmax(0,1.38fr)_340px]">
             <div className="flex min-w-0 flex-col gap-4 lg:gap-6">
                 {/* ── Metrics row ── */}
                 <section data-dashboard-widget="overview" className="grid grid-cols-1 gap-4 xl:grid-cols-3 xl:grid-rows-2">
