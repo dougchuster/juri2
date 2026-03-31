@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -44,7 +44,7 @@ interface AdvogadoItem {
     };
     timeMembros: Array<{
         timeId: string;
-        advogadoId: string;
+        advogadoId: string | null;
         lider: boolean;
         time: {
             id: string;
@@ -55,36 +55,43 @@ interface AdvogadoItem {
     }>;
 }
 
+interface MembroItem {
+    id: string;
+    timeId: string;
+    userId: string;
+    advogadoId: string | null;
+    lider: boolean;
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        isActive: boolean;
+    };
+}
+
 interface EquipeItem {
     id: string;
     nome: string;
     descricao: string | null;
     cor: string | null;
     ativo: boolean;
-    membros: Array<{
-        id: string;
-        timeId: string;
-        advogadoId: string;
-        lider: boolean;
-        advogado: {
-            id: string;
-            ativo: boolean;
-            user: {
-                id: string;
-                name: string;
-                email: string;
-                isActive: boolean;
-            };
-        };
-    }>;
+    membros: MembroItem[];
+}
+
+interface UserItem {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
 }
 
 interface Props {
     advogados: AdvogadoItem[];
     equipes: EquipeItem[];
+    allUsers: UserItem[];
 }
 
-function getActionError(result: unknown, fallback = "Operação não concluída.") {
+function getActionError(result: unknown, fallback = "Operacao nao concluida.") {
     if (!result || typeof result !== "object") return fallback;
     const payload = result as { error?: unknown };
     if (!payload.error) return null;
@@ -97,12 +104,14 @@ function getActionError(result: unknown, fallback = "Operação não concluída.
     return fallback;
 }
 
-export function AdminEquipeJuridica({ advogados, equipes }: Props) {
+export function AdminEquipeJuridica({ advogados, equipes, allUsers }: Props) {
     const router = useRouter();
+    const [localEquipes, setLocalEquipes] = useState<EquipeItem[]>(equipes);
     const [showCreateFuncionario, setShowCreateFuncionario] = useState(false);
     const [showCreateEquipe, setShowCreateEquipe] = useState(false);
     const [showVincularMembro, setShowVincularMembro] = useState(false);
-    const [equipeSelecionada, setEquipeSelecionada] = useState<EquipeItem | null>(null);
+    const [equipeSelecionadaId, setEquipeSelecionadaId] = useState<string | null>(null);
+    const equipeSelecionada = localEquipes.find((e) => e.id === equipeSelecionadaId) ?? null;
     const [advogadoEdicao, setAdvogadoEdicao] = useState<AdvogadoItem | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -111,23 +120,26 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
     const kpis = useMemo(() => {
         const ativos = advogados.filter((a) => a.ativo && a.user.isActive).length;
         const inativos = advogados.length - ativos;
-        const lideres = equipes.reduce((acc, equipe) => acc + equipe.membros.filter((m) => m.lider).length, 0);
+        const lideres = localEquipes.reduce(
+            (acc, equipe) => acc + equipe.membros.filter((m) => m.lider).length,
+            0
+        );
         return {
             totalAdvogados: advogados.length,
             ativos,
             inativos,
-            totalEquipes: equipes.length,
+            totalEquipes: localEquipes.length,
             lideres,
         };
-    }, [advogados, equipes]);
+    }, [advogados, localEquipes]);
 
-    const advogadosAtivosOptions = useMemo(
-        () =>
-            advogados
-                .filter((a) => a.ativo && a.user.isActive)
-                .map((a) => ({ value: a.id, label: `${a.user.name} (${a.oab}/${a.seccional})` })),
-        [advogados]
-    );
+    const allUsersOptions = useMemo(() => {
+        if (!equipeSelecionada) return [];
+        const membrosIds = new Set(equipeSelecionada.membros.map((m) => m.userId));
+        return allUsers
+            .filter((u) => !membrosIds.has(u.id))
+            .map((u) => ({ value: u.id, label: `${u.name} (${u.role})` }));
+    }, [allUsers, equipeSelecionada]);
 
     async function handleCreateFuncionario(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -138,7 +150,14 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
             nome: String(f.get("nome") || ""),
             email: String(f.get("email") || ""),
             senha: String(f.get("senha") || ""),
-            role: String(f.get("role") || "ADVOGADO") as "ADMIN" | "SOCIO" | "ADVOGADO" | "CONTROLADOR" | "ASSISTENTE" | "FINANCEIRO" | "SECRETARIA",
+            role: String(f.get("role") || "ADVOGADO") as
+                | "ADMIN"
+                | "SOCIO"
+                | "ADVOGADO"
+                | "CONTROLADOR"
+                | "ASSISTENTE"
+                | "FINANCEIRO"
+                | "SECRETARIA",
             perfilProfissional: String(f.get("perfilProfissional") || ""),
             cargo: String(f.get("cargo") || ""),
             nivel: String(f.get("nivel") || ""),
@@ -223,40 +242,93 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
         setLoading(true);
         setError(null);
         const f = new FormData(e.currentTarget);
+        const userId = String(f.get("userId") || "");
+        const lider = f.get("lider") === "on";
+
+        // Optimistic update
+        const userInfo = allUsers.find((u) => u.id === userId);
+        if (userInfo) {
+            setLocalEquipes((prev) =>
+                prev.map((eq) => {
+                    if (eq.id !== equipeSelecionada.id) return eq;
+                    const existingIndex = eq.membros.findIndex((m) => m.userId === userId);
+                    const newMembro: MembroItem = {
+                        id: `temp-${userId}`,
+                        timeId: eq.id,
+                        userId,
+                        advogadoId: null,
+                        lider,
+                        user: {
+                            id: userInfo.id,
+                            name: userInfo.name,
+                            email: userInfo.email,
+                            isActive: true,
+                        },
+                    };
+                    if (existingIndex >= 0) {
+                        const updated = [...eq.membros];
+                        updated[existingIndex] = { ...updated[existingIndex], lider };
+                        return { ...eq, membros: updated };
+                    }
+                    return { ...eq, membros: [...eq.membros, newMembro] };
+                })
+            );
+        }
+
         const result = await vincularAdvogadoNaEquipe({
             timeId: equipeSelecionada.id,
-            advogadoId: String(f.get("advogadoId") || ""),
-            lider: f.get("lider") === "on",
+            userId,
+            lider,
         });
-        const actionError = getActionError(result, "Erro ao vincular advogado na equipe.");
+        const actionError = getActionError(result, "Erro ao vincular membro na equipe.");
         if (actionError) {
             setError(actionError);
             setLoading(false);
+            router.refresh();
             return;
         }
         setLoading(false);
         setShowVincularMembro(false);
-        setEquipeSelecionada(null);
+        setEquipeSelecionadaId(null);
         router.refresh();
     }
 
-    async function handleRemoverMembro(timeId: string, advogadoId: string) {
+    async function handleRemoverMembro(timeId: string, userId: string) {
         setError(null);
-        const result = await removerAdvogadoDaEquipe(timeId, advogadoId);
-        const actionError = getActionError(result, "Erro ao remover advogado da equipe.");
+        // Optimistic update
+        setLocalEquipes((prev) =>
+            prev.map((eq) => {
+                if (eq.id !== timeId) return eq;
+                return { ...eq, membros: eq.membros.filter((m) => m.userId !== userId) };
+            })
+        );
+        const result = await removerAdvogadoDaEquipe(timeId, userId);
+        const actionError = getActionError(result, "Erro ao remover membro da equipe.");
         if (actionError) {
             setError(actionError);
+            router.refresh();
             return;
         }
         router.refresh();
     }
 
-    async function handleDefinirLider(timeId: string, advogadoId: string) {
+    async function handleDefinirLider(timeId: string, userId: string) {
         setError(null);
-        const result = await vincularAdvogadoNaEquipe({ timeId, advogadoId, lider: true });
+        // Optimistic update: clear all leaders, set this one
+        setLocalEquipes((prev) =>
+            prev.map((eq) => {
+                if (eq.id !== timeId) return eq;
+                return {
+                    ...eq,
+                    membros: eq.membros.map((m) => ({ ...m, lider: m.userId === userId })),
+                };
+            })
+        );
+        const result = await vincularAdvogadoNaEquipe({ timeId, userId, lider: true });
         const actionError = getActionError(result, "Erro ao definir lider da equipe.");
         if (actionError) {
             setError(actionError);
+            router.refresh();
             return;
         }
         router.refresh();
@@ -300,7 +372,7 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                 </Button>
                 <Button size="sm" variant="gradient" onClick={() => setShowCreateFuncionario(true)}>
                     <UserPlus size={14} />
-                    Novo Funcionário
+                    Novo Funcionario
                 </Button>
             </div>
 
@@ -311,88 +383,91 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                         <h3 className="text-sm font-semibold text-text-primary">Advogados Cadastrados</h3>
                     </div>
                     <div className="overflow-x-auto">
-                    <table className="w-full min-w-[480px]">
-                        <thead>
-                            <tr className="border-b border-border bg-bg-tertiary/20">
-                                <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">Advogado</th>
-                                <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">OAB</th>
-                                <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">Equipes</th>
-                                <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">Status</th>
-                                <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider text-text-muted">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {advogados.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="px-4 py-10 text-sm text-text-muted text-center">
-                                        Nenhum advogado cadastrado.
-                                    </td>
+                        <table className="w-full min-w-[480px]">
+                            <thead>
+                                <tr className="border-b border-border bg-bg-tertiary/20">
+                                    <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">Advogado</th>
+                                    <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">OAB</th>
+                                    <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">Equipes</th>
+                                    <th className="px-4 py-2.5 text-left text-[11px] uppercase tracking-wider text-text-muted">Status</th>
+                                    <th className="px-4 py-2.5 text-right text-[11px] uppercase tracking-wider text-text-muted">Acoes</th>
                                 </tr>
-                            ) : (
-                                advogados.map((advogado) => (
-                                    <tr key={advogado.id} className="border-b border-border/60 last:border-0 hover:bg-bg-tertiary/20">
-                                        <td className="px-4 py-3">
-                                            <p className="text-sm font-medium text-text-primary">{advogado.user.name}</p>
-                                            <p className="text-xs text-text-muted">{advogado.user.email}</p>
-                                        </td>
-                                        <td className="px-4 py-3 text-sm text-text-secondary font-mono">
-                                            {advogado.oab}/{advogado.seccional}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex flex-wrap gap-1">
-                                                {advogado.timeMembros.length === 0 && (
-                                                    <span className="text-xs text-text-muted">Sem equipe</span>
-                                                )}
-                                                {advogado.timeMembros.map((membro) => (
-                                                    <span
-                                                        key={`${membro.timeId}-${advogado.id}`}
-                                                        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] text-white"
-                                                        style={{ backgroundColor: membro.time.cor || "#2563EB" }}
-                                                    >
-                                                        {membro.time.nome}
-                                                        {membro.lider && <Crown size={10} />}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <Badge variant={advogado.ativo && advogado.user.isActive ? "success" : "muted"} size="sm">
-                                                {advogado.ativo && advogado.user.isActive ? "Ativo" : "Inativo"}
-                                            </Badge>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex items-center justify-end gap-1">
-                                                <button
-                                                    onClick={() => setAdvogadoEdicao(advogado)}
-                                                    className="rounded-lg p-1.5 text-text-muted hover:bg-bg-tertiary hover:text-text-primary transition-colors"
-                                                    title="Editar advogado"
-                                                >
-                                                    <Pencil size={15} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleToggleAdvogado(advogado.id)}
-                                                    className="rounded-lg p-1.5 text-text-muted hover:bg-bg-tertiary hover:text-text-primary transition-colors"
-                                                    title={advogado.ativo ? "Desativar advogado" : "Ativar advogado"}
-                                                >
-                                                    {advogado.ativo ? <PowerOff size={15} /> : <Power size={15} />}
-                                                </button>
-                                            </div>
+                            </thead>
+                            <tbody>
+                                {advogados.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={5} className="px-4 py-10 text-sm text-text-muted text-center">
+                                            Nenhum advogado cadastrado.
                                         </td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                ) : (
+                                    advogados.map((advogado) => (
+                                        <tr key={advogado.id} className="border-b border-border/60 last:border-0 hover:bg-bg-tertiary/20">
+                                            <td className="px-4 py-3">
+                                                <p className="text-sm font-medium text-text-primary">{advogado.user.name}</p>
+                                                <p className="text-xs text-text-muted">{advogado.user.email}</p>
+                                            </td>
+                                            <td className="px-4 py-3 text-sm text-text-secondary font-mono">
+                                                {advogado.oab}/{advogado.seccional}
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {advogado.timeMembros.length === 0 && (
+                                                        <span className="text-xs text-text-muted">Sem equipe</span>
+                                                    )}
+                                                    {advogado.timeMembros.map((membro) => (
+                                                        <span
+                                                            key={`${membro.timeId}-${advogado.id}`}
+                                                            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] text-white"
+                                                            style={{ backgroundColor: membro.time.cor || "#2563EB" }}
+                                                        >
+                                                            {membro.time.nome}
+                                                            {membro.lider && <Crown size={10} />}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <Badge
+                                                    variant={advogado.ativo && advogado.user.isActive ? "success" : "muted"}
+                                                    size="sm"
+                                                >
+                                                    {advogado.ativo && advogado.user.isActive ? "Ativo" : "Inativo"}
+                                                </Badge>
+                                            </td>
+                                            <td className="px-4 py-3">
+                                                <div className="flex items-center justify-end gap-1">
+                                                    <button
+                                                        onClick={() => setAdvogadoEdicao(advogado)}
+                                                        className="rounded-lg p-1.5 text-text-muted hover:bg-bg-tertiary hover:text-text-primary transition-colors"
+                                                        title="Editar advogado"
+                                                    >
+                                                        <Pencil size={15} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleToggleAdvogado(advogado.id)}
+                                                        className="rounded-lg p-1.5 text-text-muted hover:bg-bg-tertiary hover:text-text-primary transition-colors"
+                                                        title={advogado.ativo ? "Desativar advogado" : "Ativar advogado"}
+                                                    >
+                                                        {advogado.ativo ? <PowerOff size={15} /> : <Power size={15} />}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
                 <div className="space-y-3">
-                    {equipes.length === 0 ? (
+                    {localEquipes.length === 0 ? (
                         <div className="glass-card p-6 text-sm text-text-muted text-center">
                             Nenhuma equipe juridica cadastrada.
                         </div>
                     ) : (
-                        equipes.map((equipe) => (
+                        localEquipes.map((equipe) => (
                             <div key={equipe.id} className="glass-card p-4 space-y-3">
                                 <div className="flex items-start justify-between gap-2">
                                     <div>
@@ -411,7 +486,7 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                                         size="xs"
                                         variant="outline"
                                         onClick={() => {
-                                            setEquipeSelecionada(equipe);
+                                            setEquipeSelecionadaId(equipe.id);
                                             setShowVincularMembro(true);
                                         }}
                                     >
@@ -428,22 +503,31 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                                             .slice()
                                             .sort((a, b) => {
                                                 if (a.lider !== b.lider) return a.lider ? -1 : 1;
-                                                return a.advogado.user.name.localeCompare(b.advogado.user.name);
+                                                return a.user.name.localeCompare(b.user.name);
                                             })
                                             .map((membro) => (
-                                                <div key={membro.id} className="rounded-lg border border-border bg-bg-tertiary/30 px-2.5 py-2">
+                                                <div
+                                                    key={`${membro.timeId}-${membro.userId}`}
+                                                    className="rounded-lg border border-border bg-bg-tertiary/30 px-2.5 py-2"
+                                                >
                                                     <div className="flex items-center justify-between gap-2">
                                                         <div>
                                                             <p className="text-xs font-medium text-text-primary flex items-center gap-1.5">
-                                                                {membro.advogado.user.name}
-                                                                {membro.lider && <Crown size={11} className="text-warning" />}
+                                                                {membro.user.name}
+                                                                {membro.lider && (
+                                                                    <Crown size={11} className="text-warning" />
+                                                                )}
                                                             </p>
-                                                            <p className="text-[11px] text-text-muted">{membro.advogado.user.email}</p>
+                                                            <p className="text-[11px] text-text-muted">
+                                                                {membro.user.email}
+                                                            </p>
                                                         </div>
                                                         <div className="flex items-center gap-1">
                                                             {!membro.lider && (
                                                                 <button
-                                                                    onClick={() => handleDefinirLider(equipe.id, membro.advogadoId)}
+                                                                    onClick={() =>
+                                                                        handleDefinirLider(equipe.id, membro.userId)
+                                                                    }
                                                                     className="rounded p-1 text-text-muted hover:text-warning transition-colors"
                                                                     title="Definir lider"
                                                                 >
@@ -451,7 +535,9 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                                                                 </button>
                                                             )}
                                                             <button
-                                                                onClick={() => handleRemoverMembro(equipe.id, membro.advogadoId)}
+                                                                onClick={() =>
+                                                                    handleRemoverMembro(equipe.id, membro.userId)
+                                                                }
                                                                 className="rounded p-1 text-text-muted hover:text-danger transition-colors"
                                                                 title="Remover da equipe"
                                                             >
@@ -469,7 +555,12 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                 </div>
             </div>
 
-            <Modal isOpen={showCreateFuncionario} onClose={() => setShowCreateFuncionario(false)} title="Novo Funcionário" size="md">
+            <Modal
+                isOpen={showCreateFuncionario}
+                onClose={() => setShowCreateFuncionario(false)}
+                title="Novo Funcionario"
+                size="md"
+            >
                 <form onSubmit={handleCreateFuncionario} className="space-y-4">
                     <Input id="func-nome" name="nome" label="Nome completo" required />
                     <Input id="func-email" name="email" label="E-mail de acesso" type="email" required />
@@ -482,7 +573,7 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                         defaultValue="ADVOGADO"
                         options={[
                             { value: "ADMIN", label: "Administrador" },
-                            { value: "SOCIO", label: "Sócio" },
+                            { value: "SOCIO", label: "Socio" },
                             { value: "ADVOGADO", label: "Advogado" },
                             { value: "FINANCEIRO", label: "Financeiro" },
                             { value: "CONTROLADOR", label: "Controladoria" },
@@ -494,7 +585,7 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                     <Select
                         id="func-perfil-prof"
                         name="perfilProfissional"
-                        label="Perfil (área)"
+                        label="Perfil (area)"
                         defaultValue="ADVOGADO"
                         options={[
                             { value: "ADVOGADO", label: "Advogado" },
@@ -506,7 +597,9 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
 
                     <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1">
-                            <label htmlFor="func-cargo" className="text-sm font-medium text-text-secondary">Cargo (funcao)</label>
+                            <label htmlFor="func-cargo" className="text-sm font-medium text-text-secondary">
+                                Cargo (funcao)
+                            </label>
                             <input
                                 id="func-cargo"
                                 name="cargo"
@@ -521,11 +614,13 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                                 <option value="Marketing" />
                                 <option value="Atendimento" />
                                 <option value="Controladoria" />
-                                <option value="Operações" />
+                                <option value="Operacoes" />
                             </datalist>
                         </div>
                         <div className="space-y-1">
-                            <label htmlFor="func-nivel" className="text-sm font-medium text-text-secondary">Nível</label>
+                            <label htmlFor="func-nivel" className="text-sm font-medium text-text-secondary">
+                                Nivel
+                            </label>
                             <input
                                 id="func-nivel"
                                 name="nivel"
@@ -534,10 +629,10 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                                 placeholder="Ex: Junior, Pleno, Senior..."
                             />
                             <datalist id="func-nivel-options">
-                                <option value="Estagiário" />
-                                <option value="Júnior" />
+                                <option value="Estagiario" />
+                                <option value="Junior" />
                                 <option value="Pleno" />
-                                <option value="Sênior" />
+                                <option value="Senior" />
                                 <option value="Coordenador" />
                                 <option value="Gerente" />
                             </datalist>
@@ -559,33 +654,89 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                             <div className="grid grid-cols-3 gap-3">
                                 <Input id="func-oab" name="oab" label="OAB" required />
                                 <Input id="func-seccional" name="seccional" label="UF" defaultValue="DF" required />
-                                <Input id="func-comissao" name="comissaoPercent" label="% Comissao" type="number" defaultValue="0" min={0} max={100} />
+                                <Input
+                                    id="func-comissao"
+                                    name="comissaoPercent"
+                                    label="% Comissao"
+                                    type="number"
+                                    defaultValue="0"
+                                    min={0}
+                                    max={100}
+                                />
                             </div>
                             <Textarea id="func-esp" name="especialidades" label="Especialidades" rows={2} />
                         </div>
                     )}
 
                     <div className="flex justify-end gap-3">
-                        <Button variant="secondary" type="button" onClick={() => setShowCreateFuncionario(false)}>Cancelar</Button>
+                        <Button variant="secondary" type="button" onClick={() => setShowCreateFuncionario(false)}>
+                            Cancelar
+                        </Button>
                         <Button type="submit" variant="gradient" disabled={loading}>
-                            {loading ? <Loader2 size={14} className="animate-spin" /> : "Criar funcionário"}
+                            {loading ? <Loader2 size={14} className="animate-spin" /> : "Criar funcionario"}
                         </Button>
                     </div>
                 </form>
             </Modal>
 
-            <Modal isOpen={!!advogadoEdicao} onClose={() => setAdvogadoEdicao(null)} title="Editar Advogado" size="md">
+            <Modal
+                isOpen={!!advogadoEdicao}
+                onClose={() => setAdvogadoEdicao(null)}
+                title="Editar Advogado"
+                size="md"
+            >
                 <form onSubmit={handleUpdateAdvogado} className="space-y-4">
-                    <Input id="edit-adv-nome" name="nome" label="Nome completo" defaultValue={advogadoEdicao?.user.name || ""} required />
-                    <Input id="edit-adv-email" name="email" label="E-mail" type="email" defaultValue={advogadoEdicao?.user.email || ""} required />
+                    <Input
+                        id="edit-adv-nome"
+                        name="nome"
+                        label="Nome completo"
+                        defaultValue={advogadoEdicao?.user.name || ""}
+                        required
+                    />
+                    <Input
+                        id="edit-adv-email"
+                        name="email"
+                        label="E-mail"
+                        type="email"
+                        defaultValue={advogadoEdicao?.user.email || ""}
+                        required
+                    />
                     <div className="grid grid-cols-3 gap-3">
-                        <Input id="edit-adv-oab" name="oab" label="OAB" defaultValue={advogadoEdicao?.oab || ""} required />
-                        <Input id="edit-adv-seccional" name="seccional" label="UF" defaultValue={advogadoEdicao?.seccional || ""} required />
-                        <Input id="edit-adv-comissao" name="comissaoPercent" label="% Comissao" type="number" min={0} max={100} defaultValue={advogadoEdicao?.comissaoPercent ?? 0} />
+                        <Input
+                            id="edit-adv-oab"
+                            name="oab"
+                            label="OAB"
+                            defaultValue={advogadoEdicao?.oab || ""}
+                            required
+                        />
+                        <Input
+                            id="edit-adv-seccional"
+                            name="seccional"
+                            label="UF"
+                            defaultValue={advogadoEdicao?.seccional || ""}
+                            required
+                        />
+                        <Input
+                            id="edit-adv-comissao"
+                            name="comissaoPercent"
+                            label="% Comissao"
+                            type="number"
+                            min={0}
+                            max={100}
+                            defaultValue={advogadoEdicao?.comissaoPercent ?? 0}
+                        />
                     </div>
-                    <Textarea id="edit-adv-especialidades" name="especialidades" label="Especialidades" rows={2} defaultValue={advogadoEdicao?.especialidades || ""} />
+                    <Textarea
+                        id="edit-adv-especialidades"
+                        name="especialidades"
+                        label="Especialidades"
+                        rows={2}
+                        defaultValue={advogadoEdicao?.especialidades || ""}
+                    />
                     <div className="flex justify-end gap-3">
-                        <Button variant="secondary" type="button" onClick={() => setAdvogadoEdicao(null)}>Cancelar</Button>
+                        <Button variant="secondary" type="button" onClick={() => setAdvogadoEdicao(null)}>
+                            Cancelar
+                        </Button>
                         <Button type="submit" variant="gradient" disabled={loading}>
                             {loading ? <Loader2 size={14} className="animate-spin" /> : "Salvar alteracoes"}
                         </Button>
@@ -593,12 +744,19 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                 </form>
             </Modal>
 
-            <Modal isOpen={showCreateEquipe} onClose={() => setShowCreateEquipe(false)} title="Nova Equipe Jurídica" size="sm">
+            <Modal
+                isOpen={showCreateEquipe}
+                onClose={() => setShowCreateEquipe(false)}
+                title="Nova Equipe Juridica"
+                size="sm"
+            >
                 <form onSubmit={handleCreateEquipe} className="space-y-4">
                     <Input id="eq-nome" name="nome" label="Nome da equipe" required placeholder="Ex: Contencioso Civel" />
-                    <Textarea id="eq-descricao" name="descricao" label="Descrição" rows={2} />
+                    <Textarea id="eq-descricao" name="descricao" label="Descricao" rows={2} />
                     <div className="space-y-1.5">
-                        <label htmlFor="eq-cor" className="text-sm font-medium text-text-secondary">Cor da equipe</label>
+                        <label htmlFor="eq-cor" className="text-sm font-medium text-text-secondary">
+                            Cor da equipe
+                        </label>
                         <input
                             id="eq-cor"
                             name="cor"
@@ -608,7 +766,9 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                         />
                     </div>
                     <div className="flex justify-end gap-3">
-                        <Button variant="secondary" type="button" onClick={() => setShowCreateEquipe(false)}>Cancelar</Button>
+                        <Button variant="secondary" type="button" onClick={() => setShowCreateEquipe(false)}>
+                            Cancelar
+                        </Button>
                         <Button type="submit" variant="gradient" disabled={loading}>
                             {loading ? <Loader2 size={14} className="animate-spin" /> : "Criar equipe"}
                         </Button>
@@ -620,18 +780,18 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                 isOpen={showVincularMembro}
                 onClose={() => {
                     setShowVincularMembro(false);
-                    setEquipeSelecionada(null);
+                    setEquipeSelecionadaId(null);
                 }}
                 title={`Adicionar membro - ${equipeSelecionada?.nome || ""}`}
                 size="sm"
             >
                 <form onSubmit={handleVincularMembro} className="space-y-4">
                     <Select
-                        id="vinc-advogado"
-                        name="advogadoId"
-                        label="Advogado"
-                        options={advogadosAtivosOptions}
-                        placeholder="Selecionar advogado"
+                        id="vinc-usuario"
+                        name="userId"
+                        label="Funcionario"
+                        options={allUsersOptions}
+                        placeholder="Selecionar funcionario"
                         required
                     />
                     <label className="flex items-center gap-2 text-sm text-text-secondary">
@@ -644,7 +804,7 @@ export function AdminEquipeJuridica({ advogados, equipes }: Props) {
                             type="button"
                             onClick={() => {
                                 setShowVincularMembro(false);
-                                setEquipeSelecionada(null);
+                                setEquipeSelecionadaId(null);
                             }}
                         >
                             Cancelar

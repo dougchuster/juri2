@@ -78,6 +78,7 @@ model User {
   sessions                         Session[]
   recoveryCodes                    UserRecoveryCode[]
   mfaConfig                        UserMfaConfig?
+  timeMembros                      TimeMembro[]
 
   @@index([email])
   @@index([role])
@@ -474,14 +475,16 @@ model Time {
 }
 
 model TimeMembro {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   timeId     String
-  advogadoId String
-  lider      Boolean  @default(false)
-  advogado   Advogado @relation(fields: [advogadoId], references: [id])
-  time       Time     @relation(fields: [timeId], references: [id], onDelete: Cascade)
+  userId     String
+  advogadoId String?
+  lider      Boolean   @default(false)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  advogado   Advogado? @relation(fields: [advogadoId], references: [id])
+  time       Time      @relation(fields: [timeId], references: [id], onDelete: Cascade)
 
-  @@unique([timeId, advogadoId])
+  @@unique([timeId, userId])
   @@map("time_membros")
 }
 

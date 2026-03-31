@@ -15,7 +15,7 @@ export default async function EquipeJuridicaPage({ searchParams }: Props) {
     const params = await searchParams;
     const userId = toParamString(params.userId);
 
-    const [{ advogados, equipes }, funcionarios] = await Promise.all([
+    const [{ advogados, equipes, allUsers }, funcionarios] = await Promise.all([
         getEquipeJuridicaData(),
         getFuncionariosPerfisData(),
     ]);
@@ -30,6 +30,7 @@ export default async function EquipeJuridicaPage({ searchParams }: Props) {
             <AdminEquipeJuridica
                 advogados={JSON.parse(JSON.stringify(advogados))}
                 equipes={JSON.parse(JSON.stringify(equipes))}
+                allUsers={JSON.parse(JSON.stringify(allUsers))}
             />
 
             <AdminFuncionariosPerfis

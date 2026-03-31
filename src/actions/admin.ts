@@ -955,7 +955,7 @@ const createEquipeSchema = z.object({
 
 const vincularMembroSchema = z.object({
     timeId: z.string().min(1),
-    advogadoId: z.string().min(1),
+    userId: z.string().min(1),
     lider: z.coerce.boolean().default(false),
 });
 
@@ -1563,17 +1563,22 @@ export async function vincularAdvogadoNaEquipe(data: z.infer<typeof vincularMemb
                     data: { lider: false },
                 });
             }
+            const advogado = await tx.advogado.findUnique({
+                where: { userId: d.userId },
+                select: { id: true },
+            });
             await tx.timeMembro.upsert({
                 where: {
-                    timeId_advogadoId: {
+                    timeId_userId: {
                         timeId: d.timeId,
-                        advogadoId: d.advogadoId,
+                        userId: d.userId,
                     },
                 },
                 update: { lider: d.lider },
                 create: {
                     timeId: d.timeId,
-                    advogadoId: d.advogadoId,
+                    userId: d.userId,
+                    advogadoId: advogado?.id ?? null,
                     lider: d.lider,
                 },
             });
@@ -1582,25 +1587,25 @@ export async function vincularAdvogadoNaEquipe(data: z.infer<typeof vincularMemb
         revalidateEquipeJuridicaPaths();
         return { success: true };
     } catch (error) {
-        console.error("Error linking lawyer to team:", error);
-        return { success: false, error: { _form: ["Erro ao vincular advogado na equipe."] } };
+        console.error("Error linking member to team:", error);
+        return { success: false, error: { _form: ["Erro ao vincular membro na equipe."] } };
     }
 }
 
-export async function removerAdvogadoDaEquipe(timeId: string, advogadoId: string) {
-    if (!timeId || !advogadoId) {
+export async function removerAdvogadoDaEquipe(timeId: string, userId: string) {
+    if (!timeId || !userId) {
         return { success: false, error: "Dados invalidos para remocao." };
     }
 
     try {
         await db.timeMembro.deleteMany({
-            where: { timeId, advogadoId },
+            where: { timeId, userId },
         });
         revalidateEquipeJuridicaPaths();
         return { success: true };
     } catch (error) {
-        console.error("Error removing lawyer from team:", error);
-        return { success: false, error: "Erro ao remover advogado da equipe." };
+        console.error("Error removing member from team:", error);
+        return { success: false, error: "Erro ao remover membro da equipe." };
     }
 }
 

@@ -116,7 +116,7 @@ export async function getAdminStats() {
 
 // ── Equipe Jurídica ──
 export async function getEquipeJuridicaData() {
-    const [advogados, equipes] = await Promise.all([
+    const [advogados, equipes, allUsers] = await Promise.all([
         db.advogado.findMany({
             include: {
                 user: {
@@ -147,16 +147,12 @@ export async function getEquipeJuridicaData() {
             include: {
                 membros: {
                     include: {
-                        advogado: {
-                            include: {
-                                user: {
-                                    select: {
-                                        id: true,
-                                        name: true,
-                                        email: true,
-                                        isActive: true,
-                                    },
-                                },
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                                isActive: true,
                             },
                         },
                     },
@@ -164,9 +160,14 @@ export async function getEquipeJuridicaData() {
             },
             orderBy: { nome: "asc" },
         }),
+        db.user.findMany({
+            where: { isActive: true },
+            select: { id: true, name: true, email: true, role: true },
+            orderBy: { name: "asc" },
+        }),
     ]);
 
-    return { advogados, equipes };
+    return { advogados, equipes, allUsers };
 }
 
 export async function getFuncionariosPerfisData() {
